@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RKA Income — Rencana Kerja dan Anggaran Pendapatan</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="sidebar.css">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --cream:        #f4f7fc;
+    --cream-mid:    #e8eef8;
+    --cream-dark:   #d5e0f0;
+    --sand:         #c2d0e6;
+    --amber:        #F68B21;
+    --amber-light:  #ffaa50;
+    --amber-dim:    rgba(246,139,33,0.12);
+    --amber-glow:   rgba(246,139,33,0.22);
+    --sage:         #3972B8;
+    --sage-light:   #5a90d6;
+    --sage-dim:     rgba(57,114,184,0.10);
+    --sage-glow:    rgba(57,114,184,0.18);
+    --ink:          #1a2333;
+    --ink-mid:      #2e3f5c;
+    --ink-soft:     #5a6e8a;
+    --ink-muted:    #8fa0b8;
+    --white:        #ffffff;
+    --danger:       #d94040;
+    --danger-dim:   rgba(217,64,64,0.10);
+    --danger-bdr:   rgba(217,64,64,0.25);
+    --warning:      #c07010;
+    --warning-dim:  rgba(192,112,16,0.12);
+    --success:      #217a4a;
+    --success-dim:  rgba(33,122,74,0.10);
+    --radius:       16px;
+    --radius-sm:    10px;
+    --radius-xs:    7px;
+    --shadow-sm:    0 1px 4px rgba(57,114,184,0.07);
+    --shadow:       0 2px 12px rgba(57,114,184,0.10);
+    --shadow-md:    0 6px 28px rgba(57,114,184,0.14);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--cream); color:var(--ink); min-height:100vh; }
+
+  .app-shell { display:block; min-height:100vh; }
+  .main { margin-left:240px; min-height:100vh; display:flex; flex-direction:column; }
+
+  .topbar {
+    position:sticky; top:0; z-index:90;
+    background:rgba(244,247,252,0.92);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--cream-dark);
+    padding:14px 36px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .topbar-left { display:flex; align-items:center; gap:12px; }
+  .breadcrumb  { font-size:13px; color:var(--ink-muted); display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+  .breadcrumb-cur { color:var(--ink); font-weight:600; }
+  .topbar-right { display:flex; align-items:center; gap:10px; }
+  .topbar-date  { font-size:12.5px; color:var(--ink-muted); background:var(--cream-mid); padding:6px 12px; border-radius:20px; border:1px solid var(--cream-dark); }
+  .topbar-icon-btn {
+    width:36px; height:36px; border-radius:var(--radius-sm); border:1px solid var(--cream-dark);
+    background:var(--white); display:flex; align-items:center; justify-content:center;
+    cursor:pointer; color:var(--ink-soft); font-size:14px; transition:all .18s; position:relative;
+  }
+  .topbar-icon-btn:hover { background:var(--cream); color:var(--ink); }
+  .notif-dot { width:7px; height:7px; background:var(--danger); border-radius:50%; position:absolute; top:6px; right:6px; border:1.5px solid var(--cream); }
+
+  .content { padding:28px 36px 48px; animation:fadeIn .35s ease both; flex:1; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+  .page-header {
+    margin-bottom:24px; display:flex; align-items:flex-start; justify-content:space-between;
+    gap:16px; flex-wrap:wrap;
+  }
+  .page-title  { font-family:'Lora',serif; font-size:24px; font-weight:700; color:var(--ink); letter-spacing:-0.3px; line-height:1.3; }
+  .page-title em { font-style:italic; color:var(--success); }
+  .page-sub {
+    font-size:13.5px; color:var(--ink-soft); margin-top:5px; font-weight:300;
+    max-width:760px; line-height:1.7;
+  }
+  .page-actions { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+
+  .btn {
+    display:inline-flex; align-items:center; gap:7px; padding:9px 16px; border-radius:var(--radius-sm);
+    font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer;
+    border:none; transition:all .18s; text-decoration:none; line-height:1;
+  }
+  .btn i { font-size:12px; }
+  .btn-primary { background:var(--sage); color:white; box-shadow:0 4px 14px rgba(57,114,184,0.28); }
+  .btn-primary:hover { background:var(--sage-light); transform:translateY(-1px); }
+  .btn-success { background:var(--success); color:white; box-shadow:0 4px 14px rgba(33,122,74,0.25); }
+  .btn-success:hover { background:#2a9460; transform:translateY(-1px); }
+  .btn-ghost { background:var(--white); color:var(--ink-soft); border:1.5px solid var(--cream-dark); }
+  .btn-ghost:hover { border-color:var(--sand); color:var(--ink); background:var(--cream); }
+  .btn-amber { background:var(--amber); color:white; box-shadow:0 4px 14px rgba(246,139,33,0.28); }
+  .btn-amber:hover { background:var(--amber-light); transform:translateY(-1px); }
+  .btn-xs { padding:4px 10px; font-size:11.5px; }
+  .btn-sm { padding:6px 12px; font-size:12px; }
+
+  .hero-bar {
+    background:linear-gradient(135deg, #217a4a 0%, #165d36 100%);
+    border-radius:var(--radius);
+    padding:20px 24px;
+    display:grid;
+    grid-template-columns:1.3fr 1fr;
+    gap:18px;
+    align-items:center;
+    box-shadow:0 4px 20px rgba(33,122,74,0.22);
+    margin-bottom:22px;
+  }
+  .hero-left h3 {
+    font-family:'Lora',serif; font-size:22px; font-weight:700; color:white; line-height:1.3;
+  }
+  .hero-left p {
+    margin-top:8px; font-size:13px; color:rgba(255,255,255,0.75); line-height:1.7;
+  }
+  .hero-tags { display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+  .hero-tag {
+    display:inline-flex; align-items:center; gap:6px;
+    padding:6px 10px; border-radius:20px;
+    background:rgba(255,255,255,0.12); color:white;
+    font-size:11.5px; font-weight:600;
+    border:1px solid rgba(255,255,255,0.12);
+  }
+  .hero-right {
+    display:grid; grid-template-columns:1fr 1fr; gap:10px;
+  }
+  .hero-mini {
+    background:rgba(255,255,255,0.10);
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:14px;
+    padding:14px 15px;
+  }
+  .hero-mini-label {
+    font-size:10px; color:rgba(255,255,255,0.62);
+    text-transform:uppercase; letter-spacing:1px; font-weight:700;
+    margin-bottom:6px;
+  }
+  .hero-mini-val {
+    font-family:'DM Mono',monospace; font-size:18px; font-weight:600; color:white;
+  }
+  .hero-mini-sub {
+    margin-top:5px; font-size:11px; color:rgba(255,255,255,0.62);
+  }
+
+  .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:22px; }
+  .stat-card {
+    background:var(--white); border:1px solid var(--cream-dark); border-radius:var(--radius);
+    padding:18px 20px; box-shadow:var(--shadow-sm); transition:all .2s; position:relative; overflow:hidden;
+  }
+  .stat-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); }
+  .stat-card::after {
+    content:''; position:absolute; bottom:0; left:0; right:0; height:3px;
+    border-radius:0 0 var(--radius) var(--radius);
+  }
+  .stat-card.c-success::after { background:var(--success); }
+  .stat-card.c-sage::after    { background:var(--sage); }
+  .stat-card.c-amber::after   { background:var(--amber); }
+  .stat-card.c-warning::after { background:var(--warning); }
+
+  .stat-icon {
+    width:36px; height:36px; border-radius:9px; display:flex; align-items:center; justify-content:center;
+    font-size:16px; margin-bottom:12px;
+  }
+  .stat-card.c-success .stat-icon { background:var(--success-dim); color:var(--success); }
+  .stat-card.c-sage .stat-icon    { background:var(--sage-dim); color:var(--sage); }
+  .stat-card.c-amber .stat-icon   { background:var(--amber-dim); color:var(--amber); }
+  .stat-card.c-warning .stat-icon { background:var(--warning-dim); color:var(--warning); }
+
+  .stat-label { font-size:10.5px; text-transform:uppercase; letter-spacing:1.2px; color:var(--ink-muted); font-weight:600; margin-bottom:3px; }
+  .stat-value { font-family:'DM Mono',monospace; font-size:20px; font-weight:500; color:var(--ink); letter-spacing:-0.5px; line-height:1; }
+  .stat-sub   { font-size:11px; color:var(--ink-muted); margin-top:5px; }
+
+  .context-bar {
+    background:var(--white); border:1px solid var(--cream-dark); border-radius:var(--radius);
+    padding:14px 22px; margin-bottom:20px; display:flex; align-items:center; gap:14px;
+    flex-wrap:wrap; box-shadow:var(--shadow-sm);
+  }
+  .context-label { font-size:12px; font-weight:700; color:var(--ink-muted); text-transform:uppercase; letter-spacing:1px; white-space:nowrap; }
+  .ctx-select {
+    padding:8px 14px; background:var(--cream); border:1.5px solid var(--cream-dark);
+    border-radius:var(--radius-sm); font-family:'Plus Jakarta Sans',sans-serif;
+    font-size:13.5px; font-weight:600; color:var(--ink); outline:none; cursor:pointer; transition:all .18s;
+  }
+  .ctx-select:focus { border-color:var(--sage); box-shadow:0 0 0 3px var(--sage-glow); }
+  .ctx-divider { width:1px; height:24px; background:var(--cream-dark); }
+  .ctx-total { margin-left:auto; display:flex; align-items:center; gap:10px; }
+  .ctx-total-label { font-size:12px; color:var(--ink-muted); }
+  .ctx-total-val { font-family:'DM Mono',monospace; font-size:18px; font-weight:600; color:var(--success); }
+
+  .sb2 { display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:20px; font-size:11px; font-weight:700; white-space:nowrap; }
+  .sb2-draft    { background:var(--cream-mid); color:var(--ink-muted); }
+  .sb2-review   { background:var(--amber-dim); color:#a05a00; }
+  .sb2-approved { background:var(--success-dim); color:var(--success); }
+  .sb2-rejected { background:var(--danger-dim); color:var(--danger); }
+  .sb2-dot { width:5px; height:5px; border-radius:50%; flex-shrink:0; }
+  .sb2-draft .sb2-dot    { background:var(--ink-muted); }
+  .sb2-review .sb2-dot   { background:var(--amber); }
+  .sb2-approved .sb2-dot { background:var(--success); }
+  .sb2-rejected .sb2-dot { background:var(--danger); }
+
+  .rka-layout { display:grid; grid-template-columns:300px 1fr; gap:18px; align-items:start; }
+  .tree-panel {
+    background:var(--white); border:1px solid var(--cream-dark); border-radius:var(--radius);
+    overflow:hidden; box-shadow:var(--shadow-sm); position:sticky; top:80px;
+  }
+  .tree-panel-head {
+    padding:14px 16px; border-bottom:1px solid var(--cream-mid);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .tree-panel-title { font-size:13px; font-weight:700; color:var(--ink); display:flex; align-items:center; gap:7px; }
+  .tree-body { max-height:calc(100vh - 200px); overflow-y:auto; }
+
+  .prog-item { border-bottom:1px solid var(--cream-mid); }
+  .prog-item:last-child { border-bottom:none; }
+  .prog-head { display:flex; align-items:center; gap:0; padding:0; cursor:pointer; transition:background .13s; }
+  .prog-head:hover { background:var(--cream); }
+  .prog-head.active { background:var(--success-dim); }
+  .prog-chevron {
+    width:36px; height:40px; display:flex; align-items:center; justify-content:center;
+    color:var(--ink-muted); font-size:10px; flex-shrink:0; transition:transform .18s;
+  }
+  .prog-chevron.open { transform:rotate(90deg); }
+  .prog-info { flex:1; padding:10px 10px 10px 0; min-width:0; }
+  .prog-code { font-family:'DM Mono',monospace; font-size:10px; color:var(--ink-muted); }
+  .prog-name { font-size:13px; font-weight:600; color:var(--ink); line-height:1.3; }
+  .prog-name.active-text { color:var(--success); }
+  .prog-pagu { font-family:'DM Mono',monospace; font-size:11px; color:var(--ink-muted); margin-top:2px; }
+  .prog-badge { flex-shrink:0; padding:0 10px; }
+
+  .keg-list { background:var(--cream); border-top:1px solid var(--cream-mid); }
+  .keg-item { display:flex; align-items:center; gap:0; padding:0; cursor:pointer; transition:background .13s; border-bottom:1px solid var(--cream-mid); }
+  .keg-item:last-child { border-bottom:none; }
+  .keg-item:hover { background:var(--cream-mid); }
+  .keg-item.active { background:var(--success-dim); }
+  .keg-bar { width:3px; height:100%; background:transparent; align-self:stretch; margin-left:36px; flex-shrink:0; }
+  .keg-item.active .keg-bar { background:var(--success); }
+  .keg-info { flex:1; padding:9px 10px 9px 8px; min-width:0; }
+  .keg-code { font-family:'DM Mono',monospace; font-size:10px; color:var(--ink-muted); }
+  .keg-name { font-size:12.5px; font-weight:500; color:var(--ink-soft); line-height:1.3; }
+  .keg-name.active-text { color:var(--success); font-weight:600; }
+
+  .detail-panel { display:flex; flex-direction:column; gap:16px; }
+
+  .summary-bar {
+    background:linear-gradient(135deg, #217a4a 0%, #165d36 100%);
+    border-radius:var(--radius); padding:18px 24px;
+    display:flex; align-items:center; gap:20px; flex-wrap:wrap;
+    box-shadow:0 4px 20px rgba(33,122,74,0.22);
+  }
+  .sum-item { display:flex; flex-direction:column; }
+  .sum-label { font-size:10.5px; color:rgba(255,255,255,0.65); text-transform:uppercase; letter-spacing:1px; font-weight:600; margin-bottom:3px; }
+  .sum-val { font-family:'DM Mono',monospace; font-size:18px; font-weight:600; color:white; }
+  .sum-div { width:1px; background:rgba(255,255,255,0.2); align-self:stretch; flex-shrink:0; }
+  .sum-progress { flex:1; min-width:160px; }
+  .sum-prog-labels { display:flex; justify-content:space-between; font-size:11px; color:rgba(255,255,255,0.72); margin-bottom:6px; }
+  .sum-prog-track { height:6px; background:rgba(255,255,255,0.2); border-radius:3px; }
+  .sum-prog-fill { height:100%; border-radius:3px; background:rgba(255,255,255,0.88); transition:width .6s cubic-bezier(.4,0,.2,1); }
+  .sum-actions { display:flex; gap:8px; margin-left:auto; flex-shrink:0; flex-wrap:wrap; }
+  .btn-white {
+    background:white; color:var(--success); border:none; padding:8px 16px; border-radius:var(--radius-sm);
+    font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:700; cursor:pointer;
+    display:flex; align-items:center; gap:7px; transition:all .18s; box-shadow:0 2px 8px rgba(0,0,0,0.1);
+  }
+  .btn-white:hover { transform:translateY(-1px); box-shadow:0 4px 14px rgba(0,0,0,0.15); }
+  .btn-white-outline {
+    background:transparent; color:white; border:1.5px solid rgba(255,255,255,0.4); padding:7px 14px;
+    border-radius:var(--radius-sm); font-family:'Plus Jakarta Sans',sans-serif; font-size:12.5px;
+    font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; transition:all .18s;
+  }
+  .btn-white-outline:hover { background:rgba(255,255,255,0.12); border-color:rgba(255,255,255,0.7); }
+
+  .tbl-card { background:var(--white); border:1px solid var(--cream-dark); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow-sm); }
+  .tbl-card-head {
+    padding:15px 20px; border-bottom:1px solid var(--cream-mid);
+    display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+  }
+  .tbl-card-title { font-size:14px; font-weight:700; color:var(--ink); display:flex; align-items:center; gap:8px; }
+  .tbl-card-sub { font-size:12px; color:var(--ink-muted); margin-top:2px; }
+
+  .income-table { width:100%; border-collapse:collapse; }
+  .income-table thead th {
+    padding:10px 14px; text-align:left; font-size:10px; font-weight:700;
+    text-transform:uppercase; letter-spacing:1.2px; color:var(--ink-muted);
+    background:var(--cream); border-bottom:1px solid var(--cream-dark); white-space:nowrap;
+  }
+  .income-table thead th.right { text-align:right; }
+  .income-table tbody tr { border-bottom:1px solid var(--cream-mid); transition:background .12s; }
+  .income-table tbody tr:last-child { border-bottom:none; }
+  .income-table tbody tr:hover { background:rgba(33,122,74,0.025); }
+  .income-table tbody td { padding:11px 14px; font-size:13px; color:var(--ink-soft); vertical-align:middle; }
+  .income-table tbody td.right { text-align:right; }
+
+  .row-group { background:var(--cream-mid) !important; }
+  .row-group td {
+    padding:8px 14px; font-size:11px; font-weight:700;
+    text-transform:uppercase; letter-spacing:1px; color:var(--ink-mid);
+  }
+
+  .td-indent { padding-left:28px !important; }
+  .td-sub-item { font-size:12.5px; font-weight:500; color:var(--ink); }
+  .td-coa { font-family:'DM Mono',monospace; font-size:11.5px; color:var(--ink-muted); }
+  .td-mono { font-family:'DM Mono',monospace; font-size:13px; }
+  .td-rp { font-family:'DM Mono',monospace; font-size:13px; font-weight:600; color:var(--ink); }
+  .td-rp-success { color:var(--success); font-family:'DM Mono',monospace; font-size:13px; font-weight:700; }
+  .td-rp-danger { color:var(--danger); font-family:'DM Mono',monospace; font-size:13px; font-weight:700; }
+
+  .row-total { background:rgba(33,122,74,0.10) !important; }
+  .row-total td { font-weight:700; color:var(--success); font-size:13.5px; padding:13px 14px; }
+  .row-total td.td-rp { color:var(--success); font-size:15px; }
+
+  .act-btn {
+    width:28px; height:28px; border-radius:6px; border:1px solid var(--cream-dark); background:var(--white);
+    color:var(--ink-muted); display:inline-flex; align-items:center; justify-content:center; cursor:pointer;
+    font-size:11px; transition:all .15s;
+  }
+  .act-btn:hover { border-color:rgba(57,114,184,0.3); background:var(--sage-dim); color:var(--sage); }
+  .act-btn.danger:hover { border-color:var(--danger-bdr); background:var(--danger-dim); color:var(--danger); }
+
+  .add-row-btn {
+    display:flex; align-items:center; gap:8px; padding:10px 14px; border:1.5px dashed var(--cream-dark);
+    background:transparent; font-family:'Plus Jakarta Sans',sans-serif; font-size:12.5px; color:var(--ink-muted);
+    cursor:pointer; transition:all .18s; width:100%; text-align:left;
+  }
+  .add-row-btn:hover { border-color:var(--success); color:var(--success); background:var(--success-dim); }
+
+  .empty-pick { padding:80px 20px; text-align:center; }
+  .empty-pick-icon { font-size:42px; color:var(--cream-dark); margin-bottom:16px; }
+  .empty-pick-title { font-size:16px; font-weight:700; color:var(--ink-mid); margin-bottom:6px; }
+  .empty-pick-sub { font-size:13px; color:var(--ink-muted); }
+
+  .overlay-modal {
+    display:none; position:fixed; inset:0; background:rgba(26,35,51,0.4);
+    z-index:500; backdrop-filter:blur(4px); align-items:center; justify-content:center; padding:16px;
+  }
+  .overlay-modal.open { display:flex; }
+  .modal {
+    background:var(--white); border:1px solid var(--cream-dark); border-radius:var(--radius);
+    width:620px; max-width:100%; max-height:calc(100vh - 32px); overflow-y:auto;
+    box-shadow:var(--shadow-md); animation:modalIn .28s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes modalIn { from{opacity:0;transform:scale(.92) translateY(10px)} to{opacity:1;transform:scale(1) translateY(0)} }
+  .modal-header {
+    padding:22px 24px 18px; border-bottom:1px solid var(--cream-mid);
+    display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+  }
+  .modal-title { font-family:'Lora',serif; font-size:18px; font-weight:700; color:var(--ink); }
+  .modal-sub { font-size:12.5px; color:var(--ink-muted); margin-top:3px; }
+  .modal-close {
+    width:32px; height:32px; border-radius:8px; border:1px solid var(--cream-dark); background:transparent;
+    color:var(--ink-muted); cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center;
+    transition:all .15s; flex-shrink:0;
+  }
+  .modal-close:hover { background:var(--danger-dim); color:var(--danger); border-color:var(--danger-bdr); }
+  .modal-body { padding:22px 24px; }
+  .modal-footer { padding:16px 24px; border-top:1px solid var(--cream-mid); display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap; }
+
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+  .form-group { display:flex; flex-direction:column; gap:5px; margin-bottom:14px; }
+  .form-label { font-size:11.5px; font-weight:700; color:var(--ink-mid); letter-spacing:0.5px; text-transform:uppercase; }
+  .form-label .req { color:var(--danger); margin-left:2px; }
+  .form-input, .form-select, .form-textarea {
+    width:100%; padding:9px 12px; background:var(--cream); border:1.5px solid var(--cream-dark);
+    border-radius:var(--radius-sm); font-family:'Plus Jakarta Sans',sans-serif; font-size:13.5px;
+    color:var(--ink); outline:none; transition:all .18s;
+  }
+  .form-textarea { resize:vertical; min-height:70px; }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color:var(--sage); background:var(--white); box-shadow:0 0 0 3px var(--sage-glow); }
+
+  .toast-stack {
+    position:fixed; bottom:24px; right:24px; z-index:999;
+    display:flex; flex-direction:column; gap:8px; pointer-events:none;
+  }
+  .toast {
+    background:var(--ink); color:white; padding:12px 18px; border-radius:var(--radius-sm);
+    font-size:13px; font-weight:500; display:flex; align-items:center; gap:9px;
+    box-shadow:0 6px 24px rgba(0,0,0,0.2); pointer-events:all;
+    animation:toastIn .28s cubic-bezier(.34,1.56,.64,1); max-width:320px;
+  }
+  .toast.success { background:#1a5c36; }
+  .toast.warning { background:#7a4500; }
+  @keyframes toastIn { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:translateX(0)} }
+
+  ::-webkit-scrollbar { width:4px; height:4px; }
+  ::-webkit-scrollbar-track { background:transparent; }
+  ::-webkit-scrollbar-thumb { background:var(--cream-dark); border-radius:2px; }
+
+  @media(max-width:1200px){
+    .stats-row { grid-template-columns:repeat(2,1fr); }
+    .hero-bar { grid-template-columns:1fr; }
+  }
+  @media(max-width:1100px){
+    .rka-layout { grid-template-columns:1fr; }
+  }
+  @media(max-width:900px){
+    .main { margin-left:0 !important; }
+  }
+  @media(max-width:700px){
+    .content { padding:20px 16px 36px; }
+    .topbar { padding:12px 16px; }
+    .page-header { flex-direction:column; align-items:flex-start; }
+    .form-row { grid-template-columns:1fr; }
+    .summary-bar { flex-direction:column; align-items:flex-start; }
+    .stats-row { grid-template-columns:1fr; }
+    .hero-right { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body data-page="rkaincome">
+
+<div class="app-shell">
+  <div id="sb-root"></div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <span class="breadcrumb">
+          Sistem Anggaran
+          <span style="color:var(--cream-dark)">›</span>
+          Perencanaan
+          <span style="color:var(--cream-dark)">›</span>
+          <span class="breadcrumb-cur">RKA — Income</span>
+        </span>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-date" id="topbarDate"></div>
+        <div class="topbar-icon-btn"><i class="fa-solid fa-bell"></i><div class="notif-dot"></div></div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <div class="page-header">
+        <div>
+          <div class="page-title">Rencana Kerja & Anggaran <em>[INCOME]</em></div>
+          <div class="page-sub">
+            Rencana Kerja dan Anggaran (RKA) [INCOME] adalah modul yang berfungsi untuk menyusun dan mencatat
+            rencana pendapatan per program, di mana realisasi atau data aktual tidak diinput melalui middleware,
+            tetapi otomatis diambil dari COA pendapatan yang tercatat di Accurate. Setiap program pendapatan wajib
+            memiliki COA khusus agar proses pelacakan, pelaporan, dan perbandingan antara rencana dan realisasi
+            dapat dilakukan dengan akurat, terstruktur, dan sepenuhnya sinkron dengan sistem keuangan utama.
+          </div>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-ghost" onclick="exportIncomeCSV()"><i class="fa-solid fa-file-csv"></i> Export</button>
+          <button class="btn btn-amber" onclick="refreshAccurate()"><i class="fa-solid fa-rotate"></i> Refresh Accurate</button>
+          <button class="btn btn-success" onclick="openAddProgram()"><i class="fa-solid fa-plus"></i> Program Pendapatan</button>
+        </div>
+      </div>
+
+      <div class="hero-bar">
+        <div class="hero-left">
+          <h3>Rencana pendapatan terhubung langsung dengan COA Accurate.</h3>
+          <p>
+            Modul ini memisahkan proses perencanaan dengan realisasi. Tim hanya menyusun target pendapatan
+            berdasarkan program dan COA income, sedangkan nilai aktual ditarik otomatis dari Accurate agar
+            pelaporan lebih konsisten dan audit trail tetap terjaga.
+          </p>
+          <div class="hero-tags">
+            <span class="hero-tag"><i class="fa-solid fa-money-bill-trend-up"></i> Target Pendapatan</span>
+            <span class="hero-tag"><i class="fa-solid fa-link"></i> Sinkron COA Accurate</span>
+            <span class="hero-tag"><i class="fa-solid fa-scale-balanced"></i> Plan vs Actual</span>
+          </div>
+        </div>
+        <div class="hero-right">
+          <div class="hero-mini">
+            <div class="hero-mini-label">Planned Revenue</div>
+            <div class="hero-mini-val" id="heroPlan">—</div>
+            <div class="hero-mini-sub">Total target pendapatan</div>
+          </div>
+          <div class="hero-mini">
+            <div class="hero-mini-label">Actual Revenue</div>
+            <div class="hero-mini-val" id="heroActual">—</div>
+            <div class="hero-mini-sub">Dari Accurate</div>
+          </div>
+          <div class="hero-mini">
+            <div class="hero-mini-label">Achievement</div>
+            <div class="hero-mini-val" id="heroAchievement">—</div>
+            <div class="hero-mini-sub">Persentase capaian</div>
+          </div>
+          <div class="hero-mini">
+            <div class="hero-mini-label">Variance</div>
+            <div class="hero-mini-val" id="heroVariance">—</div>
+            <div class="hero-mini-sub">Selisih target vs realisasi</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card c-success">
+          <div class="stat-icon"><i class="fa-solid fa-folder-tree"></i></div>
+          <div class="stat-label">Total Program</div>
+          <div class="stat-value" id="statProgram">—</div>
+          <div class="stat-sub">Program pendapatan aktif</div>
+        </div>
+        <div class="stat-card c-sage">
+          <div class="stat-icon"><i class="fa-solid fa-diagram-project"></i></div>
+          <div class="stat-label">Total Kegiatan</div>
+          <div class="stat-value" id="statKegiatan">—</div>
+          <div class="stat-sub">Kegiatan pendukung pendapatan</div>
+        </div>
+        <div class="stat-card c-amber">
+          <div class="stat-icon"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+          <div class="stat-label">COA Terkait</div>
+          <div class="stat-value" id="statCoa">—</div>
+          <div class="stat-sub">COA income yang digunakan</div>
+        </div>
+        <div class="stat-card c-warning">
+          <div class="stat-icon"><i class="fa-solid fa-chart-line"></i></div>
+          <div class="stat-label">Capaian</div>
+          <div class="stat-value" id="statPct">—</div>
+          <div class="stat-sub">Realisasi terhadap target</div>
+        </div>
+      </div>
+
+      <div class="context-bar">
+        <span class="context-label">Tahun Anggaran</span>
+        <select class="ctx-select" id="ctxTahun" onchange="renderAll()">
+          <option value="2026">2026</option>
+          <option value="2025">2025</option>
+          <option value="2024">2024</option>
+        </select>
+
+        <div class="ctx-divider"></div>
+
+        <span class="context-label">Unit / UPT</span>
+        <select class="ctx-select" id="ctxUpt" onchange="renderAll()">
+          <option value="BPKD">Badan Pengelolaan Keuangan Daerah</option>
+          <option value="Dinas Pendidikan">Dinas Pendidikan dan Kebudayaan</option>
+          <option value="Dinas Kesehatan">Dinas Kesehatan</option>
+          <option value="Dinas PUPR">Dinas Pekerjaan Umum dan PR</option>
+        </select>
+
+        <div class="ctx-total">
+          <span class="ctx-total-label">Total Target</span>
+          <span class="ctx-total-val" id="ctxTotal">—</span>
+        </div>
+      </div>
+
+      <div class="rka-layout">
+        <div>
+          <div class="tree-panel">
+            <div class="tree-panel-head">
+              <div class="tree-panel-title">
+                <i class="fa-solid fa-sitemap" style="color:var(--success);font-size:12px;"></i>
+                Struktur Program Income
+              </div>
+              <button class="btn btn-ghost btn-xs" onclick="openAddProgram()">
+                <i class="fa-solid fa-plus"></i> Baru
+              </button>
+            </div>
+            <div class="tree-body" id="treeBody"></div>
+          </div>
+        </div>
+
+        <div class="detail-panel" id="detailPanel">
+          <div class="tbl-card">
+            <div class="empty-pick">
+              <div class="empty-pick-icon"><i class="fa-solid fa-hand-pointer"></i></div>
+              <div class="empty-pick-title">Pilih Program atau Kegiatan</div>
+              <div class="empty-pick-sub">Klik item di panel kiri untuk melihat target pendapatan, COA income, realisasi Accurate, dan selisih.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PROGRAM -->
+<div class="overlay-modal" id="modalProgram" onclick="closeModalIfBg(event,'modalProgram')">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="mProgTitle">Tambah Program Pendapatan</div>
+        <div class="modal-sub" id="mProgSub">Isi informasi program pendapatan</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modalProgram')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Kode Program <span class="req">*</span></label>
+          <input class="form-input" id="pKode" type="text" placeholder="mis. PI.01">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select class="form-select" id="pStatus">
+            <option value="Draft">Draft</option>
+            <option value="Review">Dalam Review</option>
+            <option value="Approved">Disetujui</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Nama Program <span class="req">*</span></label>
+        <input class="form-input" id="pNama" type="text" placeholder="Nama program pendapatan…">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Deskripsi / Sasaran</label>
+        <textarea class="form-textarea" id="pSasaran" placeholder="Tujuan program dan strategi pencapaian pendapatan…"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Indikator / Target</label>
+        <input class="form-input" id="pTarget" type="text" placeholder="mis. Capaian pendapatan 12 M per tahun">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalProgram')">Batal</button>
+      <button class="btn btn-success" onclick="saveProgram()"><i class="fa-solid fa-floppy-disk"></i> Simpan Program</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL KEGIATAN -->
+<div class="overlay-modal" id="modalKegiatan" onclick="closeModalIfBg(event,'modalKegiatan')">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="mKegTitle">Tambah Kegiatan Pendapatan</div>
+        <div class="modal-sub" id="mKegSub">Kegiatan pendukung program income</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modalKegiatan')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Kode Kegiatan <span class="req">*</span></label>
+          <input class="form-input" id="kKode" type="text" placeholder="mis. PI.01.K1">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Program Induk <span class="req">*</span></label>
+          <select class="form-select" id="kProgram"></select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Nama Kegiatan <span class="req">*</span></label>
+        <input class="form-input" id="kNama" type="text" placeholder="Nama kegiatan pendapatan…">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Penanggung Jawab</label>
+          <input class="form-input" id="kPic" type="text" placeholder="Nama PIC…">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Channel / Lokasi</label>
+          <input class="form-input" id="kLokasi" type="text" placeholder="Unit layanan / cabang / kanal…">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalKegiatan')">Batal</button>
+      <button class="btn btn-success" onclick="saveKegiatan()"><i class="fa-solid fa-floppy-disk"></i> Simpan Kegiatan</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ITEM INCOME -->
+<div class="overlay-modal" id="modalItem" onclick="closeModalIfBg(event,'modalItem')">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="mItemTitle">Tambah Item Pendapatan</div>
+        <div class="modal-sub" id="mItemSub">Target terhubung ke COA Accurate</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modalItem')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">COA Pendapatan <span class="req">*</span></label>
+          <select class="form-select" id="iCoa">
+            <option value="">— Pilih COA —</option>
+            <option value="4-1100">4-1100 Pendapatan Jasa Layanan</option>
+            <option value="4-1200">4-1200 Pendapatan Retribusi</option>
+            <option value="4-1300">4-1300 Pendapatan Kerja Sama</option>
+            <option value="4-1400">4-1400 Pendapatan Sewa</option>
+            <option value="4-1500">4-1500 Pendapatan Administrasi</option>
+            <option value="4-1600">4-1600 Pendapatan Lain-lain</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nama Item <span class="req">*</span></label>
+          <input class="form-input" id="iNama" type="text" placeholder="mis. Retribusi Pelayanan">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Target / Rencana (Rp) <span class="req">*</span></label>
+          <input class="form-input" id="iPlan" type="number" placeholder="0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Realisasi Accurate (Rp)</label>
+          <input class="form-input" id="iActual" type="number" placeholder="0">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Catatan</label>
+        <textarea class="form-textarea" id="iNote" placeholder="Catatan item pendapatan…"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalItem')">Batal</button>
+      <button class="btn btn-success" onclick="saveIncomeItem()"><i class="fa-solid fa-floppy-disk"></i> Simpan Item</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-stack" id="toastStack"></div>
+
+<script>
+let PROGRAMS = [
+  {
+    id:1, kode:'PI.01', nama:'Program Pendapatan Jasa Layanan', sasaran:'Meningkatkan pendapatan dari layanan administrasi dan operasional.', target:'Target tahunan 12 M', status:'Approved', upt:'BPKD', tahun:2026,
+    kegiatan:[
+      {
+        id:101, kode:'PI.01.K1', progId:1, nama:'Pendapatan Layanan Administrasi', lokasi:'Loket Pelayanan', pic:'Muhammad Iqbal',
+        items:[
+          { id:1001, coa:'4-1100', nama:'Jasa Layanan Dokumen', note:'Sinkron dari Accurate', plan:4000000000, actual:3750000000 },
+          { id:1002, coa:'4-1500', nama:'Biaya Administrasi', note:'Auto tarik COA Accurate', plan:1250000000, actual:1180000000 },
+        ],
+      },
+      {
+        id:102, kode:'PI.01.K2', progId:1, nama:'Pendapatan Sewa Fasilitas', lokasi:'Gedung Serbaguna', pic:'Endang S.',
+        items:[
+          { id:1003, coa:'4-1400', nama:'Sewa Aula', note:'Target tahunan sewa aula', plan:2750000000, actual:2100000000 },
+        ],
+      },
+    ],
+  },
+  {
+    id:2, kode:'PI.02', nama:'Program Pendapatan Retribusi', sasaran:'Mengoptimalkan penerimaan retribusi melalui kanal resmi.', target:'Target tahunan 8 M', status:'Review', upt:'BPKD', tahun:2026,
+    kegiatan:[
+      {
+        id:201, kode:'PI.02.K1', progId:2, nama:'Retribusi Pelayanan Umum', lokasi:'Unit Pelayanan', pic:'Dra. Endang',
+        items:[
+          { id:2001, coa:'4-1200', nama:'Retribusi Pelayanan', note:'Diambil otomatis dari Accurate', plan:3200000000, actual:2650000000 },
+          { id:2002, coa:'4-1600', nama:'Pendapatan Lain-lain Retribusi', note:'Perlu review mapping', plan:650000000, actual:420000000 },
+        ],
+      },
+    ],
+  },
+  {
+    id:3, kode:'PI.03', nama:'Program Kerja Sama & Kemitraan', sasaran:'Meningkatkan pendapatan dari kerja sama dan kemitraan daerah.', target:'Target tahunan 6 M', status:'Draft', upt:'Dinas Pendidikan', tahun:2026,
+    kegiatan:[
+      {
+        id:301, kode:'PI.03.K1', progId:3, nama:'Kerja Sama Sponsor Event', lokasi:'Event Pendidikan', pic:'Ahmad Fauzi',
+        items:[
+          { id:3001, coa:'4-1300', nama:'Sponsor Acara Pendidikan', note:'Masih draft target', plan:1800000000, actual:900000000 },
+        ],
+      },
+    ],
+  },
+];
+
+let state = {
+  openPrograms: new Set([1,2,3]),
+  selectedType: null,
+  selectedId: null,
+  editingProgId: null,
+  editingKegId: null,
+  editingItemId: null,
+};
+
+let activeKegiatanForItem = null;
+
+function fmtRp(n) {
+  if (!n) return 'Rp 0';
+  if (n >= 1000000000) return 'Rp ' + (n/1000000000).toFixed(2) + ' M';
+  if (n >= 1000000) return 'Rp ' + (n/1000000).toFixed(0) + ' jt';
+  if (n >= 1000) return 'Rp ' + Math.round(n/1000) + ' rb';
+  return 'Rp ' + n.toLocaleString('id-ID');
+}
+function fmtRpFull(n) { return 'Rp ' + (n || 0).toLocaleString('id-ID'); }
+function fmtRpShort(n) {
+  if (n >= 1000000000) return 'Rp ' + (n/1000000000).toFixed(2) + 'M';
+  if (n >= 1000000) return 'Rp ' + (n/1000000).toFixed(0) + 'jt';
+  return 'Rp ' + (n || 0).toLocaleString('id-ID');
+}
+function itemVariance(item) { return (item.actual || 0) - (item.plan || 0); }
+function itemAchievement(item) {
+  if (!item.plan || item.plan === 0) return 0;
+  return Math.round((item.actual || 0) / item.plan * 100);
+}
+function kegiatanPlan(keg) { return keg.items.reduce((s, i) => s + (i.plan || 0), 0); }
+function kegiatanActual(keg) { return keg.items.reduce((s, i) => s + (i.actual || 0), 0); }
+function programPlan(prog) { return prog.kegiatan.reduce((s, k) => s + kegiatanPlan(k), 0); }
+function programActual(prog) { return prog.kegiatan.reduce((s, k) => s + kegiatanActual(k), 0); }
+function getCtxUpt() { return document.getElementById('ctxUpt')?.value || 'BPKD'; }
+function getCtxTahun() { return parseInt(document.getElementById('ctxTahun')?.value || '2026'); }
+function getFilteredProgs() {
+  const upt = getCtxUpt();
+  const tahun = getCtxTahun();
+  return PROGRAMS.filter(p => p.upt === upt && p.tahun === tahun);
+}
+function getProgById(id) { return PROGRAMS.find(p => p.id === id); }
+function getKegById(id) {
+  for (const p of PROGRAMS) {
+    const k = p.kegiatan.find(x => x.id === id);
+    if (k) return k;
+  }
+  return null;
+}
+function getItemById(id) {
+  for (const p of PROGRAMS) {
+    for (const k of p.kegiatan) {
+      const item = k.items.find(x => x.id === id);
+      if (item) return item;
+    }
+  }
+  return null;
+}
+function statusBadge(s) {
+  const cls = {
+    Draft:'sb2-draft',
+    Review:'sb2-review',
+    Approved:'sb2-approved',
+    Rejected:'sb2-rejected'
+  };
+  return `<span class="sb2 ${cls[s] || 'sb2-draft'}"><span class="sb2-dot"></span>${s}</span>`;
+}
+
+function updateStats() {
+  const progs = getFilteredProgs();
+  const kegs = progs.flatMap(p => p.kegiatan);
+  const items = kegs.flatMap(k => k.items);
+  const plan = items.reduce((s, i) => s + (i.plan || 0), 0);
+  const actual = items.reduce((s, i) => s + (i.actual || 0), 0);
+  const achievement = plan ? Math.round(actual / plan * 100) : 0;
+  const variance = actual - plan;
+  const coaCount = new Set(items.map(i => i.coa).filter(Boolean)).size;
+
+  document.getElementById('statProgram').textContent = progs.length;
+  document.getElementById('statKegiatan').textContent = kegs.length;
+  document.getElementById('statCoa').textContent = coaCount;
+  document.getElementById('statPct').textContent = achievement + '%';
+  document.getElementById('ctxTotal').textContent = fmtRpShort(plan);
+
+  document.getElementById('heroPlan').textContent = fmtRpShort(plan);
+  document.getElementById('heroActual').textContent = fmtRpShort(actual);
+  document.getElementById('heroAchievement').textContent = achievement + '%';
+  document.getElementById('heroVariance').textContent = (variance >= 0 ? '+' : '') + fmtRpShort(variance);
+}
+
+function renderTree() {
+  const progs = getFilteredProgs();
+  const body = document.getElementById('treeBody');
+
+  if (!progs.length) {
+    body.innerHTML = `<div style="padding:32px 16px;text-align:center;font-size:13px;color:var(--ink-muted);">
+      Belum ada program income untuk UPT / tahun ini.<br>
+      <button class="btn btn-success btn-sm" style="margin-top:12px;" onclick="openAddProgram()"><i class="fa-solid fa-plus"></i> Tambah Program</button>
+    </div>`;
+    return;
+  }
+
+  body.innerHTML = progs.map(prog => {
+    const isOpen = state.openPrograms.has(prog.id);
+    const isSelProg = state.selectedType === 'program' && state.selectedId === prog.id;
+    const plan = programPlan(prog);
+    const actual = programActual(prog);
+
+    const kegHTML = prog.kegiatan.map(keg => {
+      const isSelKeg = state.selectedType === 'kegiatan' && state.selectedId === keg.id;
+      return `<div class="keg-item ${isSelKeg ? 'active' : ''}" onclick="selectKegiatan(${keg.id}); event.stopPropagation();">
+        <div class="keg-bar"></div>
+        <div class="keg-info">
+          <div class="keg-code">${keg.kode}</div>
+          <div class="keg-name ${isSelKeg ? 'active-text' : ''}">${keg.nama}</div>
+        </div>
+        <div style="padding-right:10px;font-family:'DM Mono',monospace;font-size:11px;color:var(--ink-muted);white-space:nowrap;">${fmtRpShort(kegiatanPlan(keg))}</div>
+      </div>`;
+    }).join('');
+
+    return `<div class="prog-item">
+      <div class="prog-head ${isSelProg ? 'active' : ''}" onclick="toggleProgram(${prog.id})">
+        <div class="prog-chevron ${isOpen ? 'open' : ''}"><i class="fa-solid fa-chevron-right"></i></div>
+        <div class="prog-info">
+          <div class="prog-code">${prog.kode}</div>
+          <div class="prog-name ${isSelProg ? 'active-text' : ''}">${prog.nama}</div>
+          <div class="prog-pagu">Plan ${fmtRpShort(plan)} · Actual ${fmtRpShort(actual)}</div>
+        </div>
+        <div class="prog-badge">${statusBadge(prog.status)}</div>
+      </div>
+      ${isOpen ? `<div class="keg-list">
+        ${kegHTML}
+        <div class="keg-item" onclick="openAddKegiatan(${prog.id}); event.stopPropagation();" style="border-top:1px dashed var(--cream-dark);opacity:.75;">
+          <div class="keg-bar"></div>
+          <div class="keg-info" style="padding:8px 10px 8px 8px;">
+            <div style="font-size:12px;color:var(--ink-muted);display:flex;align-items:center;gap:5px;">
+              <i class="fa-solid fa-plus" style="font-size:10px;"></i> Tambah Kegiatan
+            </div>
+          </div>
+        </div>
+      </div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function toggleProgram(id) {
+  if (state.openPrograms.has(id)) state.openPrograms.delete(id);
+  else state.openPrograms.add(id);
+  selectProgram(id);
+}
+function selectProgram(id) {
+  state.selectedType = 'program';
+  state.selectedId = id;
+  renderTree();
+  renderDetail();
+}
+function selectKegiatan(id) {
+  state.selectedType = 'kegiatan';
+  state.selectedId = id;
+  renderTree();
+  renderDetail();
+}
+
+function renderDetail() {
+  const panel = document.getElementById('detailPanel');
+
+  if (state.selectedType === 'program') {
+    const prog = getProgById(state.selectedId);
+    if (!prog) return;
+
+    const plan = programPlan(prog);
+    const actual = programActual(prog);
+    const pct = plan ? Math.round(actual / plan * 100) : 0;
+
+    panel.innerHTML = `
+      <div class="summary-bar">
+        <div style="flex-shrink:0;">
+          <div style="font-family:'Lora',serif;font-size:15px;font-weight:700;color:white;margin-bottom:3px;">${prog.nama}</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.7);">${prog.kode} · ${prog.kegiatan.length} Kegiatan</div>
+        </div>
+        <div class="sum-div"></div>
+        <div class="sum-item">
+          <div class="sum-label">Target</div>
+          <div class="sum-val">${fmtRpShort(plan)}</div>
+        </div>
+        <div class="sum-div"></div>
+        <div class="sum-item">
+          <div class="sum-label">Actual</div>
+          <div class="sum-val">${fmtRpShort(actual)}</div>
+        </div>
+        <div class="sum-div"></div>
+        <div class="sum-progress">
+          <div class="sum-prog-labels">
+            <span>Capaian</span>
+            <span>${pct}%</span>
+          </div>
+          <div class="sum-prog-track">
+            <div class="sum-prog-fill" style="width:${Math.min(pct,100)}%;"></div>
+          </div>
+        </div>
+        <div class="sum-actions">
+          ${statusBadge(prog.status)}
+          <button class="btn-white-outline" onclick="openEditProgram(${prog.id})"><i class="fa-solid fa-pen"></i> Edit</button>
+          <button class="btn-white" onclick="openAddKegiatan(${prog.id})"><i class="fa-solid fa-plus"></i> Kegiatan</button>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div style="background:var(--white);border:1px solid var(--cream-dark);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow-sm);">
+          <div style="font-size:11px;font-weight:700;color:var(--ink-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Sasaran Program</div>
+          <div style="font-size:13px;color:var(--ink-soft);line-height:1.6;">${prog.sasaran || '—'}</div>
+        </div>
+        <div style="background:var(--white);border:1px solid var(--cream-dark);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow-sm);">
+          <div style="font-size:11px;font-weight:700;color:var(--ink-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Indikator / Target</div>
+          <div style="font-size:13px;color:var(--ink-soft);line-height:1.6;">${prog.target || '—'}</div>
+        </div>
+      </div>
+
+      <div class="tbl-card">
+        <div class="tbl-card-head">
+          <div>
+            <div class="tbl-card-title"><i class="fa-solid fa-list-check" style="color:var(--success);font-size:13px;"></i>Daftar Kegiatan Pendapatan</div>
+            <div class="tbl-card-sub">${prog.kegiatan.length} kegiatan dalam program ini</div>
+          </div>
+          <button class="btn btn-success btn-sm" onclick="openAddKegiatan(${prog.id})">
+            <i class="fa-solid fa-plus"></i> Tambah Kegiatan
+          </button>
+        </div>
+
+        <div style="overflow-x:auto;">
+          <table class="income-table">
+            <thead>
+              <tr>
+                <th>Kode</th>
+                <th>Nama Kegiatan</th>
+                <th>PIC</th>
+                <th class="right">Target</th>
+                <th class="right">Actual</th>
+                <th class="right">Capaian</th>
+                <th class="right">Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${prog.kegiatan.map(keg => {
+                const planK = kegiatanPlan(keg);
+                const actualK = kegiatanActual(keg);
+                const pctK = planK ? Math.round(actualK / planK * 100) : 0;
+                return `
+                  <tr onclick="selectKegiatan(${keg.id})" style="cursor:pointer;">
+                    <td class="td-coa">${keg.kode}</td>
+                    <td style="font-weight:600;color:var(--ink);">${keg.nama}</td>
+                    <td style="font-size:12.5px;">${keg.pic || '—'}</td>
+                    <td class="right td-rp">${fmtRpShort(planK)}</td>
+                    <td class="right td-rp-success">${fmtRpShort(actualK)}</td>
+                    <td class="right td-mono">${pctK}%</td>
+                    <td style="text-align:right;white-space:nowrap;">
+                      <button class="act-btn" onclick="event.stopPropagation();openEditKegiatan(${keg.id})"><i class="fa-solid fa-pen"></i></button>
+                      <button class="act-btn danger" onclick="event.stopPropagation();deleteKegiatan(${keg.id})" style="margin-left:4px;"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                  </tr>`;
+              }).join('')}
+            </tbody>
+            <tfoot>
+              <tr class="row-total">
+                <td colspan="3">Total Program</td>
+                <td class="right td-rp">${fmtRpFull(plan)}</td>
+                <td class="right td-rp">${fmtRpFull(actual)}</td>
+                <td class="right">${pct}%</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    `;
+  } else if (state.selectedType === 'kegiatan') {
+    const keg = getKegById(state.selectedId);
+    if (!keg) return;
+    const prog = getProgById(keg.progId);
+    const plan = kegiatanPlan(keg);
+    const actual = kegiatanActual(keg);
+    const pct = plan ? Math.round(actual / plan * 100) : 0;
+
+    panel.innerHTML = `
+      <div class="summary-bar">
+        <div style="flex-shrink:0;min-width:0;">
+          <div style="font-size:11px;color:rgba(255,255,255,0.65);margin-bottom:3px;">${prog?.kode} — ${prog?.nama}</div>
+          <div style="font-family:'Lora',serif;font-size:15px;font-weight:700;color:white;">${keg.nama}</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:3px;">${keg.kode} · PIC: ${keg.pic || '—'} · ${keg.lokasi || '—'}</div>
+        </div>
+        <div class="sum-div"></div>
+        <div class="sum-item">
+          <div class="sum-label">Target</div>
+          <div class="sum-val">${fmtRpShort(plan)}</div>
+        </div>
+        <div class="sum-div"></div>
+        <div class="sum-item">
+          <div class="sum-label">Actual</div>
+          <div class="sum-val">${fmtRpShort(actual)}</div>
+        </div>
+        <div class="sum-div"></div>
+        <div class="sum-progress">
+          <div class="sum-prog-labels">
+            <span>Capaian</span>
+            <span>${pct}%</span>
+          </div>
+          <div class="sum-prog-track">
+            <div class="sum-prog-fill" style="width:${Math.min(pct,100)}%;"></div>
+          </div>
+        </div>
+        <div class="sum-actions">
+          <button class="btn-white-outline" onclick="refreshAccurate()"><i class="fa-solid fa-link"></i> Sync Accurate</button>
+          <button class="btn-white" onclick="openAddItem(${keg.id})"><i class="fa-solid fa-plus"></i> Item Income</button>
+        </div>
+      </div>
+
+      <div class="tbl-card">
+        <div class="tbl-card-head">
+          <div>
+            <div class="tbl-card-title"><i class="fa-solid fa-money-bill-trend-up" style="color:var(--success);font-size:13px;"></i>Rincian Item Pendapatan</div>
+            <div class="tbl-card-sub">Setiap item wajib memakai COA income yang sinkron dengan Accurate</div>
+          </div>
+          <button class="btn btn-success btn-sm" onclick="openAddItem(${keg.id})">
+            <i class="fa-solid fa-plus"></i> Item Pendapatan
+          </button>
+        </div>
+
+        <div style="overflow-x:auto;">
+          <table class="income-table">
+            <thead>
+              <tr>
+                <th style="width:120px;">COA</th>
+                <th>Item Pendapatan</th>
+                <th class="right" style="width:150px;">Target</th>
+                <th class="right" style="width:150px;">Actual Accurate</th>
+                <th class="right" style="width:120px;">Selisih</th>
+                <th class="right" style="width:90px;">Capaian</th>
+                <th class="right" style="width:80px;">Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${renderIncomeRows(keg)}
+            </tbody>
+          </table>
+        </div>
+
+        <button class="add-row-btn" onclick="openAddItem(${keg.id})">
+          <i class="fa-solid fa-plus-circle"></i> Tambah Item Pendapatan Baru
+        </button>
+      </div>
+    `;
+  }
+}
+
+function renderIncomeRows(keg) {
+  let html = '';
+
+  keg.items.forEach(item => {
+    const variance = itemVariance(item);
+    const achievement = itemAchievement(item);
+
+    html += `
+      <tr class="row-group">
+        <td colspan="2" style="display:flex;align-items:center;gap:8px;">
+          <span class="td-coa">${item.coa}</span>
+          <span style="font-size:12px;font-weight:700;color:var(--ink);">${item.nama}</span>
+          ${item.note ? `<span style="font-size:11px;color:var(--ink-muted);font-weight:400;">— ${item.note}</span>` : ''}
+        </td>
+        <td class="right td-rp">${fmtRpFull(item.plan)}</td>
+        <td class="right td-rp-success">${fmtRpFull(item.actual)}</td>
+        <td class="right ${variance >= 0 ? 'td-rp-success' : 'td-rp-danger'}">${variance >= 0 ? '+' : ''}${fmtRpFull(variance)}</td>
+        <td class="right td-mono">${achievement}%</td>
+        <td class="right" style="white-space:nowrap;">
+          <button class="act-btn" onclick="openEditItem(${item.id})"><i class="fa-solid fa-pen"></i></button>
+          <button class="act-btn danger" onclick="deleteIncomeItem(${keg.id},${item.id})" style="margin-left:3px;"><i class="fa-solid fa-trash"></i></button>
+        </td>
+      </tr>`;
+  });
+
+  const totalPlan = kegiatanPlan(keg);
+  const totalActual = kegiatanActual(keg);
+  const totalPct = totalPlan ? Math.round(totalActual / totalPlan * 100) : 0;
+
+  html += `
+    <tr class="row-total">
+      <td colspan="2">Total Kegiatan <span style="font-size:12px;font-weight:400;color:rgba(33,122,74,0.75);margin-left:8px;">${keg.nama}</span></td>
+      <td class="right td-rp">${fmtRpFull(totalPlan)}</td>
+      <td class="right td-rp">${fmtRpFull(totalActual)}</td>
+      <td class="right">${totalActual - totalPlan >= 0 ? '+' : ''}${fmtRpFull(totalActual - totalPlan)}</td>
+      <td class="right">${totalPct}%</td>
+      <td></td>
+    </tr>`;
+
+  return html;
+}
+
+function renderAll() {
+  updateStats();
+  renderTree();
+  if (state.selectedId) renderDetail();
+}
+
+function openAddProgram() {
+  state.editingProgId = null;
+  document.getElementById('mProgTitle').textContent = 'Tambah Program Pendapatan';
+  document.getElementById('mProgSub').textContent = 'Isi informasi program pendapatan';
+  document.getElementById('pKode').value = `PI.0${getFilteredProgs().length + 1}`;
+  document.getElementById('pNama').value = '';
+  document.getElementById('pSasaran').value = '';
+  document.getElementById('pTarget').value = '';
+  document.getElementById('pStatus').value = 'Draft';
+  openModal('modalProgram');
+}
+
+function openEditProgram(id) {
+  const p = getProgById(id);
+  if (!p) return;
+  state.editingProgId = id;
+  document.getElementById('mProgTitle').textContent = 'Edit Program Pendapatan';
+  document.getElementById('mProgSub').textContent = p.kode + ' — ' + p.nama;
+  document.getElementById('pKode').value = p.kode;
+  document.getElementById('pNama').value = p.nama;
+  document.getElementById('pSasaran').value = p.sasaran || '';
+  document.getElementById('pTarget').value = p.target || '';
+  document.getElementById('pStatus').value = p.status || 'Draft';
+  openModal('modalProgram');
+}
+
+function saveProgram() {
+  const kode = document.getElementById('pKode').value.trim();
+  const nama = document.getElementById('pNama').value.trim();
+
+  if (!kode || !nama) {
+    showToast('warning', 'fa-triangle-exclamation', 'Kode dan Nama Program wajib diisi.');
+    return;
+  }
+
+  const payload = {
+    kode,
+    nama,
+    sasaran: document.getElementById('pSasaran').value.trim(),
+    target: document.getElementById('pTarget').value.trim(),
+    status: document.getElementById('pStatus').value,
+    upt: getCtxUpt(),
+    tahun: getCtxTahun(),
+  };
+
+  if (state.editingProgId) {
+    const idx = PROGRAMS.findIndex(p => p.id === state.editingProgId);
+    if (idx >= 0) Object.assign(PROGRAMS[idx], payload);
+    showToast('success', 'fa-circle-check', 'Program pendapatan berhasil diperbarui.');
+  } else {
+    const newId = Math.max(0, ...PROGRAMS.map(p => p.id)) + 1;
+    PROGRAMS.push({ id:newId, ...payload, kegiatan:[] });
+    state.openPrograms.add(newId);
+    showToast('success', 'fa-circle-check', 'Program pendapatan berhasil ditambahkan.');
+  }
+
+  closeModal('modalProgram');
+  renderAll();
+}
+
+function populateProgSelect(selected) {
+  const sel = document.getElementById('kProgram');
+  sel.innerHTML = getFilteredProgs().map(p => `<option value="${p.id}" ${p.id === selected ? 'selected' : ''}>${p.kode} — ${p.nama}</option>`).join('');
+}
+
+function openAddKegiatan(progId) {
+  state.editingKegId = null;
+  populateProgSelect(progId);
+  const prog = getProgById(progId);
+  document.getElementById('mKegTitle').textContent = 'Tambah Kegiatan Pendapatan';
+  document.getElementById('mKegSub').textContent = 'Kegiatan pendukung program income';
+  document.getElementById('kKode').value = `${prog?.kode || 'PI.??'}.K${(prog?.kegiatan.length || 0) + 1}`;
+  document.getElementById('kNama').value = '';
+  document.getElementById('kPic').value = '';
+  document.getElementById('kLokasi').value = '';
+  openModal('modalKegiatan');
+}
+
+function openEditKegiatan(id) {
+  const keg = getKegById(id);
+  if (!keg) return;
+  state.editingKegId = id;
+  populateProgSelect(keg.progId);
+  document.getElementById('mKegTitle').textContent = 'Edit Kegiatan Pendapatan';
+  document.getElementById('mKegSub').textContent = keg.kode;
+  document.getElementById('kKode').value = keg.kode;
+  document.getElementById('kNama').value = keg.nama;
+  document.getElementById('kPic').value = keg.pic || '';
+  document.getElementById('kLokasi').value = keg.lokasi || '';
+  openModal('modalKegiatan');
+}
+
+function saveKegiatan() {
+  const kode = document.getElementById('kKode').value.trim();
+  const nama = document.getElementById('kNama').value.trim();
+  const progId = parseInt(document.getElementById('kProgram').value, 10);
+
+  if (!kode || !nama) {
+    showToast('warning', 'fa-triangle-exclamation', 'Kode dan Nama Kegiatan wajib diisi.');
+    return;
+  }
+
+  const prog = getProgById(progId);
+  if (!prog) return;
+
+  const payload = {
+    kode,
+    nama,
+    progId,
+    pic: document.getElementById('kPic').value.trim(),
+    lokasi: document.getElementById('kLokasi').value.trim(),
+  };
+
+  if (state.editingKegId) {
+    const idx = prog.kegiatan.findIndex(k => k.id === state.editingKegId);
+    if (idx >= 0) Object.assign(prog.kegiatan[idx], payload);
+    showToast('success', 'fa-circle-check', 'Kegiatan berhasil diperbarui.');
+  } else {
+    const newId = Date.now();
+    prog.kegiatan.push({ id:newId, ...payload, items:[] });
+    state.selectedType = 'kegiatan';
+    state.selectedId = newId;
+    showToast('success', 'fa-circle-check', 'Kegiatan pendapatan berhasil ditambahkan.');
+  }
+
+  closeModal('modalKegiatan');
+  renderAll();
+}
+
+function deleteKegiatan(id) {
+  const keg = getKegById(id);
+  if (!keg) return;
+  if (!confirm(`Hapus kegiatan "${keg.nama}"?`)) return;
+
+  const prog = getProgById(keg.progId);
+  if (!prog) return;
+
+  prog.kegiatan = prog.kegiatan.filter(k => k.id !== id);
+
+  if (state.selectedId === id) {
+    state.selectedType = 'program';
+    state.selectedId = keg.progId;
+  }
+
+  showToast('success', 'fa-trash', 'Kegiatan berhasil dihapus.');
+  renderAll();
+}
+
+function openAddItem(kegId) {
+  activeKegiatanForItem = kegId;
+  state.editingItemId = null;
+  document.getElementById('mItemTitle').textContent = 'Tambah Item Pendapatan';
+  document.getElementById('mItemSub').textContent = 'Target terhubung ke COA Accurate';
+  document.getElementById('iCoa').value = '';
+  document.getElementById('iNama').value = '';
+  document.getElementById('iPlan').value = '';
+  document.getElementById('iActual').value = '';
+  document.getElementById('iNote').value = '';
+  openModal('modalItem');
+}
+
+function openEditItem(id) {
+  const item = getItemById(id);
+  if (!item) return;
+
+  state.editingItemId = id;
+  document.getElementById('mItemTitle').textContent = 'Edit Item Pendapatan';
+  document.getElementById('mItemSub').textContent = item.nama;
+  document.getElementById('iCoa').value = item.coa || '';
+  document.getElementById('iNama').value = item.nama || '';
+  document.getElementById('iPlan').value = item.plan || 0;
+  document.getElementById('iActual').value = item.actual || 0;
+  document.getElementById('iNote').value = item.note || '';
+  openModal('modalItem');
+}
+
+function saveIncomeItem() {
+  const coa = document.getElementById('iCoa').value;
+  const nama = document.getElementById('iNama').value.trim();
+  const plan = parseFloat(document.getElementById('iPlan').value) || 0;
+  const actual = parseFloat(document.getElementById('iActual').value) || 0;
+
+  if (!coa || !nama || !plan) {
+    showToast('warning', 'fa-triangle-exclamation', 'COA, Nama Item, dan Target wajib diisi.');
+    return;
+  }
+
+  const payload = {
+    coa,
+    nama,
+    plan,
+    actual,
+    note: document.getElementById('iNote').value.trim(),
+  };
+
+  if (state.editingItemId) {
+    for (const p of PROGRAMS) {
+      for (const k of p.kegiatan) {
+        const idx = k.items.findIndex(i => i.id === state.editingItemId);
+        if (idx >= 0) {
+          Object.assign(k.items[idx], payload);
+          break;
+        }
+      }
+    }
+    showToast('success', 'fa-circle-check', 'Item pendapatan berhasil diperbarui.');
+  } else {
+    const keg = getKegById(activeKegiatanForItem);
+    if (keg) keg.items.push({ id:Date.now(), ...payload });
+    showToast('success', 'fa-circle-check', 'Item pendapatan berhasil ditambahkan.');
+  }
+
+  closeModal('modalItem');
+  renderAll();
+}
+
+function deleteIncomeItem(kegId, itemId) {
+  const keg = getKegById(kegId);
+  if (!keg) return;
+
+  const item = keg.items.find(i => i.id === itemId);
+  if (!confirm(`Hapus item "${item?.nama}"?`)) return;
+
+  keg.items = keg.items.filter(i => i.id !== itemId);
+  showToast('success', 'fa-trash', 'Item pendapatan berhasil dihapus.');
+  renderAll();
+}
+
+function refreshAccurate() {
+  for (const p of PROGRAMS) {
+    for (const k of p.kegiatan) {
+      for (const item of k.items) {
+        const bump = Math.round((item.plan || 0) * 0.03);
+        item.actual = Math.min(item.plan + bump, item.actual + bump);
+      }
+    }
+  }
+  renderAll();
+  showToast('success', 'fa-rotate', 'Data realisasi berhasil disegarkan dari Accurate.');
+}
+
+function exportIncomeCSV() {
+  const progs = getFilteredProgs();
+  const rows = [['Kode Program','Nama Program','Kode Kegiatan','Nama Kegiatan','COA','Item Pendapatan','Target','Actual Accurate','Variance','Achievement']];
+  progs.forEach(p => p.kegiatan.forEach(k => k.items.forEach(i => {
+    rows.push([
+      p.kode, p.nama,
+      k.kode, k.nama,
+      i.coa, i.nama,
+      i.plan, i.actual,
+      itemVariance(i),
+      itemAchievement(i) + '%'
+    ]);
+  })));
+
+  const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\\n');
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8;'}));
+  link.download = `RKA_Income_${getCtxUpt()}_${getCtxTahun()}.csv`;
+  link.click();
+
+  showToast('success', 'fa-file-csv', 'RKA Income berhasil diekspor.');
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function closeModalIfBg(e,id) { if (e.target === document.getElementById(id)) closeModal(id); }
+
+function showToast(type, icon, msg) {
+  const stack = document.getElementById('toastStack');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<i class="fa-solid ${icon}"></i><span>${msg}</span>`;
+  stack.appendChild(t);
+  setTimeout(() => {
+    t.style.cssText = 'opacity:0;transform:translateX(20px);transition:all .3s;';
+    setTimeout(() => t.remove(), 300);
+  }, 3500);
+}
+
+document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('id-ID',{
+  weekday:'short', day:'numeric', month:'long', year:'numeric'
+});
+
+renderAll();
+</script>
+
+<script src="sidebar.js"></script>
+</body>
+</html>
