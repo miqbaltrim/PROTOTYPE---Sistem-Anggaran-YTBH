@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Master COA — Sistem Anggaran</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:        #f4f7fc;
+    --cream-mid:    #e8eef8;
+    --cream-dark:   #d5e0f0;
+    --sand:         #c2d0e6;
+    --amber:        #F68B21;
+    --amber-light:  #ffaa50;
+    --amber-dim:    rgba(246,139,33,0.12);
+    --amber-glow:   rgba(246,139,33,0.22);
+    --sage:         #3972B8;
+    --sage-light:   #5a90d6;
+    --sage-dim:     rgba(57,114,184,0.1);
+    --sage-glow:    rgba(57,114,184,0.18);
+    --ink:          #1a2333;
+    --ink-mid:      #2e3f5c;
+    --ink-soft:     #5a6e8a;
+    --ink-muted:    #8fa0b8;
+    --white:        #ffffff;
+    --danger:       #d94040;
+    --danger-dim:   rgba(217,64,64,0.1);
+    --danger-bdr:   rgba(217,64,64,0.25);
+    --warning:      #c07010;
+    --warning-dim:  rgba(192,112,16,0.12);
+    --success:      #217a4a;
+    --success-dim:  rgba(33,122,74,0.1);
+    --radius:       16px;
+    --radius-sm:    10px;
+    --radius-xs:    7px;
+    --shadow-sm:    0 1px 4px rgba(57,114,184,0.07);
+    --shadow:       0 2px 12px rgba(57,114,184,0.1);
+    --shadow-md:    0 6px 28px rgba(57,114,184,0.14);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ══ SIDEBAR COMPONENT ══ */
+  .sb {
+    width: 240px; flex-shrink: 0;
+    background: var(--white);
+    border-right: 1px solid var(--cream-dark);
+    display: flex; flex-direction: column;
+    padding: 0 0 24px;
+    position: fixed; top:0; left:0; bottom:0;
+    z-index: 200;
+    transition: transform .3s cubic-bezier(.4,0,.2,1);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  .sb-logo { display:flex; align-items:center; gap:10px; padding:22px 22px 20px; border-bottom:1px solid var(--cream-mid); text-decoration:none; }
+  .sb-logo-mark { width:34px; height:34px; border-radius:9px; background:var(--sage); display:flex; align-items:center; justify-content:center; font-family:'Lora',serif; font-size:15px; font-weight:700; color:white; flex-shrink:0; box-shadow:0 3px 10px rgba(57,114,184,0.28); }
+  .sb-logo-text { font-family:'Lora',serif; font-size:15px; font-weight:700; color:var(--ink); letter-spacing:-0.2px; line-height:1.2; }
+  .sb-logo-sub  { font-size:10px; color:var(--ink-muted); font-weight:400; }
+  .sb-body { flex:1; overflow-y:auto; padding:12px 0; scrollbar-width:none; }
+  .sb-body::-webkit-scrollbar { display:none; }
+  .sb-section { padding:0 12px; margin-bottom:4px; }
+  .sb-section-label { font-size:10px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase; color:var(--ink-muted); padding:10px 10px 4px; display:block; }
+  .sb-item { display:flex; align-items:center; gap:10px; padding:10px; border-radius:var(--radius-sm); color:var(--ink-soft); font-size:13.5px; font-weight:500; cursor:pointer; transition:background .15s, color .15s; text-decoration:none; position:relative; white-space:nowrap; }
+  .sb-item-icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0; transition:background .15s; }
+  .sb-item:hover { background:var(--cream); color:var(--ink); }
+  .sb-item:hover .sb-item-icon { background:var(--cream-mid); }
+  .sb-item.active { background:var(--sage-dim); color:var(--sage); font-weight:600; }
+  .sb-item.active .sb-item-icon { background:rgba(57,114,184,0.12); color:var(--sage); }
+  .sb-item.active::before { content:''; position:absolute; left:-12px; top:22%; bottom:22%; width:3px; border-radius:0 3px 3px 0; background:var(--sage); }
+  .sb-badge { margin-left:auto; background:var(--danger); color:white; font-size:10px; font-weight:700; padding:2px 7px; border-radius:20px; line-height:1.5; }
+  .sb-divider { height:1px; background:var(--cream-mid); margin:8px 22px; }
+  .sb-footer { padding:14px 12px 0; border-top:1px solid var(--cream-mid); flex-shrink:0; }
+  .sb-user { display:flex; align-items:center; gap:10px; padding:10px; border-radius:var(--radius-sm); cursor:pointer; transition:background .15s; text-decoration:none; }
+  .sb-user:hover { background:var(--cream); }
+  .sb-avatar { width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,var(--sage),var(--amber)); display:flex; align-items:center; justify-content:center; font-family:'Lora',serif; font-size:13px; font-weight:700; color:white; flex-shrink:0; position:relative; }
+  .sb-avatar::after { content:''; position:absolute; bottom:0; right:0; width:8px; height:8px; border-radius:50%; background:#2da86e; border:2px solid var(--white); }
+  .sb-user-info { flex:1; min-width:0; }
+  .sb-user-name { font-size:13px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .sb-user-role { font-size:11px; color:var(--ink-muted); }
+  .sb-logout { width:28px; height:28px; border-radius:7px; border:1px solid var(--cream-dark); background:transparent; color:var(--ink-muted); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; transition:all .15s; flex-shrink:0; }
+  .sb-logout:hover { background:rgba(217,64,64,0.08); border-color:rgba(217,64,64,0.25); color:var(--danger); }
+  .sb-overlay { display:none; position:fixed; inset:0; background:rgba(26,35,51,0.45); backdrop-filter:blur(3px); z-index:199; opacity:0; transition:opacity .3s; }
+  .sb-overlay.show { opacity:1; }
+  .sb-toggle { display:none; position:fixed; top:14px; left:14px; width:38px; height:38px; z-index:300; border-radius:var(--radius-sm); border:1px solid var(--cream-dark); background:var(--white); cursor:pointer; align-items:center; justify-content:center; color:var(--ink-soft); font-size:15px; box-shadow:0 2px 8px rgba(57,114,184,0.1); transition:all .2s; }
+  .sb-toggle:hover { background:var(--cream); color:var(--ink); }
+  @media (max-width:900px) {
+    .sb { transform:translateX(-100%); box-shadow:none; }
+    .sb.is-open { transform:translateX(0); box-shadow:8px 0 32px rgba(26,35,51,0.15); }
+    .sb-overlay { display:block; }
+    .sb-toggle { display:inline-flex; }
+    .main { margin-left: 0 !important; }
+  }
+
+  /* ══ LAYOUT ══ */
+  .main {
+    margin-left: 240px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ══ TOPBAR ══ */
+  .topbar {
+    position: sticky; top:0; z-index:90;
+    background: rgba(244,247,252,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--cream-dark);
+    padding: 14px 36px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .topbar-left { display:flex; align-items:center; gap:12px; }
+  .breadcrumb { font-size:13px; color:var(--ink-muted); display:flex; align-items:center; gap:6px; }
+  .breadcrumb-cur { color:var(--ink); font-weight:600; }
+  .topbar-right { display:flex; align-items:center; gap:10px; }
+  .topbar-date { font-size:12.5px; color:var(--ink-muted); background:var(--cream-mid); padding:6px 12px; border-radius:20px; border:1px solid var(--cream-dark); }
+  .topbar-icon-btn { width:36px; height:36px; border-radius:var(--radius-sm); border:1px solid var(--cream-dark); background:var(--white); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink-soft); font-size:14px; transition:all .18s; position:relative; }
+  .topbar-icon-btn:hover { background:var(--cream); color:var(--ink); }
+  .notif-dot { width:7px; height:7px; background:var(--danger); border-radius:50%; position:absolute; top:6px; right:6px; border:1.5px solid var(--cream); }
+
+  /* ══ CONTENT ══ */
+  .content {
+    padding: 32px 36px 48px;
+    animation: fadeIn 0.35s ease both;
+    flex: 1;
+  }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+  /* ══ PAGE HEADER ══ */
+  .page-header { margin-bottom:28px; display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .page-title-block { }
+  .page-title {
+    font-family: 'Lora', serif;
+    font-size: 24px; font-weight:700; color:var(--ink);
+    letter-spacing:-0.3px; line-height:1.3;
+  }
+  .page-title em { font-style:italic; color:var(--sage); }
+  .page-sub { font-size:13.5px; color:var(--ink-soft); margin-top:5px; font-weight:300; max-width:560px; line-height:1.6; }
+
+  .page-actions { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+
+  /* ══ BUTTONS ══ */
+  .btn {
+    display:inline-flex; align-items:center; gap:7px;
+    padding:9px 16px; border-radius:var(--radius-sm);
+    font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:600;
+    cursor:pointer; border:none; transition:all .18s; text-decoration:none;
+  }
+  .btn i { font-size:12px; }
+  .btn-primary { background:var(--sage); color:white; box-shadow:0 4px 14px rgba(57,114,184,0.28); }
+  .btn-primary:hover { background:var(--sage-light); transform:translateY(-1px); }
+  .btn-ghost { background:var(--white); color:var(--ink-soft); border:1.5px solid var(--cream-dark); }
+  .btn-ghost:hover { border-color:var(--sand); color:var(--ink); background:var(--cream); }
+  .btn-amber { background:var(--amber); color:white; box-shadow:0 4px 14px rgba(246,139,33,0.28); }
+  .btn-amber:hover { background:var(--amber-light); transform:translateY(-1px); }
+  .btn-sm { padding:6px 12px; font-size:12px; }
+  .btn-danger-ghost { background:var(--white); color:var(--danger); border:1.5px solid var(--danger-bdr); }
+  .btn-danger-ghost:hover { background:var(--danger-dim); }
+
+  /* ══ STAT CARDS ROW ══ */
+  .stats-row {
+    display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px;
+  }
+  .stat-card {
+    background:var(--white); border:1px solid var(--cream-dark); border-radius:var(--radius);
+    padding:18px 20px; box-shadow:var(--shadow-sm); transition:all .2s;
+    animation: cardIn 0.4s ease both; position:relative; overflow:hidden;
+  }
+  .stat-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); }
+  .stat-card::after { content:''; position:absolute; bottom:0; left:0; right:0; height:3px; border-radius:0 0 var(--radius) var(--radius); }
+  .stat-card.c-sage::after   { background:var(--sage); }
+  .stat-card.c-amber::after  { background:var(--amber); }
+  .stat-card.c-success::after{ background:var(--success); }
+  .stat-card.c-warning::after{ background:var(--warning); }
+  .stat-card:nth-child(1) { animation-delay:.05s; }
+  .stat-card:nth-child(2) { animation-delay:.10s; }
+  .stat-card:nth-child(3) { animation-delay:.15s; }
+  .stat-card:nth-child(4) { animation-delay:.20s; }
+  @keyframes cardIn { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+  .stat-icon { width:36px; height:36px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:16px; margin-bottom:12px; }
+  .stat-card.c-sage   .stat-icon { background:var(--sage-dim);    color:var(--sage); }
+  .stat-card.c-amber  .stat-icon { background:var(--amber-dim);   color:var(--amber); }
+  .stat-card.c-success.stat-icon { background:var(--success-dim); color:var(--success); }
+  .stat-card.c-success .stat-icon { background:var(--success-dim); color:var(--success); }
+  .stat-card.c-warning .stat-icon { background:var(--warning-dim); color:var(--warning); }
+  .stat-label { font-size:11px; text-transform:uppercase; letter-spacing:1.2px; color:var(--ink-muted); font-weight:600; margin-bottom:4px; }
+  .stat-value { font-family:'DM Mono',monospace; font-size:22px; font-weight:500; color:var(--ink); letter-spacing:-0.5px; line-height:1; }
+  .stat-sub { font-size:11.5px; color:var(--ink-muted); margin-top:5px; }
+
+  /* ══ TOOLBAR (search + filters) ══ */
+  .toolbar {
+    display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap;
+  }
+  .search-wrap {
+    position:relative; flex:1; min-width:220px;
+  }
+  .search-icon { position:absolute; left:13px; top:50%; transform:translateY(-50%); font-size:13px; color:var(--ink-muted); pointer-events:none; }
+  .search-input {
+    width:100%; padding:9px 13px 9px 36px;
+    background:var(--white); border:1.5px solid var(--cream-dark); border-radius:var(--radius-sm);
+    font-family:'Plus Jakarta Sans',sans-serif; font-size:13.5px; color:var(--ink);
+    outline:none; transition:all .18s;
+  }
+  .search-input::placeholder { color:var(--ink-muted); }
+  .search-input:focus { border-color:var(--sage); box-shadow:0 0 0 3px var(--sage-glow); }
+  .filter-select {
+    padding:8px 12px; background:var(--white); border:1.5px solid var(--cream-dark);
+    border-radius:var(--radius-sm); font-family:'Plus Jakarta Sans',sans-serif;
+    font-size:13px; color:var(--ink-soft); outline:none; cursor:pointer; transition:all .18s;
+  }
+  .filter-select:focus { border-color:var(--sage); }
+  .toolbar-right { display:flex; gap:8px; margin-left:auto; }
+
+  /* ══ SYNC BANNER ══ */
+  .sync-banner {
+    background: linear-gradient(135deg, var(--sage) 0%, #2558a0 100%);
+    border-radius: var(--radius);
+    padding: 18px 24px;
+    margin-bottom: 20px;
+    display: flex; align-items: center; justify-content: space-between; gap:16px;
+    box-shadow: 0 4px 20px rgba(57,114,184,0.25);
+    animation: cardIn .4s ease both;
+  }
+  .sync-banner-left { display:flex; align-items:center; gap:14px; }
+  .sync-banner-icon { width:44px; height:44px; border-radius:12px; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; font-size:20px; color:white; flex-shrink:0; }
+  .sync-banner-text { }
+  .sync-banner-title { font-family:'Lora',serif; font-size:15px; font-weight:700; color:white; margin-bottom:3px; }
+  .sync-banner-sub { font-size:12px; color:rgba(255,255,255,0.72); }
+  .sync-banner-right { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+  .sync-info-pill { background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.2); border-radius:20px; padding:5px 13px; font-size:11.5px; color:rgba(255,255,255,0.9); font-weight:600; display:flex; align-items:center; gap:6px; }
+  .sync-dot { width:6px; height:6px; border-radius:50%; background:#4ade80; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+  .btn-sync { background:white; color:var(--sage); border:none; padding:9px 18px; border-radius:var(--radius-sm); font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:7px; transition:all .18s; box-shadow:0 2px 10px rgba(0,0,0,0.12); }
+  .btn-sync:hover { transform:translateY(-1px); box-shadow:0 4px 16px rgba(0,0,0,0.15); }
+  .btn-sync.syncing i { animation:spin 1s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  /* ══ ENTITY TABS ══ */
+  .entity-tabs { display:flex; gap:6px; margin-bottom:18px; flex-wrap:wrap; }
+  .entity-tab {
+    display:flex; align-items:center; gap:7px; padding:8px 14px;
+    border-radius:var(--radius-sm); font-size:13px; font-weight:500;
+    cursor:pointer; border:1.5px solid var(--cream-dark); background:var(--white);
+    color:var(--ink-soft); transition:all .15s; font-family:'Plus Jakarta Sans',sans-serif;
+  }
+  .entity-tab:hover { border-color:var(--sage); color:var(--sage); background:var(--sage-dim); }
+  .entity-tab.active { background:var(--sage); color:white; border-color:var(--sage); font-weight:600; }
+  .entity-tab .tab-count { font-size:10.5px; font-weight:700; padding:1px 6px; border-radius:10px; }
+  .entity-tab.active .tab-count { background:rgba(255,255,255,0.25); color:white; }
+  .entity-tab:not(.active) .tab-count { background:var(--cream-mid); color:var(--ink-muted); }
+
+  /* ══ TABLE CARD ══ */
+  .table-card {
+    background:var(--white); border:1px solid var(--cream-dark); border-radius:var(--radius);
+    overflow:hidden; box-shadow:var(--shadow-sm);
+  }
+  .table-card-header {
+    padding:16px 22px; border-bottom:1px solid var(--cream-mid);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .table-card-title { font-size:14px; font-weight:700; color:var(--ink); display:flex; align-items:center; gap:8px; }
+  .table-card-sub { font-size:12px; color:var(--ink-muted); margin-top:2px; }
+  .table-card-right { display:flex; align-items:center; gap:8px; }
+
+  /* ══ TABLE ══ */
+  .tbl-wrap { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; }
+  thead th {
+    padding:11px 16px; text-align:left;
+    font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:1.2px;
+    color:var(--ink-muted); background:var(--cream); border-bottom:1px solid var(--cream-dark);
+    white-space:nowrap;
+  }
+  thead th.sortable { cursor:pointer; user-select:none; }
+  thead th.sortable:hover { color:var(--sage); }
+  thead th.sort-asc i, thead th.sort-desc i { color:var(--sage); }
+  tbody tr { border-bottom:1px solid var(--cream-mid); transition:background .12s; }
+  tbody tr:last-child { border-bottom:none; }
+  tbody tr:hover { background:rgba(57,114,184,0.03); }
+  tbody td { padding:13px 16px; font-size:13.5px; color:var(--ink-soft); vertical-align:middle; }
+
+  /* cells */
+  .td-code { font-family:'DM Mono',monospace; font-size:13px; font-weight:500; color:var(--ink); letter-spacing:0.3px; }
+  .td-name { font-weight:600; color:var(--ink); font-size:13.5px; }
+  .td-name-sub { font-size:11.5px; color:var(--ink-muted); margin-top:2px; font-weight:400; }
+  .td-level { font-family:'DM Mono',monospace; font-size:12px; }
+
+  /* indent untuk tree */
+  .row-indent-0 .td-code { }
+  .row-indent-1 .td-name { padding-left:16px; }
+  .row-indent-2 .td-name { padding-left:32px; }
+  .row-indent-3 .td-name { padding-left:48px; }
+  .row-indent-4 .td-name { padding-left:60px; }
+
+  /* tree toggle */
+  .tree-toggle {
+    display:inline-flex; align-items:center; justify-content:center;
+    width:18px; height:18px; border-radius:4px; background:var(--cream-mid);
+    font-size:9px; color:var(--ink-muted); cursor:pointer; margin-right:6px;
+    flex-shrink:0; transition:all .15s; border:none;
+    vertical-align:middle;
+  }
+  .tree-toggle:hover { background:var(--sage-dim); color:var(--sage); }
+  .tree-toggle.expanded { background:var(--sage-dim); color:var(--sage); }
+  .tree-spacer { display:inline-block; width:24px; flex-shrink:0; }
+
+  /* type badge */
+  .type-badge {
+    display:inline-flex; align-items:center; padding:3px 9px;
+    border-radius:20px; font-size:11px; font-weight:600; letter-spacing:0.2px; white-space:nowrap;
+  }
+  .type-aset      { background:#e8f0fc; color:#2558a0; }
+  .type-kewajiban { background:#fce8e8; color:#b03030; }
+  .type-ekuitas   { background:#e8f8ef; color:#196040; }
+  .type-pendapatan{ background:#fff3e0; color:#a05a00; }
+  .type-beban     { background:#f3e8ff; color:#6030a0; }
+
+  /* normal/lawan */
+  .saldo-badge {
+    display:inline-flex; align-items:center; gap:4px;
+    font-size:11px; font-weight:600; padding:2px 8px; border-radius:6px;
+  }
+  .saldo-d { background:rgba(33,122,74,0.1); color:#196040; }
+  .saldo-k { background:rgba(217,64,64,0.1);  color:#b03030; }
+
+  /* entitas pill */
+  .entity-pill {
+    display:inline-flex; align-items:center; gap:4px; padding:2px 8px;
+    border-radius:20px; font-size:11px; font-weight:600;
+    background:var(--sage-dim); color:var(--sage); border:1px solid rgba(57,114,184,0.2);
+    margin:1px;
+  }
+
+  /* status */
+  .status-dot { width:7px; height:7px; border-radius:50%; display:inline-block; margin-right:5px; }
+  .status-aktif .status-dot  { background:#2da86e; }
+  .status-nonaktif .status-dot { background:var(--ink-muted); }
+  .status-baru .status-dot   { background:var(--amber); }
+
+  /* action buttons */
+  .act-btn {
+    width:30px; height:30px; border-radius:7px; border:1px solid var(--cream-dark);
+    background:var(--white); color:var(--ink-soft); display:inline-flex;
+    align-items:center; justify-content:center; cursor:pointer; font-size:12px;
+    transition:all .15s;
+  }
+  .act-btn:hover        { border-color:rgba(57,114,184,0.35); background:var(--sage-dim); color:var(--sage); }
+  .act-btn.danger:hover { border-color:var(--danger-bdr); background:var(--danger-dim); color:var(--danger); }
+
+  /* ══ PAGINATION ══ */
+  .pagination {
+    padding:14px 20px; border-top:1px solid var(--cream-mid);
+    display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+  }
+  .pagination-info { font-size:12.5px; color:var(--ink-muted); }
+  .pagination-btns { display:flex; gap:4px; }
+  .pg-btn {
+    width:32px; height:32px; border-radius:var(--radius-xs); border:1px solid var(--cream-dark);
+    background:var(--white); color:var(--ink-soft); display:flex; align-items:center;
+    justify-content:center; font-size:12.5px; cursor:pointer; transition:all .15s;
+    font-family:'Plus Jakarta Sans',sans-serif; font-weight:500;
+  }
+  .pg-btn:hover { background:var(--cream); color:var(--ink); }
+  .pg-btn.active { background:var(--sage); color:white; border-color:var(--sage); }
+  .pg-btn:disabled { opacity:.4; cursor:default; }
+
+  /* ══ EMPTY STATE ══ */
+  .empty-state { padding:64px 20px; text-align:center; }
+  .empty-icon { font-size:36px; color:var(--cream-dark); margin-bottom:14px; }
+  .empty-title { font-size:15px; font-weight:700; color:var(--ink-mid); margin-bottom:6px; }
+  .empty-sub { font-size:13px; color:var(--ink-muted); }
+
+  /* ══ MODAL ══ */
+  .overlay-modal {
+    display:none; position:fixed; inset:0;
+    background:rgba(26,35,51,0.4); z-index:500;
+    backdrop-filter:blur(4px); align-items:center; justify-content:center;
+  }
+  .overlay-modal.open { display:flex; }
+  .modal {
+    background:var(--white); border:1px solid var(--cream-dark); border-radius:var(--radius);
+    width:540px; max-width:calc(100vw - 32px); max-height:calc(100vh - 48px);
+    overflow-y:auto; box-shadow:var(--shadow-md);
+    animation:modalIn .28s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes modalIn { from{opacity:0;transform:scale(.92) translateY(10px)} to{opacity:1;transform:scale(1) translateY(0)} }
+  .modal-header { padding:22px 24px 18px; border-bottom:1px solid var(--cream-mid); display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+  .modal-title { font-family:'Lora',serif; font-size:19px; font-weight:700; color:var(--ink); }
+  .modal-sub { font-size:12.5px; color:var(--ink-muted); margin-top:3px; }
+  .modal-close { width:32px; height:32px; border-radius:8px; border:1px solid var(--cream-dark); background:transparent; color:var(--ink-muted); cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center; transition:all .15s; flex-shrink:0; }
+  .modal-close:hover { background:var(--danger-dim); color:var(--danger); border-color:var(--danger-bdr); }
+  .modal-body { padding:22px 24px; }
+  .modal-footer { padding:16px 24px; border-top:1px solid var(--cream-mid); display:flex; justify-content:flex-end; gap:10px; }
+
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+  .form-row.full { grid-template-columns:1fr; }
+  .form-group { display:flex; flex-direction:column; gap:5px; margin-bottom:14px; }
+  .form-label { font-size:11.5px; font-weight:700; color:var(--ink-mid); letter-spacing:0.5px; text-transform:uppercase; }
+  .form-label .req { color:var(--danger); margin-left:2px; }
+  .input-wrap { position:relative; }
+  .input-icon { position:absolute; left:12px; top:50%; transform:translateY(-50%); font-size:13px; color:var(--ink-muted); pointer-events:none; }
+  .form-input, .form-select {
+    width:100%; padding:9px 12px; background:var(--cream); border:1.5px solid var(--cream-dark);
+    border-radius:var(--radius-sm); font-family:'Plus Jakarta Sans',sans-serif;
+    font-size:13.5px; color:var(--ink); outline:none; transition:all .18s;
+  }
+  .form-input.has-icon { padding-left:36px; }
+  .form-input:focus, .form-select:focus { border-color:var(--sage); background:var(--white); box-shadow:0 0 0 3px var(--sage-glow); }
+  .form-hint { font-size:11.5px; color:var(--ink-muted); }
+  .form-section-title { font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink-muted); margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+  .form-section-title::after { content:''; flex:1; height:1px; background:var(--cream-mid); }
+
+  .checkbox-row { display:flex; align-items:center; gap:9px; cursor:pointer; }
+  .checkbox-row input[type=checkbox] { width:15px; height:15px; accent-color:var(--sage); cursor:pointer; }
+  .checkbox-label { font-size:13px; color:var(--ink-soft); }
+
+  /* ══ TOAST ══ */
+  .toast-stack { position:fixed; bottom:24px; right:24px; z-index:999; display:flex; flex-direction:column; gap:8px; pointer-events:none; }
+  .toast {
+    background:var(--ink); color:white; padding:12px 18px; border-radius:var(--radius-sm);
+    font-size:13px; font-weight:500; display:flex; align-items:center; gap:9px;
+    box-shadow:0 6px 24px rgba(0,0,0,0.2); pointer-events:all;
+    animation:toastIn .28s cubic-bezier(.34,1.56,.64,1);
+    max-width:320px;
+  }
+  @keyframes toastIn { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:translateX(0)} }
+  .toast.success { background:#1a5c36; }
+  .toast.warning { background:#7a4500; }
+  .toast i { font-size:14px; flex-shrink:0; }
+
+  /* ══ SCROLLBAR ══ */
+  ::-webkit-scrollbar { width:4px; height:4px; }
+  ::-webkit-scrollbar-track { background:transparent; }
+  ::-webkit-scrollbar-thumb { background:var(--cream-dark); border-radius:2px; }
+  ::-webkit-scrollbar-thumb:hover { background:var(--sand); }
+
+  /* ══ RESPONSIVE ══ */
+  @media (max-width:1100px) {
+    .stats-row { grid-template-columns:repeat(2,1fr); }
+  }
+  @media (max-width:700px) {
+    .content { padding:20px 16px 36px; }
+    .topbar { padding:12px 16px; }
+    .stats-row { grid-template-columns:repeat(2,1fr); }
+    .page-header { flex-direction:column; align-items:flex-start; }
+    .form-row { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body data-page="mastercoa">
+
+<div class="app-shell">
+  <div id="sb-root"></div>
+
+  <!-- ════ MAIN ════ -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <span class="breadcrumb">
+          Sistem Anggaran
+          <span style="color:var(--cream-dark)">›</span>
+          Master Data
+          <span style="color:var(--cream-dark)">›</span>
+          <span class="breadcrumb-cur">Master COA</span>
+        </span>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-date" id="topbarDate"></div>
+        <div class="topbar-icon-btn">
+          <i class="fa-solid fa-bell"></i>
+          <div class="notif-dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- PAGE HEADER -->
+      <div class="page-header">
+        <div class="page-title-block">
+          <div class="page-title">Master <em>COA</em></div>
+          <div class="page-sub">Chart of Accounts terkonsolidasi dari seluruh entitas terdaftar. Sinkronisasi otomatis memastikan setiap akun selaras di semua database entitas.</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-ghost" onclick="openImportModal()">
+            <i class="fa-solid fa-file-arrow-up"></i> Import COA
+          </button>
+          <button class="btn btn-primary" onclick="openAddModal()">
+            <i class="fa-solid fa-plus"></i> Tambah Akun
+          </button>
+        </div>
+      </div>
+
+      <!-- STAT CARDS -->
+      <div class="stats-row">
+        <div class="stat-card c-sage">
+          <div class="stat-icon"><i class="fa-solid fa-sitemap"></i></div>
+          <div class="stat-label">Total Akun</div>
+          <div class="stat-value" id="statTotal">—</div>
+          <div class="stat-sub">Dari semua entitas</div>
+        </div>
+        <div class="stat-card c-amber">
+          <div class="stat-icon"><i class="fa-solid fa-building"></i></div>
+          <div class="stat-label">Entitas Terdaftar</div>
+          <div class="stat-value" id="statEntitas">—</div>
+          <div class="stat-sub">Database aktif</div>
+        </div>
+        <div class="stat-card c-success">
+          <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
+          <div class="stat-label">Tersinkronisasi</div>
+          <div class="stat-value" id="statSynced">—</div>
+          <div class="stat-sub">Akun sudah sinkron</div>
+        </div>
+        <div class="stat-card c-warning">
+          <div class="stat-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+          <div class="stat-label">Perlu Sinkronisasi</div>
+          <div class="stat-value" id="statPending">—</div>
+          <div class="stat-sub">Belum diperbarui</div>
+        </div>
+      </div>
+
+      <!-- SYNC BANNER -->
+      <div class="sync-banner">
+        <div class="sync-banner-left">
+          <div class="sync-banner-icon"><i class="fa-solid fa-rotate"></i></div>
+          <div class="sync-banner-text">
+            <div class="sync-banner-title">Sinkronisasi Multi-Entitas</div>
+            <div class="sync-banner-sub" id="lastSyncText">Terakhir disinkronkan: Hari ini, 08:30 WIB · Seluruh entitas berhasil tersinkronisasi</div>
+          </div>
+        </div>
+        <div class="sync-banner-right">
+          <div class="sync-info-pill">
+            <span class="sync-dot"></span>
+            <span id="entityCount">5 Entitas Online</span>
+          </div>
+          <button class="btn-sync" id="btnSync" onclick="runSync()">
+            <i class="fa-solid fa-arrows-rotate"></i> Sinkronkan Sekarang
+          </button>
+        </div>
+      </div>
+
+      <!-- ENTITY TABS -->
+      <div class="entity-tabs" id="entityTabs">
+        <!-- rendered by JS -->
+      </div>
+
+      <!-- TOOLBAR -->
+      <div class="toolbar">
+        <div class="search-wrap">
+          <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+          <input class="search-input" id="searchInput" type="text" placeholder="Cari kode atau nama akun…" oninput="applyFilters()">
+        </div>
+        <select class="filter-select" id="filterTipe" onchange="applyFilters()">
+          <option value="">Semua Tipe</option>
+          <option value="Aset">Aset</option>
+          <option value="Kewajiban">Kewajiban</option>
+          <option value="Ekuitas">Ekuitas</option>
+          <option value="Pendapatan">Pendapatan</option>
+          <option value="Beban">Beban</option>
+        </select>
+        <select class="filter-select" id="filterSaldo" onchange="applyFilters()">
+          <option value="">Semua Saldo Normal</option>
+          <option value="D">Debet (D)</option>
+          <option value="K">Kredit (K)</option>
+        </select>
+        <select class="filter-select" id="filterStatus" onchange="applyFilters()">
+          <option value="">Semua Status</option>
+          <option value="Aktif">Aktif</option>
+          <option value="Nonaktif">Nonaktif</option>
+        </select>
+        <div class="toolbar-right">
+          <button class="btn btn-ghost btn-sm" onclick="exportCSV()">
+            <i class="fa-solid fa-file-csv"></i> Export
+          </button>
+          <button class="btn btn-ghost btn-sm" id="btnViewToggle" onclick="toggleView()">
+            <i class="fa-solid fa-list-tree"></i> Pohon
+          </button>
+        </div>
+      </div>
+
+      <!-- TABLE CARD -->
+      <div class="table-card">
+        <div class="table-card-header">
+          <div>
+            <div class="table-card-title">
+              <i class="fa-solid fa-table-list" style="color:var(--sage);font-size:13px;"></i>
+              Daftar Chart of Accounts
+            </div>
+            <div class="table-card-sub" id="tableSubtitle">Menampilkan semua akun</div>
+          </div>
+          <div class="table-card-right">
+            <button class="btn btn-ghost btn-sm" onclick="expandAll()">Buka Semua</button>
+            <button class="btn btn-ghost btn-sm" onclick="collapseAll()">Tutup Semua</button>
+          </div>
+        </div>
+
+        <div class="tbl-wrap">
+          <table id="coaTable">
+            <thead>
+              <tr>
+                <th class="sortable" data-col="kode" onclick="sortBy('kode')">
+                  Kode Akun <i class="fa-solid fa-sort" style="font-size:9px;margin-left:4px;"></i>
+                </th>
+                <th class="sortable" data-col="nama" onclick="sortBy('nama')">
+                  Nama Akun <i class="fa-solid fa-sort" style="font-size:9px;margin-left:4px;"></i>
+                </th>
+                <th>Tipe</th>
+                <th>Saldo Normal</th>
+                <th>Level</th>
+                <th>Entitas</th>
+                <th>Status</th>
+                <th style="text-align:right;">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="coaTbody">
+              <!-- rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <div id="emptyState" class="empty-state" style="display:none;">
+          <div class="empty-icon"><i class="fa-solid fa-filter-circle-xmark"></i></div>
+          <div class="empty-title">Tidak ada akun ditemukan</div>
+          <div class="empty-sub">Coba ubah filter atau kata kunci pencarian</div>
+        </div>
+
+        <div class="pagination" id="pagination">
+          <!-- rendered by JS -->
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app-shell -->
+
+<!-- ══════════ MODAL TAMBAH/EDIT ══════════ -->
+<div class="overlay-modal" id="modalForm" onclick="closeModalIfBg(event,'modalForm')">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modalFormTitle">Tambah Akun Baru</div>
+        <div class="modal-sub" id="modalFormSub">Isi detail akun yang akan ditambahkan ke COA</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modalForm')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-section-title">Identifikasi Akun</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Kode Akun <span class="req">*</span></label>
+          <div class="input-wrap">
+            <span class="input-icon"><i class="fa-solid fa-hashtag"></i></span>
+            <input class="form-input has-icon" id="fKode" type="text" placeholder="mis. 1-1100">
+          </div>
+          <span class="form-hint">Format: Tipe-Nomor (mis. 1-1100)</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Akun Induk</label>
+          <select class="form-select" id="fInduk">
+            <option value="">— Akun Utama (tidak ada induk) —</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nama Akun <span class="req">*</span></label>
+        <input class="form-input" id="fNama" type="text" placeholder="mis. Kas dan Setara Kas">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Deskripsi</label>
+          <input class="form-input" id="fDeskripsi" type="text" placeholder="Keterangan singkat akun">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tipe Akun <span class="req">*</span></label>
+          <select class="form-select" id="fTipe" onchange="autoSaldo()">
+            <option value="">— Pilih Tipe —</option>
+            <option value="Aset">Aset</option>
+            <option value="Kewajiban">Kewajiban</option>
+            <option value="Ekuitas">Ekuitas</option>
+            <option value="Pendapatan">Pendapatan</option>
+            <option value="Beban">Beban</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Saldo Normal <span class="req">*</span></label>
+          <select class="form-select" id="fSaldo">
+            <option value="D">Debet (D)</option>
+            <option value="K">Kredit (K)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select class="form-select" id="fStatus">
+            <option value="Aktif">Aktif</option>
+            <option value="Nonaktif">Nonaktif</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-section-title" style="margin-top:6px;">Entitas</div>
+      <div class="form-group">
+        <label class="form-label">Terapkan ke Entitas <span class="req">*</span></label>
+        <div id="entityCheckboxes" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:4px;">
+          <!-- rendered by JS -->
+        </div>
+        <span class="form-hint" style="margin-top:6px;">Pilih entitas yang menggunakan akun ini</span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalForm')">Batal</button>
+      <button class="btn btn-primary" onclick="saveAccount()"><i class="fa-solid fa-floppy-disk"></i> Simpan Akun</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ MODAL IMPORT ══════════ -->
+<div class="overlay-modal" id="modalImport" onclick="closeModalIfBg(event,'modalImport')">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Import COA</div>
+        <div class="modal-sub">Unggah file CSV atau Excel berisi daftar akun</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modalImport')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div style="border:2px dashed var(--cream-dark);border-radius:var(--radius);padding:36px 24px;text-align:center;cursor:pointer;transition:border-color .18s;" id="dropzone"
+           onclick="document.getElementById('fileInput').click()"
+           ondragover="event.preventDefault();this.style.borderColor='var(--sage)'"
+           ondragleave="this.style.borderColor='var(--cream-dark)'">
+        <div style="font-size:28px;color:var(--sage-light);margin-bottom:10px;"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+        <div style="font-size:14px;font-weight:600;color:var(--ink-mid);">Klik atau seret file ke sini</div>
+        <div style="font-size:12.5px;color:var(--ink-muted);margin-top:4px;">Format: .csv, .xlsx · Maks 10 MB</div>
+        <input type="file" id="fileInput" accept=".csv,.xlsx" style="display:none" onchange="handleFile(this)">
+      </div>
+      <div id="filePreview" style="display:none;margin-top:16px;">
+        <div style="background:var(--success-dim);border:1px solid rgba(33,122,74,0.2);border-radius:var(--radius-sm);padding:12px 16px;display:flex;align-items:center;gap:10px;">
+          <i class="fa-solid fa-file-csv" style="color:var(--success);font-size:18px;"></i>
+          <div style="flex:1;">
+            <div style="font-size:13px;font-weight:600;color:var(--ink)" id="fileName">file.csv</div>
+            <div style="font-size:11.5px;color:var(--ink-muted)" id="fileSize">0 KB</div>
+          </div>
+          <button style="background:none;border:none;color:var(--ink-muted);cursor:pointer;font-size:14px;" onclick="clearFile()">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+      <div style="margin-top:16px;">
+        <div class="form-group">
+          <label class="form-label">Terapkan ke Entitas</label>
+          <select class="form-select" id="importEntity">
+            <option value="all">Semua Entitas</option>
+          </select>
+        </div>
+        <div class="checkbox-row" style="margin-top:8px;">
+          <input type="checkbox" id="chkOverwrite">
+          <label class="checkbox-label" for="chkOverwrite">Timpa akun yang sudah ada (berdasarkan kode)</label>
+        </div>
+      </div>
+      <div style="margin-top:16px;background:var(--cream);border-radius:var(--radius-sm);padding:12px 16px;">
+        <div style="font-size:11.5px;font-weight:700;color:var(--ink-mid);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px;">Format kolom yang diperlukan</div>
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink-soft);line-height:1.8;">
+          kode_akun | nama_akun | tipe | saldo_normal | akun_induk | status
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalImport')">Batal</button>
+      <button class="btn btn-amber" onclick="processImport()"><i class="fa-solid fa-file-import"></i> Proses Import</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ MODAL DETAIL ══════════ -->
+<div class="overlay-modal" id="modalDetail" onclick="closeModalIfBg(event,'modalDetail')">
+  <div class="modal" style="width:480px;">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="detailTitle">Detail Akun</div>
+        <div class="modal-sub" id="detailSub"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modalDetail')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body" id="detailBody">
+      <!-- rendered by JS -->
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalDetail')">Tutup</button>
+      <button class="btn btn-primary" id="detailEditBtn" onclick="editFromDetail()"><i class="fa-solid fa-pen"></i> Edit Akun</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-stack" id="toastStack"></div>
+
+<script>
+// ══════════════════════════════════════════════
+//  DATA
+// ══════════════════════════════════════════════
+const ENTITIES = [
+  { id:'ENT-001', name:'PT Miteemid Utama',      db:'miteemid_main',   color:'#3972B8' },
+  { id:'ENT-002', name:'PT Miteemid Teknologi',   db:'miteemid_tech',   color:'#F68B21' },
+  { id:'ENT-003', name:'CV E-Warteg Indonesia',   db:'ewarteg_main',    color:'#217a4a' },
+  { id:'ENT-004', name:'PT Miteemid Digital',     db:'miteemid_digital',color:'#7a30c0' },
+  { id:'ENT-005', name:'Yayasan Anggaran Bersama',db:'yab_main',        color:'#c07010' },
+];
+
+// COA master data
+const COA_DATA = [
+  // ── ASET ──
+  { id:1,  kode:'1',      nama:'ASET',                         deskripsi:'Kelompok Aset',                  tipe:'Aset',       saldo:'D', level:0, induk:null, entitas:['ENT-001','ENT-002','ENT-003','ENT-004','ENT-005'], status:'Aktif'    },
+  { id:2,  kode:'1-1000', nama:'Aset Lancar',                  deskripsi:'Aset yang mudah dicairkan',      tipe:'Aset',       saldo:'D', level:1, induk:1,    entitas:['ENT-001','ENT-002','ENT-003','ENT-004','ENT-005'], status:'Aktif'    },
+  { id:3,  kode:'1-1100', nama:'Kas dan Setara Kas',           deskripsi:'Kas, rekening giro, deposito',   tipe:'Aset',       saldo:'D', level:2, induk:2,    entitas:['ENT-001','ENT-002','ENT-003','ENT-004','ENT-005'], status:'Aktif'    },
+  { id:4,  kode:'1-1110', nama:'Kas Besar',                    deskripsi:'Kas fisik di brankas',           tipe:'Aset',       saldo:'D', level:3, induk:3,    entitas:['ENT-001','ENT-002','ENT-003'],                    status:'Aktif'    },
+  { id:5,  kode:'1-1120', nama:'Kas Kecil (Petty Cash)',       deskripsi:'Kas untuk keperluan kecil',      tipe:'Aset',       saldo:'D', level:3, induk:3,    entitas:['ENT-001','ENT-002','ENT-003','ENT-004'],          status:'Aktif'    },
+  { id:6,  kode:'1-1130', nama:'Bank BCA',                     deskripsi:'Rekening operasional BCA',       tipe:'Aset',       saldo:'D', level:3, induk:3,    entitas:['ENT-001','ENT-002','ENT-004'],                    status:'Aktif'    },
+  { id:7,  kode:'1-1140', nama:'Bank Mandiri',                 deskripsi:'Rekening operasional Mandiri',   tipe:'Aset',       saldo:'D', level:3, induk:3,    entitas:['ENT-001','ENT-003','ENT-005'],                    status:'Aktif'    },
+  { id:8,  kode:'1-1200', nama:'Piutang Usaha',                deskripsi:'Tagihan kepada pelanggan',       tipe:'Aset',       saldo:'D', level:2, induk:2,    entitas:['ENT-001','ENT-002','ENT-003','ENT-004'],          status:'Aktif'    },
+  { id:9,  kode:'1-1210', nama:'Piutang Dagang',               deskripsi:'Piutang dari penjualan',         tipe:'Aset',       saldo:'D', level:3, induk:8,    entitas:['ENT-001','ENT-002','ENT-003'],                    status:'Aktif'    },
+  { id:10, kode:'1-1220', nama:'Piutang Karyawan',             deskripsi:'Pinjaman kepada karyawan',       tipe:'Aset',       saldo:'D', level:3, induk:8,    entitas:['ENT-001','ENT-002'],                              status:'Nonaktif' },
+  { id:11, kode:'1-1300', nama:'Persediaan',                   deskripsi:'Stok barang dagangan',           tipe:'Aset',       saldo:'D', level:2, induk:2,    entitas:['ENT-003','ENT-004'],                              status:'Aktif'    },
+  { id:12, kode:'1-1400', nama:'Biaya Dibayar Dimuka',         deskripsi:'Asuransi, sewa, dll',            tipe:'Aset',       saldo:'D', level:2, induk:2,    entitas:['ENT-001','ENT-002','ENT-005'],                    status:'Aktif'    },
+  { id:13, kode:'1-2000', nama:'Aset Tidak Lancar',            deskripsi:'Aset jangka panjang',            tipe:'Aset',       saldo:'D', level:1, induk:1,    entitas:['ENT-001','ENT-002','ENT-003','ENT-004','ENT-005'], status:'Aktif'    },
+  { id:14, kode:'1-2100', nama:'Aset Tetap',                   deskripsi:'Tanah, gedung, peralatan',       tipe:'Aset',       saldo:'D', level:2, induk:13,   entitas:['ENT-001','ENT-002','ENT-003','ENT-004'],          status:'Aktif'    },
+  { id:15, kode:'1-2110', nama:'Tanah',                        deskripsi:'Tanah milik perusahaan',         tipe:'Aset',       saldo:'D', level:3, induk:14,   entitas:['ENT-001'],                                        status:'Aktif'    },
+  { id:16, kode:'1-2120', nama:'Bangunan',                     deskripsi:'Gedung dan infrastruktur',       tipe:'Aset',       saldo:'D', level:3, induk:14,   entitas:['ENT-001','ENT-003'],                              status:'Aktif'    },
+  { id:17, kode:'1-2130', nama:'Peralatan & Inventaris',       deskripsi:'Komputer, furnitur, dst',        tipe:'Aset',       saldo:'D', level:3, induk:14,   entitas:['ENT-001','ENT-002','ENT-003','ENT-004'],          status:'Aktif'    },
+  { id:18, kode:'1-2200', nama:'Akumulasi Penyusutan',         deskripsi:'Pengurang nilai aset tetap',     tipe:'Aset',       saldo:'K', level:2, induk:13,   entitas:['ENT-001','ENT-002','ENT-003','ENT-004'],          status:'Aktif'    },
+  // ── KEWAJIBAN ──
+  { id:20, kode:'2',      nama:'KEWAJIBAN',                    deskripsi:'Kelompok Kewajiban',             tipe:'Kewajiban',  saldo:'K', level:0, induk:null, entitas:['ENT-001','ENT-002','ENT-003','ENT-004','ENT-005'], status:'Aktif'    },
+  { id:21, kode:'2-1000', nama:'Kewajiban Lancar',             deskripsi:'Utang jatuh tempo < 1 tahun',    tipe:'Kewajiban',  saldo:'K', level:1, induk:20,   entitas:['ENT-001','ENT-002','ENT-003','ENT-004','ENT-005'], status:'Aktif'    },
+  { id:22, kode:'2-1100', nama:'Utang Usaha',                  deskripsi:'Tagihan dari pemasok',           tipe:'Kewajiban',  saldo:'K', level:2, induk:21,   entitas:['ENT-001','ENT-002','ENT-003','ENT-004'],          status:'Aktif'    },
+  { id:23, kode:'2-1200', nama:'Utang Pajak',                  deskripsi:'PPh, PPN terutang',              tipe:'Kewajiban',  saldo:'K', level:2, induk:21,   entitas:['ENT-001','ENT-002','ENT-003','ENT-004','ENT-005'], status:'Aktif'    },
+  { id:24, kode:'2-1300', nama:'Utang Gaji',                   deskripsi:'Gaji karyawan yang belum dibayar',tipe:'Kewajiban', saldo:'K', level:2, induk:21,   entitas:['ENT-001','ENT-002','ENT-003'],                    status:'Aktif'    },
+  { id:25, kode:'2-2000', nama:'Kewajiban Jangka Panjang',     deskripsi:'Utang bank, obligasi',           tipe:'Kewajiban',  saldo:'K', level:1, induk:20,   entitas:['ENT-001','ENT-003'],                              status:'Aktif'    },
+  { id:26, kode:'2-2100', nama:'Utang Bank Jangka Panjang',    deskripsi:'Pinjaman bank > 1 tahun',        tipe:'Kewajiban',  saldo:'K', level:2, induk:25,   entitas:['ENT-001','ENT-003'],                              status:'Aktif'    },
+  // ── EKUITAS ──
+  { id:30, kode:'3',      nama:'EKUITAS',                      deskripsi:'Kelompok Ekuitas / Modal',       tipe:'Ekuitas',    saldo:'K', level:0, induk:null, entitas:['ENT-001','ENT-002','ENT-003','ENT-004','ENT-005'], status:'Aktif'    },
+  { id:31, kode:'3-1000', nama:'Modal Disetor',                deskripsi:'Modal dari pemegang saham',      tipe:'Ekuitas',    saldo:'K', level:1, induk:30,   entitas:['ENT-001','ENT-002','ENT-003','ENT-004'],          status:'Aktif'    },
+  { id:32, kode:'3-2000', nama:'Saldo Laba',                   deskripsi:'Laba ditahan',                   tipe:'Ekuitas',    saldo:'K', level:1, induk:30,   entitas:['ENT-001','ENT-002','ENT-003','ENT-004','ENT-005'], status:'Aktif'    },
+  { id:33, kode:'3-3000', nama:'Laba Tahun Berjalan',          deskripsi:'Laba periode ini',               tipe:'Ekuitas',    saldo:'K', level:1, induk:30,   entitas:['ENT-001','ENT-002','ENT-003','ENT-004','ENT-005'], status:'Aktif'    },
+  // ── PENDAPATAN ──
+  { id:40, kode:'4',      nama:'PENDAPATAN',                   deskripsi:'Kelompok Pendapatan',            tipe:'Pendapatan', saldo:'K', level:0, induk:null, entitas:['ENT-001','ENT-002','ENT-003','ENT-004','ENT-005'], status:'Aktif'    },
+  { id:41, kode:'4-1000', nama:'Pendapatan Usaha',             deskripsi:'Pendapatan dari kegiatan utama', tipe:'Pendapatan', saldo:'K', level:1, induk:40,   entitas:['ENT-001','ENT-002','ENT-003','ENT-004','ENT-005'], status:'Aktif'    },
+  { id:42, kode:'4-1100', nama:'Pendapatan Jasa',              deskripsi:'Fee project, konsultasi',        tipe:'Pendapatan', saldo:'K', level:2, induk:41,   entitas:['ENT-001','ENT-002','ENT-004'],                    status:'Aktif'    },
+  { id:43, kode:'4-1200', nama:'Pendapatan Penjualan',         deskripsi:'Penjualan produk / makanan',     tipe:'Pendapatan', saldo:'K', level:2, induk:41,   entitas:['ENT-003'],                                        status:'Aktif'    },
+  { id:44, kode:'4-2000', nama:'Pendapatan Lain-lain',         deskripsi:'Bunga, sewa, dll',               tipe:'Pendapatan', saldo:'K', level:1, induk:40,   entitas:['ENT-001','ENT-002','ENT-005'],                    status:'Aktif'    },
+  // ── BEBAN ──
+  { id:50, kode:'5',      nama:'BEBAN',                        deskripsi:'Kelompok Beban',                 tipe:'Beban',      saldo:'D', level:0, induk:null, entitas:['ENT-001','ENT-002','ENT-003','ENT-004','ENT-005'], status:'Aktif'    },
+  { id:51, kode:'5-1000', nama:'Beban Operasional',            deskripsi:'Biaya operasi rutin',            tipe:'Beban',      saldo:'D', level:1, induk:50,   entitas:['ENT-001','ENT-002','ENT-003','ENT-004','ENT-005'], status:'Aktif'    },
+  { id:52, kode:'5-1100', nama:'Beban Gaji & Tunjangan',       deskripsi:'Gaji, BPJS, insentif',           tipe:'Beban',      saldo:'D', level:2, induk:51,   entitas:['ENT-001','ENT-002','ENT-003','ENT-004'],          status:'Aktif'    },
+  { id:53, kode:'5-1200', nama:'Beban Sewa',                   deskripsi:'Sewa kantor, gudang',            tipe:'Beban',      saldo:'D', level:2, induk:51,   entitas:['ENT-001','ENT-002','ENT-004'],                    status:'Aktif'    },
+  { id:54, kode:'5-1300', nama:'Beban Utilitas',               deskripsi:'Listrik, air, internet',         tipe:'Beban',      saldo:'D', level:2, induk:51,   entitas:['ENT-001','ENT-002','ENT-003','ENT-004','ENT-005'], status:'Aktif'    },
+  { id:55, kode:'5-1400', nama:'Beban Pemasaran',              deskripsi:'Iklan, promosi, event',          tipe:'Beban',      saldo:'D', level:2, induk:51,   entitas:['ENT-001','ENT-002','ENT-004'],                    status:'Aktif'    },
+  { id:56, kode:'5-1500', nama:'Beban Penyusutan',             deskripsi:'Depresiasi aset tetap',          tipe:'Beban',      saldo:'D', level:2, induk:51,   entitas:['ENT-001','ENT-002','ENT-003','ENT-004'],          status:'Aktif'    },
+  { id:57, kode:'5-2000', nama:'Beban Non-Operasional',        deskripsi:'Biaya di luar operasi',          tipe:'Beban',      saldo:'D', level:1, induk:50,   entitas:['ENT-001','ENT-002'],                              status:'Aktif'    },
+  { id:58, kode:'5-2100', nama:'Beban Bunga',                  deskripsi:'Bunga pinjaman',                 tipe:'Beban',      saldo:'D', level:2, induk:57,   entitas:['ENT-001','ENT-003'],                              status:'Aktif'    },
+  { id:59, kode:'5-2200', nama:'Beban Pajak Penghasilan',      deskripsi:'PPh badan',                      tipe:'Beban',      saldo:'D', level:2, induk:57,   entitas:['ENT-001','ENT-002','ENT-003','ENT-004'],          status:'Aktif'    },
+];
+
+// ══════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════
+let state = {
+  activeEntity : 'all',
+  sortCol      : 'kode',
+  sortDir      : 'asc',
+  search       : '',
+  filterTipe   : '',
+  filterSaldo  : '',
+  filterStatus : '',
+  collapsed    : new Set(),   // set of parent IDs that are collapsed
+  viewMode     : 'tree',      // 'tree' | 'flat'
+  page         : 1,
+  perPage      : 25,
+  editingId    : null,
+  detailId     : null,
+};
+
+// ══════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════
+function getEntityById(id) { return ENTITIES.find(e => e.id === id); }
+function getAccountById(id) { return COA_DATA.find(a => a.id === id); }
+
+function typeBadge(tipe) {
+  const map = {
+    'Aset'      : 'type-aset',
+    'Kewajiban' : 'type-kewajiban',
+    'Ekuitas'   : 'type-ekuitas',
+    'Pendapatan': 'type-pendapatan',
+    'Beban'     : 'type-beban',
+  };
+  return `<span class="type-badge ${map[tipe]||''}">${tipe}</span>`;
+}
+
+function saldoBadge(s) {
+  return s === 'D'
+    ? `<span class="saldo-badge saldo-d"><i class="fa-solid fa-arrow-left" style="font-size:9px;"></i> Debet</span>`
+    : `<span class="saldo-badge saldo-k"><i class="fa-solid fa-arrow-right" style="font-size:9px;"></i> Kredit</span>`;
+}
+
+function statusBadge(s) {
+  const cls = s === 'Aktif' ? 'status-aktif' : 'status-nonaktif';
+  return `<span class="${cls}"><span class="status-dot"></span>${s}</span>`;
+}
+
+function entityPills(entIDs) {
+  return entIDs.map(id => {
+    const e = getEntityById(id);
+    if (!e) return '';
+    const abbr = e.name.replace(/[^A-Z0-9]/g,'').slice(0,3) || e.id;
+    return `<span class="entity-pill" title="${e.name}" style="border-color:${e.color}22;color:${e.color};background:${e.color}12;">${abbr}</span>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════
+//  STATS
+// ══════════════════════════════════════════════
+function updateStats() {
+  const total   = COA_DATA.length;
+  const synced  = COA_DATA.filter(a => a.status === 'Aktif').length;
+  const pending = COA_DATA.filter(a => a.entitas.length < ENTITIES.length && a.level === 0).length + 2;
+  document.getElementById('statTotal').textContent   = total;
+  document.getElementById('statEntitas').textContent = ENTITIES.length;
+  document.getElementById('statSynced').textContent  = synced;
+  document.getElementById('statPending').textContent = pending;
+  document.getElementById('entityCount').textContent = ENTITIES.length + ' Entitas Online';
+}
+
+// ══════════════════════════════════════════════
+//  ENTITY TABS
+// ══════════════════════════════════════════════
+function renderEntityTabs() {
+  const tabs = document.getElementById('entityTabs');
+  let html = `<button class="entity-tab ${state.activeEntity==='all'?'active':''}" onclick="setEntity('all')">
+    <i class="fa-solid fa-layer-group"></i> Semua Entitas
+    <span class="tab-count">${COA_DATA.length}</span>
+  </button>`;
+  ENTITIES.forEach(e => {
+    const count = COA_DATA.filter(a => a.entitas.includes(e.id)).length;
+    const isActive = state.activeEntity === e.id;
+    const abbr = e.name.split(' ').map(w=>w[0]).join('').slice(0,4);
+    html += `<button class="entity-tab ${isActive?'active':''}" onclick="setEntity('${e.id}')" title="${e.name}">
+      ${abbr}
+      <span class="tab-count">${count}</span>
+    </button>`;
+  });
+  tabs.innerHTML = html;
+}
+
+function setEntity(id) {
+  state.activeEntity = id;
+  state.page = 1;
+  renderEntityTabs();
+  renderTable();
+}
+
+// ══════════════════════════════════════════════
+//  FILTER + SORT
+// ══════════════════════════════════════════════
+function applyFilters() {
+  state.search       = document.getElementById('searchInput').value.toLowerCase();
+  state.filterTipe   = document.getElementById('filterTipe').value;
+  state.filterSaldo  = document.getElementById('filterSaldo').value;
+  state.filterStatus = document.getElementById('filterStatus').value;
+  state.page = 1;
+  renderTable();
+}
+
+function getFilteredData() {
+  return COA_DATA.filter(a => {
+    if (state.activeEntity !== 'all' && !a.entitas.includes(state.activeEntity)) return false;
+    if (state.filterTipe   && a.tipe !== state.filterTipe)     return false;
+    if (state.filterSaldo  && a.saldo !== state.filterSaldo)   return false;
+    if (state.filterStatus && a.status !== state.filterStatus) return false;
+    if (state.search) {
+      const q = state.search;
+      if (!a.kode.toLowerCase().includes(q) && !a.nama.toLowerCase().includes(q) && !a.deskripsi.toLowerCase().includes(q)) return false;
+    }
+    return true;
+  });
+}
+
+function sortBy(col) {
+  if (state.sortCol === col) {
+    state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
+  } else {
+    state.sortCol = col;
+    state.sortDir = 'asc';
+  }
+  // update header icons
+  document.querySelectorAll('thead th').forEach(th => {
+    const i = th.querySelector('i');
+    if (!i) return;
+    th.classList.remove('sort-asc','sort-desc');
+    i.className = 'fa-solid fa-sort';
+    i.style.fontSize = '9px';
+    i.style.marginLeft = '4px';
+  });
+  const active = document.querySelector(`thead th[data-col="${col}"]`);
+  if (active) {
+    active.classList.add(state.sortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+    const i = active.querySelector('i');
+    if (i) i.className = `fa-solid fa-sort-${state.sortDir === 'asc' ? 'up' : 'down'}`;
+  }
+  renderTable();
+}
+
+// ══════════════════════════════════════════════
+//  TREE VIEW
+// ══════════════════════════════════════════════
+function buildTree(data) {
+  // For tree view, show hierarchy. For flat view, just show filtered.
+  if (state.viewMode === 'flat') {
+    const sorted = [...data].sort((a, b) => {
+      const av = a[state.sortCol], bv = b[state.sortCol];
+      return state.sortDir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+    });
+    return sorted;
+  }
+
+  // Tree mode: build in kode order, honoring collapsed state
+  const filtered = new Set(data.map(a => a.id));
+
+  // We need all ancestors of filtered items to be visible too
+  function getAncestors(item) {
+    const ancestors = [];
+    let cur = item;
+    while (cur.induk !== null) {
+      const parent = getAccountById(cur.induk);
+      if (parent) { ancestors.push(parent); cur = parent; }
+      else break;
+    }
+    return ancestors;
+  }
+
+  const visible = new Set(filtered);
+  if (state.search || state.filterTipe || state.filterSaldo || state.filterStatus || state.activeEntity !== 'all') {
+    data.forEach(a => getAncestors(a).forEach(p => visible.add(p.id)));
+  } else {
+    COA_DATA.forEach(a => visible.add(a.id));
+  }
+
+  // Check if a row should be hidden due to collapsed ancestor
+  function isHidden(item) {
+    let cur = item;
+    while (cur.induk !== null) {
+      if (state.collapsed.has(cur.induk)) return true;
+      const parent = getAccountById(cur.induk);
+      if (!parent) break;
+      cur = parent;
+    }
+    return false;
+  }
+
+  return COA_DATA
+    .filter(a => visible.has(a.id) && !isHidden(a))
+    .sort((a, b) => a.kode.localeCompare(b.kode, undefined, {numeric:true}));
+}
+
+function hasChildren(id) {
+  return COA_DATA.some(a => a.induk === id);
+}
+
+// ══════════════════════════════════════════════
+//  RENDER TABLE
+// ══════════════════════════════════════════════
+function renderTable() {
+  const filtered = getFilteredData();
+  const rows = buildTree(filtered);
+
+  // Subtitle
+  document.getElementById('tableSubtitle').textContent =
+    `Menampilkan ${rows.length} dari ${COA_DATA.length} akun` +
+    (state.activeEntity !== 'all' ? ` · ${getEntityById(state.activeEntity)?.name}` : '');
+
+  const tbody = document.getElementById('coaTbody');
+  const empty = document.getElementById('emptyState');
+
+  if (rows.length === 0) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    document.getElementById('pagination').innerHTML = '';
+    return;
+  }
+  empty.style.display = 'none';
+
+  // Pagination (for flat mode)
+  const startIdx = (state.page - 1) * state.perPage;
+  const pageRows = state.viewMode === 'flat'
+    ? rows.slice(startIdx, startIdx + state.perPage)
+    : rows; // tree shows all
+
+  tbody.innerHTML = pageRows.map(a => {
+    const isParent  = hasChildren(a.id);
+    const isCollapsed = state.collapsed.has(a.id);
+
+    // indent prefix
+    let prefix = '';
+    if (state.viewMode === 'tree') {
+      if (isParent) {
+        prefix = `<button class="tree-toggle ${!isCollapsed?'expanded':''}" onclick="toggleCollapse(${a.id},event)" title="${isCollapsed?'Buka':'Tutup'}">
+          <i class="fa-solid fa-chevron-${isCollapsed?'right':'down'}"></i>
+        </button>`;
+      } else {
+        prefix = '<span class="tree-spacer"></span>';
+      }
+    }
+
+    const isNew = a.id > 50; // demo
+    const rowClass = `row-indent-${Math.min(a.level,4)}`;
+
+    return `<tr class="${rowClass}" style="animation:fadeIn .3s ease both;">
+      <td class="td-code">${a.kode}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:2px;">
+          ${state.viewMode==='tree' ? prefix : ''}
+          <div>
+            <div class="td-name" style="${a.level===0?'font-family:\'Lora\',serif;font-size:14px;':''}">
+              ${a.nama}
+            </div>
+            ${a.deskripsi ? `<div class="td-name-sub">${a.deskripsi}</div>` : ''}
+          </div>
+        </div>
+      </td>
+      <td>${typeBadge(a.tipe)}</td>
+      <td>${saldoBadge(a.saldo)}</td>
+      <td class="td-level" style="color:var(--ink-muted);">L${a.level}</td>
+      <td>${entityPills(a.entitas)}</td>
+      <td>${statusBadge(a.status)}</td>
+      <td style="text-align:right;white-space:nowrap;">
+        <button class="act-btn" onclick="openDetail(${a.id})" title="Detail"><i class="fa-solid fa-eye"></i></button>
+        <button class="act-btn" onclick="openEditModal(${a.id})" title="Edit" style="margin-left:4px;"><i class="fa-solid fa-pen"></i></button>
+        <button class="act-btn danger" onclick="deleteAccount(${a.id})" title="Hapus" style="margin-left:4px;"><i class="fa-solid fa-trash"></i></button>
+      </td>
+    </tr>`;
+  }).join('');
+
+  renderPagination(rows.length);
+}
+
+function toggleCollapse(id, event) {
+  event.preventDefault();
+  event.stopPropagation();
+  if (state.collapsed.has(id)) {
+    state.collapsed.delete(id);
+  } else {
+    state.collapsed.add(id);
+  }
+  renderTable();
+}
+
+function expandAll()   { state.collapsed.clear(); renderTable(); }
+function collapseAll() {
+  COA_DATA.filter(a => hasChildren(a.id)).forEach(a => state.collapsed.add(a.id));
+  renderTable();
+}
+
+function toggleView() {
+  state.viewMode = state.viewMode === 'tree' ? 'flat' : 'tree';
+  const btn = document.getElementById('btnViewToggle');
+  btn.innerHTML = state.viewMode === 'tree'
+    ? '<i class="fa-solid fa-list-tree"></i> Pohon'
+    : '<i class="fa-solid fa-list"></i> Datar';
+  renderTable();
+}
+
+// ══════════════════════════════════════════════
+//  PAGINATION
+// ══════════════════════════════════════════════
+function renderPagination(total) {
+  if (state.viewMode === 'tree') {
+    document.getElementById('pagination').innerHTML = `
+      <div class="pagination-info">${total} akun ditampilkan (mode pohon)</div>
+      <div></div>`;
+    return;
+  }
+  const pages = Math.ceil(total / state.perPage);
+  const start = (state.page - 1) * state.perPage + 1;
+  const end   = Math.min(state.page * state.perPage, total);
+  let btns = '';
+  for (let i = 1; i <= pages; i++) {
+    if (pages > 7 && i > 2 && i < pages - 1 && Math.abs(i - state.page) > 1) {
+      if (i === 3 || i === pages - 2) btns += `<span class="pg-btn" style="pointer-events:none;">…</span>`;
+      continue;
+    }
+    btns += `<button class="pg-btn ${i===state.page?'active':''}" onclick="goPage(${i})">${i}</button>`;
+  }
+  document.getElementById('pagination').innerHTML = `
+    <div class="pagination-info">Menampilkan ${start}–${end} dari ${total} akun</div>
+    <div class="pagination-btns">
+      <button class="pg-btn" onclick="goPage(${state.page-1})" ${state.page<=1?'disabled':''}>
+        <i class="fa-solid fa-chevron-left" style="font-size:10px;"></i>
+      </button>
+      ${btns}
+      <button class="pg-btn" onclick="goPage(${state.page+1})" ${state.page>=pages?'disabled':''}>
+        <i class="fa-solid fa-chevron-right" style="font-size:10px;"></i>
+      </button>
+    </div>`;
+}
+
+function goPage(p) {
+  const total  = getFilteredData().length;
+  const pages  = Math.ceil(total / state.perPage);
+  state.page   = Math.max(1, Math.min(p, pages));
+  renderTable();
+}
+
+// ══════════════════════════════════════════════
+//  SYNC
+// ══════════════════════════════════════════════
+function runSync() {
+  const btn = document.getElementById('btnSync');
+  btn.classList.add('syncing');
+  btn.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> Menyinkronkan…';
+  btn.disabled  = true;
+  setTimeout(() => {
+    btn.classList.remove('syncing');
+    btn.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> Sinkronkan Sekarang';
+    btn.disabled  = false;
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
+    document.getElementById('lastSyncText').textContent =
+      `Terakhir disinkronkan: Hari ini, ${timeStr} WIB · Seluruh entitas berhasil tersinkronisasi`;
+    showToast('success', 'fa-circle-check', 'Sinkronisasi berhasil! Semua entitas diperbarui.');
+  }, 2800);
+}
+
+// ══════════════════════════════════════════════
+//  MODAL FORM
+// ══════════════════════════════════════════════
+function populateIndukSelect(excludeId) {
+  const sel = document.getElementById('fInduk');
+  sel.innerHTML = '<option value="">— Akun Utama —</option>';
+  COA_DATA
+    .filter(a => a.id !== excludeId && a.level < 3)
+    .sort((a,b) => a.kode.localeCompare(b.kode, undefined, {numeric:true}))
+    .forEach(a => {
+      sel.innerHTML += `<option value="${a.id}">${a.kode} — ${a.nama}</option>`;
+    });
+}
+
+function populateEntityCheckboxes(selectedIds = []) {
+  const wrap = document.getElementById('entityCheckboxes');
+  wrap.innerHTML = ENTITIES.map(e => `
+    <label class="checkbox-row" style="min-width:180px;">
+      <input type="checkbox" value="${e.id}" ${selectedIds.includes(e.id)?'checked':''}
+             style="accent-color:${e.color};">
+      <span class="checkbox-label">${e.name.replace(/^(PT|CV|Yayasan) /,'')}</span>
+    </label>`).join('');
+}
+
+function autoSaldo() {
+  const tipe = document.getElementById('fTipe').value;
+  const sel  = document.getElementById('fSaldo');
+  if (['Aset','Beban'].includes(tipe)) sel.value = 'D';
+  else sel.value = 'K';
+}
+
+function openAddModal() {
+  state.editingId = null;
+  document.getElementById('modalFormTitle').textContent = 'Tambah Akun Baru';
+  document.getElementById('modalFormSub').textContent   = 'Isi detail akun yang akan ditambahkan ke COA';
+  document.getElementById('fKode').value = '';
+  document.getElementById('fNama').value = '';
+  document.getElementById('fDeskripsi').value = '';
+  document.getElementById('fTipe').value = '';
+  document.getElementById('fSaldo').value = 'D';
+  document.getElementById('fStatus').value = 'Aktif';
+  populateIndukSelect(null);
+  populateEntityCheckboxes(ENTITIES.map(e => e.id));
+  openModal('modalForm');
+}
+
+function openEditModal(id) {
+  const a = getAccountById(id);
+  if (!a) return;
+  state.editingId = id;
+  document.getElementById('modalFormTitle').textContent = 'Edit Akun';
+  document.getElementById('modalFormSub').textContent   = `${a.kode} — ${a.nama}`;
+  document.getElementById('fKode').value = a.kode;
+  document.getElementById('fNama').value = a.nama;
+  document.getElementById('fDeskripsi').value = a.deskripsi;
+  document.getElementById('fTipe').value = a.tipe;
+  document.getElementById('fSaldo').value = a.saldo;
+  document.getElementById('fStatus').value = a.status;
+  populateIndukSelect(id);
+  document.getElementById('fInduk').value = a.induk || '';
+  populateEntityCheckboxes(a.entitas);
+  openModal('modalForm');
+}
+
+function saveAccount() {
+  const kode = document.getElementById('fKode').value.trim();
+  const nama  = document.getElementById('fNama').value.trim();
+  const tipe  = document.getElementById('fTipe').value;
+  if (!kode || !nama || !tipe) {
+    showToast('warning','fa-triangle-exclamation','Mohon isi Kode Akun, Nama Akun, dan Tipe.');
+    return;
+  }
+  const selectedEntitas = [...document.querySelectorAll('#entityCheckboxes input:checked')].map(i => i.value);
+  if (!selectedEntitas.length) {
+    showToast('warning','fa-triangle-exclamation','Pilih minimal satu entitas.');
+    return;
+  }
+  const indukVal = document.getElementById('fInduk').value;
+  const indukId  = indukVal ? parseInt(indukVal) : null;
+  const indukObj = indukId ? getAccountById(indukId) : null;
+  const newLevel = indukObj ? indukObj.level + 1 : 0;
+
+  if (state.editingId) {
+    const idx = COA_DATA.findIndex(a => a.id === state.editingId);
+    if (idx >= 0) {
+      Object.assign(COA_DATA[idx], {
+        kode, nama,
+        deskripsi : document.getElementById('fDeskripsi').value.trim(),
+        tipe, saldo : document.getElementById('fSaldo').value,
+        status    : document.getElementById('fStatus').value,
+        entitas   : selectedEntitas,
+        induk     : indukId,
+        level     : newLevel,
+      });
+    }
+    showToast('success','fa-circle-check','Akun berhasil diperbarui.');
+  } else {
+    const newId = Math.max(...COA_DATA.map(a=>a.id)) + 1;
+    COA_DATA.push({
+      id      : newId,
+      kode, nama,
+      deskripsi: document.getElementById('fDeskripsi').value.trim(),
+      tipe, saldo: document.getElementById('fSaldo').value,
+      level   : newLevel,
+      induk   : indukId,
+      entitas : selectedEntitas,
+      status  : document.getElementById('fStatus').value,
+    });
+    showToast('success','fa-circle-check','Akun baru berhasil ditambahkan.');
+  }
+  closeModal('modalForm');
+  updateStats();
+  renderTable();
+}
+
+// ══════════════════════════════════════════════
+//  DELETE
+// ══════════════════════════════════════════════
+function deleteAccount(id) {
+  const a = getAccountById(id);
+  if (!a) return;
+  if (hasChildren(id)) {
+    showToast('warning','fa-triangle-exclamation',`"${a.nama}" memiliki akun anak. Hapus anak terlebih dahulu.`);
+    return;
+  }
+  if (!confirm(`Hapus akun "${a.kode} — ${a.nama}"?\n\nTindakan ini tidak dapat dibatalkan.`)) return;
+  const idx = COA_DATA.findIndex(x => x.id === id);
+  if (idx >= 0) COA_DATA.splice(idx, 1);
+  showToast('success','fa-trash','Akun berhasil dihapus.');
+  updateStats();
+  renderTable();
+}
+
+// ══════════════════════════════════════════════
+//  DETAIL MODAL
+// ══════════════════════════════════════════════
+function openDetail(id) {
+  const a = getAccountById(id);
+  if (!a) return;
+  state.detailId = id;
+  document.getElementById('detailTitle').textContent = a.nama;
+  document.getElementById('detailSub').textContent   = `${a.kode} · ${a.tipe} · Level ${a.level}`;
+  document.getElementById('detailEditBtn').onclick   = () => { closeModal('modalDetail'); openEditModal(id); };
+
+  const parent = a.induk ? getAccountById(a.induk) : null;
+  document.getElementById('detailBody').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;">
+      <div style="background:var(--cream);border-radius:var(--radius-sm);padding:14px;">
+        <div style="font-size:10.5px;font-weight:700;color:var(--ink-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Kode Akun</div>
+        <div style="font-family:'DM Mono',monospace;font-size:18px;font-weight:500;color:var(--ink);">${a.kode}</div>
+      </div>
+      <div style="background:var(--cream);border-radius:var(--radius-sm);padding:14px;">
+        <div style="font-size:10.5px;font-weight:700;color:var(--ink-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Tipe & Saldo</div>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:4px;">${typeBadge(a.tipe)} ${saldoBadge(a.saldo)}</div>
+      </div>
+    </div>
+    <div style="margin-bottom:14px;">
+      <div style="font-size:11px;font-weight:700;color:var(--ink-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">Deskripsi</div>
+      <div style="font-size:13.5px;color:var(--ink-soft);">${a.deskripsi || '—'}</div>
+    </div>
+    <div style="margin-bottom:14px;">
+      <div style="font-size:11px;font-weight:700;color:var(--ink-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">Akun Induk</div>
+      <div style="font-size:13.5px;color:var(--ink-soft);">${parent ? `${parent.kode} — ${parent.nama}` : '— (Akun Utama)'}</div>
+    </div>
+    <div style="margin-bottom:14px;">
+      <div style="font-size:11px;font-weight:700;color:var(--ink-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">
+        Entitas (${a.entitas.length})
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        ${a.entitas.map(eid => {
+          const e = getEntityById(eid);
+          return e ? `<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--cream);border-radius:var(--radius-xs);">
+            <span style="width:8px;height:8px;border-radius:50%;background:${e.color};flex-shrink:0;"></span>
+            <span style="font-size:13px;font-weight:500;color:var(--ink);">${e.name}</span>
+            <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink-muted);margin-left:auto;">${e.db}</span>
+          </div>` : '';
+        }).join('')}
+        ${a.entitas.length < ENTITIES.length
+          ? `<div style="font-size:12px;color:var(--ink-muted);padding:4px 12px;">
+              + ${ENTITIES.length - a.entitas.length} entitas tidak menggunakan akun ini
+            </div>` : ''}
+      </div>
+    </div>
+    <div>
+      <div style="font-size:11px;font-weight:700;color:var(--ink-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">Status</div>
+      ${statusBadge(a.status)}
+    </div>`;
+  openModal('modalDetail');
+}
+
+// ══════════════════════════════════════════════
+//  IMPORT
+// ══════════════════════════════════════════════
+function openImportModal() {
+  // populate entity select
+  const sel = document.getElementById('importEntity');
+  sel.innerHTML = '<option value="all">Semua Entitas</option>' +
+    ENTITIES.map(e => `<option value="${e.id}">${e.name}</option>`).join('');
+  openModal('modalImport');
+}
+
+function handleFile(input) {
+  if (!input.files[0]) return;
+  const f = input.files[0];
+  document.getElementById('fileName').textContent = f.name;
+  document.getElementById('fileSize').textContent = (f.size / 1024).toFixed(1) + ' KB';
+  document.getElementById('filePreview').style.display = 'block';
+}
+function clearFile() {
+  document.getElementById('fileInput').value = '';
+  document.getElementById('filePreview').style.display = 'none';
+}
+function processImport() {
+  closeModal('modalImport');
+  showToast('success','fa-file-import','Import COA berhasil diproses (demo).');
+}
+
+// ══════════════════════════════════════════════
+//  EXPORT
+// ══════════════════════════════════════════════
+function exportCSV() {
+  const data = getFilteredData();
+  const header = ['Kode Akun','Nama Akun','Deskripsi','Tipe','Saldo Normal','Level','Entitas','Status'];
+  const rows = data.map(a => [
+    a.kode, a.nama, a.deskripsi, a.tipe, a.saldo, a.level,
+    a.entitas.map(id => getEntityById(id)?.name || id).join('; '),
+    a.status
+  ]);
+  const csv = [header, ...rows].map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+  const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
+  const url  = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href     = url;
+  link.download = 'master_coa.csv';
+  link.click();
+  URL.revokeObjectURL(url);
+  showToast('success','fa-file-csv',`Berhasil mengekspor ${data.length} akun ke CSV.`);
+}
+
+// ══════════════════════════════════════════════
+//  MODAL UTILS
+// ══════════════════════════════════════════════
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function closeModalIfBg(e, id) {
+  if (e.target === document.getElementById(id)) closeModal(id);
+}
+
+// ══════════════════════════════════════════════
+//  TOAST
+// ══════════════════════════════════════════════
+function showToast(type, icon, msg) {
+  const stack = document.getElementById('toastStack');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<i class="fa-solid ${icon}"></i><span>${msg}</span>`;
+  stack.appendChild(t);
+  setTimeout(() => { t.style.opacity='0'; t.style.transform='translateX(20px)'; t.style.transition='all .3s'; setTimeout(()=>t.remove(),300); }, 3500);
+}
+
+// ══════════════════════════════════════════════
+//  DATE
+// ══════════════════════════════════════════════
+function setDate() {
+  const d = new Date();
+  document.getElementById('topbarDate').textContent = d.toLocaleDateString('id-ID', {
+    weekday:'short', day:'numeric', month:'long', year:'numeric'
+  });
+}
+
+// ══════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════
+setDate();
+updateStats();
+renderEntityTabs();
+renderTable();
+</script>
+
+<script src="sidebar.js"></script>
+</body>
+</html>

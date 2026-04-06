@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Master Approval — Sistem Anggaran</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:        #f4f7fc;
+    --cream-mid:    #e8eef8;
+    --cream-dark:   #d5e0f0;
+    --sand:         #c2d0e6;
+    --amber:        #F68B21;
+    --amber-light:  #ffaa50;
+    --amber-dim:    rgba(246,139,33,0.12);
+    --amber-glow:   rgba(246,139,33,0.22);
+    --sage:         #3972B8;
+    --sage-light:   #5a90d6;
+    --sage-dim:     rgba(57,114,184,0.1);
+    --sage-glow:    rgba(57,114,184,0.18);
+    --ink:          #1a2333;
+    --ink-mid:      #2e3f5c;
+    --ink-soft:     #5a6e8a;
+    --ink-muted:    #8fa0b8;
+    --white:        #ffffff;
+    --danger:       #d94040;
+    --danger-dim:   rgba(217,64,64,0.1);
+    --danger-bdr:   rgba(217,64,64,0.25);
+    --warning:      #c07010;
+    --warning-dim:  rgba(192,112,16,0.12);
+    --success:      #217a4a;
+    --success-dim:  rgba(33,122,74,0.1);
+    --radius:       16px;
+    --radius-sm:    10px;
+    --radius-xs:    7px;
+    --shadow-sm:    0 1px 4px rgba(57,114,184,0.07);
+    --shadow:       0 2px 12px rgba(57,114,184,0.1);
+    --shadow-md:    0 6px 28px rgba(57,114,184,0.14);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--cream); color:var(--ink); min-height:100vh; }
+
+  /* ══ SIDEBAR ══ */
+  .sb { width:240px; flex-shrink:0; background:var(--white); border-right:1px solid var(--cream-dark); display:flex; flex-direction:column; padding:0 0 24px; position:fixed; top:0; left:0; bottom:0; z-index:200; transition:transform .3s cubic-bezier(.4,0,.2,1); font-family:'Plus Jakarta Sans',sans-serif; }
+  .sb-logo { display:flex; align-items:center; gap:10px; padding:22px 22px 20px; border-bottom:1px solid var(--cream-mid); text-decoration:none; }
+  .sb-logo-mark { width:34px; height:34px; border-radius:9px; background:var(--sage); display:flex; align-items:center; justify-content:center; font-family:'Lora',serif; font-size:15px; font-weight:700; color:white; flex-shrink:0; box-shadow:0 3px 10px rgba(57,114,184,0.28); }
+  .sb-logo-text { font-family:'Lora',serif; font-size:15px; font-weight:700; color:var(--ink); letter-spacing:-0.2px; line-height:1.2; }
+  .sb-logo-sub  { font-size:10px; color:var(--ink-muted); font-weight:400; }
+  .sb-body { flex:1; overflow-y:auto; padding:12px 0; scrollbar-width:none; }
+  .sb-body::-webkit-scrollbar { display:none; }
+  .sb-section { padding:0 12px; margin-bottom:4px; }
+  .sb-section-label { font-size:10px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase; color:var(--ink-muted); padding:10px 10px 4px; display:block; }
+  .sb-item { display:flex; align-items:center; gap:10px; padding:10px; border-radius:var(--radius-sm); color:var(--ink-soft); font-size:13.5px; font-weight:500; cursor:pointer; transition:background .15s,color .15s; text-decoration:none; position:relative; white-space:nowrap; }
+  .sb-item-icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0; transition:background .15s; }
+  .sb-item:hover { background:var(--cream); color:var(--ink); }
+  .sb-item:hover .sb-item-icon { background:var(--cream-mid); }
+  .sb-item.active { background:var(--sage-dim); color:var(--sage); font-weight:600; }
+  .sb-item.active .sb-item-icon { background:rgba(57,114,184,0.12); color:var(--sage); }
+  .sb-item.active::before { content:''; position:absolute; left:-12px; top:22%; bottom:22%; width:3px; border-radius:0 3px 3px 0; background:var(--sage); }
+  .sb-badge { margin-left:auto; background:var(--danger); color:white; font-size:10px; font-weight:700; padding:2px 7px; border-radius:20px; line-height:1.5; }
+  .sb-divider { height:1px; background:var(--cream-mid); margin:8px 22px; }
+  .sb-footer { padding:14px 12px 0; border-top:1px solid var(--cream-mid); flex-shrink:0; }
+  .sb-user { display:flex; align-items:center; gap:10px; padding:10px; border-radius:var(--radius-sm); cursor:pointer; transition:background .15s; text-decoration:none; }
+  .sb-user:hover { background:var(--cream); }
+  .sb-avatar { width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,var(--sage),var(--amber)); display:flex; align-items:center; justify-content:center; font-family:'Lora',serif; font-size:13px; font-weight:700; color:white; flex-shrink:0; position:relative; }
+  .sb-avatar::after { content:''; position:absolute; bottom:0; right:0; width:8px; height:8px; border-radius:50%; background:#2da86e; border:2px solid var(--white); }
+  .sb-user-info { flex:1; min-width:0; }
+  .sb-user-name { font-size:13px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .sb-user-role { font-size:11px; color:var(--ink-muted); }
+  .sb-logout { width:28px; height:28px; border-radius:7px; border:1px solid var(--cream-dark); background:transparent; color:var(--ink-muted); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; transition:all .15s; flex-shrink:0; }
+  .sb-logout:hover { background:rgba(217,64,64,0.08); border-color:rgba(217,64,64,0.25); color:var(--danger); }
+  .sb-overlay { display:none; position:fixed; inset:0; background:rgba(26,35,51,0.45); backdrop-filter:blur(3px); z-index:199; opacity:0; transition:opacity .3s; }
+  .sb-overlay.show { opacity:1; }
+  .sb-toggle { display:none; position:fixed; top:14px; left:14px; width:38px; height:38px; z-index:300; border-radius:var(--radius-sm); border:1px solid var(--cream-dark); background:var(--white); cursor:pointer; align-items:center; justify-content:center; color:var(--ink-soft); font-size:15px; box-shadow:0 2px 8px rgba(57,114,184,0.1); transition:all .2s; }
+  .sb-toggle:hover { background:var(--cream); color:var(--ink); }
+  @media(max-width:900px){
+    .sb{transform:translateX(-100%);box-shadow:none;}
+    .sb.is-open{transform:translateX(0);box-shadow:8px 0 32px rgba(26,35,51,0.15);}
+    .sb-overlay{display:block;} .sb-toggle{display:inline-flex;}
+    .main{margin-left:0!important;}
+  }
+
+  /* ══ LAYOUT ══ */
+  .main { margin-left:240px; min-height:100vh; display:flex; flex-direction:column; }
+
+  /* ══ TOPBAR ══ */
+  .topbar { position:sticky; top:0; z-index:90; background:rgba(244,247,252,0.92); backdrop-filter:blur(12px); border-bottom:1px solid var(--cream-dark); padding:14px 36px; display:flex; align-items:center; justify-content:space-between; }
+  .topbar-left { display:flex; align-items:center; gap:12px; }
+  .breadcrumb  { font-size:13px; color:var(--ink-muted); display:flex; align-items:center; gap:6px; }
+  .breadcrumb-cur { color:var(--ink); font-weight:600; }
+  .topbar-right { display:flex; align-items:center; gap:10px; }
+  .topbar-date  { font-size:12.5px; color:var(--ink-muted); background:var(--cream-mid); padding:6px 12px; border-radius:20px; border:1px solid var(--cream-dark); }
+  .topbar-icon-btn { width:36px; height:36px; border-radius:var(--radius-sm); border:1px solid var(--cream-dark); background:var(--white); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink-soft); font-size:14px; transition:all .18s; position:relative; }
+  .topbar-icon-btn:hover { background:var(--cream); color:var(--ink); }
+  .notif-dot { width:7px; height:7px; background:var(--danger); border-radius:50%; position:absolute; top:6px; right:6px; border:1.5px solid var(--cream); }
+
+  /* ══ CONTENT ══ */
+  .content { padding:32px 36px 48px; animation:fadeIn .35s ease both; flex:1; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ══ PAGE HEADER ══ */
+  .page-header { margin-bottom:28px; display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .page-title  { font-family:'Lora',serif; font-size:24px; font-weight:700; color:var(--ink); letter-spacing:-0.3px; line-height:1.3; }
+  .page-title em { font-style:italic; color:var(--sage); }
+  .page-sub    { font-size:13.5px; color:var(--ink-soft); margin-top:5px; font-weight:300; max-width:580px; line-height:1.6; }
+  .page-actions { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+
+  /* ══ BUTTONS ══ */
+  .btn { display:inline-flex; align-items:center; gap:7px; padding:9px 16px; border-radius:var(--radius-sm); font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; border:none; transition:all .18s; text-decoration:none; }
+  .btn i { font-size:12px; }
+  .btn-primary { background:var(--sage); color:white; box-shadow:0 4px 14px rgba(57,114,184,0.28); }
+  .btn-primary:hover { background:var(--sage-light); transform:translateY(-1px); }
+  .btn-ghost { background:var(--white); color:var(--ink-soft); border:1.5px solid var(--cream-dark); }
+  .btn-ghost:hover { border-color:var(--sand); color:var(--ink); background:var(--cream); }
+  .btn-danger-ghost { background:var(--white); color:var(--danger); border:1.5px solid var(--danger-bdr); }
+  .btn-danger-ghost:hover { background:var(--danger-dim); }
+  .btn-sm { padding:6px 12px; font-size:12px; }
+  .btn-xs { padding:4px 10px; font-size:11.5px; }
+
+  /* ══ STAT CARDS ══ */
+  .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:28px; }
+  .stat-card { background:var(--white); border:1px solid var(--cream-dark); border-radius:var(--radius); padding:18px 20px; box-shadow:var(--shadow-sm); transition:all .2s; animation:cardIn .4s ease both; position:relative; overflow:hidden; }
+  .stat-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); }
+  .stat-card::after { content:''; position:absolute; bottom:0; left:0; right:0; height:3px; border-radius:0 0 var(--radius) var(--radius); }
+  .stat-card.c-sage::after   { background:var(--sage); }
+  .stat-card.c-amber::after  { background:var(--amber); }
+  .stat-card.c-success::after{ background:#217a4a; }
+  .stat-card.c-warning::after{ background:var(--warning); }
+  .stat-card:nth-child(1){animation-delay:.05s} .stat-card:nth-child(2){animation-delay:.10s}
+  .stat-card:nth-child(3){animation-delay:.15s} .stat-card:nth-child(4){animation-delay:.20s}
+  @keyframes cardIn { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+  .stat-icon { width:36px; height:36px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:16px; margin-bottom:12px; }
+  .stat-card.c-sage    .stat-icon { background:var(--sage-dim); color:var(--sage); }
+  .stat-card.c-amber   .stat-icon { background:var(--amber-dim); color:var(--amber); }
+  .stat-card.c-success .stat-icon { background:rgba(33,122,74,0.1); color:#217a4a; }
+  .stat-card.c-warning .stat-icon { background:var(--warning-dim); color:var(--warning); }
+  .stat-label { font-size:11px; text-transform:uppercase; letter-spacing:1.2px; color:var(--ink-muted); font-weight:600; margin-bottom:4px; }
+  .stat-value { font-family:'DM Mono',monospace; font-size:22px; font-weight:500; color:var(--ink); letter-spacing:-0.5px; line-height:1; }
+  .stat-sub   { font-size:11.5px; color:var(--ink-muted); margin-top:5px; }
+
+  /* ══ TWO-COLUMN LAYOUT ══ */
+  .two-col { display:grid; grid-template-columns:340px 1fr; gap:20px; align-items:start; }
+  @media(max-width:1100px) { .two-col { grid-template-columns:1fr; } }
+
+  /* ══ PANEL (left sidebar list) ══ */
+  .panel { background:var(--white); border:1px solid var(--cream-dark); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow-sm); }
+  .panel-header { padding:16px 18px; border-bottom:1px solid var(--cream-mid); display:flex; align-items:center; justify-content:space-between; }
+  .panel-title  { font-size:13.5px; font-weight:700; color:var(--ink); display:flex; align-items:center; gap:8px; }
+  .panel-search { padding:10px 14px; border-bottom:1px solid var(--cream-mid); }
+  .panel-search-input { width:100%; padding:7px 12px 7px 32px; background:var(--cream); border:1.5px solid var(--cream-dark); border-radius:var(--radius-xs); font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; color:var(--ink); outline:none; transition:all .18s; }
+  .panel-search-input:focus { border-color:var(--sage); box-shadow:0 0 0 3px var(--sage-glow); }
+  .panel-search-wrap { position:relative; }
+  .panel-search-icon { position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:12px; color:var(--ink-muted); pointer-events:none; }
+  .panel-list { max-height:520px; overflow-y:auto; }
+  .panel-item { display:flex; align-items:center; gap:12px; padding:13px 18px; cursor:pointer; transition:background .13s; border-bottom:1px solid var(--cream-mid); position:relative; }
+  .panel-item:last-child { border-bottom:none; }
+  .panel-item:hover { background:var(--cream); }
+  .panel-item.active { background:var(--sage-dim); }
+  .panel-item.active::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--sage); border-radius:0 2px 2px 0; }
+  .panel-item-icon { width:36px; height:36px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+  .panel-item-name { font-size:13px; font-weight:600; color:var(--ink); line-height:1.3; }
+  .panel-item-sub  { font-size:11.5px; color:var(--ink-muted); margin-top:2px; }
+  .panel-item-badge { margin-left:auto; display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex-shrink:0; }
+
+  /* ══ FLOW CARD (right panel) ══ */
+  .flow-card { background:var(--white); border:1px solid var(--cream-dark); border-radius:var(--radius); box-shadow:var(--shadow-sm); overflow:hidden; }
+  .flow-card-header { padding:20px 24px 18px; border-bottom:1px solid var(--cream-mid); display:flex; align-items:flex-start; justify-content:space-between; gap:16px; }
+  .flow-card-title { font-family:'Lora',serif; font-size:18px; font-weight:700; color:var(--ink); }
+  .flow-card-sub   { font-size:12.5px; color:var(--ink-muted); margin-top:4px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .flow-card-actions { display:flex; gap:8px; flex-shrink:0; }
+  .flow-card-body { padding:24px; }
+
+  /* ══ EMPTY PLACEHOLDER ══ */
+  .flow-empty { padding:80px 20px; text-align:center; }
+  .flow-empty-icon { font-size:40px; color:var(--cream-dark); margin-bottom:16px; }
+  .flow-empty-title { font-size:16px; font-weight:700; color:var(--ink-mid); margin-bottom:6px; }
+  .flow-empty-sub   { font-size:13px; color:var(--ink-muted); }
+
+  /* ══ APPROVAL FLOW DIAGRAM ══ */
+  .flow-diagram { display:flex; flex-direction:column; gap:0; }
+  .flow-step-wrap { display:flex; align-items:stretch; gap:0; }
+  .flow-connector-col { display:flex; flex-direction:column; align-items:center; width:48px; flex-shrink:0; }
+  .flow-connector-line { width:2px; background:var(--cream-dark); flex:1; min-height:16px; }
+  .flow-connector-line.first { border-radius:2px 2px 0 0; }
+  .flow-connector-line.last  { border-radius:0 0 2px 2px; }
+  .flow-node-dot { width:12px; height:12px; border-radius:50%; flex-shrink:0; border:2px solid var(--white); box-shadow:0 0 0 2px var(--cream-dark); }
+  .flow-node-dot.active-dot { box-shadow:0 0 0 2px var(--sage); background:var(--sage); }
+  .flow-step-content { flex:1; padding:0 0 20px 14px; }
+  .flow-step-content.last-step { padding-bottom:0; }
+
+  /* step card */
+  .step-card { background:var(--cream); border:1px solid var(--cream-dark); border-radius:var(--radius-sm); overflow:hidden; transition:box-shadow .18s; }
+  .step-card:hover { box-shadow:var(--shadow); }
+  .step-card.step-active { border-color:rgba(57,114,184,0.35); background:var(--white); }
+  .step-card-head { padding:12px 14px; display:flex; align-items:center; justify-content:space-between; gap:10px; border-bottom:1px solid var(--cream-dark); }
+  .step-card-head.last-in-card { border-bottom:none; }
+  .step-order { font-family:'DM Mono',monospace; font-size:10.5px; font-weight:700; color:var(--ink-muted); text-transform:uppercase; letter-spacing:1px; }
+  .step-label { font-size:13.5px; font-weight:700; color:var(--ink); }
+  .step-type-badge { font-size:10px; font-weight:700; padding:2px 7px; border-radius:10px; flex-shrink:0; }
+  .step-type-wajib    { background:rgba(217,64,64,0.1); color:var(--danger); }
+  .step-type-opsional { background:var(--cream-mid); color:var(--ink-muted); }
+
+  /* approver list inside step */
+  .approver-list { padding:10px 14px; display:flex; flex-direction:column; gap:8px; }
+  .approver-row { display:flex; align-items:center; gap:10px; padding:8px 10px; background:var(--white); border:1px solid var(--cream-dark); border-radius:var(--radius-xs); transition:all .15s; }
+  .step-card.step-active .approver-row { background:var(--cream); }
+  .approver-row:hover { border-color:rgba(57,114,184,0.25); }
+  .approver-avatar { width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Lora',serif; font-size:11px; font-weight:700; color:white; flex-shrink:0; }
+  .approver-name { font-size:13px; font-weight:600; color:var(--ink); flex:1; }
+  .approver-role { font-size:11px; color:var(--ink-muted); }
+  .approver-action { display:flex; gap:4px; opacity:0; transition:opacity .15s; }
+  .approver-row:hover .approver-action { opacity:1; }
+
+  /* add approver row */
+  .add-approver-btn { display:flex; align-items:center; gap:8px; padding:8px 10px; border:1.5px dashed var(--cream-dark); border-radius:var(--radius-xs); cursor:pointer; font-size:12.5px; color:var(--ink-muted); transition:all .18s; background:transparent; width:100%; font-family:'Plus Jakarta Sans',sans-serif; }
+  .add-approver-btn:hover { border-color:var(--sage); color:var(--sage); background:var(--sage-dim); }
+
+  /* add step */
+  .add-step-row { display:flex; align-items:center; gap:14px; padding:16px 0 0; }
+  .add-step-line { flex:1; height:1px; background:var(--cream-dark); }
+  .add-step-btn { display:inline-flex; align-items:center; gap:6px; padding:8px 16px; border-radius:var(--radius-sm); border:1.5px dashed var(--sand); background:var(--white); color:var(--ink-muted); font-size:13px; font-weight:600; cursor:pointer; transition:all .18s; font-family:'Plus Jakarta Sans',sans-serif; white-space:nowrap; }
+  .add-step-btn:hover { border-color:var(--sage); color:var(--sage); background:var(--sage-dim); }
+
+  /* step actions floating */
+  .step-actions { display:flex; gap:6px; }
+  .step-act { width:26px; height:26px; border-radius:6px; border:1px solid var(--cream-dark); background:var(--white); color:var(--ink-muted); font-size:11px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; transition:all .15s; }
+  .step-act:hover       { border-color:rgba(57,114,184,0.35); background:var(--sage-dim); color:var(--sage); }
+  .step-act.danger:hover { border-color:var(--danger-bdr); background:var(--danger-dim); color:var(--danger); }
+
+  /* ══ BADGES ══ */
+  .badge { display:inline-flex; align-items:center; padding:3px 9px; border-radius:20px; font-size:11px; font-weight:600; letter-spacing:0.2px; white-space:nowrap; gap:4px; }
+  .badge-aktif    { background:rgba(33,122,74,0.1); color:#196040; }
+  .badge-nonaktif { background:var(--cream-mid); color:var(--ink-muted); }
+  .badge-jenis    { background:var(--sage-dim); color:var(--sage); }
+  .badge-anggaran { background:var(--amber-dim); color:#a05a00; }
+  .status-dot { width:6px; height:6px; border-radius:50%; display:inline-block; }
+  .dot-aktif    { background:#2da86e; }
+  .dot-nonaktif { background:var(--ink-muted); }
+
+  /* ══ TOOLBAR ══ */
+  .toolbar { display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
+  .filter-select { padding:8px 12px; background:var(--white); border:1.5px solid var(--cream-dark); border-radius:var(--radius-sm); font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; color:var(--ink-soft); outline:none; cursor:pointer; transition:all .18s; }
+  .filter-select:focus { border-color:var(--sage); }
+
+  /* ══ MODAL ══ */
+  .overlay-modal { display:none; position:fixed; inset:0; background:rgba(26,35,51,0.4); z-index:500; backdrop-filter:blur(4px); align-items:center; justify-content:center; padding:16px; }
+  .overlay-modal.open { display:flex; }
+  .modal { background:var(--white); border:1px solid var(--cream-dark); border-radius:var(--radius); width:520px; max-width:100%; max-height:calc(100vh - 32px); overflow-y:auto; box-shadow:var(--shadow-md); animation:modalIn .28s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes modalIn { from{opacity:0;transform:scale(.92) translateY(10px)} to{opacity:1;transform:scale(1) translateY(0)} }
+  .modal-header { padding:22px 24px 18px; border-bottom:1px solid var(--cream-mid); display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+  .modal-title  { font-family:'Lora',serif; font-size:18px; font-weight:700; color:var(--ink); }
+  .modal-sub    { font-size:12.5px; color:var(--ink-muted); margin-top:3px; }
+  .modal-close  { width:32px; height:32px; border-radius:8px; border:1px solid var(--cream-dark); background:transparent; color:var(--ink-muted); cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center; transition:all .15s; flex-shrink:0; }
+  .modal-close:hover { background:var(--danger-dim); color:var(--danger); border-color:var(--danger-bdr); }
+  .modal-body   { padding:22px 24px; }
+  .modal-footer { padding:16px 24px; border-top:1px solid var(--cream-mid); display:flex; justify-content:flex-end; gap:10px; }
+
+  .form-row  { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+  .form-row.full { grid-template-columns:1fr; }
+  .form-group { display:flex; flex-direction:column; gap:5px; margin-bottom:14px; }
+  .form-label { font-size:11.5px; font-weight:700; color:var(--ink-mid); letter-spacing:0.5px; text-transform:uppercase; }
+  .form-label .req { color:var(--danger); margin-left:2px; }
+  .input-wrap  { position:relative; }
+  .input-icon  { position:absolute; left:12px; top:50%; transform:translateY(-50%); font-size:13px; color:var(--ink-muted); pointer-events:none; }
+  .form-input, .form-select, .form-textarea {
+    width:100%; padding:9px 12px; background:var(--cream); border:1.5px solid var(--cream-dark);
+    border-radius:var(--radius-sm); font-family:'Plus Jakarta Sans',sans-serif;
+    font-size:13.5px; color:var(--ink); outline:none; transition:all .18s;
+  }
+  .form-input.has-icon { padding-left:36px; }
+  .form-input:focus,.form-select:focus,.form-textarea:focus { border-color:var(--sage); background:var(--white); box-shadow:0 0 0 3px var(--sage-glow); }
+  .form-textarea { resize:vertical; min-height:72px; }
+  .form-hint  { font-size:11.5px; color:var(--ink-muted); }
+  .form-section-title { font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink-muted); margin-bottom:14px; margin-top:6px; display:flex; align-items:center; gap:8px; }
+  .form-section-title::after { content:''; flex:1; height:1px; background:var(--cream-mid); }
+
+  /* user picker inside modal */
+  .user-picker-list { max-height:200px; overflow-y:auto; border:1.5px solid var(--cream-dark); border-radius:var(--radius-sm); background:var(--cream); }
+  .user-pick-row { display:flex; align-items:center; gap:10px; padding:9px 12px; cursor:pointer; transition:background .12s; border-bottom:1px solid var(--cream-mid); }
+  .user-pick-row:last-child { border-bottom:none; }
+  .user-pick-row:hover { background:var(--sage-dim); }
+  .user-pick-row.selected { background:var(--sage-dim); }
+  .user-pick-row.selected .pick-check { color:var(--sage); }
+  .pick-avatar { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Lora',serif; font-size:10px; font-weight:700; color:white; flex-shrink:0; }
+  .pick-name   { font-size:13px; font-weight:600; color:var(--ink); flex:1; }
+  .pick-role   { font-size:11px; color:var(--ink-muted); }
+  .pick-check  { color:transparent; font-size:13px; transition:color .15s; }
+
+  /* ══ TOAST ══ */
+  .toast-stack { position:fixed; bottom:24px; right:24px; z-index:999; display:flex; flex-direction:column; gap:8px; pointer-events:none; }
+  .toast { background:var(--ink); color:white; padding:12px 18px; border-radius:var(--radius-sm); font-size:13px; font-weight:500; display:flex; align-items:center; gap:9px; box-shadow:0 6px 24px rgba(0,0,0,0.2); pointer-events:all; animation:toastIn .28s cubic-bezier(.34,1.56,.64,1); max-width:320px; }
+  @keyframes toastIn { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:translateX(0)} }
+  .toast.success { background:#1a5c36; }
+  .toast.warning { background:#7a4500; }
+  .toast i { font-size:14px; flex-shrink:0; }
+
+  /* ══ SCROLLBAR ══ */
+  ::-webkit-scrollbar { width:4px; height:4px; }
+  ::-webkit-scrollbar-track { background:transparent; }
+  ::-webkit-scrollbar-thumb { background:var(--cream-dark); border-radius:2px; }
+
+  /* ══ RESPONSIVE ══ */
+  @media(max-width:1100px) { .stats-row { grid-template-columns:repeat(2,1fr); } }
+  @media(max-width:700px) {
+    .content { padding:20px 16px 36px; }
+    .topbar  { padding:12px 16px; }
+    .stats-row { grid-template-columns:repeat(2,1fr); }
+    .page-header { flex-direction:column; align-items:flex-start; }
+    .form-row { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body data-page="masterapproval">
+
+<div class="app-shell">
+  <div id="sb-root"></div>
+
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <span class="breadcrumb">
+          Sistem Anggaran
+          <span style="color:var(--cream-dark)">›</span>
+          Master Data
+          <span style="color:var(--cream-dark)">›</span>
+          <span class="breadcrumb-cur">Master Approval</span>
+        </span>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-date" id="topbarDate"></div>
+        <div class="topbar-icon-btn">
+          <i class="fa-solid fa-bell"></i>
+          <div class="notif-dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- PAGE HEADER -->
+      <div class="page-header">
+        <div>
+          <div class="page-title">Master <em>Approval</em></div>
+          <div class="page-sub">Atur parameter alur persetujuan per jenis program dan jenis anggaran. Tentukan siapa yang wajib menyetujui, urutan tahapan, dan aturan eskalasi agar proses approval terkontrol dan mudah diaudit.</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-ghost" onclick="exportCSV()">
+            <i class="fa-solid fa-file-csv"></i> Export
+          </button>
+          <button class="btn btn-primary" onclick="openAddFlowModal()">
+            <i class="fa-solid fa-plus"></i> Alur Baru
+          </button>
+        </div>
+      </div>
+
+      <!-- STAT CARDS -->
+      <div class="stats-row">
+        <div class="stat-card c-sage">
+          <div class="stat-icon"><i class="fa-solid fa-code-branch"></i></div>
+          <div class="stat-label">Total Alur</div>
+          <div class="stat-value" id="statTotal">—</div>
+          <div class="stat-sub">Alur approval terdaftar</div>
+        </div>
+        <div class="stat-card c-amber">
+          <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
+          <div class="stat-label">Alur Aktif</div>
+          <div class="stat-value" id="statAktif">—</div>
+          <div class="stat-sub">Sedang digunakan</div>
+        </div>
+        <div class="stat-card c-success">
+          <div class="stat-icon"><i class="fa-solid fa-user-check"></i></div>
+          <div class="stat-label">Total Approver</div>
+          <div class="stat-value" id="statApprover">—</div>
+          <div class="stat-sub">Di semua alur</div>
+        </div>
+        <div class="stat-card c-warning">
+          <div class="stat-icon"><i class="fa-solid fa-layer-group"></i></div>
+          <div class="stat-label">Rata-rata Tahap</div>
+          <div class="stat-value" id="statTahap">—</div>
+          <div class="stat-sub">Tahapan per alur</div>
+        </div>
+      </div>
+
+      <!-- TOOLBAR -->
+      <div class="toolbar">
+        <select class="filter-select" id="filterJenis" onchange="renderList()">
+          <option value="">Semua Jenis</option>
+          <option value="Program">Program</option>
+          <option value="Anggaran">Anggaran</option>
+          <option value="Pengadaan">Pengadaan</option>
+          <option value="Laporan">Laporan</option>
+        </select>
+        <select class="filter-select" id="filterStatus" onchange="renderList()">
+          <option value="">Semua Status</option>
+          <option value="Aktif">Aktif</option>
+          <option value="Nonaktif">Nonaktif</option>
+        </select>
+      </div>
+
+      <!-- TWO-COL LAYOUT -->
+      <div class="two-col">
+
+        <!-- LEFT: daftar alur -->
+        <div>
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title">
+                <i class="fa-solid fa-list-check" style="color:var(--sage);font-size:13px;"></i>
+                Daftar Alur Approval
+              </div>
+              <span id="listCount" style="font-size:12px;color:var(--ink-muted);"></span>
+            </div>
+            <div class="panel-search">
+              <div class="panel-search-wrap">
+                <span class="panel-search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+                <input class="panel-search-input" id="searchFlow" placeholder="Cari alur…" oninput="renderList()">
+              </div>
+            </div>
+            <div class="panel-list" id="flowList">
+              <!-- rendered by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: detail & flow diagram -->
+        <div id="rightPanel">
+          <div class="flow-card">
+            <div class="flow-empty">
+              <div class="flow-empty-icon"><i class="fa-solid fa-code-branch"></i></div>
+              <div class="flow-empty-title">Pilih Alur Approval</div>
+              <div class="flow-empty-sub">Klik salah satu alur di sebelah kiri untuk melihat dan mengedit tahapan persetujuannya</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /two-col -->
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div>
+
+<!-- ══════════ MODAL TAMBAH/EDIT ALUR ══════════ -->
+<div class="overlay-modal" id="modalFlow" onclick="closeModalIfBg(event,'modalFlow')">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modalFlowTitle">Tambah Alur Baru</div>
+        <div class="modal-sub" id="modalFlowSub">Definisikan parameter alur persetujuan</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modalFlow')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-section-title">Identitas Alur</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Kode Alur <span class="req">*</span></label>
+          <div class="input-wrap">
+            <span class="input-icon"><i class="fa-solid fa-hashtag"></i></span>
+            <input class="form-input has-icon" id="fKode" type="text" placeholder="mis. APV-001">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Jenis Dokumen <span class="req">*</span></label>
+          <select class="form-select" id="fJenis">
+            <option value="">— Pilih Jenis —</option>
+            <option value="Program">Program</option>
+            <option value="Anggaran">Anggaran</option>
+            <option value="Pengadaan">Pengadaan</option>
+            <option value="Laporan">Laporan</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nama Alur Approval <span class="req">*</span></label>
+        <input class="form-input" id="fNama" type="text" placeholder="mis. Persetujuan RKA Dinas">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Deskripsi</label>
+        <textarea class="form-textarea" id="fDeskripsi" placeholder="Keterangan singkat kapan alur ini digunakan…"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Berlaku Untuk UPT</label>
+          <select class="form-select" id="fUpt">
+            <option value="semua">Semua UPT</option>
+            <option value="UPT-001">Dinas Pendidikan</option>
+            <option value="UPT-002">Dinas Kesehatan</option>
+            <option value="UPT-003">Dinas PUPR</option>
+            <option value="UPT-004">BPKD</option>
+            <option value="UPT-005">Bappeda</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Batas Nilai (Rp)</label>
+          <input class="form-input" id="fBatas" type="number" placeholder="0 = tidak ada batas" min="0">
+          <span class="form-hint">Alur aktif jika nilai dokumen ≤ batas ini</span>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Batas Waktu per Tahap</label>
+          <div class="input-wrap">
+            <span class="input-icon" style="font-size:11px;font-weight:700;">Hari</span>
+            <input class="form-input" id="fBatasWaktu" type="number" placeholder="3" min="1" style="padding-left:40px;">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Status <span class="req">*</span></label>
+          <select class="form-select" id="fStatus">
+            <option value="Aktif">Aktif</option>
+            <option value="Nonaktif">Nonaktif</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-section-title">Eskalasi Otomatis</div>
+      <div class="form-group">
+        <label class="form-label">Jika Melewati Batas Waktu</label>
+        <select class="form-select" id="fEskalasi">
+          <option value="notif">Kirim Notifikasi Pengingat</option>
+          <option value="eskalasi">Eskalasi ke Atasan Langsung</option>
+          <option value="auto">Auto-Approve (lewati tahap)</option>
+          <option value="reject">Auto-Reject</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalFlow')">Batal</button>
+      <button class="btn btn-primary" onclick="saveFlow()"><i class="fa-solid fa-floppy-disk"></i> Simpan Alur</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ MODAL TAMBAH/EDIT TAHAP ══════════ -->
+<div class="overlay-modal" id="modalStep" onclick="closeModalIfBg(event,'modalStep')">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modalStepTitle">Tambah Tahap Approval</div>
+        <div class="modal-sub" id="modalStepSub">Definisikan satu tahapan dalam alur persetujuan</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modalStep')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Nama Tahap <span class="req">*</span></label>
+        <input class="form-input" id="sNama" type="text" placeholder="mis. Verifikasi Bendahara">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Jenis Tahap</label>
+          <select class="form-select" id="sTipe">
+            <option value="wajib">Wajib</option>
+            <option value="opsional">Opsional</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mode Persetujuan</label>
+          <select class="form-select" id="sMode">
+            <option value="semua">Semua Approver Harus Setuju</option>
+            <option value="salah_satu">Salah Satu Approver Cukup</option>
+            <option value="mayoritas">Mayoritas (>50%)</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Keterangan Tahap</label>
+        <textarea class="form-textarea" id="sKeterangan" placeholder="Apa yang diverifikasi di tahap ini…"></textarea>
+      </div>
+
+      <div class="form-section-title">Pilih Approver</div>
+      <div style="margin-bottom:10px;">
+        <div class="panel-search-wrap">
+          <span class="panel-search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+          <input class="panel-search-input" id="approverSearch" placeholder="Cari nama atau jabatan…" oninput="filterApproverList()" style="width:100%;">
+        </div>
+      </div>
+      <div class="user-picker-list" id="approverPickerList">
+        <!-- rendered by JS -->
+      </div>
+      <div class="form-hint" style="margin-top:8px;" id="selectedCount">Belum ada approver dipilih</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalStep')">Batal</button>
+      <button class="btn btn-primary" onclick="saveStep()"><i class="fa-solid fa-floppy-disk"></i> Simpan Tahap</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-stack" id="toastStack"></div>
+
+<script>
+// ═══════════════════════════════════════════
+//  MASTER DATA
+// ═══════════════════════════════════════════
+
+// Daftar user/approver sistem
+const ALL_USERS = [
+  { id:'U01', nama:'Dr. H. Ahmad Fauzi, M.Pd.',      jabatan:'Kepala Dinas Pendidikan',       warna:'#3972B8' },
+  { id:'U02', nama:'dr. Siti Rahmadhani, Sp.PH',     jabatan:'Kepala Dinas Kesehatan',        warna:'#217a4a' },
+  { id:'U03', nama:'Ir. Bambang Santoso, MT.',        jabatan:'Kepala Dinas PUPR',             warna:'#7a30c0' },
+  { id:'U04', nama:'Dra. Endang Sulistyowati, M.Si.',jabatan:'Kepala BPKD',                   warna:'#d94040' },
+  { id:'U05', nama:'Prof. Dr. Wahyu Purnomo, M.Si.', jabatan:'Kepala Bappeda',                warna:'#c07010' },
+  { id:'U06', nama:'H. Rudi Hartanto, SH., M.Hum.', jabatan:'Kepala PTSP',                   warna:'#3972B8' },
+  { id:'U07', nama:'Muhammad Iqbal',                  jabatan:'Administrator Sistem',          warna:'#F68B21' },
+  { id:'U08', nama:'Dra. Sri Wahyuni, M.Lib.',        jabatan:'Kepala Arsip & Perpustakaan',  warna:'#217a4a' },
+  { id:'U09', nama:'Drs. H. Syaiful Anwar, M.Si.',   jabatan:'Kepala BKPSDM',                warna:'#2558a0' },
+  { id:'U10', nama:'dr. Anisa Rahayu',                jabatan:'Kepala Puskesmas Pusat',        warna:'#196040' },
+  { id:'U11', nama:'Budi Santoso, SE., M.Ak.',        jabatan:'Bendahara Umum Daerah',         warna:'#7a30c0' },
+  { id:'U12', nama:'Retno Wulandari, SH.',            jabatan:'Sekretaris Daerah',             warna:'#c07010' },
+];
+
+// Alur approval
+let FLOWS = [
+  {
+    id:1, kode:'APV-001', nama:'Persetujuan RKA Dinas', jenis:'Anggaran', status:'Aktif',
+    deskripsi:'Alur persetujuan untuk pengajuan Rencana Kerja dan Anggaran (RKA) dari seluruh Dinas.',
+    upt:'semua', batas:0, batasWaktu:3, eskalasi:'eskalasi',
+    steps: [
+      { id:101, nama:'Verifikasi Bendahara', tipe:'wajib', mode:'semua',  keterangan:'Verifikasi kelengkapan dokumen dan kesesuaian anggaran dengan kode akun COA.', approvers:['U11'] },
+      { id:102, nama:'Review Bappeda',       tipe:'wajib', mode:'semua',  keterangan:'Penelaahan kesesuaian program dengan RPJMD dan dokumen perencanaan daerah.', approvers:['U05'] },
+      { id:103, nama:'Persetujuan BPKD',     tipe:'wajib', mode:'semua',  keterangan:'Validasi pagu anggaran dan konfirmasi ketersediaan dana di kas daerah.', approvers:['U04'] },
+      { id:104, nama:'Pengesahan Sekda',      tipe:'wajib', mode:'semua',  keterangan:'Pengesahan akhir oleh Sekretaris Daerah sebelum dikirim ke legislatif.', approvers:['U12'] },
+    ],
+  },
+  {
+    id:2, kode:'APV-002', nama:'Persetujuan Pengadaan Barang', jenis:'Pengadaan', status:'Aktif',
+    deskripsi:'Alur persetujuan untuk pengadaan barang dan jasa di bawah nilai Rp 200 juta.',
+    upt:'semua', batas:200000000, batasWaktu:2, eskalasi:'notif',
+    steps: [
+      { id:201, nama:'Verifikasi Teknis',  tipe:'wajib',    mode:'semua',     keterangan:'Verifikasi spesifikasi teknis dan kebutuhan oleh unit pemohon.', approvers:['U06'] },
+      { id:202, nama:'Persetujuan Kepala', tipe:'wajib',    mode:'salah_satu',keterangan:'Persetujuan kepala UPT atau pejabat yang berwenang.', approvers:['U01','U02','U03'] },
+      { id:203, nama:'Validasi Anggaran',  tipe:'wajib',    mode:'semua',     keterangan:'Konfirmasi ketersediaan pagu oleh bendahara.', approvers:['U11'] },
+    ],
+  },
+  {
+    id:3, kode:'APV-003', nama:'Persetujuan Laporan Keuangan', jenis:'Laporan', status:'Aktif',
+    deskripsi:'Alur persetujuan laporan keuangan bulanan dan triwulanan seluruh UPT.',
+    upt:'semua', batas:0, batasWaktu:5, eskalasi:'notif',
+    steps: [
+      { id:301, nama:'Review Internal',   tipe:'wajib',    mode:'semua', keterangan:'Pemeriksaan internal oleh tim verifikator.', approvers:['U07','U11'] },
+      { id:302, nama:'Persetujuan BPKD',  tipe:'wajib',    mode:'semua', keterangan:'Validasi laporan oleh Kepala BPKD.', approvers:['U04'] },
+      { id:303, nama:'Arsip & Dokumen',   tipe:'opsional', mode:'semua', keterangan:'Pengarsipan dokumen final oleh unit kearsipan.', approvers:['U08'] },
+    ],
+  },
+  {
+    id:4, kode:'APV-004', nama:'Persetujuan Program Prioritas', jenis:'Program', status:'Aktif',
+    deskripsi:'Alur khusus untuk program strategis dan prioritas daerah dengan nilai di atas Rp 500 juta.',
+    upt:'semua', batas:500000000, batasWaktu:7, eskalasi:'eskalasi',
+    steps: [
+      { id:401, nama:'Kajian Teknis Bappeda',  tipe:'wajib', mode:'semua',     keterangan:'Kajian kelayakan teknis dan kebijakan.', approvers:['U05'] },
+      { id:402, nama:'Review Anggaran BPKD',   tipe:'wajib', mode:'semua',     keterangan:'Analisis fiskal dan dampak anggaran.', approvers:['U04','U11'] },
+      { id:403, nama:'Persetujuan Kepala UPT', tipe:'wajib', mode:'salah_satu',keterangan:'Konfirmasi kesiapan pelaksanaan oleh Kepala UPT terkait.', approvers:['U01','U02','U03'] },
+      { id:404, nama:'Pengesahan Sekda',        tipe:'wajib', mode:'semua',     keterangan:'Pengesahan akhir dan pemberian arahan kebijakan.', approvers:['U12'] },
+    ],
+  },
+  {
+    id:5, kode:'APV-005', nama:'Approval Pengadaan > 200 Juta', jenis:'Pengadaan', status:'Aktif',
+    deskripsi:'Alur pengadaan untuk nilai di atas Rp 200 juta dengan pengawasan lebih ketat.',
+    upt:'semua', batas:0, batasWaktu:3, eskalasi:'eskalasi',
+    steps: [
+      { id:501, nama:'Verifikasi Administrasi', tipe:'wajib', mode:'semua',     keterangan:'Kelengkapan administrasi dan dokumen tender.', approvers:['U06','U07'] },
+      { id:502, nama:'Review Anggaran',          tipe:'wajib', mode:'semua',     keterangan:'Konfirmasi pagu dan akun COA.', approvers:['U11'] },
+      { id:503, nama:'Persetujuan Kepala Dinas', tipe:'wajib', mode:'salah_satu',keterangan:'Persetujuan kepala dinas terkait.', approvers:['U01','U02','U03'] },
+      { id:504, nama:'Validasi BPKD',            tipe:'wajib', mode:'semua',     keterangan:'Validasi akhir dari sisi keuangan daerah.', approvers:['U04'] },
+      { id:505, nama:'Pengesahan Sekda',          tipe:'wajib', mode:'semua',     keterangan:'Pengesahan untuk pengadaan besar.', approvers:['U12'] },
+    ],
+  },
+  {
+    id:6, kode:'APV-006', nama:'Laporan Akhir Tahun', jenis:'Laporan', status:'Nonaktif',
+    deskripsi:'Alur khusus untuk pelaporan dan rekonsiliasi akhir tahun anggaran.',
+    upt:'semua', batas:0, batasWaktu:10, eskalasi:'notif',
+    steps: [
+      { id:601, nama:'Rekonsiliasi Internal', tipe:'wajib', mode:'semua', keterangan:'Rekonsiliasi data keuangan akhir tahun.', approvers:['U07','U11'] },
+      { id:602, nama:'Validasi BPKD',         tipe:'wajib', mode:'semua', keterangan:'Validasi laporan keuangan konsolidasian.', approvers:['U04'] },
+    ],
+  },
+];
+
+// ═══════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════
+let state = {
+  selectedFlowId  : null,
+  editingFlowId   : null,
+  editingStepId   : null,   // null = add new step
+  editingStepIdx  : null,
+  stepSelectedUsers: new Set(),
+};
+
+// ═══════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════
+function getFlow(id)   { return FLOWS.find(f => f.id === id); }
+function getUser(id)   { return ALL_USERS.find(u => u.id === id); }
+function initials(name){ return name.split(' ').filter(Boolean).slice(0,2).map(w=>w[0].toUpperCase()).join(''); }
+
+function fmtRp(n) {
+  if (!n || n === 0) return 'Tidak dibatasi';
+  if (n >= 1_000_000_000) return 'Rp ' + (n/1_000_000_000).toFixed(1) + ' M';
+  if (n >= 1_000_000)     return 'Rp ' + (n/1_000_000).toFixed(0) + ' jt';
+  return 'Rp ' + n.toLocaleString('id-ID');
+}
+
+const JENIS_COLOR = {
+  Program   : { bg:'var(--sage-dim)',    text:'var(--sage)',    icon:'fa-solid fa-diagram-project' },
+  Anggaran  : { bg:'var(--amber-dim)',   text:'#a05a00',         icon:'fa-solid fa-file-invoice-dollar' },
+  Pengadaan : { bg:'rgba(122,48,192,0.1)',text:'#7a30c0',        icon:'fa-solid fa-box-open' },
+  Laporan   : { bg:'rgba(33,122,74,0.1)',text:'#196040',         icon:'fa-solid fa-chart-pie' },
+};
+function jenisStyle(j) { return JENIS_COLOR[j] || { bg:'var(--cream-mid)', text:'var(--ink-muted)', icon:'fa-solid fa-file' }; }
+
+const MODE_LABEL = { semua:'Semua setuju', salah_satu:'Salah satu cukup', mayoritas:'Mayoritas' };
+const ESK_LABEL  = { notif:'Kirim notifikasi', eskalasi:'Eskalasi ke atasan', auto:'Auto-approve', reject:'Auto-reject' };
+
+// ═══════════════════════════════════════════
+//  STATS
+// ═══════════════════════════════════════════
+function updateStats() {
+  const aktif   = FLOWS.filter(f => f.status === 'Aktif').length;
+  const approvers = new Set();
+  FLOWS.forEach(f => f.steps.forEach(s => s.approvers.forEach(id => approvers.add(id))));
+  const totalSteps = FLOWS.reduce((s,f) => s + f.steps.length, 0);
+  const avgSteps   = FLOWS.length ? (totalSteps / FLOWS.length).toFixed(1) : '0';
+  document.getElementById('statTotal').textContent    = FLOWS.length;
+  document.getElementById('statAktif').textContent    = aktif;
+  document.getElementById('statApprover').textContent = approvers.size;
+  document.getElementById('statTahap').textContent    = avgSteps;
+}
+
+// ═══════════════════════════════════════════
+//  LIST PANEL
+// ═══════════════════════════════════════════
+function getFilteredFlows() {
+  const q  = (document.getElementById('searchFlow')?.value || '').toLowerCase();
+  const fj = document.getElementById('filterJenis')?.value  || '';
+  const fs = document.getElementById('filterStatus')?.value || '';
+  return FLOWS.filter(f => {
+    if (fj && f.jenis !== fj)    return false;
+    if (fs && f.status !== fs)   return false;
+    if (q && !f.nama.toLowerCase().includes(q) && !f.kode.toLowerCase().includes(q)) return false;
+    return true;
+  });
+}
+
+function renderList() {
+  const flows = getFilteredFlows();
+  document.getElementById('listCount').textContent = flows.length + ' alur';
+  const list = document.getElementById('flowList');
+  if (!flows.length) {
+    list.innerHTML = `<div style="padding:32px 18px;text-align:center;">
+      <div style="font-size:22px;color:var(--cream-dark);margin-bottom:8px;"><i class="fa-solid fa-filter-circle-xmark"></i></div>
+      <div style="font-size:13px;color:var(--ink-muted);">Tidak ada alur ditemukan</div>
+    </div>`;
+    return;
+  }
+  list.innerHTML = flows.map(f => {
+    const js = jenisStyle(f.jenis);
+    const isActive = f.id === state.selectedFlowId;
+    const approverCount = new Set(f.steps.flatMap(s => s.approvers)).size;
+    return `<div class="panel-item ${isActive?'active':''}" onclick="selectFlow(${f.id})">
+      <div class="panel-item-icon" style="background:${js.bg};color:${js.text};">
+        <i class="${js.icon}"></i>
+      </div>
+      <div style="flex:1;min-width:0;">
+        <div class="panel-item-name">${f.nama}</div>
+        <div class="panel-item-sub">${f.kode} · ${f.steps.length} Tahap · ${approverCount} Approver</div>
+      </div>
+      <div class="panel-item-badge">
+        <span class="${f.status==='Aktif'?'badge-aktif':'badge-nonaktif'}" style="display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;background:${f.status==='Aktif'?'rgba(33,122,74,0.1)':'var(--cream-mid)'};color:${f.status==='Aktif'?'#196040':'var(--ink-muted)'};">
+          <span class="status-dot ${f.status==='Aktif'?'dot-aktif':'dot-nonaktif'}"></span>${f.status}
+        </span>
+        <span style="background:${js.bg};color:${js.text};font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:8px;">${f.jenis}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function selectFlow(id) {
+  state.selectedFlowId = id;
+  renderList();
+  renderFlowDetail();
+}
+
+// ═══════════════════════════════════════════
+//  FLOW DETAIL (right panel)
+// ═══════════════════════════════════════════
+function renderFlowDetail() {
+  const f = getFlow(state.selectedFlowId);
+  const panel = document.getElementById('rightPanel');
+  if (!f) {
+    panel.innerHTML = `<div class="flow-card"><div class="flow-empty">
+      <div class="flow-empty-icon"><i class="fa-solid fa-code-branch"></i></div>
+      <div class="flow-empty-title">Pilih Alur Approval</div>
+      <div class="flow-empty-sub">Klik salah satu alur di sebelah kiri</div>
+    </div></div>`;
+    return;
+  }
+
+  const js = jenisStyle(f.jenis);
+  const totalApprovers = new Set(f.steps.flatMap(s => s.approvers)).size;
+
+  panel.innerHTML = `<div class="flow-card" style="animation:fadeIn .3s ease both;">
+    <div class="flow-card-header">
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+          <span style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;background:${js.bg};color:${js.text};font-size:15px;flex-shrink:0;">
+            <i class="${js.icon}"></i>
+          </span>
+          <div class="flow-card-title">${f.nama}</div>
+        </div>
+        <div class="flow-card-sub">
+          <span style="font-family:'DM Mono',monospace;font-size:12px;">${f.kode}</span>
+          <span style="background:${js.bg};color:${js.text};font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;">${f.jenis}</span>
+          <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:${f.status==='Aktif'?'#196040':'var(--ink-muted)'};">
+            <span class="status-dot ${f.status==='Aktif'?'dot-aktif':'dot-nonaktif'}"></span>${f.status}
+          </span>
+          <span style="color:var(--ink-muted);">·</span>
+          <span>${f.steps.length} Tahap · ${totalApprovers} Approver</span>
+          <span style="color:var(--ink-muted);">·</span>
+          <span>Batas ${f.batasWaktu} hari/tahap</span>
+        </div>
+        ${f.deskripsi ? `<div style="font-size:12.5px;color:var(--ink-soft);margin-top:8px;line-height:1.6;">${f.deskripsi}</div>` : ''}
+      </div>
+      <div class="flow-card-actions">
+        <button class="btn btn-ghost btn-sm" onclick="openEditFlowModal(${f.id})">
+          <i class="fa-solid fa-pen"></i> Edit
+        </button>
+        <button class="btn btn-danger-ghost btn-sm" onclick="deleteFlow(${f.id})">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- INFO PILLS -->
+    <div style="padding:12px 24px;border-bottom:1px solid var(--cream-mid);display:flex;gap:10px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:7px;padding:6px 12px;background:var(--cream);border-radius:var(--radius-xs);font-size:12px;color:var(--ink-soft);">
+        <i class="fa-solid fa-money-bill-wave" style="color:var(--sage);"></i>
+        Batas Nilai: <strong style="color:var(--ink);margin-left:3px;">${fmtRp(f.batas)}</strong>
+      </div>
+      <div style="display:flex;align-items:center;gap:7px;padding:6px 12px;background:var(--cream);border-radius:var(--radius-xs);font-size:12px;color:var(--ink-soft);">
+        <i class="fa-solid fa-clock" style="color:var(--amber);"></i>
+        Batas Waktu: <strong style="color:var(--ink);margin-left:3px;">${f.batasWaktu} hari/tahap</strong>
+      </div>
+      <div style="display:flex;align-items:center;gap:7px;padding:6px 12px;background:var(--cream);border-radius:var(--radius-xs);font-size:12px;color:var(--ink-soft);">
+        <i class="fa-solid fa-arrow-up-right-dots" style="color:var(--warning);"></i>
+        Eskalasi: <strong style="color:var(--ink);margin-left:3px;">${ESK_LABEL[f.eskalasi]||f.eskalasi}</strong>
+      </div>
+    </div>
+
+    <div class="flow-card-body">
+      <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-muted);margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;">
+        <span>Alur Tahapan Persetujuan</span>
+        <button class="btn btn-ghost btn-xs" onclick="openAddStepModal()">
+          <i class="fa-solid fa-plus"></i> Tambah Tahap
+        </button>
+      </div>
+
+      <div class="flow-diagram">
+        ${f.steps.map((step, idx) => renderStepNode(step, idx, f.steps.length)).join('')}
+      </div>
+
+      <div class="add-step-row">
+        <div class="add-step-line"></div>
+        <button class="add-step-btn" onclick="openAddStepModal()">
+          <i class="fa-solid fa-circle-plus"></i> Tambah Tahap Baru
+        </button>
+        <div class="add-step-line"></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderStepNode(step, idx, total) {
+  const isLast  = idx === total - 1;
+  const isWajib = step.tipe === 'wajib';
+
+  const approverAvatars = step.approvers.map(uid => {
+    const u = getUser(uid);
+    if (!u) return '';
+    return `<div class="approver-row">
+      <div class="approver-avatar" style="background:${u.warna};">${initials(u.nama)}</div>
+      <div style="flex:1;min-width:0;">
+        <div class="approver-name">${u.nama}</div>
+        <div class="approver-role">${u.jabatan}</div>
+      </div>
+      <div class="approver-action">
+        <button class="step-act danger" onclick="removeApprover(${step.id},'${uid}')" title="Hapus approver">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+
+  return `
+  <div class="flow-step-wrap">
+    <div class="flow-connector-col">
+      ${idx === 0 ? '<div class="flow-connector-line first" style="min-height:18px;"></div>' : '<div class="flow-connector-line" style="min-height:18px;"></div>'}
+      <div class="flow-node-dot active-dot"></div>
+      ${!isLast ? '<div class="flow-connector-line" style="flex:1;"></div>' : '<div style="flex:1;"></div>'}
+    </div>
+    <div class="flow-step-content ${isLast?'last-step':''}">
+      <div class="step-card ${isWajib?'step-active':''}">
+        <div class="step-card-head">
+          <div style="display:flex;flex-direction:column;gap:2px;">
+            <div class="step-order">Tahap ${idx + 1}</div>
+            <div class="step-label">${step.nama}</div>
+            ${step.keterangan ? `<div style="font-size:11.5px;color:var(--ink-muted);margin-top:2px;">${step.keterangan}</div>` : ''}
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;margin-left:10px;">
+            <div style="display:flex;gap:5px;align-items:center;">
+              <span class="step-type-badge ${isWajib?'step-type-wajib':'step-type-opsional'}">${isWajib?'Wajib':'Opsional'}</span>
+              <div class="step-actions">
+                <button class="step-act" onclick="openEditStepModal(${step.id})" title="Edit tahap"><i class="fa-solid fa-pen"></i></button>
+                <button class="step-act danger" onclick="deleteStep(${step.id})" title="Hapus tahap"><i class="fa-solid fa-trash"></i></button>
+              </div>
+            </div>
+            <span style="font-size:10.5px;color:var(--ink-muted);background:var(--cream);padding:2px 8px;border-radius:6px;">${MODE_LABEL[step.mode]||step.mode}</span>
+          </div>
+        </div>
+        <div class="approver-list">
+          ${approverAvatars}
+          <button class="add-approver-btn" onclick="openAddApproverToStep(${step.id})">
+            <i class="fa-solid fa-user-plus"></i> Tambah Approver
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════
+//  FLOW MODAL
+// ═══════════════════════════════════════════
+function openAddFlowModal() {
+  state.editingFlowId = null;
+  document.getElementById('modalFlowTitle').textContent = 'Tambah Alur Baru';
+  document.getElementById('modalFlowSub').textContent   = 'Definisikan parameter alur persetujuan';
+  document.getElementById('fKode').value      = `APV-${String(FLOWS.length+1).padStart(3,'0')}`;
+  document.getElementById('fNama').value      = '';
+  document.getElementById('fDeskripsi').value = '';
+  document.getElementById('fJenis').value     = '';
+  document.getElementById('fUpt').value       = 'semua';
+  document.getElementById('fBatas').value     = '';
+  document.getElementById('fBatasWaktu').value= '3';
+  document.getElementById('fStatus').value    = 'Aktif';
+  document.getElementById('fEskalasi').value  = 'eskalasi';
+  openModal('modalFlow');
+}
+
+function openEditFlowModal(id) {
+  const f = getFlow(id);
+  if (!f) return;
+  state.editingFlowId = id;
+  document.getElementById('modalFlowTitle').textContent = 'Edit Alur Approval';
+  document.getElementById('modalFlowSub').textContent   = f.kode + ' — ' + f.nama;
+  document.getElementById('fKode').value      = f.kode;
+  document.getElementById('fNama').value      = f.nama;
+  document.getElementById('fDeskripsi').value = f.deskripsi || '';
+  document.getElementById('fJenis').value     = f.jenis;
+  document.getElementById('fUpt').value       = f.upt || 'semua';
+  document.getElementById('fBatas').value     = f.batas || '';
+  document.getElementById('fBatasWaktu').value= f.batasWaktu || 3;
+  document.getElementById('fStatus').value    = f.status;
+  document.getElementById('fEskalasi').value  = f.eskalasi || 'notif';
+  openModal('modalFlow');
+}
+
+function saveFlow() {
+  const kode  = document.getElementById('fKode').value.trim();
+  const nama  = document.getElementById('fNama').value.trim();
+  const jenis = document.getElementById('fJenis').value;
+  if (!kode || !nama || !jenis) {
+    showToast('warning','fa-triangle-exclamation','Mohon isi Kode, Nama, dan Jenis Dokumen.');
+    return;
+  }
+  const payload = {
+    kode, nama, jenis,
+    deskripsi  : document.getElementById('fDeskripsi').value.trim(),
+    upt        : document.getElementById('fUpt').value,
+    batas      : parseInt(document.getElementById('fBatas').value) || 0,
+    batasWaktu : parseInt(document.getElementById('fBatasWaktu').value) || 3,
+    status     : document.getElementById('fStatus').value,
+    eskalasi   : document.getElementById('fEskalasi').value,
+  };
+  if (state.editingFlowId) {
+    const idx = FLOWS.findIndex(f => f.id === state.editingFlowId);
+    if (idx >= 0) Object.assign(FLOWS[idx], payload);
+    showToast('success','fa-circle-check','Alur berhasil diperbarui.');
+  } else {
+    const newId = Math.max(0,...FLOWS.map(f=>f.id)) + 1;
+    FLOWS.push({ id:newId, ...payload, steps:[] });
+    state.selectedFlowId = newId;
+    showToast('success','fa-circle-check','Alur baru berhasil ditambahkan.');
+  }
+  closeModal('modalFlow');
+  updateStats();
+  renderList();
+  renderFlowDetail();
+}
+
+function deleteFlow(id) {
+  const f = getFlow(id);
+  if (!f) return;
+  if (!confirm(`Hapus alur "${f.nama}"?\n\nTindakan ini tidak dapat dibatalkan.`)) return;
+  FLOWS = FLOWS.filter(x => x.id !== id);
+  if (state.selectedFlowId === id) state.selectedFlowId = null;
+  showToast('success','fa-trash','Alur berhasil dihapus.');
+  updateStats();
+  renderList();
+  renderFlowDetail();
+}
+
+// ═══════════════════════════════════════════
+//  STEP MODAL
+// ═══════════════════════════════════════════
+function openAddStepModal() {
+  const f = getFlow(state.selectedFlowId);
+  if (!f) return;
+  state.editingStepId  = null;
+  state.editingStepIdx = null;
+  state.stepSelectedUsers = new Set();
+  document.getElementById('modalStepTitle').textContent = 'Tambah Tahap Approval';
+  document.getElementById('modalStepSub').textContent   = 'Alur: ' + f.nama;
+  document.getElementById('sNama').value       = '';
+  document.getElementById('sTipe').value       = 'wajib';
+  document.getElementById('sMode').value       = 'semua';
+  document.getElementById('sKeterangan').value = '';
+  renderApproverPicker();
+  openModal('modalStep');
+}
+
+function openEditStepModal(stepId) {
+  const f = getFlow(state.selectedFlowId);
+  if (!f) return;
+  const stepIdx = f.steps.findIndex(s => s.id === stepId);
+  if (stepIdx < 0) return;
+  const step = f.steps[stepIdx];
+  state.editingStepId  = stepId;
+  state.editingStepIdx = stepIdx;
+  state.stepSelectedUsers = new Set(step.approvers);
+  document.getElementById('modalStepTitle').textContent = 'Edit Tahap';
+  document.getElementById('modalStepSub').textContent   = step.nama;
+  document.getElementById('sNama').value       = step.nama;
+  document.getElementById('sTipe').value       = step.tipe;
+  document.getElementById('sMode').value       = step.mode;
+  document.getElementById('sKeterangan').value = step.keterangan || '';
+  renderApproverPicker();
+  openModal('modalStep');
+}
+
+function saveStep() {
+  const nama = document.getElementById('sNama').value.trim();
+  if (!nama) { showToast('warning','fa-triangle-exclamation','Mohon isi Nama Tahap.'); return; }
+  if (!state.stepSelectedUsers.size) { showToast('warning','fa-triangle-exclamation','Pilih minimal satu approver.'); return; }
+  const f = getFlow(state.selectedFlowId);
+  if (!f) return;
+  const payload = {
+    nama, tipe: document.getElementById('sTipe').value,
+    mode: document.getElementById('sMode').value,
+    keterangan: document.getElementById('sKeterangan').value.trim(),
+    approvers: [...state.stepSelectedUsers],
+  };
+  if (state.editingStepId) {
+    const idx = f.steps.findIndex(s => s.id === state.editingStepId);
+    if (idx >= 0) Object.assign(f.steps[idx], payload);
+    showToast('success','fa-circle-check','Tahap berhasil diperbarui.');
+  } else {
+    const newId = Date.now();
+    f.steps.push({ id:newId, ...payload });
+    showToast('success','fa-circle-check','Tahap berhasil ditambahkan.');
+  }
+  closeModal('modalStep');
+  updateStats();
+  renderFlowDetail();
+}
+
+function deleteStep(stepId) {
+  const f = getFlow(state.selectedFlowId);
+  if (!f) return;
+  const s = f.steps.find(x => x.id === stepId);
+  if (!s) return;
+  if (!confirm(`Hapus tahap "${s.nama}"?`)) return;
+  f.steps = f.steps.filter(x => x.id !== stepId);
+  showToast('success','fa-trash','Tahap dihapus.');
+  updateStats();
+  renderFlowDetail();
+}
+
+// ═══════════════════════════════════════════
+//  APPROVER MANAGEMENT
+// ═══════════════════════════════════════════
+function renderApproverPicker() {
+  const q = (document.getElementById('approverSearch')?.value || '').toLowerCase();
+  const users = ALL_USERS.filter(u =>
+    !q || u.nama.toLowerCase().includes(q) || u.jabatan.toLowerCase().includes(q));
+  const list = document.getElementById('approverPickerList');
+  list.innerHTML = users.map(u => {
+    const sel = state.stepSelectedUsers.has(u.id);
+    return `<div class="user-pick-row ${sel?'selected':''}" onclick="toggleApprover('${u.id}')">
+      <div class="pick-avatar" style="background:${u.warna};">${initials(u.nama)}</div>
+      <div style="flex:1;min-width:0;">
+        <div class="pick-name">${u.nama}</div>
+        <div class="pick-role">${u.jabatan}</div>
+      </div>
+      <i class="fa-solid fa-check pick-check" style="color:${sel?'var(--sage)':'transparent'};"></i>
+    </div>`;
+  }).join('');
+  const cnt = state.stepSelectedUsers.size;
+  document.getElementById('selectedCount').textContent = cnt
+    ? cnt + ' approver dipilih'
+    : 'Belum ada approver dipilih';
+}
+
+function filterApproverList() { renderApproverPicker(); }
+
+function toggleApprover(uid) {
+  if (state.stepSelectedUsers.has(uid)) state.stepSelectedUsers.delete(uid);
+  else state.stepSelectedUsers.add(uid);
+  renderApproverPicker();
+}
+
+// tambah approver langsung dari step (shortcut)
+function openAddApproverToStep(stepId) {
+  const f = getFlow(state.selectedFlowId);
+  if (!f) return;
+  const step = f.steps.find(s => s.id === stepId);
+  if (!step) return;
+  state.editingStepId  = stepId;
+  state.editingStepIdx = f.steps.findIndex(s => s.id === stepId);
+  state.stepSelectedUsers = new Set(step.approvers);
+  document.getElementById('modalStepTitle').textContent = 'Tambah Approver';
+  document.getElementById('modalStepSub').textContent   = 'Tahap: ' + step.nama;
+  document.getElementById('sNama').value       = step.nama;
+  document.getElementById('sTipe').value       = step.tipe;
+  document.getElementById('sMode').value       = step.mode;
+  document.getElementById('sKeterangan').value = step.keterangan || '';
+  if (document.getElementById('approverSearch')) document.getElementById('approverSearch').value = '';
+  renderApproverPicker();
+  openModal('modalStep');
+}
+
+function removeApprover(stepId, uid) {
+  const f = getFlow(state.selectedFlowId);
+  if (!f) return;
+  const step = f.steps.find(s => s.id === stepId);
+  if (!step) return;
+  if (step.approvers.length <= 1) {
+    showToast('warning','fa-triangle-exclamation','Minimal satu approver harus ada di setiap tahap.');
+    return;
+  }
+  step.approvers = step.approvers.filter(id => id !== uid);
+  renderFlowDetail();
+}
+
+// ═══════════════════════════════════════════
+//  EXPORT
+// ═══════════════════════════════════════════
+function exportCSV() {
+  const rows = [];
+  rows.push(['Kode Alur','Nama Alur','Jenis','Status','Batas Nilai','Batas Waktu (Hari)','Urutan Tahap','Nama Tahap','Tipe Tahap','Mode','Approver','Jabatan']);
+  FLOWS.forEach(f => {
+    f.steps.forEach((s, i) => {
+      s.approvers.forEach(uid => {
+        const u = getUser(uid);
+        rows.push([f.kode, f.nama, f.jenis, f.status, f.batas||0, f.batasWaktu, i+1, s.nama, s.tipe, s.mode, u?.nama||uid, u?.jabatan||'']);
+      });
+    });
+  });
+  const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+  const link = document.createElement('a');
+  link.href     = URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
+  link.download = 'master_approval.csv';
+  link.click();
+  showToast('success','fa-file-csv','Berhasil mengekspor data approval ke CSV.');
+}
+
+// ═══════════════════════════════════════════
+//  MODAL UTILS
+// ═══════════════════════════════════════════
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function closeModalIfBg(e,id) { if (e.target === document.getElementById(id)) closeModal(id); }
+
+// ═══════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════
+function showToast(type,icon,msg) {
+  const stack = document.getElementById('toastStack');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<i class="fa-solid ${icon}"></i><span>${msg}</span>`;
+  stack.appendChild(t);
+  setTimeout(()=>{ t.style.cssText='opacity:0;transform:translateX(20px);transition:all .3s;'; setTimeout(()=>t.remove(),300); },3500);
+}
+
+// ═══════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════
+document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('id-ID',{weekday:'short',day:'numeric',month:'long',year:'numeric'});
+updateStats();
+renderList();
+</script>
+
+<script src="sidebar.js"></script>
+</body>
+</html>

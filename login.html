@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistem Anggaran &mdash; Masuk</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root {
+    --cream:      #f4f7fc;
+    --cream-mid:  #e8eef8;
+    --cream-dark: #d5e0f0;
+    --sand:       #c2d0e6;
+    --amber:      #F68B21;
+    --amber-light:#ffaa50;
+    --amber-dim:  rgba(246,139,33,0.12);
+    --sage:       #3972B8;
+    --sage-light: #5a90d6;
+    --sage-dim:   rgba(57,114,184,0.1);
+    --ink:        #1a2333;
+    --ink-mid:    #2e3f5c;
+    --ink-soft:   #5a6e8a;
+    --ink-muted:  #8fa0b8;
+    --white:      #ffffff;
+    --danger:     #d94040;
+    --radius:     14px;
+    --radius-sm:  9px;
+    --shadow:     0 4px 24px rgba(57,114,184,0.1);
+    --shadow-md:  0 8px 40px rgba(57,114,184,0.15);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  /* LAYOUT */
+  .shell {
+    display: grid;
+    grid-template-columns: 1fr 480px;
+    min-height: 100vh;
+  }
+
+  /* LEFT PANEL */
+  .left-panel {
+    background: var(--sage);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 44px 52px;
+    overflow: hidden;
+  }
+
+  .left-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 80% 20%, rgba(255,255,255,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 10% 90%, rgba(246,139,33,0.2) 0%, transparent 60%);
+  }
+
+  .deco-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+  .ring-1 { width:480px; height:480px; top:-120px; right:-180px; }
+  .ring-2 { width:320px; height:320px; top:-40px; right:-80px; border-color:rgba(255,255,255,0.07); }
+  .ring-3 { width:280px; height:280px; bottom:-80px; left:-80px; border-color:rgba(255,255,255,0.08); }
+  .ring-4 { width:160px; height:160px; bottom:40px; left:40px; border-color:rgba(246,139,33,0.25); }
+
+  .dot { position: absolute; border-radius: 50%; background: rgba(255,255,255,0.15); }
+  .dot-1 { width:8px; height:8px; top:38%; left:72%; animation: floatY 6s ease-in-out infinite; }
+  .dot-2 { width:5px; height:5px; top:55%; left:30%; animation: floatY 8s ease-in-out infinite 2s; background:rgba(246,139,33,0.6); }
+  .dot-3 { width:10px; height:10px; top:22%; left:45%; animation: floatY 7s ease-in-out infinite 1s; }
+
+  @keyframes floatY {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-12px); }
+  }
+
+  .left-top { position: relative; z-index: 1; }
+  .left-mid  { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .left-bot  { position: relative; z-index: 1; }
+
+  .brand-logo { display: inline-flex; align-items: center; gap: 10px; }
+
+  .brand-logo img {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 3px;
+  }
+
+  .logo-text {
+    font-family: 'Lora', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: -0.3px;
+  }
+
+  /* HERO ILLUSTRATION */
+  .hero-illustration { margin: 36px 0 32px; }
+
+  .fin-scene {
+    width: 100%;
+    max-width: 400px;
+    filter: drop-shadow(0 12px 32px rgba(0,0,0,0.2));
+  }
+
+  @keyframes coinBounce {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-5px); }
+  }
+  @keyframes barGrow {
+    from { transform: scaleY(0); transform-origin: bottom; }
+    to   { transform: scaleY(1); transform-origin: bottom; }
+  }
+  @keyframes fadeInUp {
+    from { opacity:0; transform: translateY(8px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+
+  .fin-bar { animation: barGrow 0.7s cubic-bezier(0.34,1.56,0.64,1) both; }
+  .fin-bar-1 { animation-delay: 0.3s; }
+  .fin-bar-2 { animation-delay: 0.45s; }
+  .fin-bar-3 { animation-delay: 0.6s; }
+  .fin-bar-4 { animation-delay: 0.75s; }
+  .fin-bar-5 { animation-delay: 0.9s; }
+  .fin-bar-6 { animation-delay: 1.05s; }
+
+  .fin-card { animation: fadeInUp 0.5s ease both; }
+  .fin-card-1 { animation-delay: 0.1s; }
+  .fin-card-2 { animation-delay: 0.2s; }
+  .fin-card-3 { animation-delay: 0.3s; }
+
+  .coin-stack { animation: coinBounce 3s ease-in-out infinite; }
+
+  .hero-heading {
+    font-family: 'Lora', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: white;
+    line-height: 1.3;
+    letter-spacing: -0.5px;
+  }
+  .hero-heading em { font-style: italic; color: #ffd199; }
+
+  .hero-sub {
+    font-size: 15px;
+    color: rgba(255,255,255,0.65);
+    margin-top: 14px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .feature-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 28px;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 30px;
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.85);
+    backdrop-filter: blur(4px);
+  }
+  .pill-dot { width:6px; height:6px; border-radius:50%; background:var(--amber-light); }
+
+  /* RIGHT PANEL */
+  .right-panel {
+    background: var(--cream);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 52px;
+    position: relative;
+    overflow: hidden;
+    animation: slideIn 0.5s cubic-bezier(0.22,1,0.36,1);
+  }
+
+  @keyframes slideIn {
+    from { opacity:0; transform: translateX(30px); }
+    to   { opacity:1; transform: translateX(0); }
+  }
+
+  .right-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 70% 50% at 50% 100%, var(--cream-mid) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .form-wrap { position: relative; z-index: 1; max-width: 340px; width: 100%; }
+
+  .form-eyebrow {
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--amber);
+    font-weight: 600;
+    margin-bottom: 10px;
+    animation: fadeUp 0.5s ease 0.1s both;
+  }
+  .form-heading {
+    font-family: 'Lora', serif;
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.25;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+    animation: fadeUp 0.5s ease 0.15s both;
+  }
+  .form-subtext {
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin-bottom: 34px;
+    animation: fadeUp 0.5s ease 0.2s both;
+    font-weight: 300;
+  }
+
+  @keyframes fadeUp {
+    from { opacity:0; transform: translateY(10px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+
+  .form-group { margin-bottom: 18px; animation: fadeUp 0.5s ease both; }
+  .form-group:nth-child(1) { animation-delay: 0.25s; }
+  .form-group:nth-child(2) { animation-delay: 0.3s; }
+  .form-group:nth-child(3) { animation-delay: 0.35s; }
+
+  .form-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-mid);
+    letter-spacing: 0.3px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .input-wrap { position: relative; }
+
+  /* Icon FA di dalam input */
+  .input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: var(--ink-muted);
+    pointer-events: none;
+    transition: color 0.2s;
+    width: 16px;
+    text-align: center;
+    line-height: 1;
+  }
+
+  .input-wrap:focus-within .input-icon { color: var(--sage); }
+
+  .form-input {
+    width: 100%;
+    padding: 13px 14px 13px 42px;
+    background: var(--white);
+    border: 1.5px solid var(--cream-dark);
+    border-radius: var(--radius-sm);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    transition: all 0.2s;
+    outline: none;
+    box-shadow: 0 1px 3px rgba(42,33,24,0.04);
+  }
+  .form-input::placeholder { color: var(--ink-muted); font-weight: 300; }
+  .form-input:focus {
+    border-color: var(--sage);
+    box-shadow: 0 0 0 4px var(--sage-dim), 0 1px 3px rgba(42,33,24,0.04);
+  }
+
+  /* Toggle password button — pakai FA icon */
+  .pw-toggle {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--ink-muted);
+    font-size: 14px;
+    transition: color 0.2s;
+    padding: 0;
+    line-height: 1;
+    width: 20px;
+    text-align: center;
+  }
+  .pw-toggle:hover { color: var(--sage); }
+
+  .form-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    animation: fadeUp 0.5s ease 0.38s both;
+  }
+
+  .remember { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+  .remember-box {
+    width: 17px; height: 17px;
+    border: 1.5px solid var(--sand);
+    border-radius: 5px;
+    background: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .remember-box.checked { background: var(--sage); border-color: var(--sage); }
+  .remember-box.checked::after { content: '\2713'; color: white; font-size: 10px; font-weight: 700; }
+  .remember-label { font-size: 13px; color: var(--ink-soft); user-select: none; }
+
+  .forgot-link {
+    font-size: 13px;
+    color: var(--amber);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .forgot-link:hover { color: var(--amber-light); }
+
+  .btn-login {
+    width: 100%;
+    padding: 14px;
+    background: var(--sage);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s;
+    letter-spacing: 0.2px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.5s ease 0.42s both;
+    box-shadow: 0 4px 16px rgba(57,114,184,0.35);
+  }
+  .btn-login::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    transition: left 0.5s;
+  }
+  .btn-login:hover { background: var(--sage-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(57,114,184,0.4); }
+  .btn-login:hover::before { left: 100%; }
+  .btn-login:active { transform: translateY(0); }
+  .btn-login.loading { pointer-events: none; background: var(--sage-light); }
+  .btn-login .spinner {
+    display: none;
+    width: 18px; height: 18px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin: 0 auto;
+  }
+  .btn-login.loading .btn-label { display: none; }
+  .btn-login.loading .spinner { display: block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .error-msg {
+    display: none;
+    background: rgba(192,68,58,0.08);
+    border: 1px solid rgba(192,68,58,0.2);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--danger);
+    margin-bottom: 16px;
+    align-items: center;
+    gap: 8px;
+  }
+  .error-msg.show { display: flex; }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 22px 0;
+    animation: fadeUp 0.5s ease 0.45s both;
+  }
+  .divider-line { flex: 1; height: 1px; background: var(--cream-dark); }
+  .divider-text { font-size: 12px; color: var(--ink-muted); white-space: nowrap; }
+
+  .social-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    animation: fadeUp 0.5s ease 0.48s both;
+  }
+  .btn-social {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 11px 16px;
+    background: var(--white);
+    border: 1.5px solid var(--cream-dark);
+    border-radius: var(--radius-sm);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px; font-weight: 500;
+    color: var(--ink-mid);
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 1px 3px rgba(42,33,24,0.04);
+  }
+  .btn-social:hover { border-color: var(--cream-dark); background: var(--cream-mid); transform: translateY(-1px); }
+  .btn-social svg { width: 17px; height: 17px; }
+
+  .register-link {
+    text-align: center;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    margin-top: 24px;
+    animation: fadeUp 0.5s ease 0.5s both;
+  }
+  .register-link a { color: var(--amber); font-weight: 600; text-decoration: none; transition: color 0.2s; }
+  .register-link a:hover { color: var(--amber-light); }
+
+  @media (max-width: 820px) {
+    body { overflow: auto; }
+    .shell { grid-template-columns: 1fr; }
+    .left-panel { display: none; }
+    .right-panel { min-height: 100vh; padding: 48px 28px; align-items: center; }
+    .form-wrap { max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div class="deco-ring ring-1"></div>
+    <div class="deco-ring ring-2"></div>
+    <div class="deco-ring ring-3"></div>
+    <div class="deco-ring ring-4"></div>
+    <div class="dot dot-1"></div>
+    <div class="dot dot-2"></div>
+    <div class="dot dot-3"></div>
+
+    <div class="left-top">
+      <div class="brand-logo">
+        <img src="logo.png" alt="Sistem Anggaran"
+             style="width:38px;height:38px;border-radius:10px;object-fit:contain;box-shadow:0 4px 12px rgba(0,0,0,0.18);background:#ffffff;padding:4px;">
+        <span class="logo-text">Sistem Anggaran</span>
+      </div>
+    </div>
+
+    <div class="left-mid">
+      <div class="hero-illustration">
+        <svg class="fin-scene" viewBox="0 0 400 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="400" height="280" rx="20" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+          <rect x="16" y="16" width="150" height="90" rx="12" fill="rgba(246,139,33,0.25)" stroke="rgba(246,139,33,0.5)" stroke-width="1" class="fin-card fin-card-1"/>
+          <rect x="16" y="40" width="150" height="14" fill="rgba(0,0,0,0.15)"/>
+          <rect x="28" y="52" width="26" height="20" rx="4" fill="rgba(255,220,100,0.7)" stroke="rgba(246,139,33,0.4)" stroke-width="0.5"/>
+          <line x1="36" y1="52" x2="36" y2="72" stroke="rgba(200,150,0,0.4)" stroke-width="1"/>
+          <line x1="44" y1="52" x2="44" y2="72" stroke="rgba(200,150,0,0.4)" stroke-width="1"/>
+          <line x1="28" y1="62" x2="54" y2="62" stroke="rgba(200,150,0,0.4)" stroke-width="1"/>
+          <rect x="28" y="80" width="30" height="6" rx="3" fill="rgba(255,255,255,0.5)"/>
+          <rect x="66" y="80" width="30" height="6" rx="3" fill="rgba(255,255,255,0.5)"/>
+          <rect x="104" y="80" width="30" height="6" rx="3" fill="rgba(255,255,255,0.5)"/>
+          <rect x="142" y="80" width="18" height="6" rx="3" fill="rgba(255,255,255,0.5)"/>
+          <rect x="28" y="94" width="55" height="5" rx="2.5" fill="rgba(255,255,255,0.3)"/>
+          <path d="M152 28 Q158 22 152 16" stroke="rgba(255,255,255,0.6)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <path d="M155 31 Q164 22 155 13" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <path d="M158 34 Q170 22 158 10" stroke="rgba(255,255,255,0.28)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <rect x="24" y="22" width="150" height="90" rx="12" fill="rgba(57,114,184,0.2)" stroke="rgba(57,114,184,0.35)" stroke-width="1" class="fin-card fin-card-2"/>
+          <g class="coin-stack">
+            <ellipse cx="318" cy="90" rx="36" ry="10" fill="rgba(200,155,0,0.5)" stroke="rgba(246,200,50,0.4)" stroke-width="0.5"/>
+            <rect x="282" y="76" width="72" height="14" fill="rgba(246,190,40,0.55)"/>
+            <ellipse cx="318" cy="76" rx="36" ry="10" fill="rgba(246,200,50,0.75)" stroke="rgba(255,220,80,0.5)" stroke-width="0.5"/>
+            <ellipse cx="318" cy="72" rx="36" ry="10" fill="rgba(200,155,0,0.5)" stroke="rgba(246,200,50,0.4)" stroke-width="0.5"/>
+            <rect x="282" y="58" width="72" height="14" fill="rgba(246,190,40,0.6)"/>
+            <ellipse cx="318" cy="58" rx="36" ry="10" fill="rgba(246,210,60,0.8)" stroke="rgba(255,230,90,0.5)" stroke-width="0.5"/>
+            <text x="318" y="63" text-anchor="middle" font-size="11" fill="rgba(180,130,0,0.9)" font-weight="700" font-family="serif">Rp</text>
+            <ellipse cx="318" cy="54" rx="36" ry="10" fill="rgba(200,155,0,0.5)" stroke="rgba(246,200,50,0.4)" stroke-width="0.5"/>
+            <rect x="282" y="40" width="72" height="14" fill="rgba(246,190,40,0.65)"/>
+            <ellipse cx="318" cy="40" rx="36" ry="10" fill="rgba(255,220,70,0.9)" stroke="rgba(255,235,100,0.6)" stroke-width="1"/>
+            <text x="318" y="45" text-anchor="middle" font-size="11" fill="rgba(150,100,0,0.95)" font-weight="700" font-family="serif">Rp</text>
+          </g>
+          <ellipse cx="304" cy="37" rx="8" ry="3" fill="rgba(255,255,255,0.25)" transform="rotate(-20 304 37)"/>
+          <rect x="16" y="120" width="232" height="70" rx="12" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.15)" stroke-width="0.5" class="fin-card fin-card-3"/>
+          <rect x="28" y="132" width="70" height="5" rx="2.5" fill="rgba(255,255,255,0.35)"/>
+          <rect x="28" y="143" width="110" height="14" rx="5" fill="rgba(255,255,255,0.7)"/>
+          <rect x="28" y="164" width="55" height="5" rx="2.5" fill="rgba(106,200,155,0.8)"/>
+          <rect x="91" y="164" width="1.5" height="5" fill="rgba(255,255,255,0.2)"/>
+          <rect x="98" y="164" width="45" height="5" rx="2.5" fill="rgba(224,92,92,0.7)"/>
+          <polyline points="155,175 165,168 175,172 185,160 195,165 205,155 215,158 225,152 235,155" stroke="rgba(106,200,155,0.7)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <polyline points="155,175 165,168 175,172 185,160 195,165 205,155 215,158 225,152 235,155" stroke="rgba(106,200,155,0.15)" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="16" y="202" width="170" height="62" rx="10" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+          <rect x="26" y="210" width="60" height="5" rx="2.5" fill="rgba(255,255,255,0.25)"/>
+          <rect x="28"  y="240" width="16" height="18" rx="3" fill="rgba(255,255,255,0.2)"   class="fin-bar fin-bar-1"/>
+          <rect x="50"  y="228" width="16" height="30" rx="3" fill="rgba(57,114,184,0.7)"    class="fin-bar fin-bar-2"/>
+          <rect x="72"  y="233" width="16" height="25" rx="3" fill="rgba(255,255,255,0.2)"   class="fin-bar fin-bar-3"/>
+          <rect x="94"  y="222" width="16" height="36" rx="3" fill="rgba(246,139,33,0.85)"   class="fin-bar fin-bar-4"/>
+          <rect x="116" y="236" width="16" height="22" rx="3" fill="rgba(255,255,255,0.2)"   class="fin-bar fin-bar-5"/>
+          <rect x="138" y="225" width="16" height="33" rx="3" fill="rgba(106,200,155,0.8)"   class="fin-bar fin-bar-6"/>
+          <rect x="198" y="202" width="186" height="62" rx="10" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+          <rect x="210" y="210" width="60" height="5" rx="2.5" fill="rgba(255,255,255,0.25)"/>
+          <circle cx="244" cy="234" r="20" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="12"/>
+          <circle cx="244" cy="234" r="20" fill="none" stroke="rgba(57,114,184,0.85)"  stroke-width="12" stroke-dasharray="50 76"  stroke-dashoffset="0"   transform="rotate(-90 244 234)"/>
+          <circle cx="244" cy="234" r="20" fill="none" stroke="rgba(246,139,33,0.85)"  stroke-width="12" stroke-dasharray="30 96"  stroke-dashoffset="-50" transform="rotate(-90 244 234)"/>
+          <circle cx="244" cy="234" r="20" fill="none" stroke="rgba(106,200,155,0.8)"  stroke-width="12" stroke-dasharray="20 106" stroke-dashoffset="-80" transform="rotate(-90 244 234)"/>
+          <circle cx="244" cy="234" r="11" fill="rgba(57,114,184,0.12)"/>
+          <rect x="235" y="231" width="18" height="5" rx="2.5" fill="rgba(255,255,255,0.55)"/>
+          <circle cx="274" cy="222" r="4" fill="rgba(57,114,184,0.85)"/>
+          <rect x="281" y="219" width="30" height="4" rx="2" fill="rgba(255,255,255,0.35)"/>
+          <circle cx="274" cy="233" r="4" fill="rgba(246,139,33,0.85)"/>
+          <rect x="281" y="230" width="40" height="4" rx="2" fill="rgba(255,255,255,0.35)"/>
+          <circle cx="274" cy="244" r="4" fill="rgba(106,200,155,0.8)"/>
+          <rect x="281" y="241" width="35" height="4" rx="2" fill="rgba(255,255,255,0.35)"/>
+          <g transform="translate(278, 110)">
+            <rect width="96" height="28" rx="8" fill="rgba(106,200,155,0.15)" stroke="rgba(106,200,155,0.3)" stroke-width="0.8"/>
+            <text x="12" y="19" font-size="18" fill="rgba(106,200,155,0.9)">&#8593;</text>
+            <rect x="32" y="10" width="50" height="5" rx="2.5" fill="rgba(106,200,155,0.6)"/>
+            <rect x="32" y="18" width="36" height="4" rx="2" fill="rgba(255,255,255,0.25)"/>
+          </g>
+          <g transform="translate(164, 108)" class="coin-stack">
+            <rect width="58" height="22" rx="11" fill="rgba(246,139,33,0.2)" stroke="rgba(246,139,33,0.45)" stroke-width="1"/>
+            <text x="29" y="16" text-anchor="middle" font-size="12" fill="rgba(255,220,130,0.9)" font-weight="700" font-family="'Plus Jakarta Sans',sans-serif">+Rp 2M</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="hero-heading">
+        Kelola anggaran dengan<br><em>lebih cerdas</em>
+      </div>
+      <div class="hero-sub">
+        Pantau pemasukan, pengeluaran, dan alokasi anggaran<br>dalam satu dasbor yang ringkas dan akurat.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <div class="form-wrap">
+
+      <div class="form-eyebrow">Selamat datang kembali</div>
+      <div class="form-heading">Masuk ke akun Anda</div>
+
+      <div class="error-msg" id="errorMsg">
+        <span><i class="fa-solid fa-triangle-exclamation"></i></span>
+        <span id="errorText">Email atau kata sandi salah.</span>
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label class="form-label">Alamat Email</label>
+        <div class="input-wrap">
+          <input class="form-input" id="emailInput" type="email" placeholder="nama@email.com" autocomplete="email">
+          <span class="input-icon"><i class="fa-regular fa-envelope"></i></span>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label class="form-label">Kata Sandi</label>
+        <div class="input-wrap">
+          <input class="form-input" id="passwordInput" type="password" placeholder="Masukkan kata sandi" autocomplete="current-password">
+          <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
+          <button class="pw-toggle" id="pwToggle" onclick="togglePassword()" title="Tampilkan kata sandi">
+            <i class="fa-regular fa-eye" id="pwIcon"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-meta">
+        <div class="remember" onclick="toggleRemember()">
+          <div class="remember-box" id="rememberBox"></div>
+          <span class="remember-label">Ingat saya</span>
+        </div>
+        <a href="#" class="forgot-link">Lupa kata sandi?</a>
+      </div>
+
+      <button class="btn-login" id="loginBtn" onclick="handleLogin()">
+        <span class="btn-label">Masuk ke Dasbor &#8594;</span>
+        <div class="spinner"></div>
+      </button>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let pwVisible = false;
+  function togglePassword() {
+    pwVisible = !pwVisible;
+    const input = document.getElementById('passwordInput');
+    const icon  = document.getElementById('pwIcon');
+    input.type  = pwVisible ? 'text' : 'password';
+    // Ganti icon FA: eye <-> eye-slash
+    icon.className = pwVisible ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye';
+  }
+
+  let remembered = false;
+  function toggleRemember() {
+    remembered = !remembered;
+    document.getElementById('rememberBox').classList.toggle('checked', remembered);
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') handleLogin();
+  });
+
+  function handleLogin() {
+    const email    = document.getElementById('emailInput').value.trim();
+    const password = document.getElementById('passwordInput').value;
+    const btn      = document.getElementById('loginBtn');
+    const errorMsg = document.getElementById('errorMsg');
+
+    errorMsg.classList.remove('show');
+
+    if (!email || !password) {
+      document.getElementById('errorText').textContent = 'Mohon isi email dan kata sandi.';
+      errorMsg.classList.add('show');
+      return;
+    }
+    if (!email.includes('@')) {
+      document.getElementById('errorText').textContent = 'Format email tidak valid.';
+      errorMsg.classList.add('show');
+      return;
+    }
+
+    btn.classList.add('loading');
+    setTimeout(() => {
+      window.location.href = 'dashboard.html';
+    }, 1400);
+  }
+</script>
+</body>
+</html>
