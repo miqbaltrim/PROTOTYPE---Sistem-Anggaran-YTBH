@@ -27,9 +27,6 @@ const SB_CONFIG = {
       label: 'Utama',
       items: [
         { nav:'dashboard', href:'dashboard.html', icon:'fa-solid fa-house', label:'Dasbor' },
-        { nav:'transaksi', href:'transaksi.html', icon:'fa-solid fa-arrow-right-arrow-left', label:'Transaksi', badge:4 },
-        { nav:'anggaran',  href:'anggaran.html',  icon:'fa-solid fa-wallet', label:'Anggaran' },
-        { nav:'tabungan',  href:'tabungan.html',  icon:'fa-solid fa-piggy-bank', label:'Tujuan Tabungan' },
       ],
     },
     {

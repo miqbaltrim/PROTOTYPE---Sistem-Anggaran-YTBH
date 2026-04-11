@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Master UPT — Cabang di Bawah Divisi UPK</title>
+<title>Master UPT — Unit Pelaksana Teknis & RKA</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="sidebar.css">
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -322,11 +322,11 @@
 <div class="main">
   <div class="topbar">
     <div class="breadcrumb">
-      Sistem Anggaran <span>›</span> Master Organisasi <span>›</span> <b>Master UPT / Cabang</b>
+      Sistem Anggaran <span>›</span> Master Organisasi <span>›</span> <b>Master UPT</b>
     </div>
     <div class="topbar-right">
       <div class="topbar-date" id="topbarDate">—</div>
-      <div class="chip-info"><i class="fa-solid fa-link"></i> Terkait divisi Master UPK</div>
+      <div class="chip-info"><i class="fa-solid fa-link"></i> Terkait UPK induk</div>
       <button class="icon-btn" type="button" aria-label="Notifikasi">
         <i class="fa-solid fa-bell"></i>
         <span class="notif-dot"></span>
@@ -337,92 +337,60 @@
   <div class="content">
     <div class="page-header">
       <div>
-        <div class="page-title">Master <em>UPT</em> sebagai Cabang</div>
+        <div class="page-title">Master <em>UPT</em> &amp; Penyusunan RKA</div>
       </div>
       <div class="page-actions">
-        <button class="btn btn-ghost" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Export Cabang</button>
-        <button class="btn btn-accent" onclick="focusHierarchyFilter()"><i class="fa-solid fa-filter-circle-dollar"></i> Filter per Divisi</button>
-        <button class="btn btn-primary" onclick="openAddModal()"><i class="fa-solid fa-plus"></i> Tambah Cabang UPT</button>
+        <button class="btn btn-ghost" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Export UPT</button>
+        <button class="btn btn-accent" onclick="focusHierarchyFilter()"><i class="fa-solid fa-filter-circle-dollar"></i> Filter per UPK</button>
+        <button class="btn btn-primary" onclick="openAddModal()"><i class="fa-solid fa-plus"></i> Tambah UPT</button>
       </div>
     </div>
-
-    <section class="hero">
-      <div class="hero-left">
-        <div class="eyebrow">Hierarki Cabang</div>
-        <div class="hero-title">Setiap <strong>UPT</strong> harus terhubung ke <strong>UPK</strong> sebagai divisi induk.</div>
-        <div class="hero-actions">
-          <span class="hero-chip"><i class="fa-solid fa-sitemap"></i> Wajib pilih induk UPK</span>
-          <span class="hero-chip"><i class="fa-solid fa-code-branch"></i> UPT = cabang operasional</span>
-          <span class="hero-chip"><i class="fa-solid fa-money-bill-wave"></i> Pagu mengikuti cabang</span>
-        </div>
-      </div>
-      <div class="hero-right">
-        <div class="hero-mini">
-          <div class="hero-mini-label">Total Cabang</div>
-          <div class="hero-mini-value" id="heroTotalUpt">—</div>
-          <div class="hero-mini-sub">UPT terdaftar</div>
-        </div>
-        <div class="hero-mini">
-          <div class="hero-mini-label">Divisi Induk</div>
-          <div class="hero-mini-value" id="heroTotalUpk">—</div>
-          <div class="hero-mini-sub">UPK yang terhubung</div>
-        </div>
-        <div class="hero-mini">
-          <div class="hero-mini-label">Cabang Aktif</div>
-          <div class="hero-mini-value" id="heroActiveUpt">—</div>
-          <div class="hero-mini-sub">Status operasional aktif</div>
-        </div>
-        <div class="hero-mini">
-          <div class="hero-mini-label">Total Pagu</div>
-          <div class="hero-mini-value" id="heroBudget">—</div>
-          <div class="hero-mini-sub">Akumulasi seluruh cabang</div>
-        </div>
-      </div>
-    </section>
 
     <div class="stats-row">
       <div class="stat-card c-primary">
         <div class="stat-icon"><i class="fa-solid fa-code-branch"></i></div>
         <div class="stat-label">Total UPT</div>
         <div class="stat-value" id="statTotalUpt">—</div>
-        <div class="stat-sub">Seluruh cabang terdaftar</div>
+        <div class="stat-sub">Seluruh unit teknis terdaftar</div>
       </div>
       <div class="stat-card c-accent">
         <div class="stat-icon"><i class="fa-solid fa-building"></i></div>
         <div class="stat-label">UPK Induk</div>
         <div class="stat-value" id="statTotalUpk">—</div>
-        <div class="stat-sub">Divisi yang menaungi cabang</div>
+        <div class="stat-sub">UPK yang menaungi UPT</div>
       </div>
       <div class="stat-card c-success">
         <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
         <div class="stat-label">UPT Aktif</div>
         <div class="stat-value" id="statActiveUpt">—</div>
-        <div class="stat-sub">Cabang masih beroperasi</div>
+        <div class="stat-sub">UPT masih beroperasi</div>
       </div>
       <div class="stat-card c-warning">
         <div class="stat-icon"><i class="fa-solid fa-file-invoice-dollar"></i></div>
         <div class="stat-label">Total Pagu</div>
         <div class="stat-value" id="statBudget">—</div>
-        <div class="stat-sub">Akumulasi pagu cabang</div>
+        <div class="stat-sub">Akumulasi pagu unit</div>
       </div>
     </div>
 
     <div class="toolbar">
       <div class="search-wrap">
         <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-        <input class="search-input" id="searchInput" type="text" placeholder="Cari kode UPT, nama cabang, kepala, atau divisi induk..." oninput="applyFilters()">
+        <input class="search-input" id="searchInput" type="text" placeholder="Cari kode UPT, nama unit, kepala unit, atau UPK induk..." oninput="applyFilters()">
       </div>
 
       <select class="filter-select" id="filterUpk" onchange="applyFilters()">
-        <option value="">Semua Divisi UPK</option>
+        <option value="">Semua UPK</option>
       </select>
 
       <select class="filter-select" id="filterTipe" onchange="applyFilters()">
-        <option value="">Semua Tipe</option>
-        <option value="Dinas">Dinas</option>
-        <option value="Badan">Badan</option>
-        <option value="Kantor">Kantor</option>
-        <option value="UPTD">UPTD</option>
+        <option value="">Semua Jenis</option>
+        <option value="Bagian">Bagian</option>
+        <option value="Unit">Unit</option>
+        <option value="Pusat">Pusat</option>
+        <option value="Program">Program</option>
+        <option value="Fakultas">Fakultas</option>
+            <option value="Fakultas">Fakultas</option>
       </select>
 
       <select class="filter-select" id="filterStatus" onchange="applyFilters()">
@@ -449,7 +417,7 @@
       <div class="panel">
         <div class="panel-head">
           <div>
-            <div class="panel-title"><i class="fa-solid fa-code-branch" style="color:var(--primary)"></i> Daftar Cabang UPT</div>
+            <div class="panel-title"><i class="fa-solid fa-code-branch" style="color:var(--primary)"></i> Daftar Master UPT</div>
             <div class="panel-sub" id="tableSubtitle">Memuat data...</div>
           </div>
         </div>
@@ -458,12 +426,12 @@
             <thead>
               <tr>
                 <th class="sortable" data-col="kode" onclick="sortBy('kode')">Kode <i class="fa-solid fa-sort"></i></th>
-                <th class="sortable" data-col="nama" onclick="sortBy('nama')">Cabang UPT <i class="fa-solid fa-sort"></i></th>
-                <th>Divisi Induk UPK</th>
-                <th>Tipe</th>
+                <th class="sortable" data-col="nama" onclick="sortBy('nama')">Nama UPT <i class="fa-solid fa-sort"></i></th>
+                <th>UPK Induk</th>
+                <th>Jenis</th>
                 <th>Kepala UPT</th>
                 <th class="sortable" data-col="pagu" onclick="sortBy('pagu')">Pagu RKA <i class="fa-solid fa-sort"></i></th>
-                <th>Realisasi</th>
+                <th>Progress RKA</th>
                 <th>Status</th>
                 <th style="text-align:right;">Aksi</th>
               </tr>
@@ -473,7 +441,7 @@
         </div>
         <div class="empty-state" id="emptyTable" style="display:none;">
           <i class="fa-solid fa-code-branch"></i>
-          <div class="empty-title">Cabang UPT tidak ditemukan</div>
+          <div class="empty-title">UPT tidak ditemukan</div>
           <div class="empty-sub">Coba ganti kata kunci atau filter yang digunakan.</div>
         </div>
         <div class="pagination" id="paginationTable"></div>
@@ -484,7 +452,7 @@
       <div class="card-grid" id="uptGrid"></div>
       <div class="empty-state" id="emptyGrid" style="display:none; background:#fff; border:1px solid var(--line); border-radius:18px;">
         <i class="fa-solid fa-code-branch"></i>
-        <div class="empty-title">Cabang UPT tidak ditemukan</div>
+        <div class="empty-title">UPT tidak ditemukan</div>
         <div class="empty-sub">Coba ganti kata kunci atau filter yang digunakan.</div>
       </div>
       <div class="pagination" id="paginationGrid" style="background:#fff; border:1px solid var(--line); border-radius:18px;"></div>
@@ -496,31 +464,32 @@
   <div class="modal">
     <div class="modal-head">
       <div>
-        <div class="modal-title" id="modalFormTitle">Tambah Cabang UPT</div>
-        <div class="modal-sub" id="modalFormSub">Isi data cabang dan hubungkan ke divisi induk UPK.</div>
+        <div class="modal-title" id="modalFormTitle">Tambah UPT</div>
+        <div class="modal-sub" id="modalFormSub">Isi data UPT dan hubungkan ke UPK induk sebagai dasar penyusunan RKA.</div>
       </div>
       <button class="modal-close" onclick="closeModal('modalForm')"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="modal-body">
-      <div class="section-title">Hierarki Organisasi</div>
+      <div class="section-title">Relasi Struktur</div>
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">Divisi Induk UPK <span class="req">*</span></label>
+          <label class="form-label">UPK Induk <span class="req">*</span></label>
           <select class="form-select" id="fUpk"></select>
         </div>
         <div class="form-group">
-          <label class="form-label">Tipe UPT <span class="req">*</span></label>
+          <label class="form-label">Jenis UPT <span class="req">*</span></label>
           <select class="form-select" id="fTipe">
-            <option value="">— Pilih Tipe —</option>
-            <option value="Dinas">Dinas</option>
-            <option value="Badan">Badan</option>
-            <option value="Kantor">Kantor</option>
-            <option value="UPTD">UPTD</option>
+            <option value="">— Pilih Jenis —</option>
+            <option value="Bagian">Bagian</option>
+            <option value="Unit">Unit</option>
+            <option value="Pusat">Pusat</option>
+            <option value="Program">Program</option>
+            <option value="Fakultas">Fakultas</option>
           </select>
         </div>
       </div>
 
-      <div class="section-title">Identitas Cabang</div>
+      <div class="section-title">Identitas UPT</div>
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">Kode UPT <span class="req">*</span></label>
@@ -528,17 +497,17 @@
         </div>
         <div class="form-group">
           <label class="form-label">Nama UPT <span class="req">*</span></label>
-          <input class="form-input" id="fNama" type="text" placeholder="mis. UPTD Pelatihan Masyarakat">
+          <input class="form-input" id="fNama" type="text" placeholder="mis. Bagian Keuangan & Akuntansi">
         </div>
       </div>
       <div class="form-group">
-        <label class="form-label">Deskripsi Cabang</label>
-        <textarea class="form-textarea" id="fDeskripsi" placeholder="Ringkasan fungsi cabang, ruang lingkup layanan, dan peran unit..."></textarea>
+        <label class="form-label">Deskripsi UPT</label>
+        <textarea class="form-textarea" id="fDeskripsi" placeholder="Ringkasan fungsi unit, ruang lingkup operasional, dan perannya dalam penyusunan RKA..."></textarea>
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">Kepala UPT <span class="req">*</span></label>
-          <input class="form-input" id="fKepala" type="text" placeholder="Nama kepala cabang">
+          <label class="form-label">Penanggung Jawab UPT <span class="req">*</span></label>
+          <input class="form-input" id="fKepala" type="text" placeholder="Nama kepala unit">
         </div>
         <div class="form-group">
           <label class="form-label">NIP Kepala</label>
@@ -561,12 +530,12 @@
           <input class="form-input" id="fAlamat" type="text" placeholder="Jl. ...">
         </div>
         <div class="form-group">
-          <label class="form-label">Jumlah Pegawai</label>
+          <label class="form-label">Jumlah Personel</label>
           <input class="form-input" id="fPegawai" type="number" min="0" placeholder="0">
         </div>
       </div>
 
-      <div class="section-title">Anggaran Cabang</div>
+      <div class="section-title">Anggaran UPT</div>
       <div class="form-row col3">
         <div class="form-group">
           <label class="form-label">Tahun Anggaran</label>
@@ -595,7 +564,7 @@
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">Pagu Anggaran (Rp)</label>
+          <label class="form-label">Pagu RKA (Rp)</label>
           <input class="form-input" id="fPagu" type="number" min="0" placeholder="0" oninput="updatePaguPreview()">
           <span class="form-hint" id="paguPreview">—</span>
         </div>
@@ -608,7 +577,7 @@
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modalForm')">Batal</button>
-      <button class="btn btn-primary" onclick="saveUPT()"><i class="fa-solid fa-floppy-disk"></i> Simpan Cabang</button>
+      <button class="btn btn-primary" onclick="saveUPT()"><i class="fa-solid fa-floppy-disk"></i> Simpan UPT</button>
     </div>
   </div>
 </div>
@@ -617,7 +586,7 @@
   <div class="modal modal-lg">
     <div class="modal-head">
       <div>
-        <div class="modal-title" id="detailTitle">Detail Cabang UPT</div>
+        <div class="modal-title" id="detailTitle">Detail UPT</div>
         <div class="modal-sub" id="detailSub">—</div>
       </div>
       <button class="modal-close" onclick="closeModal('modalDetail')"><i class="fa-solid fa-xmark"></i></button>
@@ -626,7 +595,7 @@
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modalDetail')">Tutup</button>
       <button class="btn btn-accent" id="detailHierarchyBtn"><i class="fa-solid fa-sitemap"></i> Lihat Induk</button>
-      <button class="btn btn-primary" id="detailEditBtn"><i class="fa-solid fa-pen"></i> Edit Cabang</button>
+      <button class="btn btn-primary" id="detailEditBtn"><i class="fa-solid fa-pen"></i> Edit UPT</button>
     </div>
   </div>
 </div>
@@ -638,85 +607,98 @@ const STORAGE_UPK = 'APP_ORG_UPK_DIVISIONS_V2';
 const STORAGE_UPT = 'APP_ORG_UPT_BRANCHES_V2';
 
 const seedUPK = [
-  { id: 1, kode: 'UPK-001', nama: 'Divisi Operasional Wilayah Barat', area: 'Jawa Barat & Banten', status:'Aktif' },
-  { id: 2, kode: 'UPK-002', nama: 'Divisi Infrastruktur & Transportasi', area: 'Koridor Tengah', status:'Aktif' },
-  { id: 3, kode: 'UPK-003', nama: 'Divisi Pelayanan Publik & SDM', area: 'Kota Induk', status:'Aktif' },
-  { id: 4, kode: 'UPK-004', nama: 'Divisi Layanan Kesehatan Regional', area: 'Selatan & Timur', status:'Aktif' },
-  { id: 5, kode: 'UPK-005', nama: 'Divisi Cadangan Pengembangan', area: 'Ekspansi Baru', status:'Nonaktif' }
+  { id: 1, kode: 'UPK-001', nama: 'Yayasan Bakti Tunas Husada', area: 'Yayasan Pusat', status:'Aktif' },
+  { id: 2, kode: 'UPK-002', nama: 'Universitas Bakti Tunas Husada', area: 'Perguruan Tinggi', status:'Aktif' },
+  { id: 3, kode: 'UPK-003', nama: 'Klinik Bakti Tunas Husada', area: 'Layanan Kesehatan', status:'Aktif' },
+  { id: 4, kode: 'UPK-004', nama: 'BTH Student House', area: 'Asrama & Pembinaan', status:'Aktif' },
+  { id: 5, kode: 'UPK-005', nama: 'LKSA Amanah', area: 'Sosial & Pengasuhan', status:'Aktif' },
+  { id: 6, kode: 'UPK-006', nama: 'Dana Sosial YBTH', area: 'Program Sosial', status:'Nonaktif' }
 ];
 
 const seedUPT = [
   {
-    id:1, kode:'UPT-001', nama:'Dinas Pendidikan dan Kebudayaan', upkId:1, upkKode:'UPK-001', upkNama:'Divisi Operasional Wilayah Barat', tipe:'Dinas',
-    deskripsi:'Melaksanakan urusan pemerintahan di bidang pendidikan, kebudayaan, dan pengembangan sumber daya manusia.',
-    kepala:'Dr. H. Ahmad Fauzi, M.Pd.', nip:'196804151992031012', telp:'021-8601234', email:'disdik@pemda.go.id', alamat:'Jl. Raya Pendidikan No. 1, Jakarta',
-    pegawai:342, status:'Aktif', tahun:2026, pagu:18500000000, realisasi:7240000000, sumber:'APBD'
+    id:1, kode:'UPT-001', nama:'Sekretariat Yayasan', upkId:1, upkKode:'UPK-001', upkNama:'Yayasan Bakti Tunas Husada', tipe:'Bagian',
+    deskripsi:'Koordinasi administrasi, kesekretariatan, dan dokumentasi kegiatan yayasan.',
+    kepala:'Kepala Sekretariat', nip:'-', telp:'0265-0001001', email:'sekretariat@ybth.ac.id', alamat:'Kampus YBTH Pusat',
+    pegawai:14, status:'Aktif', tahun:2026, pagu:2250000000, realisasi:875000000, sumber:'Yayasan'
   },
   {
-    id:2, kode:'UPT-002', nama:'Dinas Kesehatan', upkId:4, upkKode:'UPK-004', upkNama:'Divisi Layanan Kesehatan Regional', tipe:'Dinas',
-    deskripsi:'Pelayanan urusan pemerintahan di bidang kesehatan masyarakat dan layanan kesehatan primer.',
-    kepala:'dr. Siti Rahmadhani, Sp.PH', nip:'197203221999032004', telp:'021-8612345', email:'dinkes@pemda.go.id', alamat:'Jl. Kesehatan Raya No. 5, Jakarta',
-    pegawai:218, status:'Aktif', tahun:2026, pagu:24300000000, realisasi:12100000000, sumber:'APBD'
+    id:2, kode:'UPT-002', nama:'Bagian Keuangan & Akuntansi', upkId:1, upkKode:'UPK-001', upkNama:'Yayasan Bakti Tunas Husada', tipe:'Bagian',
+    deskripsi:'Mengelola akuntansi, pelaporan, kas, dan dukungan anggaran yayasan.',
+    kepala:'Manajer Keuangan', nip:'-', telp:'0265-0001002', email:'keuangan@ybth.ac.id', alamat:'Kampus YBTH Pusat',
+    pegawai:10, status:'Aktif', tahun:2026, pagu:3100000000, realisasi:1420000000, sumber:'Yayasan'
   },
   {
-    id:3, kode:'UPT-003', nama:'Dinas Pekerjaan Umum dan Penataan Ruang', upkId:2, upkKode:'UPK-002', upkNama:'Divisi Infrastruktur & Transportasi', tipe:'Dinas',
-    deskripsi:'Pelaksanaan urusan pemerintahan bidang infrastruktur, jalan, jembatan, dan tata ruang.',
-    kepala:'Ir. Bambang Santoso, MT.', nip:'196906101995031005', telp:'021-8623456', email:'dpupr@pemda.go.id', alamat:'Jl. Infrastruktur No. 12, Jakarta',
-    pegawai:196, status:'Aktif', tahun:2026, pagu:45000000000, realisasi:19800000000, sumber:'APBD'
+    id:3, kode:'UPT-003', nama:'Bagian SDM & Umum', upkId:1, upkKode:'UPK-001', upkNama:'Yayasan Bakti Tunas Husada', tipe:'Bagian',
+    deskripsi:'Mengelola SDM, administrasi umum, dan layanan pendukung yayasan.',
+    kepala:'Koordinator SDM', nip:'-', telp:'0265-0001003', email:'sdm@ybth.ac.id', alamat:'Kampus YBTH Pusat',
+    pegawai:11, status:'Aktif', tahun:2026, pagu:1850000000, realisasi:690000000, sumber:'Yayasan'
   },
   {
-    id:4, kode:'UPT-004', nama:'Badan Pengelolaan Keuangan Daerah', upkId:3, upkKode:'UPK-003', upkNama:'Divisi Pelayanan Publik & SDM', tipe:'Badan',
-    deskripsi:'Pengelolaan keuangan daerah, anggaran, perbendaharaan, dan pelaporan.',
-    kepala:'Dra. Endang Sulistyowati, M.Si.', nip:'197105181995032003', telp:'021-8634567', email:'bpkd@pemda.go.id', alamat:'Jl. Keuangan Daerah No. 3, Jakarta',
-    pegawai:87, status:'Aktif', tahun:2026, pagu:8750000000, realisasi:3920000000, sumber:'APBD'
+    id:4, kode:'UPT-004', nama:'Fakultas Ilmu Kesehatan', upkId:2, upkKode:'UPK-002', upkNama:'Universitas Bakti Tunas Husada', tipe:'Fakultas',
+    deskripsi:'Unit akademik untuk operasional pembelajaran Fakultas Ilmu Kesehatan.',
+    kepala:'Dekan FIK', nip:'-', telp:'0265-0002001', email:'fik@bth.ac.id', alamat:'Kampus UBTH',
+    pegawai:64, status:'Aktif', tahun:2026, pagu:8200000000, realisasi:3510000000, sumber:'Operasional UBTH'
   },
   {
-    id:5, kode:'UPT-005', nama:'Badan Perencanaan Pembangunan Daerah', upkId:3, upkKode:'UPK-003', upkNama:'Divisi Pelayanan Publik & SDM', tipe:'Badan',
-    deskripsi:'Perencanaan pembangunan daerah dan koordinasi program lintas perangkat daerah.',
-    kepala:'Prof. Dr. Wahyu Purnomo, M.Si.', nip:'196502141990031007', telp:'021-8645678', email:'bappeda@pemda.go.id', alamat:'Jl. Perencanaan No. 7, Jakarta',
-    pegawai:124, status:'Aktif', tahun:2026, pagu:12000000000, realisasi:4500000000, sumber:'APBD'
+    id:5, kode:'UPT-005', nama:'Fakultas Farmasi', upkId:2, upkKode:'UPK-002', upkNama:'Universitas Bakti Tunas Husada', tipe:'Fakultas',
+    deskripsi:'Unit akademik untuk operasional pembelajaran Fakultas Farmasi.',
+    kepala:'Dekan Farmasi', nip:'-', telp:'0265-0002002', email:'farmasi@bth.ac.id', alamat:'Kampus UBTH',
+    pegawai:58, status:'Aktif', tahun:2026, pagu:7650000000, realisasi:2980000000, sumber:'Operasional UBTH'
   },
   {
-    id:6, kode:'UPT-006', nama:'Kantor Pelayanan Terpadu Satu Pintu', upkId:3, upkKode:'UPK-003', upkNama:'Divisi Pelayanan Publik & SDM', tipe:'Kantor',
-    deskripsi:'Pelayanan perizinan dan non-perizinan secara terpadu satu pintu.',
-    kepala:'H. Rudi Hartanto, SH., M.Hum.', nip:'197708202003121003', telp:'021-8656789', email:'ptsp@pemda.go.id', alamat:'Jl. Pelayanan Publik No. 2, Jakarta',
-    pegawai:65, status:'Aktif', tahun:2026, pagu:5200000000, realisasi:2100000000, sumber:'APBD'
+    id:6, kode:'UPT-006', nama:'Fakultas Teknologi & Bisnis', upkId:2, upkKode:'UPK-002', upkNama:'Universitas Bakti Tunas Husada', tipe:'Fakultas',
+    deskripsi:'Unit akademik untuk operasional pembelajaran Fakultas Teknologi dan Bisnis.',
+    kepala:'Dekan FTB', nip:'-', telp:'0265-0002003', email:'ftb@bth.ac.id', alamat:'Kampus UBTH',
+    pegawai:44, status:'Aktif', tahun:2026, pagu:5900000000, realisasi:1740000000, sumber:'Operasional UBTH'
   },
   {
-    id:7, kode:'UPT-007', nama:'UPTD Puskesmas Kecamatan Pusat', upkId:4, upkKode:'UPK-004', upkNama:'Divisi Layanan Kesehatan Regional', tipe:'UPTD',
-    deskripsi:'Pelayanan kesehatan dasar tingkat pertama di wilayah kecamatan pusat.',
-    kepala:'dr. Anisa Rahayu', nip:'198904122015022001', telp:'021-8667890', email:'puskesmas.pusat@dinkes.go.id', alamat:'Jl. Sehat No. 10, Jakarta Pusat',
-    pegawai:48, status:'Aktif', tahun:2026, pagu:3800000000, realisasi:1900000000, sumber:'APBD'
+    id:7, kode:'UPT-007', nama:'LPPM', upkId:2, upkKode:'UPK-002', upkNama:'Universitas Bakti Tunas Husada', tipe:'Pusat',
+    deskripsi:'Lembaga penelitian dan pengabdian kepada masyarakat.',
+    kepala:'Ketua LPPM', nip:'-', telp:'0265-0002004', email:'lppm@bth.ac.id', alamat:'Kampus UBTH',
+    pegawai:12, status:'Aktif', tahun:2026, pagu:2100000000, realisasi:720000000, sumber:'Operasional UBTH'
   },
   {
-    id:8, kode:'UPT-008', nama:'UPTD Balai Latihan Kerja', upkId:3, upkKode:'UPK-003', upkNama:'Divisi Pelayanan Publik & SDM', tipe:'UPTD',
-    deskripsi:'Penyelenggaraan pelatihan vokasional dan pengembangan kompetensi tenaga kerja.',
-    kepala:'Drs. Muhamad Rizal, MM.', nip:'197003151995031009', telp:'021-8678901', email:'blk@disnaker.go.id', alamat:'Jl. Kompetensi No. 8, Jakarta Timur',
-    pegawai:56, status:'Aktif', tahun:2026, pagu:4600000000, realisasi:1380000000, sumber:'APBN'
+    id:8, kode:'UPT-008', nama:'Unit Pelayanan Medis', upkId:3, upkKode:'UPK-003', upkNama:'Klinik Bakti Tunas Husada', tipe:'Unit',
+    deskripsi:'Pelayanan medis utama pada Klinik BTH.',
+    kepala:'Koordinator Pelayanan', nip:'-', telp:'0265-0003001', email:'pelayanan.klinik@bth.ac.id', alamat:'Klinik BTH',
+    pegawai:19, status:'Aktif', tahun:2026, pagu:4600000000, realisasi:2130000000, sumber:'Operasional Klinik'
   },
   {
-    id:9, kode:'UPT-009', nama:'Dinas Perhubungan', upkId:2, upkKode:'UPK-002', upkNama:'Divisi Infrastruktur & Transportasi', tipe:'Dinas',
-    deskripsi:'Pelaksanaan urusan pemerintahan bidang perhubungan, lalu lintas, dan transportasi.',
-    kepala:'Ir. Suharto Nugroho, MT.', nip:'197112031996031006', telp:'021-8689012', email:'dishub@pemda.go.id', alamat:'Jl. Transportasi No. 15, Jakarta',
-    pegawai:178, status:'Aktif', tahun:2026, pagu:16800000000, realisasi:0, sumber:'APBD'
+    id:9, kode:'UPT-009', nama:'Unit Penunjang Medis', upkId:3, upkKode:'UPK-003', upkNama:'Klinik Bakti Tunas Husada', tipe:'Unit',
+    deskripsi:'Unit laboratorium, alat kesehatan, dan penunjang klinik.',
+    kepala:'Koordinator Penunjang', nip:'-', telp:'0265-0003002', email:'penunjang.klinik@bth.ac.id', alamat:'Klinik BTH',
+    pegawai:11, status:'Aktif', tahun:2026, pagu:1950000000, realisasi:880000000, sumber:'Operasional Klinik'
   },
   {
-    id:10, kode:'UPT-010', nama:'Kantor Arsip dan Perpustakaan Daerah', upkId:3, upkKode:'UPK-003', upkNama:'Divisi Pelayanan Publik & SDM', tipe:'Kantor',
-    deskripsi:'Pengelolaan arsip daerah dan pengembangan literasi masyarakat.',
-    kepala:'Dra. Sri Wahyuni, M.Lib.', nip:'196811051995032002', telp:'021-8690123', email:'arsip@pemda.go.id', alamat:'Jl. Literasi No. 4, Jakarta',
-    pegawai:42, status:'Nonaktif', tahun:2026, pagu:0, realisasi:0, sumber:'APBD'
+    id:10, kode:'UPT-010', nama:'Operasional Asrama', upkId:4, upkKode:'UPK-004', upkNama:'BTH Student House', tipe:'Unit',
+    deskripsi:'Operasional harian asrama mahasiswa dan kebutuhan rumah tangga asrama.',
+    kepala:'Koordinator Asrama', nip:'-', telp:'0265-0004001', email:'asrama@bth.ac.id', alamat:'BTH Student House',
+    pegawai:9, status:'Aktif', tahun:2026, pagu:1350000000, realisasi:540000000, sumber:'Operasional BSH'
   },
   {
-    id:11, kode:'UPT-011', nama:'Badan Kepegawaian dan Pengembangan SDM', upkId:3, upkKode:'UPK-003', upkNama:'Divisi Pelayanan Publik & SDM', tipe:'Badan',
-    deskripsi:'Manajemen kepegawaian daerah dan pengembangan SDM aparatur.',
-    kepala:'Drs. H. Syaiful Anwar, M.Si.', nip:'196709181992031004', telp:'021-8701234', email:'bkpsdm@pemda.go.id', alamat:'Jl. Aparatur No. 6, Jakarta',
-    pegawai:93, status:'Aktif', tahun:2026, pagu:9200000000, realisasi:3680000000, sumber:'APBD'
+    id:11, kode:'UPT-011', nama:'Program Pembinaan Mahasiswa', upkId:4, upkKode:'UPK-004', upkNama:'BTH Student House', tipe:'Program',
+    deskripsi:'Kegiatan pembinaan, pengasuhan, dan pengembangan karakter mahasiswa asrama.',
+    kepala:'Koordinator Pembinaan', nip:'-', telp:'0265-0004002', email:'pembinaan@bth.ac.id', alamat:'BTH Student House',
+    pegawai:7, status:'Aktif', tahun:2026, pagu:980000000, realisasi:300000000, sumber:'Operasional BSH'
   },
   {
-    id:12, kode:'UPT-012', nama:'UPTD Rumah Sakit Umum Daerah', upkId:4, upkKode:'UPK-004', upkNama:'Divisi Layanan Kesehatan Regional', tipe:'UPTD',
-    deskripsi:'Pelayanan kesehatan rujukan dengan fasilitas rawat inap dan rawat jalan.',
-    kepala:'dr. Hendra Wijaya, Sp.B.', nip:'198001152008011005', telp:'021-8712345', email:'rsud@dinkes.go.id', alamat:'Jl. Kesembuhan No. 20, Jakarta Selatan',
-    pegawai:312, status:'Aktif', tahun:2026, pagu:0, realisasi:0, sumber:'APBD'
+    id:12, kode:'UPT-012', nama:'Pengasuhan & Pembinaan Anak', upkId:5, upkKode:'UPK-005', upkNama:'LKSA Amanah', tipe:'Program',
+    deskripsi:'Program pengasuhan dan pembinaan anak LKSA Amanah.',
+    kepala:'Kepala Pengasuhan', nip:'-', telp:'0265-0005001', email:'pengasuhan@lksa.id', alamat:'LKSA Amanah',
+    pegawai:13, status:'Aktif', tahun:2026, pagu:1280000000, realisasi:610000000, sumber:'Dana Sosial'
+  },
+  {
+    id:13, kode:'UPT-013', nama:'Pendidikan & Kesehatan Anak', upkId:5, upkKode:'UPK-005', upkNama:'LKSA Amanah', tipe:'Program',
+    deskripsi:'Program pendidikan, kesehatan, dan kesejahteraan anak asuh.',
+    kepala:'Koordinator Pendidikan', nip:'-', telp:'0265-0005002', email:'pendidikan@lksa.id', alamat:'LKSA Amanah',
+    pegawai:8, status:'Aktif', tahun:2026, pagu:1650000000, realisasi:720000000, sumber:'Dana Sosial'
+  },
+  {
+    id:14, kode:'UPT-014', nama:'Program Beasiswa', upkId:6, upkKode:'UPK-006', upkNama:'Dana Sosial YBTH', tipe:'Program',
+    deskripsi:'Program beasiswa dan dukungan pendidikan penerima manfaat.',
+    kepala:'Koordinator Beasiswa', nip:'-', telp:'0265-0006001', email:'beasiswa@ybth.ac.id', alamat:'YBTH Pusat',
+    pegawai:4, status:'Nonaktif', tahun:2026, pagu:0, realisasi:0, sumber:'Dana Sosial'
   }
 ];
 
@@ -740,10 +722,11 @@ let UPK_DATA = readUPK();
 let UPT_DATA = readUPT();
 
 const TIPE_ICON = {
-  Dinas: 'fa-solid fa-landmark',
-  Badan: 'fa-solid fa-building-columns',
-  Kantor: 'fa-solid fa-building',
-  UPTD: 'fa-solid fa-sitemap'
+  Bagian: 'fa-solid fa-briefcase',
+  Unit: 'fa-solid fa-cubes',
+  Pusat: 'fa-solid fa-building',
+  Program: 'fa-solid fa-diagram-project',
+  Fakultas: 'fa-solid fa-graduation-cap'
 };
 
 const state = {
@@ -801,7 +784,7 @@ function buildUpkOptions() {
   const currentForm = form.dataset.current || '';
   const options = UPK_DATA.slice().sort((a,b) => (a.kode + a.nama).localeCompare(b.kode + b.nama));
 
-  filter.innerHTML = '<option value="">Semua Divisi UPK</option>' + options.map(item => `<option value="${item.id}">${escapeHTML(item.kode)} · ${escapeHTML(item.nama)}</option>`).join('');
+  filter.innerHTML = '<option value="">Semua UPK</option>' + options.map(item => `<option value="${item.id}">${escapeHTML(item.kode)} · ${escapeHTML(item.nama)}</option>`).join('');
   filter.value = currentFilter;
 
   form.innerHTML = '<option value="">— Pilih Divisi Induk —</option>' + options.map(item => `<option value="${item.id}">${escapeHTML(item.kode)} · ${escapeHTML(item.nama)}${item.status === 'Nonaktif' ? ' (Nonaktif)' : ''}</option>`).join('');
@@ -899,7 +882,7 @@ function render() {
 }
 
 function renderTable(data, page) {
-  document.getElementById('tableSubtitle').textContent = `Menampilkan ${data.length} dari ${UPT_DATA.length} cabang UPT`;
+  document.getElementById('tableSubtitle').textContent = `Menampilkan ${data.length} dari ${UPT_DATA.length} data UPT`;
   const tbody = document.getElementById('uptTbody');
   const empty = document.getElementById('emptyTable');
 
@@ -919,11 +902,11 @@ function renderTable(data, page) {
         <td class="mono">${escapeHTML(item.kode)}</td>
         <td>
           <div class="title-cell">${escapeHTML(item.nama)}</div>
-          <div class="title-sub">${escapeHTML(item.deskripsi || 'Cabang operasional di bawah divisi induk')}</div>
+          <div class="title-sub">${escapeHTML(item.deskripsi || 'Unit pelaksana teknis untuk operasional dan RKA')}</div>
         </td>
         <td>
           <div class="title-cell">${escapeHTML(item.upkNama || 'Belum dipilih')}</div>
-          <div class="upk-breadcrumb"><strong>${escapeHTML(item.upkKode || '—')}</strong><span>›</span><span>Cabang UPT</span></div>
+          <div class="upk-breadcrumb"><strong>${escapeHTML(item.upkKode || '—')}</strong><span>›</span><span>UPT</span></div>
         </td>
         <td><span class="badge badge-accent"><i class="${TIPE_ICON[item.tipe] || 'fa-solid fa-building'}"></i>${escapeHTML(item.tipe || '—')}</span></td>
         <td>
@@ -1003,7 +986,7 @@ function renderGrid(data, page) {
             </div>
             <div class="budget-track" style="height:8px;"><div class="budget-fill" style="width:${pct}%; background:${barColor(pct)};"></div></div>
           </div>
-        ` : '<div class="badge badge-warning"><i class="fa-solid fa-triangle-exclamation"></i>Belum ada pagu cabang</div>'}
+        ` : '<div class="badge badge-warning"><i class="fa-solid fa-triangle-exclamation"></i>Belum ada pagu RKA</div>'}
 
         <div class="card-stats">
           <div>
@@ -1054,7 +1037,7 @@ function renderPagination(total, elId) {
   }
 
   document.getElementById(elId).innerHTML = `
-    <div class="pagination-info">Menampilkan ${start}–${end} dari ${total} cabang</div>
+    <div class="pagination-info">Menampilkan ${start}–${end} dari ${total} unit</div>
     <div class="pagination-btns">
       <button class="pg-btn" onclick="goPage(${state.page - 1})" ${state.page <= 1 ? 'disabled' : ''}><i class="fa-solid fa-chevron-left"></i></button>
       ${buttons}
@@ -1072,8 +1055,8 @@ function goPage(page) {
 
 function openAddModal() {
   state.editingId = null;
-  document.getElementById('modalFormTitle').textContent = 'Tambah Cabang UPT';
-  document.getElementById('modalFormSub').textContent = 'Isi data cabang dan hubungkan ke divisi induk UPK.';
+  document.getElementById('modalFormTitle').textContent = 'Tambah UPT';
+  document.getElementById('modalFormSub').textContent = 'Isi data unit dan hubungkan ke divisi induk UPK.';
   ['fKode','fNama','fDeskripsi','fKepala','fNip','fTelp','fEmail','fAlamat','fPegawai','fPagu','fRealisasi'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('fTipe').value = '';
   document.getElementById('fTahun').value = '2026';
@@ -1090,7 +1073,7 @@ function openEditModal(id) {
   const item = UPT_DATA.find(entry => entry.id === id);
   if (!item) return;
   state.editingId = id;
-  document.getElementById('modalFormTitle').textContent = 'Edit Cabang UPT';
+  document.getElementById('modalFormTitle').textContent = 'Edit UPT';
   document.getElementById('modalFormSub').textContent = `${item.kode} — ${item.nama}`;
   document.getElementById('fUpk').dataset.current = String(item.upkId || '');
   buildUpkOptions();
@@ -1145,7 +1128,7 @@ function saveUPT() {
   };
 
   if (!payload.upkId || !payload.tipe || !payload.kode || !payload.nama || !payload.kepala) {
-    showToast('warning', 'fa-triangle-exclamation', 'Divisi induk, tipe, kode, nama, dan kepala UPT wajib diisi.');
+    showToast('warning', 'fa-triangle-exclamation', 'UPK induk, jenis UPT, kode, nama, dan penanggung jawab wajib diisi.');
     return;
   }
 
@@ -1156,7 +1139,7 @@ function saveUPT() {
 
   const duplicate = UPT_DATA.find(item => item.kode.toLowerCase() === payload.kode.toLowerCase() && item.id !== state.editingId);
   if (duplicate) {
-    showToast('warning', 'fa-copy', 'Kode UPT sudah digunakan oleh cabang lain.');
+    showToast('warning', 'fa-copy', 'Kode UPT sudah digunakan oleh unit lain.');
     return;
   }
 
@@ -1165,13 +1148,13 @@ function saveUPT() {
     if (index >= 0) {
       UPT_DATA[index] = { ...UPT_DATA[index], ...payload };
       writeUPT(UPT_DATA);
-      showToast('success', 'fa-circle-check', 'Cabang UPT berhasil diperbarui.');
+      showToast('success', 'fa-circle-check', 'Data UPT berhasil diperbarui.');
     }
   } else {
     const newId = Math.max(0, ...UPT_DATA.map(item => item.id)) + 1;
     UPT_DATA.push({ id: newId, ...payload });
     writeUPT(UPT_DATA);
-    showToast('success', 'fa-circle-check', 'Cabang UPT baru berhasil ditambahkan.');
+    showToast('success', 'fa-circle-check', 'Data UPT baru berhasil ditambahkan.');
   }
 
   closeModal('modalForm');
@@ -1181,11 +1164,11 @@ function saveUPT() {
 function deleteUPT(id) {
   const item = UPT_DATA.find(entry => entry.id === id);
   if (!item) return;
-  if (!confirm(`Hapus cabang "${item.nama}"?\n\nTindakan ini tidak dapat dibatalkan.`)) return;
+  if (!confirm(`Hapus unit "${item.nama}"?\n\nTindakan ini tidak dapat dibatalkan.`)) return;
   UPT_DATA = UPT_DATA.filter(entry => entry.id !== id);
   writeUPT(UPT_DATA);
   render();
-  showToast('success', 'fa-trash', 'Cabang UPT berhasil dihapus.');
+  showToast('success', 'fa-trash', 'Data UPT berhasil dihapus.');
 }
 
 function openDetail(id) {
@@ -1203,8 +1186,8 @@ function openDetail(id) {
     <div class="detail-banner">
       <div class="detail-banner-icon"><i class="${TIPE_ICON[item.tipe] || 'fa-solid fa-building'}"></i></div>
       <div style="flex:1;">
-        <div class="detail-banner-title">${escapeHTML(item.nama)} sebagai cabang dari ${escapeHTML(item.upkNama || 'divisi belum dipilih')}</div>
-        <div class="detail-banner-sub">${escapeHTML(item.kode)} · Kepala cabang ${escapeHTML(item.kepala || '—')} · Pagu ${fmtCurrency(item.pagu)} · Realisasi ${pct}%</div>
+        <div class="detail-banner-title">${escapeHTML(item.nama)} sebagai unit dari ${escapeHTML(item.upkNama || 'divisi belum dipilih')}</div>
+        <div class="detail-banner-sub">${escapeHTML(item.kode)} · Kepala unit ${escapeHTML(item.kepala || '—')} · Pagu ${fmtCurrency(item.pagu)} · Realisasi ${pct}%</div>
       </div>
       <div>${statusBadge(item.status)}</div>
     </div>
@@ -1227,7 +1210,7 @@ function openDetail(id) {
         <div class="detail-value">${escapeHTML(item.upkKode || '—')} · ${escapeHTML(item.upkNama || '—')}</div>
       </div>
       <div class="detail-box">
-        <div class="detail-label">Tipe Cabang</div>
+        <div class="detail-label">Tipe UPT</div>
         <div class="detail-value">${escapeHTML(item.tipe || '—')}</div>
       </div>
       <div class="detail-box">
@@ -1257,8 +1240,8 @@ function openDetail(id) {
     </div>
 
     <div class="detail-box" style="margin-bottom:18px;">
-      <div class="detail-label">Deskripsi Cabang</div>
-      <div class="detail-value" style="font-size:13px; font-weight:600; color:var(--text-soft);">${escapeHTML(item.deskripsi || 'Belum ada deskripsi cabang.')}</div>
+      <div class="detail-label">Deskripsi UPT</div>
+      <div class="detail-value" style="font-size:13px; font-weight:600; color:var(--text-soft);">${escapeHTML(item.deskripsi || 'Belum ada deskripsi unit.')}</div>
     </div>
 
     ${Number(item.pagu) > 0 ? `
@@ -1273,7 +1256,7 @@ function openDetail(id) {
     ` : `
       <div class="detail-box" style="border:1px solid rgba(192,112,16,.2); background:var(--warning-soft);">
         <div class="detail-label" style="color:var(--warning);">Status Anggaran</div>
-        <div class="detail-value" style="color:var(--warning); font-size:13px;">Cabang ini belum memiliki pagu anggaran.</div>
+        <div class="detail-value" style="color:var(--warning); font-size:13px;">UPT ini belum memiliki pagu untuk penyusunan RKA.</div>
       </div>
     `}
   `;
@@ -1308,9 +1291,9 @@ function exportCSV() {
   const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
-  link.download = 'master_upt_cabang.csv';
+  link.download = 'master_upt_unit.csv';
   link.click();
-  showToast('success', 'fa-file-csv', `Berhasil mengekspor ${rows.length} cabang UPT.`);
+  showToast('success', 'fa-file-csv', `Berhasil mengekspor ${rows.length} data UPT.`);
 }
 
 function openModal(id) { document.getElementById(id).classList.add('open'); }

@@ -491,7 +491,6 @@
       <div class="page-header">
         <div class="page-title-block">
           <div class="page-title">Master <em>COA</em></div>
-          <div class="page-sub">Chart of Accounts terkonsolidasi dari seluruh entitas terdaftar. Sinkronisasi otomatis memastikan setiap akun selaras di semua database entitas.</div>
         </div>
         <div class="page-actions">
           <button class="btn btn-ghost" onclick="openImportModal()">
@@ -507,9 +506,9 @@
       <div class="stats-row">
         <div class="stat-card c-sage">
           <div class="stat-icon"><i class="fa-solid fa-sitemap"></i></div>
-          <div class="stat-label">Total Akun</div>
+          <div class="stat-label">Total COA</div>
           <div class="stat-value" id="statTotal">—</div>
-          <div class="stat-sub">Dari semua entitas</div>
+          <div class="stat-sub">Akun unik + item pending</div>
         </div>
         <div class="stat-card c-amber">
           <div class="stat-icon"><i class="fa-solid fa-building"></i></div>
@@ -519,15 +518,15 @@
         </div>
         <div class="stat-card c-success">
           <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
-          <div class="stat-label">Tersinkronisasi</div>
+          <div class="stat-label">Sudah Mapping</div>
           <div class="stat-value" id="statSynced">—</div>
-          <div class="stat-sub">Akun sudah sinkron</div>
+          <div class="stat-sub">Sudah punya kode Accurate</div>
         </div>
         <div class="stat-card c-warning">
           <div class="stat-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
-          <div class="stat-label">Perlu Sinkronisasi</div>
+          <div class="stat-label">Belum Mapping</div>
           <div class="stat-value" id="statPending">—</div>
-          <div class="stat-sub">Belum diperbarui</div>
+          <div class="stat-sub">Perlu mapping ke Accurate</div>
         </div>
       </div>
 
@@ -536,14 +535,13 @@
         <div class="sync-banner-left">
           <div class="sync-banner-icon"><i class="fa-solid fa-rotate"></i></div>
           <div class="sync-banner-text">
-            <div class="sync-banner-title">Sinkronisasi Multi-Entitas</div>
-            <div class="sync-banner-sub" id="lastSyncText">Terakhir disinkronkan: Hari ini, 08:30 WIB · Seluruh entitas berhasil tersinkronisasi</div>
+            <div class="sync-banner-title">Konsolidasi COA dari Mapping Anggaran</div>
           </div>
         </div>
         <div class="sync-banner-right">
           <div class="sync-info-pill">
             <span class="sync-dot"></span>
-            <span id="entityCount">5 Entitas Online</span>
+            <span id="entityCount">7 Entitas Aktif</span>
           </div>
           <button class="btn-sync" id="btnSync" onclick="runSync()">
             <i class="fa-solid fa-arrows-rotate"></i> Sinkronkan Sekarang
@@ -565,7 +563,6 @@
         <select class="filter-select" id="filterTipe" onchange="applyFilters()">
           <option value="">Semua Tipe</option>
           <option value="Aset">Aset</option>
-          <option value="Kewajiban">Kewajiban</option>
           <option value="Ekuitas">Ekuitas</option>
           <option value="Pendapatan">Pendapatan</option>
           <option value="Beban">Beban</option>
@@ -598,7 +595,7 @@
               <i class="fa-solid fa-table-list" style="color:var(--sage);font-size:13px;"></i>
               Daftar Chart of Accounts
             </div>
-            <div class="table-card-sub" id="tableSubtitle">Menampilkan semua akun</div>
+            <div class="table-card-sub" id="tableSubtitle">Menampilkan akun hasil konsolidasi workbook</div>
           </div>
           <div class="table-card-right">
             <button class="btn btn-ghost btn-sm" onclick="expandAll()">Buka Semua</button>
@@ -813,64 +810,4165 @@
 //  DATA
 // ══════════════════════════════════════════════
 const ENTITIES = [
-  { id:'ENT-001', name:'PT ytbh Utama',      db:'ytbh_main',   color:'#3972B8' },
-  { id:'ENT-002', name:'PT ytbh Teknologi',   db:'ytbh_tech',   color:'#F68B21' },
-  { id:'ENT-003', name:'CV E-Warteg Indonesia',   db:'ewarteg_main',    color:'#217a4a' },
-  { id:'ENT-004', name:'PT ytbh Digital',     db:'ytbh_digital',color:'#7a30c0' },
-  { id:'ENT-005', name:'Yayasan Anggaran Bersama',db:'yab_main',        color:'#c07010' },
+  {
+    "id": "ENT-UBTH",
+    "name": "Universitas BTH (UBTH)",
+    "db": "ubth_budget",
+    "color": "#3972B8"
+  },
+  {
+    "id": "ENT-KLINIK",
+    "name": "Klinik BTH",
+    "db": "klinik_budget",
+    "color": "#F68B21"
+  },
+  {
+    "id": "ENT-BSH",
+    "name": "BTH Student House",
+    "db": "bsh_budget",
+    "color": "#217a4a"
+  },
+  {
+    "id": "ENT-LKSA",
+    "name": "LKSA Amanah",
+    "db": "lksa_budget",
+    "color": "#7a30c0"
+  },
+  {
+    "id": "ENT-YBTH",
+    "name": "Yayasan BTH",
+    "db": "ybth_budget",
+    "color": "#c07010"
+  },
+  {
+    "id": "ENT-INV",
+    "name": "Investasi YBTH",
+    "db": "investasi_budget",
+    "color": "#0f766e"
+  },
+  {
+    "id": "ENT-DS",
+    "name": "Dana Sosial YBTH",
+    "db": "danasos_budget",
+    "color": "#be185d"
+  }
 ];
 
 // COA master data
 const COA_DATA = [
-  // ── ASET ──
-  { id:1,  kode:'1',      nama:'ASET',                         deskripsi:'Kelompok Aset',                  tipe:'Aset',       saldo:'D', level:0, induk:null, entitas:['ENT-001','ENT-002','ENT-003','ENT-004','ENT-005'], status:'Aktif'    },
-  { id:2,  kode:'1-1000', nama:'Aset Lancar',                  deskripsi:'Aset yang mudah dicairkan',      tipe:'Aset',       saldo:'D', level:1, induk:1,    entitas:['ENT-001','ENT-002','ENT-003','ENT-004','ENT-005'], status:'Aktif'    },
-  { id:3,  kode:'1-1100', nama:'Kas dan Setara Kas',           deskripsi:'Kas, rekening giro, deposito',   tipe:'Aset',       saldo:'D', level:2, induk:2,    entitas:['ENT-001','ENT-002','ENT-003','ENT-004','ENT-005'], status:'Aktif'    },
-  { id:4,  kode:'1-1110', nama:'Kas Besar',                    deskripsi:'Kas fisik di brankas',           tipe:'Aset',       saldo:'D', level:3, induk:3,    entitas:['ENT-001','ENT-002','ENT-003'],                    status:'Aktif'    },
-  { id:5,  kode:'1-1120', nama:'Kas Kecil (Petty Cash)',       deskripsi:'Kas untuk keperluan kecil',      tipe:'Aset',       saldo:'D', level:3, induk:3,    entitas:['ENT-001','ENT-002','ENT-003','ENT-004'],          status:'Aktif'    },
-  { id:6,  kode:'1-1130', nama:'Bank BCA',                     deskripsi:'Rekening operasional BCA',       tipe:'Aset',       saldo:'D', level:3, induk:3,    entitas:['ENT-001','ENT-002','ENT-004'],                    status:'Aktif'    },
-  { id:7,  kode:'1-1140', nama:'Bank Mandiri',                 deskripsi:'Rekening operasional Mandiri',   tipe:'Aset',       saldo:'D', level:3, induk:3,    entitas:['ENT-001','ENT-003','ENT-005'],                    status:'Aktif'    },
-  { id:8,  kode:'1-1200', nama:'Piutang Usaha',                deskripsi:'Tagihan kepada pelanggan',       tipe:'Aset',       saldo:'D', level:2, induk:2,    entitas:['ENT-001','ENT-002','ENT-003','ENT-004'],          status:'Aktif'    },
-  { id:9,  kode:'1-1210', nama:'Piutang Dagang',               deskripsi:'Piutang dari penjualan',         tipe:'Aset',       saldo:'D', level:3, induk:8,    entitas:['ENT-001','ENT-002','ENT-003'],                    status:'Aktif'    },
-  { id:10, kode:'1-1220', nama:'Piutang Karyawan',             deskripsi:'Pinjaman kepada karyawan',       tipe:'Aset',       saldo:'D', level:3, induk:8,    entitas:['ENT-001','ENT-002'],                              status:'Nonaktif' },
-  { id:11, kode:'1-1300', nama:'Persediaan',                   deskripsi:'Stok barang dagangan',           tipe:'Aset',       saldo:'D', level:2, induk:2,    entitas:['ENT-003','ENT-004'],                              status:'Aktif'    },
-  { id:12, kode:'1-1400', nama:'Biaya Dibayar Dimuka',         deskripsi:'Asuransi, sewa, dll',            tipe:'Aset',       saldo:'D', level:2, induk:2,    entitas:['ENT-001','ENT-002','ENT-005'],                    status:'Aktif'    },
-  { id:13, kode:'1-2000', nama:'Aset Tidak Lancar',            deskripsi:'Aset jangka panjang',            tipe:'Aset',       saldo:'D', level:1, induk:1,    entitas:['ENT-001','ENT-002','ENT-003','ENT-004','ENT-005'], status:'Aktif'    },
-  { id:14, kode:'1-2100', nama:'Aset Tetap',                   deskripsi:'Tanah, gedung, peralatan',       tipe:'Aset',       saldo:'D', level:2, induk:13,   entitas:['ENT-001','ENT-002','ENT-003','ENT-004'],          status:'Aktif'    },
-  { id:15, kode:'1-2110', nama:'Tanah',                        deskripsi:'Tanah milik perusahaan',         tipe:'Aset',       saldo:'D', level:3, induk:14,   entitas:['ENT-001'],                                        status:'Aktif'    },
-  { id:16, kode:'1-2120', nama:'Bangunan',                     deskripsi:'Gedung dan infrastruktur',       tipe:'Aset',       saldo:'D', level:3, induk:14,   entitas:['ENT-001','ENT-003'],                              status:'Aktif'    },
-  { id:17, kode:'1-2130', nama:'Peralatan & Inventaris',       deskripsi:'Komputer, furnitur, dst',        tipe:'Aset',       saldo:'D', level:3, induk:14,   entitas:['ENT-001','ENT-002','ENT-003','ENT-004'],          status:'Aktif'    },
-  { id:18, kode:'1-2200', nama:'Akumulasi Penyusutan',         deskripsi:'Pengurang nilai aset tetap',     tipe:'Aset',       saldo:'K', level:2, induk:13,   entitas:['ENT-001','ENT-002','ENT-003','ENT-004'],          status:'Aktif'    },
-  // ── KEWAJIBAN ──
-  { id:20, kode:'2',      nama:'KEWAJIBAN',                    deskripsi:'Kelompok Kewajiban',             tipe:'Kewajiban',  saldo:'K', level:0, induk:null, entitas:['ENT-001','ENT-002','ENT-003','ENT-004','ENT-005'], status:'Aktif'    },
-  { id:21, kode:'2-1000', nama:'Kewajiban Lancar',             deskripsi:'Utang jatuh tempo < 1 tahun',    tipe:'Kewajiban',  saldo:'K', level:1, induk:20,   entitas:['ENT-001','ENT-002','ENT-003','ENT-004','ENT-005'], status:'Aktif'    },
-  { id:22, kode:'2-1100', nama:'Utang Usaha',                  deskripsi:'Tagihan dari pemasok',           tipe:'Kewajiban',  saldo:'K', level:2, induk:21,   entitas:['ENT-001','ENT-002','ENT-003','ENT-004'],          status:'Aktif'    },
-  { id:23, kode:'2-1200', nama:'Utang Pajak',                  deskripsi:'PPh, PPN terutang',              tipe:'Kewajiban',  saldo:'K', level:2, induk:21,   entitas:['ENT-001','ENT-002','ENT-003','ENT-004','ENT-005'], status:'Aktif'    },
-  { id:24, kode:'2-1300', nama:'Utang Gaji',                   deskripsi:'Gaji karyawan yang belum dibayar',tipe:'Kewajiban', saldo:'K', level:2, induk:21,   entitas:['ENT-001','ENT-002','ENT-003'],                    status:'Aktif'    },
-  { id:25, kode:'2-2000', nama:'Kewajiban Jangka Panjang',     deskripsi:'Utang bank, obligasi',           tipe:'Kewajiban',  saldo:'K', level:1, induk:20,   entitas:['ENT-001','ENT-003'],                              status:'Aktif'    },
-  { id:26, kode:'2-2100', nama:'Utang Bank Jangka Panjang',    deskripsi:'Pinjaman bank > 1 tahun',        tipe:'Kewajiban',  saldo:'K', level:2, induk:25,   entitas:['ENT-001','ENT-003'],                              status:'Aktif'    },
-  // ── EKUITAS ──
-  { id:30, kode:'3',      nama:'EKUITAS',                      deskripsi:'Kelompok Ekuitas / Modal',       tipe:'Ekuitas',    saldo:'K', level:0, induk:null, entitas:['ENT-001','ENT-002','ENT-003','ENT-004','ENT-005'], status:'Aktif'    },
-  { id:31, kode:'3-1000', nama:'Modal Disetor',                deskripsi:'Modal dari pemegang saham',      tipe:'Ekuitas',    saldo:'K', level:1, induk:30,   entitas:['ENT-001','ENT-002','ENT-003','ENT-004'],          status:'Aktif'    },
-  { id:32, kode:'3-2000', nama:'Saldo Laba',                   deskripsi:'Laba ditahan',                   tipe:'Ekuitas',    saldo:'K', level:1, induk:30,   entitas:['ENT-001','ENT-002','ENT-003','ENT-004','ENT-005'], status:'Aktif'    },
-  { id:33, kode:'3-3000', nama:'Laba Tahun Berjalan',          deskripsi:'Laba periode ini',               tipe:'Ekuitas',    saldo:'K', level:1, induk:30,   entitas:['ENT-001','ENT-002','ENT-003','ENT-004','ENT-005'], status:'Aktif'    },
-  // ── PENDAPATAN ──
-  { id:40, kode:'4',      nama:'PENDAPATAN',                   deskripsi:'Kelompok Pendapatan',            tipe:'Pendapatan', saldo:'K', level:0, induk:null, entitas:['ENT-001','ENT-002','ENT-003','ENT-004','ENT-005'], status:'Aktif'    },
-  { id:41, kode:'4-1000', nama:'Pendapatan Usaha',             deskripsi:'Pendapatan dari kegiatan utama', tipe:'Pendapatan', saldo:'K', level:1, induk:40,   entitas:['ENT-001','ENT-002','ENT-003','ENT-004','ENT-005'], status:'Aktif'    },
-  { id:42, kode:'4-1100', nama:'Pendapatan Jasa',              deskripsi:'Fee project, konsultasi',        tipe:'Pendapatan', saldo:'K', level:2, induk:41,   entitas:['ENT-001','ENT-002','ENT-004'],                    status:'Aktif'    },
-  { id:43, kode:'4-1200', nama:'Pendapatan Penjualan',         deskripsi:'Penjualan produk / makanan',     tipe:'Pendapatan', saldo:'K', level:2, induk:41,   entitas:['ENT-003'],                                        status:'Aktif'    },
-  { id:44, kode:'4-2000', nama:'Pendapatan Lain-lain',         deskripsi:'Bunga, sewa, dll',               tipe:'Pendapatan', saldo:'K', level:1, induk:40,   entitas:['ENT-001','ENT-002','ENT-005'],                    status:'Aktif'    },
-  // ── BEBAN ──
-  { id:50, kode:'5',      nama:'BEBAN',                        deskripsi:'Kelompok Beban',                 tipe:'Beban',      saldo:'D', level:0, induk:null, entitas:['ENT-001','ENT-002','ENT-003','ENT-004','ENT-005'], status:'Aktif'    },
-  { id:51, kode:'5-1000', nama:'Beban Operasional',            deskripsi:'Biaya operasi rutin',            tipe:'Beban',      saldo:'D', level:1, induk:50,   entitas:['ENT-001','ENT-002','ENT-003','ENT-004','ENT-005'], status:'Aktif'    },
-  { id:52, kode:'5-1100', nama:'Beban Gaji & Tunjangan',       deskripsi:'Gaji, BPJS, insentif',           tipe:'Beban',      saldo:'D', level:2, induk:51,   entitas:['ENT-001','ENT-002','ENT-003','ENT-004'],          status:'Aktif'    },
-  { id:53, kode:'5-1200', nama:'Beban Sewa',                   deskripsi:'Sewa kantor, gudang',            tipe:'Beban',      saldo:'D', level:2, induk:51,   entitas:['ENT-001','ENT-002','ENT-004'],                    status:'Aktif'    },
-  { id:54, kode:'5-1300', nama:'Beban Utilitas',               deskripsi:'Listrik, air, internet',         tipe:'Beban',      saldo:'D', level:2, induk:51,   entitas:['ENT-001','ENT-002','ENT-003','ENT-004','ENT-005'], status:'Aktif'    },
-  { id:55, kode:'5-1400', nama:'Beban Pemasaran',              deskripsi:'Iklan, promosi, event',          tipe:'Beban',      saldo:'D', level:2, induk:51,   entitas:['ENT-001','ENT-002','ENT-004'],                    status:'Aktif'    },
-  { id:56, kode:'5-1500', nama:'Beban Penyusutan',             deskripsi:'Depresiasi aset tetap',          tipe:'Beban',      saldo:'D', level:2, induk:51,   entitas:['ENT-001','ENT-002','ENT-003','ENT-004'],          status:'Aktif'    },
-  { id:57, kode:'5-2000', nama:'Beban Non-Operasional',        deskripsi:'Biaya di luar operasi',          tipe:'Beban',      saldo:'D', level:1, induk:50,   entitas:['ENT-001','ENT-002'],                              status:'Aktif'    },
-  { id:58, kode:'5-2100', nama:'Beban Bunga',                  deskripsi:'Bunga pinjaman',                 tipe:'Beban',      saldo:'D', level:2, induk:57,   entitas:['ENT-001','ENT-003'],                              status:'Aktif'    },
-  { id:59, kode:'5-2200', nama:'Beban Pajak Penghasilan',      deskripsi:'PPh badan',                      tipe:'Beban',      saldo:'D', level:2, induk:57,   entitas:['ENT-001','ENT-002','ENT-003','ENT-004'],          status:'Aktif'    },
+  {
+    "id": 1,
+    "kode": "1",
+    "nama": "ASET / INVESTASI",
+    "deskripsi": "Kelompok akun aset dan investasi dari mapping Accurate.",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 0,
+    "induk": null,
+    "entitas": [
+      "ENT-UBTH",
+      "ENT-KLINIK",
+      "ENT-BSH",
+      "ENT-LKSA",
+      "ENT-YBTH",
+      "ENT-INV",
+      "ENT-DS"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 2,
+    "kode": "3",
+    "nama": "DANA ABADI / EKUITAS",
+    "deskripsi": "Kelompok dana abadi dan akun sejenis.",
+    "tipe": "Ekuitas",
+    "saldo": "K",
+    "level": 0,
+    "induk": null,
+    "entitas": [
+      "ENT-UBTH",
+      "ENT-KLINIK",
+      "ENT-BSH",
+      "ENT-LKSA",
+      "ENT-YBTH",
+      "ENT-INV",
+      "ENT-DS"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 3,
+    "kode": "4",
+    "nama": "PENDAPATAN",
+    "deskripsi": "Kelompok akun pendapatan dari seluruh entitas.",
+    "tipe": "Pendapatan",
+    "saldo": "K",
+    "level": 0,
+    "induk": null,
+    "entitas": [
+      "ENT-UBTH",
+      "ENT-KLINIK",
+      "ENT-BSH",
+      "ENT-LKSA",
+      "ENT-YBTH",
+      "ENT-INV",
+      "ENT-DS"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 4,
+    "kode": "5",
+    "nama": "BEBAN",
+    "deskripsi": "Kelompok akun beban dari seluruh entitas.",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 0,
+    "induk": null,
+    "entitas": [
+      "ENT-UBTH",
+      "ENT-KLINIK",
+      "ENT-BSH",
+      "ENT-LKSA",
+      "ENT-YBTH",
+      "ENT-INV",
+      "ENT-DS"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 10,
+    "kode": "01.2.01.01.01",
+    "nama": "Tanah",
+    "deskripsi": "Contoh sumber: INV.I.01 — Pembelian tanah (multiyears) | INV.I.02 — Pembelian Tanah · 2 mapping sumber",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 11,
+    "kode": "01.2.01.02.01",
+    "nama": "Bangunan",
+    "deskripsi": "Contoh sumber: INV.I.03 — Pondasi benteng lahan mashudi 27x3m | INV.I.08 — Pembangunan Penambahan Benteng Belakang Gedung 7 · 4 mapping sumber",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 12,
+    "kode": "01.2.01.05.01",
+    "nama": "Peralatan",
+    "deskripsi": "Contoh sumber: INV.I.04 — Gardu listrik ATR · 1 mapping sumber",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 13,
+    "kode": "04.1.01.03.01",
+    "nama": "Pendapatan dari sumbangan /donasi - TP",
+    "deskripsi": "Contoh sumber: P.LKSA.I.01 — Donatur umum | P.LKSA.I.03 — Kencleng · 4 mapping sumber",
+    "tipe": "Pendapatan",
+    "saldo": "K",
+    "level": 1,
+    "induk": 3,
+    "entitas": [
+      "ENT-LKSA"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 14,
+    "kode": "04.1.01.04.04",
+    "nama": "Pendapatan Tes kesehatan Calon Mahasiswa Universitas BTH - TP",
+    "deskripsi": "Contoh sumber: P.KLINIK.I.03 — Pendapatan Tes kesehatan Calon Mahasiswa Universitas BTH · 1 mapping sumber",
+    "tipe": "Pendapatan",
+    "saldo": "K",
+    "level": 1,
+    "induk": 3,
+    "entitas": [
+      "ENT-KLINIK"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 15,
+    "kode": "04.1.01.04.06",
+    "nama": "Pemeriksaan Pasien Laboratorium - TP",
+    "deskripsi": "Contoh sumber: P.KLINIK.I.05 — Pemeriksaan Pasien Laboratorium · 1 mapping sumber",
+    "tipe": "Pendapatan",
+    "saldo": "K",
+    "level": 1,
+    "induk": 3,
+    "entitas": [
+      "ENT-KLINIK"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 16,
+    "kode": "04.1.01.04.08",
+    "nama": "Penerimaan Hasil Kerjasama - TP",
+    "deskripsi": "Contoh sumber: P.KLINIK.I.07 — Penerimaan Hasil Kerjasama · 1 mapping sumber",
+    "tipe": "Pendapatan",
+    "saldo": "K",
+    "level": 1,
+    "induk": 3,
+    "entitas": [
+      "ENT-KLINIK"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 17,
+    "kode": "04.1.01.04.09",
+    "nama": "Pendapatan Tes Kesehatan Mahasiswa Apoteker Universitas BTH - TP",
+    "deskripsi": "Contoh sumber: P.KLINIK.I.08 — Pendapatan Tes Kesehatan Mahasiswa Apoteker Universitas BTH · 1 mapping sumber",
+    "tipe": "Pendapatan",
+    "saldo": "K",
+    "level": 1,
+    "induk": 3,
+    "entitas": [
+      "ENT-KLINIK"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 18,
+    "kode": "04.1.01.04.10",
+    "nama": "Penerimaan Calon Siswa SMKN 2 Tasikmalaya - TP",
+    "deskripsi": "Contoh sumber: P.KLINIK.I.09 — Penerimaan Calon Siswa SMKN 2 Tasikmalaya · 1 mapping sumber",
+    "tipe": "Pendapatan",
+    "saldo": "K",
+    "level": 1,
+    "induk": 3,
+    "entitas": [
+      "ENT-KLINIK"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 19,
+    "kode": "04.1.01.04.13",
+    "nama": "Pendapatan Resep Umum - TP",
+    "deskripsi": "Contoh sumber: P.KLINIK.I.10 — Pendapatan Instalasi Farmasi · 1 mapping sumber",
+    "tipe": "Pendapatan",
+    "saldo": "K",
+    "level": 1,
+    "induk": 3,
+    "entitas": [
+      "ENT-KLINIK"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 20,
+    "kode": "04.1.01.04.15",
+    "nama": "Pendapatan JPKM - TP",
+    "deskripsi": "Contoh sumber: P.KLINIK.I.01 — JPKM PSAA Amanah · 1 mapping sumber",
+    "tipe": "Pendapatan",
+    "saldo": "K",
+    "level": 1,
+    "induk": 3,
+    "entitas": [
+      "ENT-KLINIK"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 21,
+    "kode": "04.1.01.04.20",
+    "nama": "Pendapatan dari Pelayanan Umum - TP",
+    "deskripsi": "Contoh sumber: P.KLINIK.I.04 — Pemeriksaan Pasien Klinik Umum | P.KLINIK.I.06 — Pemeriksaan Pasien Klinik Therapy · 2 mapping sumber",
+    "tipe": "Pendapatan",
+    "saldo": "K",
+    "level": 1,
+    "induk": 3,
+    "entitas": [
+      "ENT-KLINIK"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 22,
+    "kode": "04.1.01.04.21",
+    "nama": "Pendapatan dari BPJS Kesehatan - TP",
+    "deskripsi": "Contoh sumber: P.KLINIK.I.02 — Iuran Peserta BPJS · 1 mapping sumber",
+    "tipe": "Pendapatan",
+    "saldo": "K",
+    "level": 1,
+    "induk": 3,
+    "entitas": [
+      "ENT-KLINIK"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 23,
+    "kode": "04.1.01.06.01",
+    "nama": "Pendapatan dari BTH Student House - TP",
+    "deskripsi": "Contoh sumber: P.BSH.I.01 — Sewa Kamar Residen Akt. 8 | P.BSH.I.02 — Sewa Kamar Residen Akt. 9 · 3 mapping sumber",
+    "tipe": "Pendapatan",
+    "saldo": "K",
+    "level": 1,
+    "induk": 3,
+    "entitas": [
+      "ENT-BSH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 24,
+    "kode": "04.1.02.01.01",
+    "nama": "Pendapatan lain-lain - TP",
+    "deskripsi": "Contoh sumber: P.BSH.I.04 — Penerimaan Sewa Kamar Tamu | P.LKSA.I.02 — Pendapatan Ekotif · 3 mapping sumber",
+    "tipe": "Pendapatan",
+    "saldo": "K",
+    "level": 1,
+    "induk": 3,
+    "entitas": [
+      "ENT-BSH",
+      "ENT-LKSA"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 25,
+    "kode": "06.1.01.01.01",
+    "nama": "Gaji pokok karyawan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.I.01 — Gaji pegawai | B.KLINIK.I.01 — Gaji Pegawai · 5 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-BSH",
+      "ENT-KLINIK",
+      "ENT-LKSA",
+      "ENT-UBTH",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 26,
+    "kode": "06.1.01.01.02",
+    "nama": "Tunjangan Struktural - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.I.06 — Tunjangan Struktural · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 27,
+    "kode": "06.1.01.01.03",
+    "nama": "Tunjangan fungsional dosen dan tendik - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.I.07 — Tunjangan Fungsional Dosen · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 28,
+    "kode": "06.1.01.01.04",
+    "nama": "Insentif Senat - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.I.04 — Insentif Senat · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 29,
+    "kode": "06.1.01.01.06",
+    "nama": "Tunjangan Hari Raya - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.I.08 — Tunjangan Hari Raya | B.KLINIK.I.04 — Tunjangan Hari Raya · 5 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-BSH",
+      "ENT-KLINIK",
+      "ENT-LKSA",
+      "ENT-UBTH",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 30,
+    "kode": "06.1.01.01.09",
+    "nama": "Tunjangan BPJS Ketenagakerjaan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.I.02 — Tunjangan BPJS Ketenagakerjaan | B.KLINIK.I.02 — Tunjangan BPJS Ketenagakerjaan · 5 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-BSH",
+      "ENT-KLINIK",
+      "ENT-LKSA",
+      "ENT-UBTH",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 31,
+    "kode": "06.1.01.01.10",
+    "nama": "Tunjangan BPJS Kesehatan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.I.03 — Tunjangan BPJS Kesehatan | B.KLINIK.I.03 — Tunjangan BPJS Kesehatan · 5 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-BSH",
+      "ENT-KLINIK",
+      "ENT-LKSA",
+      "ENT-UBTH",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 32,
+    "kode": "06.1.01.01.13",
+    "nama": "Tunjangan Pesangon - TP",
+    "deskripsi": "Contoh sumber: B.YBTH.I.06 — PESANGON DAN PENGHARGAAN KERJA · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 33,
+    "kode": "06.1.01.01.15",
+    "nama": "Upah Lembur dan Piket - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.I.05 — Lembur dan Piket | B.KLINIK.I.05 — Uang lembur dan piket · 5 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-BSH",
+      "ENT-KLINIK",
+      "ENT-LKSA",
+      "ENT-UBTH",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 34,
+    "kode": "06.1.01.02.03",
+    "nama": "Biaya audit eksternal - TP",
+    "deskripsi": "Contoh sumber: B.YBTH.VII.01 — AUDIT EKSTERNAL · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 35,
+    "kode": "06.1.01.02.06",
+    "nama": "Biaya Pengurusan Hibah - TP",
+    "deskripsi": "Contoh sumber: B.YBTH.VII.05 — PENGURUSAN HIBAH · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 36,
+    "kode": "06.1.01.02.07",
+    "nama": "Biaya Akta dan Sertifikat - TP",
+    "deskripsi": "Contoh sumber: B.YBTH.VI.05 — AKTA DAN SERTIFIKAT · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 37,
+    "kode": "06.1.01.02.08",
+    "nama": "Biaya Alihdaya - TP",
+    "deskripsi": "Contoh sumber: B.YBTH.I.09 — TENAGA ALIH DAYA · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 38,
+    "kode": "06.1.01.02.10",
+    "nama": "Biaya Keagamaan - TP",
+    "deskripsi": "Contoh sumber: B.YBTH.VII.06 — KEAGAMAAN · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 39,
+    "kode": "06.1.01.02.11",
+    "nama": "Iuran Keanggotaan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.26 — Iuaran anggota AIPViKI Regional IV | B.UBTH.XIV.51 — Pertemuan Asosiasi tahunan Fakultas Ilmu Kesehatan dan Iuran Anggota · 2 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 40,
+    "kode": "06.1.01.02.12",
+    "nama": "Biaya entertain dengan relasi - TP",
+    "deskripsi": "Contoh sumber: B.YBTH.VII.07 — BINGKISAN RELASI YAYASAN · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 41,
+    "kode": "06.1.01.02.13",
+    "nama": "Biaya Dana Kesehatan - TP",
+    "deskripsi": "Contoh sumber: B.YBTH.VIII.01 — DANA KESEHATAN · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 42,
+    "kode": "06.1.01.02.14",
+    "nama": "Biaya bantuan istri pendiri - TP",
+    "deskripsi": "Contoh sumber: B.YBTH.VIII.02 — BANTUAN ISTRI PENDIRI · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 43,
+    "kode": "06.1.01.02.15",
+    "nama": "Biaya beasiswa anak pegawai - TP",
+    "deskripsi": "Contoh sumber: B.YBTH.VIII.03 — BEASISWA ANAK PEGAWAI · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 44,
+    "kode": "06.1.01.02.17",
+    "nama": "Administrasi Bank, umum dan surat menyurat - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XI.02 — Administrasi Bank, umum dan surat menyurat | B.KLINIK.II.03 — Biaya Surat menyurat, materai, fee pengurusan administrasi · 9 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-BSH",
+      "ENT-KLINIK",
+      "ENT-LKSA",
+      "ENT-UBTH",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 45,
+    "kode": "06.1.01.02.18",
+    "nama": "Biaya pembelian obat dan alat kesehatan - TP",
+    "deskripsi": "Contoh sumber: B.KLINIK.II.04 — Kartu pasien dan blanko pemeriksaan | B.KLINIK.II.05 — Perlengkapan Kesehatan · 3 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-KLINIK"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 46,
+    "kode": "06.1.01.02.19",
+    "nama": "Pusat Karir - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XI.03 — Treaser Study | B.UBTH.XI.04 — Jobfair · 4 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 47,
+    "kode": "06.1.01.02.20",
+    "nama": "Milad - TP",
+    "deskripsi": "Contoh sumber: B.YBTH.VII.02 — MILAD YAYASAN BTH · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 48,
+    "kode": "06.1.01.02.21",
+    "nama": "Studi Banding - TP",
+    "deskripsi": "Contoh sumber: B.YBTH.VII.03 — STUDI BANDING YAYASAN · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 49,
+    "kode": "06.1.01.02.22",
+    "nama": "Wisuda - TP",
+    "deskripsi": "Contoh sumber: B.YBTH.VII.04 — KEGIATAN WISUDA · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 50,
+    "kode": "06.1.01.02.24",
+    "nama": "Administrasi pengurusan ijin institusi - TP",
+    "deskripsi": "Contoh sumber: B.KLINIK.VI.02 — Administrasi pengurusan Ijin Institusi | B.YBTH.VI.06 — PERIZINAN INSTITUSI · 2 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-KLINIK",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 51,
+    "kode": "06.1.01.02.25",
+    "nama": "Iuran institusi - TP",
+    "deskripsi": "Contoh sumber: B.KLINIK.VI.04 — Iuran Institusi · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-KLINIK"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 52,
+    "kode": "06.1.01.02.26",
+    "nama": "Visitasi Akreditasi - TP",
+    "deskripsi": "Contoh sumber: B.KLINIK.VI.05 — Visitasi Akreditasi · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-KLINIK"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 53,
+    "kode": "06.1.01.02.27",
+    "nama": "Kepanitiaan kegiatan",
+    "deskripsi": "Contoh sumber: B.UBTH.I.11 — Kepanitiaan kegiatan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 54,
+    "kode": "06.1.01.03.00",
+    "nama": "Belanja Rumah Tangga & Belanja Barang - TP",
+    "deskripsi": "Contoh sumber: B.KLINIK.II.07 — Peralatan dan Perlengkapan  kantor | B.KLINIK.II.08 — Rumah tangga, kebersihan, keamanan · 8 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-BSH",
+      "ENT-KLINIK",
+      "ENT-LKSA",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 55,
+    "kode": "06.1.01.03.01",
+    "nama": "Biaya Pembelian  Alat Listrik dan Elektronik - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.VII.02 — Belanja Alat Listrik | B.BSH.II.04 — Alat Listrik · 4 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-BSH",
+      "ENT-LKSA",
+      "ENT-UBTH",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 56,
+    "kode": "06.1.01.03.02",
+    "nama": "Biaya Alat Tulis Kantor - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.VII.03 — Belanja ATK | B.KLINIK.II.01 — Alat Tulis Kantor · 5 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-BSH",
+      "ENT-KLINIK",
+      "ENT-LKSA",
+      "ENT-UBTH",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 57,
+    "kode": "06.1.01.03.03",
+    "nama": "Belanja Inventaris Kantor,  Perlengkapan PBM, dan  Perpustakaan - TP",
+    "deskripsi": "Contoh sumber: B.YBTH.II.01 — PERALATAN  KANTOR DAN MESIN | B.YBTH.II.02 — PERALATAN DAN PERLENGKAPAN TIK · 2 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 58,
+    "kode": "06.1.01.03.06",
+    "nama": "Biaya  Barang Inventaris Kantor - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.VII.01 — Belanja Inventaris Kantor, Perlengkapan PBM dan Perpustakaan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 59,
+    "kode": "06.1.01.03.07",
+    "nama": "Biaya Pembelian Pakaian Seragam - TP",
+    "deskripsi": "Contoh sumber: B.BSH.II.08 — Seragam pegawai | B.YBTH.VI.08 — PAKAIAN SERAGAM · 2 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-BSH",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 60,
+    "kode": "06.1.01.03.08",
+    "nama": "Biaya Konsumsi Karyawan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.IX.02 — Konsumsi dan Air Minum | B.BSH.II.05 — Konsumsi Pegawai · 3 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-BSH",
+      "ENT-UBTH",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 61,
+    "kode": "06.1.01.03.09",
+    "nama": "Biaya Konsumsi Rapat - TP",
+    "deskripsi": "Contoh sumber: B.KLINIK.II.09 — Konsumsi rapat | B.BSH.II.09 — Konsumsi Rapat · 4 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-BSH",
+      "ENT-KLINIK",
+      "ENT-LKSA",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 62,
+    "kode": "06.1.01.03.10",
+    "nama": "Biaya Konsumsi Tamu - TP",
+    "deskripsi": "Contoh sumber: B.KLINIK.II.10 — Konsumsi Tamu | B.BSH.II.06 — Konsumsi tamu · 4 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-BSH",
+      "ENT-KLINIK",
+      "ENT-LKSA",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 63,
+    "kode": "06.1.01.03.11",
+    "nama": "Belanja Fotocopy, Jilid, Laminating dan Materai - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.VII.04 — Belanja Fotocopy, Jilid, Laminating dan Materai | B.KLINIK.II.02 — Biaya Fotocopy, cetak jilid · 4 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-KLINIK",
+      "ENT-LKSA",
+      "ENT-UBTH",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 64,
+    "kode": "06.1.01.03.12",
+    "nama": "Biaya Surat Kabar/Majalah - TP",
+    "deskripsi": "Contoh sumber: B.LKSA.II.06 — Koran dan majalah | B.YBTH.II.05 — KORAN/BUKU/MAJALAH · 2 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-LKSA",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 65,
+    "kode": "06.1.01.03.13",
+    "nama": "Biaya Representasi - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XI.01 — Refresentatif | B.KLINIK.VI.01 — Representasi · 5 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-BSH",
+      "ENT-KLINIK",
+      "ENT-LKSA",
+      "ENT-UBTH",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 66,
+    "kode": "06.1.01.03.14",
+    "nama": "Perlengkapan kebersihan dan rumah tangga - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.IX.01 — Perlengkapan Kebersihan dan Rumah Tangga | B.LKSA.II.08 — Rumah tangga dan kebersihan · 2 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-LKSA",
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 67,
+    "kode": "06.1.01.03.15",
+    "nama": "Konsumsi dan galon air minum - TP",
+    "deskripsi": "Contoh sumber: B.LKSA.II.07 — Konsumsi anak dan pengelola · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-LKSA"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 68,
+    "kode": "06.1.01.03.16",
+    "nama": "Pembuangan limbah Medis - TP",
+    "deskripsi": "Contoh sumber: B.KLINIK.III.02 — Biaya Pembuangan Limbah Medis · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-KLINIK"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 69,
+    "kode": "06.1.01.03.17",
+    "nama": "Pengadaan Alat dan Bahan Praktikum Laboratorium - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.VII.05 — Pengadaan Bahan Praktikum · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 70,
+    "kode": "06.1.01.03.18",
+    "nama": "Belanja barang perpustakaan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.VII.06 — Belanja Barang Perpustakaan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 71,
+    "kode": "06.1.01.03.19",
+    "nama": "Jas Almamater, Batik Mahasiswa & Jas Profesi - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.VII.07 — Jas Almamater, Batik Mahasiswa & Jas Profesi · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 72,
+    "kode": "06.1.01.03.20",
+    "nama": "Seragam Mahasiswa Baru  - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.VII.08 — Seragam Mahasiswa Baru Prodi D3 Keperawatan | B.UBTH.VII.09 — Seragam Mahasiswa Baru Prodi D3 Analis Kesehatan · 3 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 73,
+    "kode": "06.1.01.04.01",
+    "nama": "Pemeliharaan Gedung, Halaman, dan Graha Husada - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.VIII.01 — Pemeliharaan Gedung, Halaman dan Graha Husada | B.KLINIK.III.01 — Biaya Pemeliharaan Gedung · 5 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-BSH",
+      "ENT-KLINIK",
+      "ENT-LKSA",
+      "ENT-UBTH",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 74,
+    "kode": "06.1.01.04.02",
+    "nama": "Pemeliharaan Perlengkapan Kantor, Laboratorium, Perpustakaan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.VIII.02 — Pemeliharaan Perlengkapan Kantor | B.UBTH.VIII.05 — Pemeliharaan dan Inventarisasi Alat Laboratorium · 8 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-BSH",
+      "ENT-KLINIK",
+      "ENT-UBTH",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 75,
+    "kode": "06.1.01.04.03",
+    "nama": "Pemeliharaan alat Kesehatan - TP",
+    "deskripsi": "Contoh sumber: B.KLINIK.III.04 — Biaya Pemeliharaan alat Kesehatan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-KLINIK"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 76,
+    "kode": "06.1.01.04.04",
+    "nama": "Pemeliharaan Kendaraan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.VIII.03 — Pemeliharaan Kendaraan | B.LKSA.III.02 — Kendaraan · 3 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-LKSA",
+      "ENT-UBTH",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 77,
+    "kode": "06.1.01.04.05",
+    "nama": "Pemeliharaan AC - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.VIII.04 — Pemeliharaan AC · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 78,
+    "kode": "06.1.01.04.07",
+    "nama": "Ekonomi Produktif - TP",
+    "deskripsi": "Contoh sumber: B.LKSA.III.03 — Kegiatan Ekonomi Produktif · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-LKSA"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 79,
+    "kode": "06.1.01.05.01",
+    "nama": "Perjalanan dinas - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.X.01 — Perjalanan Dinas | B.KLINIK.IV.01 — Perjalanan Dinas (Luar Kota) · 5 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-BSH",
+      "ENT-KLINIK",
+      "ENT-LKSA",
+      "ENT-UBTH",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 80,
+    "kode": "06.1.01.05.02",
+    "nama": "Transport lokal dan parkir - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.X.02 — Transport Lokal dan Parkir | B.KLINIK.IV.02 — Transport lokal · 6 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-BSH",
+      "ENT-KLINIK",
+      "ENT-LKSA",
+      "ENT-UBTH",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 81,
+    "kode": "06.1.01.05.03",
+    "nama": "Transport kepulangan anak asuh - TP",
+    "deskripsi": "Contoh sumber: B.LKSA.IV.03 — Transport Kepulangan Anak Asuh · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-LKSA"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 82,
+    "kode": "06.1.01.06.01",
+    "nama": "Biaya Listrik - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.IX.03 — Listrik | B.KLINIK.V.01 — Listrik · 3 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-KLINIK",
+      "ENT-UBTH",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 83,
+    "kode": "06.1.01.06.02",
+    "nama": "Biaya telepon/fax/internet - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.IX.04 — Telepon | B.KLINIK.V.03 — Telepon dan Speedy · 5 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-BSH",
+      "ENT-KLINIK",
+      "ENT-LKSA",
+      "ENT-UBTH",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 84,
+    "kode": "06.1.01.06.03",
+    "nama": "Biaya PDAM - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.IX.05 — PDAM | B.KLINIK.V.02 — PDAM · 5 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-BSH",
+      "ENT-KLINIK",
+      "ENT-LKSA",
+      "ENT-UBTH",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 85,
+    "kode": "06.1.01.06.04",
+    "nama": "Biaya Gas - TP",
+    "deskripsi": "Contoh sumber: B.LKSA.V.04 — Gas · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-LKSA"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 86,
+    "kode": "06.1.01.06.05",
+    "nama": "Pembelian Bahan Bakar Minyak (BBM) - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.IX.06 — Bahan Bakar Minyak (BBM) | B.KLINIK.V.04 — BBM (Bahan Bakar Minyak) · 5 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-BSH",
+      "ENT-KLINIK",
+      "ENT-LKSA",
+      "ENT-UBTH",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 87,
+    "kode": "06.1.01.07.01",
+    "nama": "Biaya pelatihan, workshop, minat dan bakat karyawan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.VI.02 — Pelatihan SPMI dan AMI | B.UBTH.VI.07 — Workshop implementasi manajemen risiko · 8 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-BSH",
+      "ENT-KLINIK",
+      "ENT-LKSA",
+      "ENT-UBTH",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 88,
+    "kode": "06.1.01.07.03",
+    "nama": "Bantuan Pengembangan Diri - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.I.09 — Biaya Pengembangan Diri Karyawan | B.KLINIK.I.06 — Bantuan Pengembangan Diri · 5 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-BSH",
+      "ENT-KLINIK",
+      "ENT-LKSA",
+      "ENT-UBTH",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 89,
+    "kode": "06.1.01.07.04",
+    "nama": "Penghargaan Karyawan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.I.10 — Penghargaan Karyawan Berprestasi Dosen dan Tendik | B.YBTH.I.08 — PENGHARGAAN MASA KERJA PEGAWAI · 2 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 90,
+    "kode": "06.1.01.07.05",
+    "nama": "Program Pembinaan Residen - TP",
+    "deskripsi": "Contoh sumber: B.BSH.II.10 — Buku panduan penghuni | B.BSH.X.01 — Pembinaan resident: · 4 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-BSH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 91,
+    "kode": "06.1.01.07.06",
+    "nama": "Pengembangan dosen - TP",
+    "deskripsi": "Contoh sumber: B.YBTH.IX.03 — PENGEMBANGAN DOSEN · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 92,
+    "kode": "06.1.01.07.07",
+    "nama": "Peningkatan kinerja pegawai - TP",
+    "deskripsi": "Contoh sumber: B.YBTH.IX.04 — PENINGKATAN KINERJA PEGAWAI · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 93,
+    "kode": "06.1.01.07.08",
+    "nama": "Rekruitmen - TP",
+    "deskripsi": "Contoh sumber: B.YBTH.IX.02 — REKRUITMEN · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 94,
+    "kode": "06.1.01.08.01",
+    "nama": "Jasa pelayanan pasien umum - TP",
+    "deskripsi": "Contoh sumber: B.KLINIK.VIII.01 — Jasa Pelayanan umum | B.KLINIK.VIII.05 — Jasa Pemeriksaan Swab · 2 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-KLINIK"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 95,
+    "kode": "06.1.01.08.02",
+    "nama": "Jasa pelayanan pasien bpjs - TP",
+    "deskripsi": "Contoh sumber: B.KLINIK.VIII.02 — Jasa Pelayanan Bpjs · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-KLINIK"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 96,
+    "kode": "06.1.01.08.03",
+    "nama": "Jasa pelayanan pasien jpkm & jpk - TP",
+    "deskripsi": "Contoh sumber: B.KLINIK.VIII.03 — Jasa pelayanan pasien jpkm & jpk · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-KLINIK"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 97,
+    "kode": "06.1.01.08.04",
+    "nama": "Uang duduk tenaga medis - TP",
+    "deskripsi": "Contoh sumber: B.KLINIK.VIII.04 — Uang duduk tenaga medis · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-KLINIK"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 98,
+    "kode": "06.1.01.09.01",
+    "nama": "Transportasi Sekolah - TP",
+    "deskripsi": "Contoh sumber: B.LKSA.VII.01 — Transportasi Sekolah · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-LKSA"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 99,
+    "kode": "06.1.01.09.02",
+    "nama": "SPP Sekolah Anak - TP",
+    "deskripsi": "Contoh sumber: B.LKSA.VII.02 — SPP Sekolah · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-LKSA"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 100,
+    "kode": "06.1.01.09.03",
+    "nama": "Ekstra Kurikuler Sekolah - TP",
+    "deskripsi": "Contoh sumber: B.LKSA.VII.03 — Ekstrakurikuler Sekolah · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-LKSA"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 101,
+    "kode": "06.1.01.09.04",
+    "nama": "Pendaftaran sekolah - TP",
+    "deskripsi": "Contoh sumber: B.LKSA.VII.04 — Pendaftaran Sekolah · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-LKSA"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 102,
+    "kode": "06.1.01.09.05",
+    "nama": "Pakaian seragam sekolah - TP",
+    "deskripsi": "Contoh sumber: B.LKSA.VII.05 — Pakaian seragam · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-LKSA"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 103,
+    "kode": "06.1.01.09.06",
+    "nama": "Buku dan peralatan sekolah - TP",
+    "deskripsi": "Contoh sumber: B.LKSA.II.05 — Buku | B.LKSA.VII.06 — Buku dan peralatan sekolah · 2 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-LKSA"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 104,
+    "kode": "06.1.01.09.07",
+    "nama": "Ujian Sekolah dan Praktikum - TP",
+    "deskripsi": "Contoh sumber: B.LKSA.VII.07 — Ujian Sekolah dan Praktikum · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-LKSA"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 105,
+    "kode": "06.1.01.09.08",
+    "nama": "Kesehatan Anak - TP",
+    "deskripsi": "Contoh sumber: B.LKSA.VII.08 — Kesehatan Anak · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-LKSA"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 106,
+    "kode": "06.1.01.09.09",
+    "nama": "Penunjang Kegiatan - TP",
+    "deskripsi": "Contoh sumber: B.LKSA.VII.09 — Penunjang Kegiatan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-LKSA"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 107,
+    "kode": "06.1.01.10.01",
+    "nama": "Dana sosial organ dan pegawai  - TP",
+    "deskripsi": "Contoh sumber: B.DS.II.01 — Dana Sosial Organ dan Pegawai  YBTH · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-DS"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 108,
+    "kode": "06.1.01.10.02",
+    "nama": "Dana sosial mahasiswa - TP",
+    "deskripsi": "Contoh sumber: B.DS.II.06 — Dana sosial mahasiswa · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-DS"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 109,
+    "kode": "06.1.01.10.04",
+    "nama": "Kegiatan keagamaan dan Kegiatan Idul Adha - TP",
+    "deskripsi": "Contoh sumber: B.DS.II.02 — Dana sosial bantuan keagamaan pihak eksternal | B.DS.II.03 — Dana sosial kegiatan Idul Adha · 3 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-DS"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 110,
+    "kode": "06.1.01.10.05",
+    "nama": "Bakti sosial ,kemasyarakatan dan bencana alam - TP",
+    "deskripsi": "Contoh sumber: B.DS.II.04 — Dana sosial Kemasyarakatan | B.DS.II.05 — Dana sosial  bencana alam dan baksos · 2 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-DS"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 111,
+    "kode": "06.1.01.10.06",
+    "nama": "Dana sosial untuk DKM Arruswadi - TP",
+    "deskripsi": "Contoh sumber: B.DS.II.08 — Dana sosial untuk DKM Ar-Ruswadi · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-DS"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 112,
+    "kode": "06.1.01.10.08",
+    "nama": "Beasiswa Mahasiswa - TP",
+    "deskripsi": "Contoh sumber: B.DS.IV.01 — Beasiswa KIP | B.DS.IV.02 — Beasiswa  mahasiswa tidak mampu · 4 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-DS"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 113,
+    "kode": "06.1.01.10.09",
+    "nama": "Dana sosial untuk rekanan - TP",
+    "deskripsi": "Contoh sumber: B.DS.II.07 — Dana sosial relasi YBTH | B.DS.V.01 — Umroh untuk Assatidz · 2 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-DS"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 114,
+    "kode": "06.1.02.01.01",
+    "nama": "Rapat Evaluasi dan Awal Program - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.II.01 — Rapat Evaluasi dan Awal Program · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 115,
+    "kode": "06.1.02.01.02",
+    "nama": "Kartu Tanda Mahasiswa (KTM) - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.II.02 — Kartu Tanda Mahasiswa (KTM) · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 116,
+    "kode": "06.1.02.01.03",
+    "nama": "Dies Natalis Universitas - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.II.03 — Dies Natalis Universitas · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 117,
+    "kode": "06.1.02.01.04",
+    "nama": "Pengembangan Softskill (Rumah Quran) - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.II.04 — Pengembangan Softskill (Rumah Quran) · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 118,
+    "kode": "06.1.02.02.00",
+    "nama": "Penelitian dan Pengabdian Masyarakat - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIII.32 — Penyusunan Road Map Penelitian dan Pengabdian Masyarakat · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 119,
+    "kode": "06.1.02.02.01",
+    "nama": "Penelitian Fakultas Ilmu Kesehatan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.III.04 — Penerimaan proposal dan pelaksanaan penelitian | B.UBTH.III.05 — Monitoring dan Evaluasi pelaksanaan penelitian · 2 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 120,
+    "kode": "06.1.02.02.02",
+    "nama": "Penelitian Fakultas Farmasi - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.III.04 — Penerimaan proposal dan pelaksanaan penelitian | B.UBTH.III.05 — Monitoring dan Evaluasi pelaksanaan penelitian · 2 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 121,
+    "kode": "06.1.02.02.03",
+    "nama": "Penelitian Fakultas Teknologi dan Bisnis - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.III.04 — Penerimaan proposal dan pelaksanaan penelitian | B.UBTH.III.05 — Monitoring dan Evaluasi pelaksanaan penelitian · 3 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 122,
+    "kode": "06.1.02.02.05",
+    "nama": "Pelatihan Tips dan Trik Penulisan Proposal untuk Menembus Hibah - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.III.12 — Pelaksanaan Pelatihan Pelatihan penulisan proposal hibah; pelatihan penulisan artikel ilmiah; pelatihan penulisan draft paten; pelatihan perizinan produk; keamanan produk pangan industri rumah tangga · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 123,
+    "kode": "06.1.02.02.07",
+    "nama": "Penghargaan Prestasi Dosen Berbasis Output LPPM - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.III.13 — Pemberian penghargaan dosen di bidang LPPM · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 124,
+    "kode": "06.1.02.02.09",
+    "nama": "Biaya Pengelolaan Jurnal JKBTH - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.III.06 — Pelaksanaan Pengelolaan Jurnal Ilmiah Kampus · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 125,
+    "kode": "06.1.02.02.18",
+    "nama": "Subsidi Pengajuan Paten/ Hak Cipta Penelitian dan PkM  - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.III.01 — Pembiayaan hasil publikasi internasional hasil penelitian dosen tetap berupa insentif dan subsidi. | B.UBTH.III.02 — Pembiayaan hasil publikasi nasional hasil penelitian berupa insentif dan subsidi. · 3 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 126,
+    "kode": "06.1.02.02.19",
+    "nama": "Implementasi Pengabdian Masyarakat Fakultas Ilmu Kesehatan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.III.08 — Penerimaan proposal dan pelaksanaan PkM | B.UBTH.III.10 — Pelaksanaan kegiatan diseminasi hasil PKM · 4 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 127,
+    "kode": "06.1.02.02.20",
+    "nama": "Implementasi Pengabdian Masyarakat Fakultas Farmasi - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.III.08 — Penerimaan proposal dan pelaksanaan PkM | B.UBTH.III.10 — Pelaksanaan kegiatan diseminasi hasil PKM · 4 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 128,
+    "kode": "06.1.02.02.21",
+    "nama": "Implementasi Pengabdian Masyarakat Fakultas Teknologi dan Bisnis - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.III.08 — Penerimaan proposal dan pelaksanaan PkM | B.UBTH.III.10 — Pelaksanaan kegiatan diseminasi hasil PKM · 4 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 129,
+    "kode": "06.1.02.02.25",
+    "nama": "Publikasi di Jurnal Nasional Pengabdian Masyarakat - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.III.07 — Pembiayaan hasil publikasi nasional hasil PkM berupa insentif dan subsidi. | B.UBTH.III.09 — Pelaksanaan Pengelolaan Jurnal Ilmiah Kampus · 2 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 130,
+    "kode": "06.1.02.03.02",
+    "nama": "Pendidikan Bela Negara (PBN) - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.IV.02 — Pendidikan Bela Negara (PBN) · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 131,
+    "kode": "06.1.02.03.03",
+    "nama": "Pencapaian Prestasi Mahasiswa - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.IV.01 — Pencapaian Prestasi Mahasiswa · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 132,
+    "kode": "06.1.02.03.05",
+    "nama": "Beasiswa Prestasi Akademik (BPA) - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.IV.03 — Beasiswa Prestasi Akademik (BPA) · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 133,
+    "kode": "06.1.02.03.07",
+    "nama": "Jaminan Pemeliharaan Kesehatan Masyarakat (JPKM) - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.IV.04 — Jaminan Pemeliharaan Kesehatan Masyarakat (JPKM) · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 134,
+    "kode": "06.1.02.03.09",
+    "nama": "Pengenalan Kehidupan Kampus bagi Mahasiswa Baru (PKKMB)  - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.IV.05 — Darma Bakti · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 135,
+    "kode": "06.1.02.03.11",
+    "nama": "Iuran APTISI - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.IV.06 — Iuran APTISI · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 136,
+    "kode": "06.1.02.03.12",
+    "nama": "Seleksi Penerimaan Mahasiswa Baru - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.IV.07 — Seleksi Penerimaan Mahasiswa Baru (SPMB) · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 137,
+    "kode": "06.1.02.04.01",
+    "nama": "Kegiatan Kehumas - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.V.01 — Pengelolaan Media Sosial | B.UBTH.V.02 — Press Release dan Publikasi · 9 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 138,
+    "kode": "06.1.02.04.02",
+    "nama": "Kerjasama Dalam dan Luar Negeri - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.V.04 — Kerjasama Dalam Negeri · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 139,
+    "kode": "06.1.02.05.01",
+    "nama": "Audit Internal  - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.VI.13 — Audit/ Evaluasi/ Review pengadaan bahan laboratorium · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 140,
+    "kode": "06.1.02.05.05",
+    "nama": "Workshop Peningkatan Pemahaman Standar Mutu UBTH - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIII.33 — Penysunan Standar Mutu Fakultas Farmasi · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 141,
+    "kode": "06.1.02.05.07",
+    "nama": "Penyusunan Dokumen SPMI",
+    "deskripsi": "Contoh sumber: B.UBTH.VI.01 — Penyusunan Dokumen SPMI · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 142,
+    "kode": "06.1.02.05.08",
+    "nama": "Survey kepuasan",
+    "deskripsi": "Contoh sumber: B.UBTH.VI.03 — Survey kepuasan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 143,
+    "kode": "06.1.02.05.09",
+    "nama": "Evaluasi Risk Akademik",
+    "deskripsi": "Contoh sumber: B.UBTH.VI.04 — Evaluasi Risk Akademik · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 144,
+    "kode": "06.1.02.05.10",
+    "nama": "AMI dan RTM",
+    "deskripsi": "Contoh sumber: B.UBTH.VI.05 — AMI dan RTM · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 145,
+    "kode": "06.1.02.05.11",
+    "nama": "Reakreditasi Universitas dan Prodi",
+    "deskripsi": "Contoh sumber: B.UBTH.VI.06 — Reakreditasi Universitas dan Prodi · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 146,
+    "kode": "06.1.02.05.12",
+    "nama": "Sosialisasi pencegahan korupsi",
+    "deskripsi": "Contoh sumber: B.UBTH.VI.08 — Sosialisasi pencegahan korupsi · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 147,
+    "kode": "06.1.02.05.13",
+    "nama": "Evaluasi perencanaan anggaran dan realisasi anggaran",
+    "deskripsi": "Contoh sumber: B.UBTH.VI.09 — Evaluasi perencanaan anggaran dan realisasi anggaran tahun 2025 (realisasi semester 1 & 2) · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 148,
+    "kode": "06.1.02.05.14",
+    "nama": "Evaluasi pengelolaan keuangan (Evaluasi Kebijakan dan Realisasis Pembayaran Honor)",
+    "deskripsi": "Contoh sumber: B.UBTH.VI.10 — Evaluasi pengelolaan keuangan (Evaluasi Kebijakan dan Realisasis Pembayaran Honor) · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 149,
+    "kode": "06.1.02.05.15",
+    "nama": "Evaluasi kinerja prodi di Fakultas Ilmu Kesehatan, Farmasi, Teknologi dan Bisnis",
+    "deskripsi": "Contoh sumber: B.UBTH.VI.12 — Evaluasi kinerja prodi tahun 2024 di Fakultas Ilmu Kesehatan, Farmasi, Teknologi dan Bisnis · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 150,
+    "kode": "06.1.02.05.16",
+    "nama": "Evaluasi perencanaan anggaran dan realisasi anggaran Promosi Penerimaan Mahasiswa Baru",
+    "deskripsi": "Contoh sumber: B.UBTH.VI.14 — Evaluasi perencanaan anggaran dan realisasi anggaran Promosi Penerimaan Mahasiswa Baru TA 2025/2026 · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 151,
+    "kode": "06.1.02.05.17",
+    "nama": "Pengawasan lainnya atas permintaan pimpinan",
+    "deskripsi": "Contoh sumber: B.UBTH.VI.15 — Pengawasan lainnya atas permintaan pimpinan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 152,
+    "kode": "06.1.02.06.01",
+    "nama": "Biaya administrasi NIDN dan Jafung - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XII.02 — Biaya administrasi NIDN dan Jafung · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 153,
+    "kode": "06.1.02.07.01",
+    "nama": "Honor Dosen Program Studi Farmasi  - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIII.01 — Honor Dosen Program Studi Farmasi · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 154,
+    "kode": "06.1.02.07.02",
+    "nama": "Honor Asisten Dosen Program Studi Farmasi - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIII.02 — Honor Asisten Dosen Program Studi Farmasi · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 155,
+    "kode": "06.1.02.07.03",
+    "nama": "Transfor Dosen dan Asisten Luar Program Studi Farmasi - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIII.03 — Transfor Dosen dan Asisten Luar Program Studi Farmasi · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 156,
+    "kode": "06.1.02.07.04",
+    "nama": "Honor Dosen Pakar/Ahli  Program Studi Farmasi - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIII.04 — Honor Dosen Pakar/Ahli  Program Studi Farmasi · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 157,
+    "kode": "06.1.02.07.05",
+    "nama": "Honor Dosen Wali Program Studi Farmasi - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIII.05 — Honor Dosen Wali Program Studi Farmasi · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 158,
+    "kode": "06.1.02.07.06",
+    "nama": "Honor UTS dan UAS Teori, Praktikum dan Klinik Program Studi Farmasi - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIII.06 — Honor UTS dan UAS Teori, Praktikum dan Klinik Program Studi Farmasi · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 159,
+    "kode": "06.1.02.07.07",
+    "nama": "Kuliah Kerja Nyata Program Studi Farmasi - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIII.36 — KKN RPL · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 160,
+    "kode": "06.1.02.07.08",
+    "nama": "Tugas Akhir I Program Studi Farmasi  - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIII.07 — Tugas Akhir I Program Studi Farmasi Angkatan 2022/2023 | B.UBTH.XIII.08 — Tugas Akhir 1 RPL · 2 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 161,
+    "kode": "06.1.02.07.09",
+    "nama": "Tugas Akhir II Program Studi Farmasi - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIII.09 — Tugas Akhir II Program Studi Farmasi Angkatan 2021/2022 | B.UBTH.XIII.10 — Tugas Akhir 2 RPL · 2 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 162,
+    "kode": "06.1.02.07.10",
+    "nama": "Honor dosen PRODI PSPPA Fakultas Farmasi - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIII.12 — Honor dosen PRODI PSPPA Fakultas Farmasi · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 163,
+    "kode": "06.1.02.07.11",
+    "nama": "Honor asisten dosen Prodi PSPPA Fakultas Farmasi - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIII.13 — Honor asisten dosen Prodi PSPPA Fakultas Farmasi · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 164,
+    "kode": "06.1.02.07.12",
+    "nama": "Transfor Dosen dan Asisten Luar Prodi PSPPA Fakultas Farmasi - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIII.14 — Transfor Dosen dan Asisten Luar Prodi PSPPA Fakultas Farmasi · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 165,
+    "kode": "06.1.02.07.13",
+    "nama": "Honor Dosen Pakar/Ahli  Prodi PSPPA Fakultas Farmasi - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIII.15 — Honor Dosen Pakar/Ahli  Prodi PSPPA Fakultas Farmasi · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 166,
+    "kode": "06.1.02.07.14",
+    "nama": "Honor Dosen Wali Prodi PSPPA Fakultas Farmasi - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIII.16 — Honor Dosen Wali Prodi PSPPA Fakultas Farmasi | B.UBTH.XIV.58 — Honor dosen Wali Prodi PSPPN · 2 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 167,
+    "kode": "06.1.02.07.15",
+    "nama": "Honor UTS dan UAS Teori, Praktikum dan Klinik Prodi PSPPA Fakultas Farmasi - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIII.17 — Honor UTS dan UAS Teori, Praktikum dan Klinik Prodi PSPPA Fakultas Farmasi · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 168,
+    "kode": "06.1.02.07.16",
+    "nama": "Matrikulasi dan Pengkayaan CBT dan OSCE  - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIII.18 — Pengkayaan CBT dan OSCE angkatan 11 PSPPA | B.UBTH.XIII.19 — Pengkayaan CBT dan OSCE angkatan 12 PSPPA · 3 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 169,
+    "kode": "06.1.02.07.17",
+    "nama": "Sidang Komprehensif  PSPPA - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIII.20 — Sidang Komprehensif  Angkatan 11 PSPPA | B.UBTH.XIII.21 — Sidang Komprehensif  Angkatan 12 PSPPA · 2 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 170,
+    "kode": "06.1.02.07.19",
+    "nama": "Praktek Klinik Profesi Apoteker PSPPA - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIII.22 — Praktek Klinik Profesi Apoteker Angkatan 12 PSPPA | B.UBTH.XIII.23 — Praktek Klinik Profesi Apoteker Angkatan 13 PSPPA · 6 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 171,
+    "kode": "06.1.02.07.25",
+    "nama": "Rapat Anggota Tahunan  Asosiasi Perguruan Tinggi Farmasi - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIII.26 — Rapat Anggota Tahunan  Asosiasi Perguruan Tinggi Farmasi dan Iuran Tahunan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 172,
+    "kode": "06.1.02.07.28",
+    "nama": "Implementasi MBKM (Tim Rekognosi) - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIII.27 — Implementasi MBKM (Tim Rekognosi) · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 173,
+    "kode": "06.1.02.07.30",
+    "nama": "Workhsop Kurikulum OBE",
+    "deskripsi": "Contoh sumber: B.UBTH.XIII.28 — Workhsop Kurikulum OBE · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 174,
+    "kode": "06.1.02.07.31",
+    "nama": "Evaluasi Kurikulum",
+    "deskripsi": "Contoh sumber: B.UBTH.XIII.29 — Evaluasi Kurikulum · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 175,
+    "kode": "06.1.02.07.32",
+    "nama": "Student Exchange AASP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIII.30 — Student Exchange AASP · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 176,
+    "kode": "06.1.02.07.33",
+    "nama": "FGD Inkubasi Bisnis",
+    "deskripsi": "Contoh sumber: B.UBTH.XIII.31 — FGD Inkubasi Bisnis | B.UBTH.XIII.35 — FGD Inkubasi Bisnis · 2 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 177,
+    "kode": "06.1.02.07.34",
+    "nama": "Survailance Prodi S1 Farmasi",
+    "deskripsi": "Contoh sumber: B.UBTH.XIII.34 — Survailance Prodi S1 Farmasi · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 178,
+    "kode": "06.1.02.08.01",
+    "nama": "Honor dosen Program Studi Optometri - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.01 — Honor dosen Program Studi Optometri · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 179,
+    "kode": "06.1.02.08.02",
+    "nama": "Honor asisten Program Studi Optometri - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.02 — Honor asisten Program Studi Optometri · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 180,
+    "kode": "06.1.02.08.03",
+    "nama": "Transfor Dosen dan Asisten Luar Program Studi Optometri - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.03 — Transport Dosen dan Asisten Luar Program Studi Optometri · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 181,
+    "kode": "06.1.02.08.04",
+    "nama": "Honor Dosen Pakar/Ahli  Program Studi Optometri - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.04 — Honor Dosen Pakar/Ahli  Program Studi Optometri · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 182,
+    "kode": "06.1.02.08.05",
+    "nama": "Honor Dosen Wali Program Studi Optometri - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.05 — Honor Dosen Wali Program Studi Optometri · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 183,
+    "kode": "06.1.02.08.06",
+    "nama": "Honor UTS dan UAS Teori, Praktikum dan Klinik Program Studi Optometri - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.06 — Honor UTS dan UAS Teori, Praktikum dan Klinik Program Studi Optometri · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 184,
+    "kode": "06.1.02.08.07",
+    "nama": "KTI Program Studi Optometri - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.07 — KTI Program Studi Optometri · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 185,
+    "kode": "06.1.02.08.08",
+    "nama": "PBL Komunitas Program Studi Optometri - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.08 — PBL Komunitas Program Studi Optometri · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 186,
+    "kode": "06.1.02.08.09",
+    "nama": "Praktek Kinik Lapangan Lanjut Program Studi Optometri - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.09 — Praktek Kinik Lapangan Lanjut Program Studi Optometri · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 187,
+    "kode": "06.1.02.08.10",
+    "nama": "Uji Kompetensi Nasional Program Studi Optometri - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.10 — Uji Kompetensi Nasional Program Studi Optometri · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 188,
+    "kode": "06.1.02.08.12",
+    "nama": "Honor dosen Program Studi Keperawatan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.11 — Honor dosen Program Studi D3 Keperawatan | B.UBTH.XIV.52 — Honor dosen Program Studi S1 Keperawatan · 2 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 189,
+    "kode": "06.1.02.08.13",
+    "nama": "Honor asisten dan CI Program Studi Keperawatan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.12 — Honor asisten dan CI Program Studi D3 Keperawatan | B.UBTH.XIV.53 — Honor asisten Program Studi  S1 Keperawatan · 2 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 190,
+    "kode": "06.1.02.08.14",
+    "nama": "Transfor Dosen dan Asisten Luar Program Studi Keperawatan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.13 — Transport Dosen dan Asisten Luar Program Studi D3 Keperawatan | B.UBTH.XIV.54 — Transfor Dosen dan Asisten Luar Program Studi S1 Keperawatan · 2 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 191,
+    "kode": "06.1.02.08.15",
+    "nama": "Honor Dosen Pakar/Ahli  Program Studi Keperawatan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.14 — Honor Dosen Pakar/Ahli  Program Studi D3 Keperawatan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 192,
+    "kode": "06.1.02.08.16",
+    "nama": "Honor Dosen Wali Program Studi Keperawatan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.15 — Honor Dosen Wali Program Studi D3 Keperawatan | B.UBTH.XIV.55 — Honor Dosen Wali Program Studi S1 Keperawatan · 2 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 193,
+    "kode": "06.1.02.08.17",
+    "nama": "Honor UTS dan UAS Teori, Praktikum dan Klinik Program Studi Keperawatan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.16 — Honor UTS dan UAS Teori, Praktikum dan Klinik Program Studi D3 Keperawatan | B.UBTH.XIV.56 — Honor UTS dan UAS Teori, Praktikum dan Klinik Program Studi S1 Keperawatan · 2 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 194,
+    "kode": "06.1.02.08.19",
+    "nama": "Bantuan Hidup Dasar Prodi Keperawatan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.17 — Bantuan Hidup Dasar Prodi D3 Keperawatan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 195,
+    "kode": "06.1.02.08.24",
+    "nama": "KTI Prodi Keperawatan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.23 — KTI Prodi D3 Keperawatan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 196,
+    "kode": "06.1.02.08.26",
+    "nama": "Praktek Klinik di RSMM Prodi Keperawatan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.18 — Praktek Belajar Klinik RSHS (5 SKS) | B.UBTH.XIV.19 — Praktek Klinik KMB, Kep. Maternitas, Kep. Anak ( 8 SKS) · 5 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 197,
+    "kode": "06.1.02.08.28",
+    "nama": "Uji Kompetensi LSP tahap 1 Keperawatan Dasar - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.28 — Uji Kompetensi LSP tahap 1 Keperawatan Dasar D Keperawatan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 198,
+    "kode": "06.1.02.08.31",
+    "nama": "Honor dosen Program Studi Analis Kesehatan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.29 — Honor dosen Program Studi Analis Kesehatan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 199,
+    "kode": "06.1.02.08.32",
+    "nama": "Honor asisten Program Studi Analis Kesehatan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.30 — Honor asisten Program Studi Analis Kesehatan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 200,
+    "kode": "06.1.02.08.33",
+    "nama": "Transfor Dosen dan Asisten Luar Program Studi Analis Kesehatan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.31 — Transport Dosen dan Asisten Luar Program Studi Analis Kesehatan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 201,
+    "kode": "06.1.02.08.34",
+    "nama": "Honor Dosen Pakar/Ahli  Program Studi Analis Kesehatan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.32 — Honor Dosen Pakar/Ahli  Program Studi Analis Kesehatan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 202,
+    "kode": "06.1.02.08.35",
+    "nama": "Honor Dosen Wali Program Studi Analis Kesehatan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.33 — Honor Dosen Wali Program Studi Analis Kesehatan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 203,
+    "kode": "06.1.02.08.36",
+    "nama": "Honor UTS dan UAS Teori, Praktikum dan Klinik Program Studi Analis Kesehatan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.34 — Honor UTS dan UAS Teori, Praktikum dan Klinik Program Studi Analis Kesehatan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 204,
+    "kode": "06.1.02.08.38",
+    "nama": "Praktek Belajar Klinik Program Studi Analis Kesehatan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.36 — Praktek Belajar Klinik Program Studi Analis Kesehatan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 205,
+    "kode": "06.1.02.08.39",
+    "nama": "Persiapan dan Pelaksanaan Uji Kompetensi Program Studi Analis Kesehatan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.37 — Persiapan dan Pelaksanaan Uji Kompetensi Program Studi Analis Kesehatan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 206,
+    "kode": "06.1.02.08.40",
+    "nama": "Praktek Kerja Lapangan 1 Program Studi Analis Kesehatan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.38 — Praktek Kerja Lapangan 1 Program Studi Analis Kesehatan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 207,
+    "kode": "06.1.02.08.41",
+    "nama": "Praktek Kerja Lapangan 2 Program Studi Analis Kesehatan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.39 — Praktek Kerja Lapangan 2 Program Studi Analis Kesehatan | B.UBTH.XIV.40 — Praktek Kerja Lapangan 2 Program Studi Analis Kesehatan · 2 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 208,
+    "kode": "06.1.02.08.42",
+    "nama": "PKMD Program Studi Analis Kesehatan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.41 — PKMD Program Studi Analis Kesehatan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 209,
+    "kode": "06.1.02.08.43",
+    "nama": "Uji Kompetensi LSP Program Studi Analis Kesehatan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.43 — Uji Kompetensi LSP Program Studi Analis Kesehatan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 210,
+    "kode": "06.1.02.08.44",
+    "nama": "Honor dosen Program Studi Administrasi Rumahsakit - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.45 — Honor dosen Program Studi Administrasi Rumahsakit · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 211,
+    "kode": "06.1.02.08.45",
+    "nama": "Transfor Dosen dan Asisten Luar Program Studi Administrasi Rumahsakit - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.46 — Transfor Dosen dan Asisten Luar Program Studi Administrasi Rumahsakit · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 212,
+    "kode": "06.1.02.08.46",
+    "nama": "Honor Dosen Pakar/Ahli  Program Studi Administrasi Rumahsakit - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.47 — Honor Dosen Pakar/Ahli  Program Studi Administrasi Rumahsakit · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 213,
+    "kode": "06.1.02.08.47",
+    "nama": "Honor Dosen Wali Program Studi Administrasi Rumahsakit - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.48 — Honor Dosen Wali Program Studi Administrasi Rumahsakit · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 214,
+    "kode": "06.1.02.08.48",
+    "nama": "Honor UTS dan UAS Teori, Praktikum dan Klinik Program Studi Administrasi Rumahsakit - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.49 — Honor UTS dan UAS Teori, Praktikum dan Klinik Program Studi Administrasi Rumahsakit · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 215,
+    "kode": "06.1.02.08.49",
+    "nama": "Praktek Belajar Lapangan Program Studi Administrasi Rumah Sakit - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.50 — Praktek Belajar Lapangan Program Studi Administrasi Rumah Sakit · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 216,
+    "kode": "06.1.02.08.51",
+    "nama": "Try Out dan Pelaksanaan Uji Kompetensi Nasasional Prodi D3 Keperawatan",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.24 — Try Out dan Pelaksanaan Uji Kompetensi Nasasional Prodi D3 Keperawatan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 217,
+    "kode": "06.1.02.08.52",
+    "nama": "Workhsop  Pemutakhiran SOP Lab Skill",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.25 — Workhsop  Pemutakhiran SOP Lab Skill · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 218,
+    "kode": "06.1.02.08.53",
+    "nama": "Pendaftaran Pelatihan BTCLS Tahun 2025",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.27 — Pendaftaran Pelatihan BTCLS Tahun 2025 · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 219,
+    "kode": "06.1.02.08.54",
+    "nama": "KTI  Program Studi Analis Kesehatan",
+    "deskripsi": "Contoh sumber: B.UBTH.XIV.35 — KTI  Program Studi Analis Kesehatan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 220,
+    "kode": "06.1.02.09.01",
+    "nama": "Honor dosen Program Studi Teknologi Pangan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XV.01 — Honor dosen Program Studi Teknologi Pangan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 221,
+    "kode": "06.1.02.09.02",
+    "nama": "Honor asisten Program Studi Teknologi Pangan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XV.02 — Honor asisten Program Studi Teknologi Pangan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 222,
+    "kode": "06.1.02.09.03",
+    "nama": "Transfor Dosen dan Asisten Luar Program Studi Teknologi Pangan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XV.03 — Transport Dosen dan Asisten Luar Program Studi Teknologi Pangan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 223,
+    "kode": "06.1.02.09.04",
+    "nama": "Honor Dosen Pakar/Ahli  Program Studi Teknologi Pangan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XV.04 — Honor Dosen Pakar/Ahli  Program Studi Teknologi Pangan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 224,
+    "kode": "06.1.02.09.05",
+    "nama": "Honor Dosen Wali Program Studi Teknologi Pangan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XV.05 — Honor Dosen Wali Program Studi Teknologi Pangan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 225,
+    "kode": "06.1.02.09.06",
+    "nama": "Honor UTS dan UAS Teori, Praktikum dan Klinik Program Studi Teknologi Pangan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XV.06 — Honor UTS dan UAS Teori, Praktikum dan Klinik Program Studi Teknologi Pangan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 226,
+    "kode": "06.1.02.09.08",
+    "nama": "Honor Dosen Pakar/Ahli  Program Studi Bisnis Digital - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XV.08 — Honor dosen Program Studi Bisnis Digital · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 227,
+    "kode": "06.1.02.09.09",
+    "nama": "Honor Dosen Wali Program Studi Bisnis Digital - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XV.09 — Honor Dosen Pakar/Ahli  Program Studi Bisnis Digital · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 228,
+    "kode": "06.1.02.09.10",
+    "nama": "Honor UTS dan UAS Teori, Praktikum dan Klinik Program Studi Bisnis Digital - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XV.10 — Honor Dosen Wali Program Studi Bisnis Digital · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 229,
+    "kode": "06.1.02.09.11",
+    "nama": "Honor dosen Program Studi Kewirausahaan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XV.11 — Honor UTS dan UAS Teori, Praktikum dan Klinik Program Studi Bisnis Digital · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 230,
+    "kode": "06.1.02.09.12",
+    "nama": "Transfor Dosen dan Asisten Luar Program Studi Kewirausahaan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XV.12 — Honor dosen Program Studi Kewirausahaan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 231,
+    "kode": "06.1.02.09.13",
+    "nama": "Honor Dosen Pakar/Ahli  Program Studi Kewirausahaan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XV.13 — Honor Dosen Pakar/Ahli  Program Studi Kewirausahaan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 232,
+    "kode": "06.1.02.09.14",
+    "nama": "Honor Dosen Wali Program Studi Kewirausahaan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XV.14 — Honor Dosen Wali Program Studi Kewirausahaan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 233,
+    "kode": "06.1.02.09.15",
+    "nama": "Honor UTS dan UAS Teori, Praktikum dan Klinik Program Studi Kewirausahaan - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XV.15 — Honor UTS dan UAS Teori, Praktikum dan Klinik Program Studi Kewirausahaan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 234,
+    "kode": "06.1.02.09.16",
+    "nama": "Pendaftaran keanggotaan APSKI - TP",
+    "deskripsi": "Contoh sumber: B.UBTH.XV.16 — Pendaftaran keanggotaan APSKI · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 235,
+    "kode": "06.1.02.09.17",
+    "nama": "Kerja Praktek Prodi Teknologi Pangan",
+    "deskripsi": "Contoh sumber: TANPA-KODE — Kerja Praktek Prodi Teknologi Pangan · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 236,
+    "kode": "06.1.02.09.18",
+    "nama": "Honor Dosen Program Studi Sistem Informasi",
+    "deskripsi": "Contoh sumber: B.UBTH.XV.17 — Honor Dosen Program Studi Sistem Informasi · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 237,
+    "kode": "06.1.02.09.19",
+    "nama": "Honor Dosen Wali Program Studi Sistem Informasi",
+    "deskripsi": "Contoh sumber: B.UBTH.XV.18 — Honor Dosen Wali Program Studi Sistem Informasi · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 238,
+    "kode": "06.1.02.09.20",
+    "nama": "Honor UTS dan UAS Teori, Praktikum dan Klinik Program Studi Sistem Informasi",
+    "deskripsi": "Contoh sumber: B.UBTH.XV.19 — Honor UTS dan UAS Teori, Praktikum dan Klinik Program Studi Sistem Informasi · 1 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 239,
+    "kode": "06.2.01.09.00",
+    "nama": "Belanja promosi,Publikasi dan Kehumasan - DP",
+    "deskripsi": "Contoh sumber: B.KLINIK.IX.01 — Belanja Promosi | B.BSH.VIII.01 — Promosi BSH · 3 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-BSH",
+      "ENT-KLINIK",
+      "ENT-LKSA"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 240,
+    "kode": "06.2.02.07.23",
+    "nama": "OSCE Formatif PSPPA - DP",
+    "deskripsi": "Contoh sumber: B.UBTH.XIII.24 — OSCE Formatif Angkatan 10 PSPPA | B.UBTH.XIII.25 — OSCE Formatif Angkatan 11 PSPPA · 2 mapping sumber",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-UBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 241,
+    "kode": "09.1.01.02.01",
+    "nama": "Dana Abadi - TP",
+    "deskripsi": "Contoh sumber: B.KLINIK.X.01 — Dana Abadi | B.BSH.IX.01 — Dana Abadi · 3 mapping sumber",
+    "tipe": "Ekuitas",
+    "saldo": "K",
+    "level": 1,
+    "induk": 2,
+    "entitas": [
+      "ENT-BSH",
+      "ENT-KLINIK",
+      "ENT-YBTH"
+    ],
+    "status": "Aktif"
+  },
+  {
+    "id": 242,
+    "kode": "SA",
+    "nama": "Saldo Awal",
+    "deskripsi": "Belum ada mapping Accurate · X. DANA ABADI",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-KLINIK"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 243,
+    "kode": "P.KLINIK.I",
+    "nama": "Pendapatan Klinik",
+    "deskripsi": "Belum ada mapping Accurate · X. DANA ABADI",
+    "tipe": "Pendapatan",
+    "saldo": "K",
+    "level": 1,
+    "induk": 3,
+    "entitas": [
+      "ENT-KLINIK"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 244,
+    "kode": "P.KLINIK.II",
+    "nama": "Pendapatan Apotek",
+    "deskripsi": "Belum ada mapping Accurate · X. DANA ABADI",
+    "tipe": "Pendapatan",
+    "saldo": "K",
+    "level": 1,
+    "induk": 3,
+    "entitas": [
+      "ENT-KLINIK"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 245,
+    "kode": "P.KLINIK.III",
+    "nama": "Otorisasi Yayasan",
+    "deskripsi": "Belum ada mapping Accurate · X. DANA ABADI",
+    "tipe": "Pendapatan",
+    "saldo": "K",
+    "level": 1,
+    "induk": 3,
+    "entitas": [
+      "ENT-KLINIK"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 246,
+    "kode": "B.BSH.VI.03",
+    "nama": "Pajak",
+    "deskripsi": "Belum ada mapping Accurate · VI. BELANJA ADMINISTRASI dan UMUM",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-BSH"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 247,
+    "kode": "P.YBTH.I.01",
+    "nama": "SALDO AWAL",
+    "deskripsi": "Belum ada mapping Accurate · Penerimaan",
+    "tipe": "Pendapatan",
+    "saldo": "K",
+    "level": 1,
+    "induk": 3,
+    "entitas": [
+      "ENT-YBTH"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 248,
+    "kode": "P.YBTH.I.02",
+    "nama": "DANA OPERASIONAL",
+    "deskripsi": "Belum ada mapping Accurate · Penerimaan",
+    "tipe": "Pendapatan",
+    "saldo": "K",
+    "level": 1,
+    "induk": 3,
+    "entitas": [
+      "ENT-YBTH"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 249,
+    "kode": "P.YBTH.I.03",
+    "nama": "UANG DISETOR KE BANK",
+    "deskripsi": "Belum ada mapping Accurate · Penerimaan",
+    "tipe": "Pendapatan",
+    "saldo": "K",
+    "level": 1,
+    "induk": 3,
+    "entitas": [
+      "ENT-YBTH"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 250,
+    "kode": "P.YBTH.I.04",
+    "nama": "SEWA LISTRIK ATM",
+    "deskripsi": "Belum ada mapping Accurate · Penerimaan",
+    "tipe": "Pendapatan",
+    "saldo": "K",
+    "level": 1,
+    "induk": 3,
+    "entitas": [
+      "ENT-YBTH"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 251,
+    "kode": "P.YBTH.I.05",
+    "nama": "LISTRIK TENANT",
+    "deskripsi": "Belum ada mapping Accurate · Penerimaan",
+    "tipe": "Pendapatan",
+    "saldo": "K",
+    "level": 1,
+    "induk": 3,
+    "entitas": [
+      "ENT-YBTH"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 252,
+    "kode": "P.YBTH.I.06",
+    "nama": "SAMPAH",
+    "deskripsi": "Belum ada mapping Accurate · Penerimaan",
+    "tipe": "Pendapatan",
+    "saldo": "K",
+    "level": 1,
+    "induk": 3,
+    "entitas": [
+      "ENT-YBTH"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 253,
+    "kode": "P.YBTH.I.07",
+    "nama": "PENERIMAAN LAINNYA",
+    "deskripsi": "Belum ada mapping Accurate · Penerimaan",
+    "tipe": "Pendapatan",
+    "saldo": "K",
+    "level": 1,
+    "induk": 3,
+    "entitas": [
+      "ENT-YBTH"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 254,
+    "kode": "P.YBTH.I.08",
+    "nama": "PENERIMAAN",
+    "deskripsi": "Belum ada mapping Accurate · Penerimaan",
+    "tipe": "Pendapatan",
+    "saldo": "K",
+    "level": 1,
+    "induk": 3,
+    "entitas": [
+      "ENT-YBTH"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 255,
+    "kode": "B.YBTH.VI.03",
+    "nama": "PAJAK",
+    "deskripsi": "Belum ada mapping Accurate · VI. BELANJA UMUM DAN ADMINISTRASI",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-YBTH"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 256,
+    "kode": "INV.I.05",
+    "nama": "Perbaikan instalasi listrik semua gedung",
+    "deskripsi": "Belum ada mapping Accurate · Aset & Infrastruktur",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 257,
+    "kode": "INV.I.06",
+    "nama": "Perbaikan jalan aspal gerbang ke klinik BTH",
+    "deskripsi": "Belum ada mapping Accurate · Aset & Infrastruktur",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 258,
+    "kode": "INV.I.07",
+    "nama": "UKL/UPL terintegrasi (AMDAL)",
+    "deskripsi": "Belum ada mapping Accurate · Aset & Infrastruktur",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 259,
+    "kode": "INV.I.11",
+    "nama": "Reviu masterplan",
+    "deskripsi": "Belum ada mapping Accurate · Aset & Infrastruktur",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 260,
+    "kode": "INV.I.12",
+    "nama": "Portal besi dan BRC lahan mashudi",
+    "deskripsi": "Belum ada mapping Accurate · Aset & Infrastruktur",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 261,
+    "kode": "INV.I.13",
+    "nama": "Pemindahan tiang baligho",
+    "deskripsi": "Belum ada mapping Accurate · Aset & Infrastruktur",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 262,
+    "kode": "INV.I.14",
+    "nama": "Kursi meja beton",
+    "deskripsi": "Belum ada mapping Accurate · Aset & Infrastruktur",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 263,
+    "kode": "INV.I.15",
+    "nama": "Pengadaan lampu taman BTH",
+    "deskripsi": "Belum ada mapping Accurate · Aset & Infrastruktur",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 264,
+    "kode": "INV.I.16",
+    "nama": "Pedestrian depan gedung rektorat",
+    "deskripsi": "Belum ada mapping Accurate · Aset & Infrastruktur",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 265,
+    "kode": "INV.I.17",
+    "nama": "Pengurusan SLO",
+    "deskripsi": "Belum ada mapping Accurate · Aset & Infrastruktur",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 266,
+    "kode": "INV.I.18",
+    "nama": "Penataan taman lahan sepanjang jalan gerbang utama",
+    "deskripsi": "Belum ada mapping Accurate · Aset & Infrastruktur",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 267,
+    "kode": "INV.I.19",
+    "nama": "Penataan lahan depan pintu darurat lab terpadu",
+    "deskripsi": "Belum ada mapping Accurate · Aset & Infrastruktur",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 268,
+    "kode": "INV.I.20",
+    "nama": "Perbaikan gerbang samping banprov",
+    "deskripsi": "Belum ada mapping Accurate · Aset & Infrastruktur",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 269,
+    "kode": "INV.I.21",
+    "nama": "Peralatan Genset Dan Hydrant",
+    "deskripsi": "Belum ada mapping Accurate · Aset & Infrastruktur",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 270,
+    "kode": "INV.I.22",
+    "nama": "Penataan Lahan samping mencit",
+    "deskripsi": "Belum ada mapping Accurate · Aset & Infrastruktur",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 271,
+    "kode": "INV.II.01",
+    "nama": "Pengembangan SIM BTH",
+    "deskripsi": "Belum ada mapping Accurate · Pengembangan Teknologi",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 272,
+    "kode": "INV.II.02",
+    "nama": "Pengembangan SIM Litabmas",
+    "deskripsi": "Belum ada mapping Accurate · Pengembangan Teknologi",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 273,
+    "kode": "INV.II.03",
+    "nama": "Pembuatan SIM Anggaran",
+    "deskripsi": "Belum ada mapping Accurate · Pengembangan Teknologi",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 274,
+    "kode": "INV.II.04",
+    "nama": "Pembuatan SIM SDM terintegrasi tahap 1",
+    "deskripsi": "Belum ada mapping Accurate · Pengembangan Teknologi",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 275,
+    "kode": "INV.II.05",
+    "nama": "Pengadaan peralatan TIK",
+    "deskripsi": "Belum ada mapping Accurate · Pengembangan Teknologi",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 276,
+    "kode": "INV.II.06",
+    "nama": "Internet",
+    "deskripsi": "Belum ada mapping Accurate · Pengembangan Teknologi",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 277,
+    "kode": "INV.III.01",
+    "nama": "Pengembangan dosen",
+    "deskripsi": "Belum ada mapping Accurate · Pengembangan SDM",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 278,
+    "kode": "INV.III.02",
+    "nama": "Peningkatan Kinerja Pegawai",
+    "deskripsi": "Belum ada mapping Accurate · Pengembangan SDM",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 279,
+    "kode": "INV.III.03",
+    "nama": "Studi Banding",
+    "deskripsi": "Belum ada mapping Accurate · Pengembangan SDM",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 280,
+    "kode": "INV.IV.01",
+    "nama": "Akuisisi Akbid dan insentif prodi baru",
+    "deskripsi": "Belum ada mapping Accurate · Kelembagaan",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 281,
+    "kode": "INV.V.01",
+    "nama": "Tugas belajar pegawai",
+    "deskripsi": "Belum ada mapping Accurate · Pengembangan dosen",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 282,
+    "kode": "INV.V.02",
+    "nama": "Remunerasi tenaga ahli (hired dosen)",
+    "deskripsi": "Belum ada mapping Accurate · Pengembangan dosen",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 283,
+    "kode": "INV.VI.01",
+    "nama": "Cicilan BSI",
+    "deskripsi": "Belum ada mapping Accurate · Pembiayaan Pembangunan",
+    "tipe": "Aset",
+    "saldo": "D",
+    "level": 1,
+    "induk": 1,
+    "entitas": [
+      "ENT-INV"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 284,
+    "kode": "P.DS.I.01",
+    "nama": "Pagu Operasional Yayasan 2025",
+    "deskripsi": "Belum ada mapping Accurate · Penerimaan Pagu",
+    "tipe": "Pendapatan",
+    "saldo": "K",
+    "level": 1,
+    "induk": 3,
+    "entitas": [
+      "ENT-DS"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 285,
+    "kode": "P.DS.II.01",
+    "nama": "Alokasi Dana Sosial Tahun 2025",
+    "deskripsi": "Belum ada mapping Accurate · Penerimaan lain-lain",
+    "tipe": "Pendapatan",
+    "saldo": "K",
+    "level": 1,
+    "induk": 3,
+    "entitas": [
+      "ENT-DS"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 286,
+    "kode": "P.DS.II.02",
+    "nama": "Dana Sosial  BTH Student House Tahun 2025",
+    "deskripsi": "Belum ada mapping Accurate · Penerimaan lain-lain",
+    "tipe": "Pendapatan",
+    "saldo": "K",
+    "level": 1,
+    "induk": 3,
+    "entitas": [
+      "ENT-DS"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 287,
+    "kode": "P.DS.II.03",
+    "nama": "Dana Sosial Kegiatan Penunjang Klinik BTH Tahun 2025",
+    "deskripsi": "Belum ada mapping Accurate · Penerimaan lain-lain",
+    "tipe": "Pendapatan",
+    "saldo": "K",
+    "level": 1,
+    "induk": 3,
+    "entitas": [
+      "ENT-DS"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 288,
+    "kode": "P.DS.II.04",
+    "nama": "Dana yang diterima LKSA dari Dinas Sosial dan donatur  Tahun 2025",
+    "deskripsi": "Belum ada mapping Accurate · Penerimaan lain-lain",
+    "tipe": "Pendapatan",
+    "saldo": "K",
+    "level": 1,
+    "induk": 3,
+    "entitas": [
+      "ENT-DS"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 289,
+    "kode": "P.DS.II.05",
+    "nama": "Kegiatan Softskill Mahasiswa Universitas BTH",
+    "deskripsi": "Belum ada mapping Accurate · Penerimaan lain-lain",
+    "tipe": "Pendapatan",
+    "saldo": "K",
+    "level": 1,
+    "induk": 3,
+    "entitas": [
+      "ENT-DS"
+    ],
+    "status": "Nonaktif"
+  },
+  {
+    "id": 290,
+    "kode": "B.DS.I.01",
+    "nama": "RKA  LKSA \"Amanah\" Tahun 2025",
+    "deskripsi": "Belum ada mapping Accurate · Operasional LKSA Amanah",
+    "tipe": "Beban",
+    "saldo": "D",
+    "level": 1,
+    "induk": 4,
+    "entitas": [
+      "ENT-DS"
+    ],
+    "status": "Nonaktif"
+  }
 ];
 
 // ══════════════════════════════════════════════
@@ -933,14 +5031,15 @@ function entityPills(entIDs) {
 //  STATS
 // ══════════════════════════════════════════════
 function updateStats() {
-  const total   = COA_DATA.length;
-  const synced  = COA_DATA.filter(a => a.status === 'Aktif').length;
-  const pending = COA_DATA.filter(a => a.entitas.length < ENTITIES.length && a.level === 0).length + 2;
+  const leafAccounts = COA_DATA.filter(a => a.level > 0);
+  const total   = leafAccounts.length;
+  const synced  = leafAccounts.filter(a => a.status === 'Aktif').length;
+  const pending = leafAccounts.filter(a => a.status !== 'Aktif').length;
   document.getElementById('statTotal').textContent   = total;
   document.getElementById('statEntitas').textContent = ENTITIES.length;
   document.getElementById('statSynced').textContent  = synced;
   document.getElementById('statPending').textContent = pending;
-  document.getElementById('entityCount').textContent = ENTITIES.length + ' Entitas Online';
+  document.getElementById('entityCount').textContent = ENTITIES.length + ' Entitas Aktif';
 }
 
 // ══════════════════════════════════════════════
@@ -948,14 +5047,15 @@ function updateStats() {
 // ══════════════════════════════════════════════
 function renderEntityTabs() {
   const tabs = document.getElementById('entityTabs');
+  const leafAccounts = COA_DATA.filter(a => a.level > 0);
   let html = `<button class="entity-tab ${state.activeEntity==='all'?'active':''}" onclick="setEntity('all')">
     <i class="fa-solid fa-layer-group"></i> Semua Entitas
-    <span class="tab-count">${COA_DATA.length}</span>
+    <span class="tab-count">${leafAccounts.length}</span>
   </button>`;
   ENTITIES.forEach(e => {
-    const count = COA_DATA.filter(a => a.entitas.includes(e.id)).length;
+    const count = leafAccounts.filter(a => a.entitas.includes(e.id)).length;
     const isActive = state.activeEntity === e.id;
-    const abbr = e.name.split(' ').map(w=>w[0]).join('').slice(0,4);
+    const abbr = e.name.split(' ').map(w=>w[0]).join('').slice(0,5);
     html += `<button class="entity-tab ${isActive?'active':''}" onclick="setEntity('${e.id}')" title="${e.name}">
       ${abbr}
       <span class="tab-count">${count}</span>
@@ -1087,7 +5187,7 @@ function renderTable() {
 
   // Subtitle
   document.getElementById('tableSubtitle').textContent =
-    `Menampilkan ${rows.length} dari ${COA_DATA.length} akun` +
+    `Menampilkan ${rows.length} baris dari ${COA_DATA.filter(a => a.level > 0).length} akun` +
     (state.activeEntity !== 'all' ? ` · ${getEntityById(state.activeEntity)?.name}` : '');
 
   const tbody = document.getElementById('coaTbody');
