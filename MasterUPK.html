@@ -1,0 +1,1912 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Master UPK — Sinkronisasi Branch Accurate</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="sidebar.css">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:           #f4f7fc;
+    --bg-soft:      #e9eff9;
+    --line:         #d7e3f2;
+    --line-soft:    #e7eef7;
+    --primary:      #3972B8;
+    --primary-2:    #2a5e9d;
+    --primary-soft: rgba(57,114,184,.10);
+    --accent:       #F68B21;
+    --accent-soft:  rgba(246,139,33,.12);
+    --success:      #217a4a;
+    --success-soft: rgba(33,122,74,.10);
+    --warning:      #c07010;
+    --warning-soft: rgba(192,112,16,.12);
+    --danger:       #d94040;
+    --danger-soft:  rgba(217,64,64,.10);
+    --text:         #1a2333;
+    --text-soft:    #60718f;
+    --text-muted:   #8ea0ba;
+    --white:        #ffffff;
+    --radius:       18px;
+    --radius-sm:    11px;
+    --radius-xs:    8px;
+    --shadow-sm:    0 2px 10px rgba(57,114,184,.07);
+    --shadow:       0 10px 28px rgba(57,114,184,.12);
+  }
+
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body {
+    font-family:'Plus Jakarta Sans',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+  }
+
+  .main {
+    margin-left:240px;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+  }
+
+  .topbar {
+    position:sticky;
+    top:0;
+    z-index:50;
+    padding:14px 34px;
+    border-bottom:1px solid var(--line);
+    background:rgba(244,247,252,.92);
+    backdrop-filter:blur(12px);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:16px;
+  }
+
+  .breadcrumb {
+    display:flex;
+    align-items:center;
+    gap:6px;
+    flex-wrap:wrap;
+    font-size:13px;
+    color:var(--text-muted);
+  }
+
+  .breadcrumb b {
+    color:var(--text);
+    font-weight:700;
+  }
+
+  .topbar-right {
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+
+  .topbar-date,
+  .mini-chip {
+    background:var(--bg-soft);
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:7px 12px;
+    font-size:12px;
+    color:var(--text-soft);
+    white-space:nowrap;
+  }
+
+  .icon-btn {
+    width:38px;
+    height:38px;
+    border-radius:11px;
+    border:1px solid var(--line);
+    background:var(--white);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--text-soft);
+    cursor:pointer;
+    transition:.18s;
+    position:relative;
+  }
+
+  .icon-btn:hover {
+    background:var(--bg);
+    color:var(--text);
+  }
+
+  .notif-dot {
+    width:7px;
+    height:7px;
+    background:var(--danger);
+    border-radius:50%;
+    position:absolute;
+    top:7px;
+    right:8px;
+    border:1.5px solid var(--bg);
+  }
+
+  .content {
+    padding:30px 34px 42px;
+    display:flex;
+    flex-direction:column;
+    gap:22px;
+  }
+
+  .page-header {
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+
+  .page-title {
+    font-family:'Lora',serif;
+    font-size:28px;
+    line-height:1.25;
+    letter-spacing:-.4px;
+  }
+
+  .page-title em { color:var(--primary); font-style:italic; }
+
+  .page-sub {
+    max-width:760px;
+    margin-top:7px;
+    font-size:13.5px;
+    line-height:1.7;
+    color:var(--text-soft);
+  }
+
+  .page-actions {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+
+  .btn {
+    border:none;
+    border-radius:11px;
+    padding:10px 16px;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+    text-decoration:none;
+    transition:.18s;
+    font-family:'Plus Jakarta Sans',sans-serif;
+  }
+
+  .btn i { font-size:12px; }
+  .btn-primary { background:var(--primary); color:#fff; box-shadow:0 6px 18px rgba(57,114,184,.24); }
+  .btn-primary:hover { transform:translateY(-1px); background:#467ec1; }
+  .btn-ghost { background:#fff; color:var(--text-soft); border:1.5px solid var(--line); }
+  .btn-ghost:hover { background:var(--bg); color:var(--text); }
+  .btn-accent { background:var(--accent); color:#fff; box-shadow:0 6px 18px rgba(246,139,33,.24); }
+  .btn-accent:hover { transform:translateY(-1px); background:#ff9d3a; }
+  .btn-danger-ghost { background:#fff; color:var(--danger); border:1.5px solid rgba(217,64,64,.24); }
+  .btn-danger-ghost:hover { background:var(--danger-soft); }
+  .btn-sm { padding:7px 12px; font-size:12px; }
+
+  .hero {
+    background:linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
+    color:#fff;
+    border-radius:22px;
+    padding:24px 26px;
+    box-shadow:0 16px 36px rgba(57,114,184,.22);
+    display:grid;
+    grid-template-columns:1.2fr .9fr;
+    gap:18px;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .hero::before,
+  .hero::after {
+    content:'';
+    position:absolute;
+    border-radius:50%;
+    border:1px solid rgba(255,255,255,.12);
+  }
+  .hero::before { width:180px; height:180px; top:-60px; right:-30px; }
+  .hero::after  { width:120px; height:120px; bottom:-45px; right:90px; }
+
+  .hero-left,
+  .hero-right { position:relative; z-index:1; }
+
+  .eyebrow {
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:1.8px;
+    color:rgba(255,255,255,.65);
+    margin-bottom:8px;
+  }
+
+  .hero-title {
+    font-family:'Lora',serif;
+    font-size:28px;
+    line-height:1.25;
+    max-width:720px;
+  }
+
+  .hero-sub {
+    margin-top:10px;
+    font-size:13px;
+    line-height:1.7;
+    color:rgba(255,255,255,.76);
+    max-width:650px;
+  }
+
+  .hero-actions {
+    margin-top:16px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+
+  .hero-chip {
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    padding:8px 12px;
+    border-radius:999px;
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.12);
+    font-size:12px;
+    font-weight:700;
+  }
+
+  .hero-right {
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+  }
+
+  .hero-mini {
+    background:rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:16px;
+    padding:15px 16px;
+  }
+
+  .hero-mini-label {
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:rgba(255,255,255,.62);
+    margin-bottom:7px;
+  }
+
+  .hero-mini-value {
+    font-family:'DM Mono',monospace;
+    font-size:20px;
+    font-weight:500;
+  }
+
+  .hero-mini-sub {
+    margin-top:6px;
+    font-size:12px;
+    color:rgba(255,255,255,.66);
+  }
+
+  .stats-row {
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+  }
+
+  .stat-card {
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:18px 18px 16px;
+    box-shadow:var(--shadow-sm);
+    position:relative;
+    overflow:hidden;
+    transition:.18s;
+  }
+
+  .stat-card:hover { transform:translateY(-2px); box-shadow:var(--shadow); }
+  .stat-card::after { content:''; position:absolute; left:0; right:0; bottom:0; height:3px; }
+  .stat-card.c-primary::after { background:var(--primary); }
+  .stat-card.c-accent::after { background:var(--accent); }
+  .stat-card.c-success::after { background:var(--success); }
+  .stat-card.c-warning::after { background:var(--warning); }
+
+  .stat-icon {
+    width:38px;
+    height:38px;
+    border-radius:11px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:12px;
+    font-size:16px;
+  }
+  .c-primary .stat-icon { background:var(--primary-soft); color:var(--primary); }
+  .c-accent .stat-icon { background:var(--accent-soft); color:var(--accent); }
+  .c-success .stat-icon { background:var(--success-soft); color:var(--success); }
+  .c-warning .stat-icon { background:var(--warning-soft); color:var(--warning); }
+
+  .stat-label {
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:1.2px;
+    color:var(--text-muted);
+    font-weight:700;
+    margin-bottom:5px;
+  }
+
+  .stat-value {
+    font-family:'DM Mono',monospace;
+    font-size:23px;
+    color:var(--text);
+    line-height:1;
+  }
+
+  .stat-sub {
+    margin-top:6px;
+    font-size:12px;
+    color:var(--text-muted);
+  }
+
+  .toolbar {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+
+  .search-wrap {
+    position:relative;
+    flex:1;
+    min-width:240px;
+  }
+
+  .search-icon {
+    position:absolute;
+    top:50%;
+    left:13px;
+    transform:translateY(-50%);
+    color:var(--text-muted);
+    font-size:13px;
+    pointer-events:none;
+  }
+
+  .search-input,
+  .filter-select,
+  .form-input,
+  .form-select,
+  .form-textarea {
+    width:100%;
+    border:1.5px solid var(--line);
+    background:#fff;
+    border-radius:11px;
+    padding:10px 12px;
+    font-size:13px;
+    color:var(--text);
+    outline:none;
+    transition:.18s;
+    font-family:'Plus Jakarta Sans',sans-serif;
+  }
+
+  .search-input { padding-left:36px; }
+
+  .search-input:focus,
+  .filter-select:focus,
+  .form-input:focus,
+  .form-select:focus,
+  .form-textarea:focus {
+    border-color:var(--primary);
+    box-shadow:0 0 0 3px rgba(57,114,184,.16);
+  }
+
+  .toolbar-right {
+    margin-left:auto;
+    display:flex;
+    gap:8px;
+    align-items:center;
+  }
+
+  .view-toggle {
+    display:flex;
+    background:#fff;
+    border:1.5px solid var(--line);
+    border-radius:11px;
+    overflow:hidden;
+  }
+
+  .view-btn {
+    border:none;
+    background:transparent;
+    padding:8px 13px;
+    font-size:12px;
+    font-weight:700;
+    color:var(--text-muted);
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-family:'Plus Jakarta Sans',sans-serif;
+  }
+
+  .view-btn.active {
+    background:var(--primary);
+    color:#fff;
+  }
+
+  .panel {
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:var(--shadow-sm);
+  }
+
+  .panel-head {
+    padding:16px 20px;
+    border-bottom:1px solid var(--line-soft);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+
+  .panel-title {
+    font-size:14px;
+    font-weight:700;
+    color:var(--text);
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+
+  .panel-sub {
+    font-size:12px;
+    color:var(--text-muted);
+    margin-top:2px;
+  }
+
+  .table-wrap { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; }
+  thead th {
+    text-align:left;
+    padding:11px 16px;
+    background:var(--bg);
+    border-bottom:1px solid var(--line);
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:1.2px;
+    color:var(--text-muted);
+    white-space:nowrap;
+  }
+  thead th.sortable { cursor:pointer; user-select:none; }
+  thead th.sortable:hover { color:var(--primary); }
+  tbody tr { border-bottom:1px solid var(--line-soft); }
+  tbody tr:last-child { border-bottom:none; }
+  tbody tr:hover { background:rgba(57,114,184,.025); }
+  tbody td {
+    padding:14px 16px;
+    font-size:13px;
+    color:var(--text-soft);
+    vertical-align:top;
+  }
+
+  .mono { font-family:'DM Mono',monospace; color:var(--text); }
+  .title-cell { color:var(--text); font-weight:700; }
+  .title-sub { margin-top:3px; font-size:11.5px; color:var(--text-muted); }
+
+  .badge {
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:4px 9px;
+    border-radius:999px;
+    font-size:11px;
+    font-weight:700;
+    white-space:nowrap;
+  }
+  .badge-primary { background:var(--primary-soft); color:var(--primary); }
+  .badge-accent { background:var(--accent-soft); color:#a05a00; }
+  .badge-success { background:var(--success-soft); color:var(--success); }
+  .badge-warning { background:var(--warning-soft); color:var(--warning); }
+  .badge-neutral { background:var(--bg-soft); color:var(--text-muted); }
+  .badge-danger { background:var(--danger-soft); color:var(--danger); }
+
+  .dot {
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    display:inline-block;
+  }
+  .dot-success { background:#29a26b; }
+  .dot-warning { background:var(--warning); }
+  .dot-muted { background:var(--text-muted); }
+
+  .branch-stack {
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+  }
+
+  .branch-pill {
+    padding:4px 8px;
+    border-radius:999px;
+    border:1px solid var(--line);
+    background:var(--bg);
+    font-size:11px;
+    color:var(--text-soft);
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+  }
+
+  .actions-inline {
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    white-space:nowrap;
+  }
+
+  .act-btn {
+    width:31px;
+    height:31px;
+    border-radius:9px;
+    border:1px solid var(--line);
+    background:#fff;
+    color:var(--text-soft);
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    transition:.16s;
+    font-size:12px;
+  }
+  .act-btn:hover { background:var(--bg); color:var(--text); }
+  .act-btn.primary:hover { background:var(--primary-soft); color:var(--primary); border-color:rgba(57,114,184,.25); }
+  .act-btn.accent:hover { background:var(--accent-soft); color:var(--accent); border-color:rgba(246,139,33,.25); }
+  .act-btn.danger:hover { background:var(--danger-soft); color:var(--danger); border-color:rgba(217,64,64,.25); }
+
+  .card-grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+    gap:16px;
+  }
+
+  .UPKon-card {
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:18px;
+    box-shadow:var(--shadow-sm);
+    transition:.18s;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .UPKon-card::before {
+    content:'';
+    position:absolute;
+    left:0;
+    right:0;
+    top:0;
+    height:3px;
+    background:var(--primary);
+  }
+
+  .UPKon-card:hover { transform:translateY(-3px); box-shadow:var(--shadow); border-color:#c4d8ef; }
+
+  .card-head {
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:12px;
+  }
+
+  .card-icon {
+    width:42px;
+    height:42px;
+    border-radius:12px;
+    background:var(--primary-soft);
+    color:var(--primary);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+    flex-shrink:0;
+  }
+
+  .card-title {
+    font-family:'Lora',serif;
+    font-size:15px;
+    line-height:1.35;
+    color:var(--text);
+    font-weight:700;
+  }
+
+  .card-code {
+    margin-top:4px;
+    font-family:'DM Mono',monospace;
+    font-size:11px;
+    color:var(--text-muted);
+  }
+
+  .card-meta,
+  .card-branches {
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+  }
+
+  .card-stats {
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+    padding-top:14px;
+    border-top:1px solid var(--line-soft);
+  }
+
+  .stat-mini-label {
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:var(--text-muted);
+    font-weight:700;
+    margin-bottom:3px;
+  }
+
+  .stat-mini-value {
+    font-size:13px;
+    color:var(--text);
+    font-weight:700;
+    line-height:1.45;
+  }
+
+  .empty-state {
+    padding:62px 16px;
+    text-align:center;
+  }
+
+  .empty-state i {
+    font-size:36px;
+    color:#c9d8ea;
+    margin-bottom:12px;
+  }
+
+  .empty-title {
+    font-size:15px;
+    font-weight:700;
+    color:var(--text);
+    margin-bottom:5px;
+  }
+
+  .empty-sub {
+    font-size:13px;
+    color:var(--text-muted);
+  }
+
+  .pagination {
+    padding:14px 20px;
+    border-top:1px solid var(--line-soft);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+
+  .pagination-info {
+    font-size:12.5px;
+    color:var(--text-muted);
+  }
+
+  .pagination-btns {
+    display:flex;
+    gap:4px;
+    align-items:center;
+  }
+
+  .pg-btn {
+    width:32px;
+    height:32px;
+    border-radius:8px;
+    border:1px solid var(--line);
+    background:#fff;
+    color:var(--text-soft);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    font-size:12px;
+    font-family:'Plus Jakarta Sans',sans-serif;
+    font-weight:700;
+  }
+  .pg-btn:hover { background:var(--bg); color:var(--text); }
+  .pg-btn.active { background:var(--primary); color:#fff; border-color:var(--primary); }
+  .pg-btn:disabled { opacity:.45; cursor:default; }
+
+  .overlay-modal {
+    position:fixed;
+    inset:0;
+    background:rgba(26,35,51,.42);
+    backdrop-filter:blur(4px);
+    z-index:300;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:16px;
+  }
+
+  .overlay-modal.open { display:flex; }
+
+  .modal {
+    width:680px;
+    max-width:100%;
+    max-height:calc(100vh - 32px);
+    overflow:auto;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:20px;
+    box-shadow:0 24px 48px rgba(16,24,40,.18);
+    animation:modalIn .24s ease;
+  }
+
+  .modal-lg { width:860px; }
+
+  @keyframes modalIn {
+    from { opacity:0; transform:translateY(12px) scale(.97); }
+    to { opacity:1; transform:none; }
+  }
+
+  .modal-head {
+    padding:20px 22px 16px;
+    border-bottom:1px solid var(--line-soft);
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    align-items:flex-start;
+  }
+
+  .modal-title {
+    font-family:'Lora',serif;
+    font-size:20px;
+    color:var(--text);
+    line-height:1.3;
+  }
+
+  .modal-sub {
+    margin-top:3px;
+    font-size:12.5px;
+    color:var(--text-muted);
+  }
+
+  .modal-close {
+    width:34px;
+    height:34px;
+    border-radius:10px;
+    border:1px solid var(--line);
+    background:#fff;
+    color:var(--text-muted);
+    cursor:pointer;
+  }
+  .modal-close:hover { background:var(--danger-soft); color:var(--danger); }
+
+  .modal-body { padding:20px 22px; }
+  .modal-footer {
+    padding:16px 22px;
+    border-top:1px solid var(--line-soft);
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+
+  .section-title {
+    font-size:11px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:1.4px;
+    color:var(--text-muted);
+    margin-bottom:12px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+
+  .section-title::after {
+    content:'';
+    flex:1;
+    height:1px;
+    background:var(--line-soft);
+  }
+
+  .form-row {
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:14px;
+    margin-bottom:14px;
+  }
+
+  .form-row.col3 { grid-template-columns:repeat(3,1fr); }
+
+  .form-group {
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+
+  .form-label {
+    font-size:11.5px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+    color:var(--text);
+  }
+
+  .req { color:var(--danger); }
+  .form-textarea { resize:vertical; min-height:92px; }
+  .form-hint { font-size:11.5px; color:var(--text-muted); }
+
+  .detail-banner {
+    background:linear-gradient(135deg,var(--primary) 0%, var(--primary-2) 100%);
+    color:#fff;
+    border-radius:18px;
+    padding:16px 18px;
+    display:flex;
+    align-items:flex-start;
+    gap:14px;
+    margin-bottom:18px;
+  }
+
+  .detail-banner-icon {
+    width:42px;
+    height:42px;
+    flex-shrink:0;
+    border-radius:12px;
+    background:rgba(255,255,255,.15);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+  }
+
+  .detail-banner-title {
+    font-family:'Lora',serif;
+    font-size:16px;
+    line-height:1.3;
+  }
+
+  .detail-banner-sub {
+    margin-top:4px;
+    font-size:12px;
+    line-height:1.6;
+    color:rgba(255,255,255,.74);
+  }
+
+  .detail-grid {
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+    margin-bottom:18px;
+  }
+
+  .detail-box {
+    background:var(--bg);
+    border-radius:14px;
+    padding:13px 14px;
+  }
+
+  .detail-label {
+    font-size:10.5px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:var(--text-muted);
+    margin-bottom:4px;
+  }
+
+  .detail-value {
+    font-size:13.5px;
+    color:var(--text);
+    font-weight:700;
+    line-height:1.6;
+  }
+
+  .branch-table {
+    border:1px solid var(--line-soft);
+    border-radius:16px;
+    overflow:hidden;
+  }
+
+  .branch-table-header {
+    padding:14px 16px;
+    background:var(--bg);
+    border-bottom:1px solid var(--line-soft);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+
+  .branch-list {
+    display:flex;
+    flex-direction:column;
+  }
+
+  .branch-item {
+    padding:14px 16px;
+    display:grid;
+    grid-template-columns:1.2fr .8fr .8fr .6fr;
+    gap:12px;
+    border-bottom:1px solid var(--line-soft);
+    align-items:center;
+  }
+
+  .branch-item:last-child { border-bottom:none; }
+
+  .money { font-family:'DM Mono',monospace; font-size:12.5px; color:var(--text); }
+
+  .toast-stack {
+    position:fixed;
+    right:22px;
+    bottom:22px;
+    z-index:500;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+
+  .toast {
+    background:var(--text);
+    color:#fff;
+    padding:12px 16px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    gap:9px;
+    box-shadow:0 10px 22px rgba(0,0,0,.2);
+    font-size:13px;
+    animation:toastIn .2s ease;
+    max-width:320px;
+  }
+  .toast.success { background:#1b6b41; }
+  .toast.warning { background:#8d5807; }
+  .toast.danger { background:#8a2d2d; }
+  @keyframes toastIn { from { opacity:0; transform:translateX(18px); } to { opacity:1; transform:none; } }
+
+  @media (max-width:1200px) {
+    .hero { grid-template-columns:1fr; }
+    .stats-row { grid-template-columns:repeat(2,1fr); }
+  }
+
+  @media (max-width:900px) {
+    .main { margin-left:0; }
+  }
+
+  @media (max-width:720px) {
+    .content { padding:20px 16px 34px; }
+    .topbar { padding:12px 16px; }
+    .stats-row,
+    .form-row,
+    .form-row.col3,
+    .detail-grid,
+    .card-stats,
+    .hero-right,
+    .branch-item {
+      grid-template-columns:1fr;
+    }
+    .page-header { flex-direction:column; }
+    .toolbar-right { width:100%; margin-left:0; justify-content:space-between; }
+  }
+</style>
+</head>
+<body data-page="masterupk">
+<div id="sb-root"></div>
+<div class="main">
+  <div class="topbar">
+    <div class="breadcrumb">
+      Sistem Anggaran <span>›</span> Master Organisasi <span>›</span> <b>Master UPK</b>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-date" id="topbarDate">—</div>
+      <div class="mini-chip"><i class="fa-solid fa-sitemap"></i> Struktur induk UPT</div>
+      <button class="icon-btn" type="button" aria-label="Notifikasi">
+        <i class="fa-solid fa-bell"></i>
+        <span class="notif-dot"></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Master <em>UPK</em> &amp; Branch Accurate</div>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-ghost" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Export Master UPK</button>
+        <button class="btn btn-accent" onclick="expandAllDetails()"><i class="fa-solid fa-arrows-rotate"></i> Cek Sinkronisasi</button>
+        <button class="btn btn-primary" onclick="openAddModal()"><i class="fa-solid fa-plus"></i> Tambah UPK</button>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card c-primary">
+        <div class="stat-icon"><i class="fa-solid fa-building"></i></div>
+        <div class="stat-label">Total UPK</div>
+        <div class="stat-value" id="statTotalDivisi">—</div>
+        <div class="stat-sub">Semua UPK terdaftar</div>
+      </div>
+      <div class="stat-card c-accent">
+        <div class="stat-icon"><i class="fa-solid fa-code-branch"></i></div>
+        <div class="stat-label">UPK Tersambung Branch</div>
+        <div class="stat-value" id="statTotalCabang">—</div>
+        <div class="stat-sub">UPK yang punya branch Accurate</div>
+      </div>
+      <div class="stat-card c-success">
+        <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
+        <div class="stat-label">UPT Aktif</div>
+        <div class="stat-value" id="statCabangAktif">—</div>
+        <div class="stat-sub">Unit teknis aktif</div>
+      </div>
+      <div class="stat-card c-warning">
+        <div class="stat-icon"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+        <div class="stat-label">Akumulasi Pagu RKA</div>
+        <div class="stat-value" id="statTotalPagu">—</div>
+        <div class="stat-sub">Pagu gabungan unit teknis</div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-wrap">
+        <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+        <input class="search-input" id="searchInput" type="text" placeholder="Cari kode UPK, nama UPK, PIC, kode branch Accurate, atau UPT terkait..." oninput="applyFilters()">
+      </div>
+
+      <select class="filter-select" id="filterStatus" onchange="applyFilters()">
+        <option value="">Semua Status UPK</option>
+        <option value="Aktif">Aktif</option>
+        <option value="Nonaktif">Nonaktif</option>
+      </select>
+
+      <select class="filter-select" id="filterCabang" onchange="applyFilters()">
+        <option value="">Semua Kondisi Branch</option>
+        <option value="punya">Sudah punya branch</option>
+        <option value="kosong">Belum punya branch</option>
+      </select>
+
+      <select class="filter-select" id="filterArea" onchange="applyFilters()">
+        <option value="">Semua Area</option>
+      </select>
+
+      <div class="toolbar-right">
+        <div class="view-toggle">
+          <button class="view-btn active" id="btnTable" onclick="setView('table')"><i class="fa-solid fa-table-list"></i> Tabel</button>
+          <button class="view-btn" id="btnGrid" onclick="setView('grid')"><i class="fa-solid fa-grip"></i> Kartu</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="viewTable">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title"><i class="fa-solid fa-sitemap" style="color:var(--primary)"></i> Daftar Master UPK</div>
+            <div class="panel-sub" id="tableSubtitle">Memuat data...</div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="sortable" data-col="kode" onclick="sortBy('kode')">Kode <i class="fa-solid fa-sort"></i></th>
+                <th class="sortable" data-col="nama" onclick="sortBy('nama')">Nama UPK <i class="fa-solid fa-sort"></i></th>
+                <th>Entitas / Lingkup</th>
+                <th>PIC UPK</th>
+                <th class="sortable" data-col="branchCount" onclick="sortBy('branchCount')">UPT Terkait <i class="fa-solid fa-sort"></i></th>
+                <th class="sortable" data-col="activeBranchCount" onclick="sortBy('activeBranchCount')">UPT Aktif <i class="fa-solid fa-sort"></i></th>
+                <th class="sortable" data-col="totalBudget" onclick="sortBy('totalBudget')">Total Pagu RKA <i class="fa-solid fa-sort"></i></th>
+                <th>Status</th>
+                <th style="text-align:right;">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="upkTbody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="emptyTable" style="display:none;">
+          <i class="fa-solid fa-layer-group"></i>
+          <div class="empty-title">UPK UPK tidak ditemukan</div>
+          <div class="empty-sub">Coba ganti kata kunci atau filter yang digunakan.</div>
+        </div>
+        <div class="pagination" id="paginationTable"></div>
+      </div>
+    </div>
+
+    <div id="viewGrid" style="display:none;">
+      <div class="card-grid" id="upkGrid"></div>
+      <div class="empty-state" id="emptyGrid" style="display:none; background:#fff; border:1px solid var(--line); border-radius:18px;">
+        <i class="fa-solid fa-layer-group"></i>
+        <div class="empty-title">UPK UPK tidak ditemukan</div>
+        <div class="empty-sub">Coba ganti kata kunci atau filter yang digunakan.</div>
+      </div>
+      <div class="pagination" id="paginationGrid" style="background:#fff; border:1px solid var(--line); border-radius:18px;"></div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay-modal" id="modalForm" onclick="closeModalIfBg(event,'modalForm')">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title" id="modalFormTitle">Tambah UPK</div>
+        <div class="modal-sub" id="modalFormSub">Isi informasi UPK dan hubungkan ke master branch Accurate.</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modalForm')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="section-title">Identitas UPK</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Kode UPK <span class="req">*</span></label>
+          <input class="form-input" id="fKode" type="text" placeholder="mis. UPK-001">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nama UPK <span class="req">*</span></label>
+          <input class="form-input" id="fNama" type="text" placeholder="mis. Universitas Bakti Tunas Husada">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Entitas / Lingkup <span class="req">*</span></label>
+          <input class="form-input" id="fArea" type="text" placeholder="mis. Jawa Barat & Banten">
+        </div>
+        <div class="form-group">
+          <label class="form-label">PIC / Penanggung Jawab <span class="req">*</span></label>
+          <input class="form-input" id="fHead" type="text" placeholder="Nama kepala UPK">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Kode Branch Accurate</label>
+          <input class="form-input" id="fEmail" type="email" placeholder="mis. BR-UBTH">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nama Branch Accurate</label>
+          <input class="form-input" id="fPhone" type="text" placeholder="mis. Accurate UBTH">
+        </div>
+      </div>
+      <div class="form-row col3">
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select class="form-select" id="fStatus">
+            <option value="Aktif">Aktif</option>
+            <option value="Nonaktif">Nonaktif</option>
+          </select>
+        </div>
+        <div class="form-group" style="grid-column:span 2;">
+          <label class="form-label">Catatan Sinkronisasi</label>
+          <input class="form-input" id="fTagline" type="text" placeholder="mis. Branch aktif dan digunakan untuk konsolidasi anggaran">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Deskripsi UPK</label>
+        <textarea class="form-textarea" id="fDescription" placeholder="Ringkasan fungsi UPK, penggunaan master branch Accurate, dan keterkaitannya dengan UPT..."></textarea>
+        <span class="form-hint">UPT yang terkait akan dikelola dari halaman Master UPT.</span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalForm')">Batal</button>
+      <button class="btn btn-primary" onclick="saveUPK()"><i class="fa-solid fa-floppy-disk"></i> Simpan UPK</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay-modal" id="modalDetail" onclick="closeModalIfBg(event,'modalDetail')">
+  <div class="modal modal-lg">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title" id="detailTitle">Detail UPK</div>
+        <div class="modal-sub" id="detailSub">—</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modalDetail')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body" id="detailBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalDetail')">Tutup</button>
+      <button class="btn btn-accent" id="detailHierarchyBtn"><i class="fa-solid fa-code-branch"></i> Lihat UPT</button>
+      <button class="btn btn-primary" id="detailEditBtn"><i class="fa-solid fa-pen"></i> Edit UPK</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-stack" id="toastStack"></div>
+
+<script>
+const STORAGE_UPK = 'APP_ORG_UPK_DIVISIONS_V2';
+const STORAGE_UPT = 'APP_ORG_UPT_BRANCHES_V2';
+
+const seedUPK = [
+  {
+    id: 1,
+    kode: 'UPK-001',
+    nama: 'Yayasan Bakti Tunas Husada',
+    area: 'Yayasan Pusat',
+    head: 'Sekretaris Yayasan',
+    email: 'BR-YBTH',
+    phone: 'Accurate YBTH Pusat',
+    status: 'Aktif',
+    tagline: 'Master branch utama untuk konsolidasi yayasan',
+    description: 'UPK induk untuk aktivitas yayasan, sekretariat, keuangan, SDM, dan fungsi koordinasi pusat.'
+  },
+  {
+    id: 2,
+    kode: 'UPK-002',
+    nama: 'Universitas Bakti Tunas Husada',
+    area: 'Perguruan Tinggi',
+    head: 'Wakil Rektor II',
+    email: 'BR-UBTH',
+    phone: 'Accurate UBTH',
+    status: 'Aktif',
+    tagline: 'Sinkronisasi branch kampus untuk operasional akademik',
+    description: 'UPK untuk operasional universitas, fakultas, LPPM, sarpras, dan pendukung proses belajar mengajar.'
+  },
+  {
+    id: 3,
+    kode: 'UPK-003',
+    nama: 'Klinik Bakti Tunas Husada',
+    area: 'Layanan Kesehatan',
+    head: 'Kepala Klinik',
+    email: 'BR-KLINIK',
+    phone: 'Accurate Klinik',
+    status: 'Aktif',
+    tagline: 'Branch Accurate klinik untuk layanan dan penunjang medis',
+    description: 'UPK untuk pelayanan medis, farmasi, administrasi klinik, dan unit penunjang kesehatan.'
+  },
+  {
+    id: 4,
+    kode: 'UPK-004',
+    nama: 'BTH Student House',
+    area: 'Asrama & Pembinaan',
+    head: 'Manajer Student House',
+    email: 'BR-BSH',
+    phone: 'Accurate BSH',
+    status: 'Aktif',
+    tagline: 'Branch Accurate asrama dan pembinaan mahasiswa',
+    description: 'UPK yang menaungi operasional asrama, pembinaan, konsumsi, dan kegiatan pendukung mahasiswa.'
+  },
+  {
+    id: 5,
+    kode: 'UPK-005',
+    nama: 'LKSA Amanah',
+    area: 'Sosial & Pengasuhan',
+    head: 'Kepala LKSA',
+    email: 'BR-LKSA',
+    phone: 'Accurate LKSA',
+    status: 'Aktif',
+    tagline: 'Branch Accurate untuk kegiatan sosial dan pengasuhan',
+    description: 'UPK untuk pengasuhan, pendidikan, kesehatan anak, dan operasional sosial LKSA Amanah.'
+  },
+  {
+    id: 6,
+    kode: 'UPK-006',
+    nama: 'Dana Sosial YBTH',
+    area: 'Program Sosial',
+    head: 'Koordinator Program Sosial',
+    email: '',
+    phone: '',
+    status: 'Nonaktif',
+    tagline: 'Menunggu finalisasi branch Accurate dana sosial',
+    description: 'UPK untuk program beasiswa, rumah quran, penghargaan assatidz, dan kegiatan sosial lainnya.'
+  }
+];
+
+const seedUPT = [
+  { id:1, kode:'UPT-001', nama:'Sekretariat Yayasan', upkId:1, upkKode:'UPK-001', upkNama:'Yayasan Bakti Tunas Husada', tipe:'Bagian', kepala:'Kepala Sekretariat', status:'Aktif', pagu:2250000000 },
+  { id:2, kode:'UPT-002', nama:'Bagian Keuangan & Akuntansi', upkId:1, upkKode:'UPK-001', upkNama:'Yayasan Bakti Tunas Husada', tipe:'Bagian', kepala:'Manajer Keuangan', status:'Aktif', pagu:3100000000 },
+  { id:3, kode:'UPT-003', nama:'Bagian SDM & Umum', upkId:1, upkKode:'UPK-001', upkNama:'Yayasan Bakti Tunas Husada', tipe:'Bagian', kepala:'Koordinator SDM', status:'Aktif', pagu:1850000000 },
+  { id:4, kode:'UPT-004', nama:'Fakultas Ilmu Kesehatan', upkId:2, upkKode:'UPK-002', upkNama:'Universitas Bakti Tunas Husada', tipe:'Fakultas', kepala:'Dekan FIK', status:'Aktif', pagu:8200000000 },
+  { id:5, kode:'UPT-005', nama:'Fakultas Farmasi', upkId:2, upkKode:'UPK-002', upkNama:'Universitas Bakti Tunas Husada', tipe:'Fakultas', kepala:'Dekan Farmasi', status:'Aktif', pagu:7650000000 },
+  { id:6, kode:'UPT-006', nama:'Fakultas Teknologi & Bisnis', upkId:2, upkKode:'UPK-002', upkNama:'Universitas Bakti Tunas Husada', tipe:'Fakultas', kepala:'Dekan FTB', status:'Aktif', pagu:5900000000 },
+  { id:7, kode:'UPT-007', nama:'LPPM', upkId:2, upkKode:'UPK-002', upkNama:'Universitas Bakti Tunas Husada', tipe:'Pusat', kepala:'Ketua LPPM', status:'Aktif', pagu:2100000000 },
+  { id:8, kode:'UPT-008', nama:'Unit Pelayanan Medis', upkId:3, upkKode:'UPK-003', upkNama:'Klinik Bakti Tunas Husada', tipe:'Unit', kepala:'Koordinator Pelayanan', status:'Aktif', pagu:4600000000 },
+  { id:9, kode:'UPT-009', nama:'Unit Penunjang Medis', upkId:3, upkKode:'UPK-003', upkNama:'Klinik Bakti Tunas Husada', tipe:'Unit', kepala:'Koordinator Penunjang', status:'Aktif', pagu:1950000000 },
+  { id:10, kode:'UPT-010', nama:'Unit Farmasi & Apotek', upkId:3, upkKode:'UPK-003', upkNama:'Klinik Bakti Tunas Husada', tipe:'Unit', kepala:'Apoteker Penanggung Jawab', status:'Aktif', pagu:1750000000 },
+  { id:11, kode:'UPT-011', nama:'Operasional Asrama', upkId:4, upkKode:'UPK-004', upkNama:'BTH Student House', tipe:'Unit', kepala:'Koordinator Asrama', status:'Aktif', pagu:1350000000 },
+  { id:12, kode:'UPT-012', nama:'Program Pembinaan Mahasiswa', upkId:4, upkKode:'UPK-004', upkNama:'BTH Student House', tipe:'Program', kepala:'Koordinator Pembinaan', status:'Aktif', pagu:980000000 },
+  { id:13, kode:'UPT-013', nama:'Pengasuhan & Pembinaan Anak', upkId:5, upkKode:'UPK-005', upkNama:'LKSA Amanah', tipe:'Program', kepala:'Kepala Pengasuhan', status:'Aktif', pagu:1280000000 },
+  { id:14, kode:'UPT-014', nama:'Pendidikan & Kesehatan Anak', upkId:5, upkKode:'UPK-005', upkNama:'LKSA Amanah', tipe:'Program', kepala:'Koordinator Pendidikan', status:'Aktif', pagu:1650000000 },
+  { id:15, kode:'UPT-015', nama:'Program Beasiswa', upkId:6, upkKode:'UPK-006', upkNama:'Dana Sosial YBTH', tipe:'Program', kepala:'Koordinator Beasiswa', status:'Nonaktif', pagu:0 }
+];
+
+function ensureSeed() {
+  if (!localStorage.getItem(STORAGE_UPK)) localStorage.setItem(STORAGE_UPK, JSON.stringify(seedUPK));
+  if (!localStorage.getItem(STORAGE_UPT)) localStorage.setItem(STORAGE_UPT, JSON.stringify(seedUPT));
+}
+
+function readUPK() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_UPK)) || seedUPK.slice(); }
+  catch { return seedUPK.slice(); }
+}
+
+function readUPT() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_UPT)) || seedUPT.slice(); }
+  catch { return seedUPT.slice(); }
+}
+
+function writeUPK(data) {
+  localStorage.setItem(STORAGE_UPK, JSON.stringify(data));
+}
+
+function writeUPT(data) {
+  localStorage.setItem(STORAGE_UPT, JSON.stringify(data));
+}
+
+ensureSeed();
+let UPK_DATA = readUPK();
+let UPT_BRANCHES = readUPT();
+
+const state = {
+  view: 'table',
+  sortCol: 'kode',
+  sortDir: 'asc',
+  search: '',
+  filterStatus: '',
+  filterCabang: '',
+  filterArea: '',
+  page: 1,
+  perPage: 8,
+  editingId: null,
+};
+
+function escapeHTML(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function fmtCurrency(n) {
+  const num = Number(n) || 0;
+  if (!num) return 'Rp 0';
+  if (num >= 1_000_000_000) return 'Rp ' + (num / 1_000_000_000).toFixed(num % 1_000_000_000 === 0 ? 0 : 1) + ' M';
+  if (num >= 1_000_000) return 'Rp ' + (num / 1_000_000).toFixed(num % 1_000_000 === 0 ? 0 : 1) + ' jt';
+  return 'Rp ' + num.toLocaleString('id-ID');
+}
+
+function getBranches(upkId) {
+  return UPT_BRANCHES.filter(item => Number(item.upkId) === Number(upkId));
+}
+
+function decorateUPK(item) {
+  const branches = getBranches(item.id);
+  const activeBranches = branches.filter(branch => branch.status === 'Aktif');
+  const totalBudget = branches.reduce((sum, branch) => sum + (Number(branch.pagu) || 0), 0);
+  return {
+    ...item,
+    branchCount: branches.length,
+    activeBranchCount: activeBranches.length,
+    totalBudget,
+    branches,
+  };
+}
+
+function statusBadge(status) {
+  if (status === 'Aktif') return '<span class="badge badge-success"><span class="dot dot-success"></span>Aktif</span>';
+  return '<span class="badge badge-neutral"><span class="dot dot-muted"></span>Nonaktif</span>';
+}
+
+function buildAreaOptions() {
+  const select = document.getElementById('filterArea');
+  const current = state.filterArea;
+  const areas = [...new Set(UPK_DATA.map(item => item.area).filter(Boolean))].sort((a,b) => a.localeCompare(b));
+  select.innerHTML = '<option value="">Semua Area</option>' + areas.map(area => `<option value="${escapeHTML(area)}">${escapeHTML(area)}</option>`).join('');
+  select.value = current;
+}
+
+function updateStats() {
+  const UPKAktif = UPK_DATA.filter(item => item.status === 'Aktif').length;
+  const branchAccurate = UPK_DATA.filter(item => item.email && item.phone).length;
+  const cabangAktif = UPT_BRANCHES.filter(item => item.status === 'Aktif').length;
+  const totalPagu = UPT_BRANCHES.reduce((sum, item) => sum + (Number(item.pagu) || 0), 0);
+
+  document.getElementById('statTotalDivisi').textContent = UPK_DATA.length;
+  document.getElementById('statTotalCabang').textContent = branchAccurate;
+  document.getElementById('statCabangAktif').textContent = cabangAktif;
+  document.getElementById('statTotalPagu').textContent = fmtCurrency(totalPagu);
+
+  document.getElementById('heroTotalDivisi').textContent = UPKAktif;
+  document.getElementById('heroTotalCabang').textContent = branchAccurate;
+  document.getElementById('heroCabangAktif').textContent = cabangAktif;
+  document.getElementById('heroTotalPagu').textContent = fmtCurrency(totalPagu);
+}
+
+function applyFilters() {
+  state.search = document.getElementById('searchInput').value.trim().toLowerCase();
+  state.filterStatus = document.getElementById('filterStatus').value;
+  state.filterCabang = document.getElementById('filterCabang').value;
+  state.filterArea = document.getElementById('filterArea').value;
+  state.page = 1;
+  render();
+}
+
+function getFiltered() {
+  return UPK_DATA.map(decorateUPK).filter(item => {
+    if (state.filterStatus && item.status !== state.filterStatus) return false;
+    if (state.filterArea && item.area !== state.filterArea) return false;
+    if (state.filterCabang === 'punya' && item.branchCount === 0) return false;
+    if (state.filterCabang === 'kosong' && item.branchCount > 0) return false;
+
+    if (state.search) {
+      const query = state.search;
+      const branchNames = item.branches.map(branch => `${branch.kode} ${branch.nama} ${branch.kepala || ''}`).join(' ');
+      const haystack = [item.kode, item.nama, item.area, item.head, item.tagline, branchNames].join(' ').toLowerCase();
+      if (!haystack.includes(query)) return false;
+    }
+
+    return true;
+  }).sort((a, b) => {
+    let av = a[state.sortCol];
+    let bv = b[state.sortCol];
+    if (typeof av === 'string') return state.sortDir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+    return state.sortDir === 'asc' ? av - bv : bv - av;
+  });
+}
+
+function sortBy(col) {
+  state.sortDir = state.sortCol === col && state.sortDir === 'asc' ? 'desc' : 'asc';
+  state.sortCol = col;
+  document.querySelectorAll('thead th').forEach(th => {
+    const icon = th.querySelector('i');
+    if (icon) icon.className = 'fa-solid fa-sort';
+  });
+  const active = document.querySelector(`thead th[data-col="${col}"] i`);
+  if (active) active.className = `fa-solid fa-sort-${state.sortDir === 'asc' ? 'up' : 'down'}`;
+  render();
+}
+
+function setView(view) {
+  state.view = view;
+  document.getElementById('viewTable').style.display = view === 'table' ? 'block' : 'none';
+  document.getElementById('viewGrid').style.display = view === 'grid' ? 'block' : 'none';
+  document.getElementById('btnTable').classList.toggle('active', view === 'table');
+  document.getElementById('btnGrid').classList.toggle('active', view === 'grid');
+  render();
+}
+
+function render() {
+  buildAreaOptions();
+  updateStats();
+  const data = getFiltered();
+  const start = (state.page - 1) * state.perPage;
+  const page = data.slice(start, start + state.perPage);
+
+  if (state.view === 'table') renderTable(data, page);
+  else renderGrid(data, page);
+}
+
+function renderTable(data, page) {
+  document.getElementById('tableSubtitle').textContent = `Menampilkan ${data.length} dari ${UPK_DATA.length} master UPK`;
+  const tbody = document.getElementById('upkTbody');
+  const empty = document.getElementById('emptyTable');
+
+  if (!page.length) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    document.getElementById('paginationTable').innerHTML = '';
+    return;
+  }
+
+  empty.style.display = 'none';
+
+  tbody.innerHTML = page.map(item => {
+    const branchPreview = item.branches.slice(0, 3).map(branch => `<span class="branch-pill"><i class="fa-solid fa-code-branch"></i>${escapeHTML(branch.kode)}</span>`).join('');
+    return `
+      <tr>
+        <td class="mono">${escapeHTML(item.kode)}</td>
+        <td>
+          <div class="title-cell">${escapeHTML(item.nama)}</div>
+          <div class="title-sub">${escapeHTML(item.tagline || 'UPK induk untuk cabang UPT')}</div>
+        </td>
+        <td>
+          <div class="title-cell">${escapeHTML(item.area || '—')}</div>
+          <div class="title-sub">${branchPreview || 'Belum ada UPT terhubung'}</div>
+        </td>
+        <td>
+          <div class="title-cell">${escapeHTML(item.head || '—')}</div>
+          <div class="title-sub">${item.email ? `Kode Branch: ${escapeHTML(item.email)}` : 'Branch Accurate belum diisi'}</div>
+        </td>
+        <td><span class="badge badge-primary"><i class="fa-solid fa-link"></i>${item.branchCount} UPT</span></td>
+        <td><span class="badge badge-success"><i class="fa-solid fa-circle-check"></i>${item.activeBranchCount} aktif</span></td>
+        <td>
+          <div class="mono">${fmtCurrency(item.totalBudget)}</div>
+          <div class="title-sub">Akumulasi pagu UPT</div>
+        </td>
+        <td>${statusBadge(item.status)}</td>
+        <td style="text-align:right;">
+          <div class="actions-inline">
+            <button class="act-btn primary" onclick="openDetail(${item.id})" title="Detail"><i class="fa-solid fa-eye"></i></button>
+            <button class="act-btn accent" onclick="openEditModal(${item.id})" title="Edit"><i class="fa-solid fa-pen"></i></button>
+            <button class="act-btn danger" onclick="deleteUPK(${item.id})" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  renderPagination(data.length, 'paginationTable');
+}
+
+function renderGrid(data, page) {
+  const grid = document.getElementById('upkGrid');
+  const empty = document.getElementById('emptyGrid');
+
+  if (!page.length) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    document.getElementById('paginationGrid').innerHTML = '';
+    return;
+  }
+
+  empty.style.display = 'none';
+
+  grid.innerHTML = page.map(item => `
+    <div class="UPKon-card">
+      <div class="card-head">
+        <div style="display:flex; gap:12px; align-items:flex-start; min-width:0;">
+          <div class="card-icon"><i class="fa-solid fa-sitemap"></i></div>
+          <div style="min-width:0;">
+            <div class="card-title">${escapeHTML(item.nama)}</div>
+            <div class="card-code">${escapeHTML(item.kode)} · ${escapeHTML(item.area || 'Tanpa area')}</div>
+          </div>
+        </div>
+        ${statusBadge(item.status)}
+      </div>
+
+      <div class="card-meta">
+        <span class="badge badge-primary"><i class="fa-solid fa-user-tie"></i>${escapeHTML(item.head || 'Tanpa PIC')}</span>
+        <span class="badge badge-accent"><i class="fa-solid fa-code-branch"></i>${item.branchCount} cabang</span>
+      </div>
+
+      <div class="card-branches">
+        ${item.branches.length
+          ? item.branches.slice(0, 4).map(branch => `<span class="branch-pill">${escapeHTML(branch.kode)} · ${escapeHTML(branch.tipe)}</span>`).join('')
+          : '<span class="branch-pill"><i class="fa-solid fa-circle-minus"></i>Belum ada UPT terkait</span>'}
+      </div>
+
+      <div class="card-stats">
+        <div>
+          <div class="stat-mini-label">Cabang Aktif</div>
+          <div class="stat-mini-value">${item.activeBranchCount} unit</div>
+        </div>
+        <div>
+          <div class="stat-mini-label">Total Pagu</div>
+          <div class="stat-mini-value">${fmtCurrency(item.totalBudget)}</div>
+        </div>
+        <div>
+          <div class="stat-mini-label">Email</div>
+          <div class="stat-mini-value">${escapeHTML(item.email || '—')}</div>
+        </div>
+        <div>
+          <div class="stat-mini-label">Telepon</div>
+          <div class="stat-mini-value">${escapeHTML(item.phone || '—')}</div>
+        </div>
+      </div>
+
+      <div class="page-actions" style="margin-top:auto;">
+        <button class="btn btn-ghost btn-sm" style="flex:1; justify-content:center;" onclick="openDetail(${item.id})"><i class="fa-solid fa-eye"></i> Detail</button>
+        <button class="btn btn-primary btn-sm" style="flex:1; justify-content:center;" onclick="openEditModal(${item.id})"><i class="fa-solid fa-pen"></i> Edit</button>
+      </div>
+    </div>
+  `).join('');
+
+  renderPagination(data.length, 'paginationGrid');
+}
+
+function renderPagination(total, elId) {
+  if (!total) {
+    document.getElementById(elId).innerHTML = '';
+    return;
+  }
+
+  const pages = Math.ceil(total / state.perPage);
+  const start = (state.page - 1) * state.perPage + 1;
+  const end = Math.min(state.page * state.perPage, total);
+  let buttons = '';
+
+  for (let i = 1; i <= pages; i++) {
+    if (pages > 7 && i > 2 && i < pages - 1 && Math.abs(i - state.page) > 1) {
+      if (i === 3 || i === pages - 2) buttons += '<span class="pg-btn" style="pointer-events:none;">…</span>';
+      continue;
+    }
+    buttons += `<button class="pg-btn ${i === state.page ? 'active' : ''}" onclick="goPage(${i})">${i}</button>`;
+  }
+
+  document.getElementById(elId).innerHTML = `
+    <div class="pagination-info">Menampilkan ${start}–${end} dari ${total} UPK</div>
+    <div class="pagination-btns">
+      <button class="pg-btn" onclick="goPage(${state.page - 1})" ${state.page <= 1 ? 'disabled' : ''}><i class="fa-solid fa-chevron-left"></i></button>
+      ${buttons}
+      <button class="pg-btn" onclick="goPage(${state.page + 1})" ${state.page >= pages ? 'disabled' : ''}><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+  `;
+}
+
+function goPage(page) {
+  const total = getFiltered().length;
+  const maxPage = Math.max(1, Math.ceil(total / state.perPage));
+  state.page = Math.max(1, Math.min(page, maxPage));
+  render();
+}
+
+function openAddModal() {
+  state.editingId = null;
+  document.getElementById('modalFormTitle').textContent = 'Tambah UPK UPK';
+  document.getElementById('modalFormSub').textContent = 'Isi informasi UPK untuk cabang UPT.';
+  ['fKode','fNama','fArea','fHead','fEmail','fPhone','fTagline','fDescription'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('fStatus').value = 'Aktif';
+  openModal('modalForm');
+}
+
+function openEditModal(id) {
+  const item = UPK_DATA.find(entry => entry.id === id);
+  if (!item) return;
+  state.editingId = id;
+  document.getElementById('modalFormTitle').textContent = 'Edit UPK UPK';
+  document.getElementById('modalFormSub').textContent = `${item.kode} — ${item.nama}`;
+  document.getElementById('fKode').value = item.kode || '';
+  document.getElementById('fNama').value = item.nama || '';
+  document.getElementById('fArea').value = item.area || '';
+  document.getElementById('fHead').value = item.head || '';
+  document.getElementById('fEmail').value = item.email || '';
+  document.getElementById('fPhone').value = item.phone || '';
+  document.getElementById('fStatus').value = item.status || 'Aktif';
+  document.getElementById('fTagline').value = item.tagline || '';
+  document.getElementById('fDescription').value = item.description || '';
+  closeModal('modalDetail');
+  openModal('modalForm');
+}
+
+function saveUPK() {
+  const payload = {
+    kode: document.getElementById('fKode').value.trim(),
+    nama: document.getElementById('fNama').value.trim(),
+    area: document.getElementById('fArea').value.trim(),
+    head: document.getElementById('fHead').value.trim(),
+    email: document.getElementById('fEmail').value.trim(),
+    phone: document.getElementById('fPhone').value.trim(),
+    status: document.getElementById('fStatus').value,
+    tagline: document.getElementById('fTagline').value.trim(),
+    description: document.getElementById('fDescription').value.trim(),
+  };
+
+  if (!payload.kode || !payload.nama || !payload.area || !payload.head) {
+    showToast('warning', 'fa-triangle-exclamation', 'Kode UPK, nama UPK, entitas/lingkup, dan PIC wajib diisi.');
+    return;
+  }
+
+  const duplicate = UPK_DATA.find(item => item.kode.toLowerCase() === payload.kode.toLowerCase() && item.id !== state.editingId);
+  if (duplicate) {
+    showToast('warning', 'fa-copy', 'Kode UPK sudah digunakan oleh UPK lain.');
+    return;
+  }
+
+  if (state.editingId) {
+    const oldItem = UPK_DATA.find(item => item.id === state.editingId);
+    const index = UPK_DATA.findIndex(item => item.id === state.editingId);
+    if (index >= 0) {
+      UPK_DATA[index] = { ...UPK_DATA[index], ...payload };
+      UPT_BRANCHES = UPT_BRANCHES.map(branch => Number(branch.upkId) === Number(state.editingId)
+        ? { ...branch, upkKode: payload.kode, upkNama: payload.nama }
+        : branch);
+      writeUPT(UPT_BRANCHES);
+      writeUPK(UPK_DATA);
+      showToast('success', 'fa-circle-check', `UPK ${oldItem?.kode || ''} berhasil diperbarui.`);
+    }
+  } else {
+    const newId = Math.max(0, ...UPK_DATA.map(item => item.id)) + 1;
+    UPK_DATA.unshift({ id: newId, ...payload });
+    writeUPK(UPK_DATA);
+    showToast('success', 'fa-circle-check', 'Master UPK baru berhasil ditambahkan.');
+  }
+
+  buildAreaOptions();
+  closeModal('modalForm');
+  render();
+}
+
+function deleteUPK(id) {
+  const item = UPK_DATA.find(entry => entry.id === id);
+  if (!item) return;
+
+  const childCount = getBranches(id).length;
+  if (childCount > 0) {
+    showToast('warning', 'fa-code-branch', `UPK ${item.kode} masih memiliki ${childCount} cabang UPT. Pindahkan cabang terlebih dahulu dari Master UPT.`);
+    return;
+  }
+
+  if (!confirm(`Hapus UPK "${item.nama}"?\n\nTindakan ini tidak dapat dibatalkan.`)) return;
+
+  UPK_DATA = UPK_DATA.filter(entry => entry.id !== id);
+  writeUPK(UPK_DATA);
+  render();
+  showToast('success', 'fa-trash', 'Master UPK berhasil dihapus.');
+}
+
+function openDetail(id) {
+  const item = decorateUPK(UPK_DATA.find(entry => entry.id === id));
+  if (!item) return;
+
+  document.getElementById('detailTitle').textContent = item.nama;
+  document.getElementById('detailSub').textContent = `${item.kode} · ${item.area || 'Tanpa area'} · ${item.branchCount} UPT terkait`;
+  document.getElementById('detailEditBtn').onclick = () => openEditModal(id);
+  document.getElementById('detailHierarchyBtn').onclick = () => scrollToBranchList();
+
+  const branchHtml = item.branches.length
+    ? item.branches.map(branch => `
+        <div class="branch-item">
+          <div>
+            <div class="title-cell">${escapeHTML(branch.nama)}</div>
+            <div class="title-sub">${escapeHTML(branch.kode)} · ${escapeHTML(branch.tipe || 'UPT')}</div>
+          </div>
+          <div>
+            <div class="title-cell">${escapeHTML(branch.kepala || 'Tanpa kepala')}</div>
+            <div class="title-sub">Kepala cabang</div>
+          </div>
+          <div>
+            <div class="money">${fmtCurrency(branch.pagu)}</div>
+            <div class="title-sub">Pagu cabang</div>
+          </div>
+          <div>${branch.status === 'Aktif'
+            ? '<span class="badge badge-success"><span class="dot dot-success"></span>Aktif</span>'
+            : '<span class="badge badge-neutral"><span class="dot dot-muted"></span>Nonaktif</span>'}
+          </div>
+        </div>
+      `).join('')
+    : `
+      <div class="empty-state" style="padding:36px 16px;">
+        <i class="fa-solid fa-code-branch"></i>
+        <div class="empty-title">Belum ada UPT terkait</div>
+        <div class="empty-sub">Tambahkan UPT dari halaman Master UPT dan hubungkan ke UPK ini.</div>
+      </div>
+    `;
+
+  document.getElementById('detailBody').innerHTML = `
+    <div class="detail-banner">
+      <div class="detail-banner-icon"><i class="fa-solid fa-sitemap"></i></div>
+      <div style="flex:1;">
+        <div class="detail-banner-title">${escapeHTML(item.nama)} sebagai UPK</div>
+        <div class="detail-banner-sub">${escapeHTML(item.tagline || 'UPK induk untuk cabang-cabang UPT')} · Kepala UPK ${escapeHTML(item.head || '—')} · ${item.branchCount} cabang terhubung</div>
+      </div>
+      <div>${statusBadge(item.status)}</div>
+    </div>
+
+    <div class="detail-grid">
+      <div class="detail-box">
+        <div class="detail-label">Kode UPK</div>
+        <div class="detail-value">${escapeHTML(item.kode)}</div>
+      </div>
+      <div class="detail-box">
+        <div class="detail-label">Area / Wilayah</div>
+        <div class="detail-value">${escapeHTML(item.area || '—')}</div>
+      </div>
+      <div class="detail-box">
+        <div class="detail-label">Kepala Divisi</div>
+        <div class="detail-value">${escapeHTML(item.head || '—')}</div>
+      </div>
+      <div class="detail-box">
+        <div class="detail-label">Kontak</div>
+        <div class="detail-value">${item.email ? `Kode: ${escapeHTML(item.email)}` : 'Branch belum diisi'}<br>${item.phone ? `Nama: ${escapeHTML(item.phone)}` : 'Nama branch belum diisi'}</div>
+      </div>
+      <div class="detail-box">
+        <div class="detail-label">Jumlah UPT</div>
+        <div class="detail-value">${item.branchCount} UPT · ${item.activeBranchCount} aktif</div>
+      </div>
+      <div class="detail-box">
+        <div class="detail-label">Total Pagu UPT</div>
+        <div class="detail-value">${fmtCurrency(item.totalBudget)}</div>
+      </div>
+    </div>
+
+    <div class="detail-box" style="margin-bottom:18px;">
+      <div class="detail-label">Deskripsi Divisi</div>
+      <div class="detail-value" style="font-size:13px; font-weight:600; color:var(--text-soft);">${escapeHTML(item.description || 'Belum ada deskripsi UPK.')}</div>
+    </div>
+
+    <div class="branch-table" id="detailBranchList">
+      <div class="branch-table-header">
+        <div>
+          <div class="panel-title"><i class="fa-solid fa-code-branch" style="color:var(--accent)"></i> Daftar UPT di bawah UPK ini</div>
+          <div class="panel-sub">UPT berikut berasal dari Master UPT dan terhubung ke UPK ini.</div>
+        </div>
+        <span class="badge badge-accent"><i class="fa-solid fa-layer-group"></i>${item.branchCount} cabang</span>
+      </div>
+      <div class="branch-list">
+        ${branchHtml}
+      </div>
+    </div>
+  `;
+
+  openModal('modalDetail');
+}
+
+function scrollToBranchList() {
+  const el = document.getElementById('detailBranchList');
+  if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function expandAllDetails() {
+  const data = getFiltered();
+  if (!data.length) {
+    showToast('warning', 'fa-filter-circle-xmark', 'Tidak ada UPK yang dapat ditampilkan.');
+    return;
+  }
+  openDetail(data[0].id);
+}
+
+function exportCSV() {
+  const rows = getFiltered().map(item => [
+    item.kode,
+    item.nama,
+    item.area,
+    item.head,
+    item.status,
+    item.branchCount,
+    item.activeBranchCount,
+    item.totalBudget,
+    item.branches.map(branch => branch.kode).join(' | ')
+  ]);
+
+  const header = ['Kode UPK','Nama Divisi','Area','Kepala Divisi','Status','Jumlah UPT','Cabang Aktif','Total Pagu','Daftar Kode UPT'];
+  const csv = [header, ...rows].map(row => row.map(col => `"${String(col ?? '').replace(/"/g, '""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'master_upk_UPK.csv';
+  link.click();
+  showToast('success', 'fa-file-csv', `Berhasil mengekspor ${rows.length} master UPK.`);
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function closeModalIfBg(event, id) { if (event.target === document.getElementById(id)) closeModal(id); }
+
+function showToast(type, icon, message) {
+  const stack = document.getElementById('toastStack');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `<i class="fa-solid ${icon}"></i><span>${escapeHTML(message)}</span>`;
+  stack.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(18px)';
+    toast.style.transition = 'all .24s ease';
+    setTimeout(() => toast.remove(), 240);
+  }, 3200);
+}
+
+window.addEventListener('storage', (event) => {
+  if (event.key === STORAGE_UPK) UPK_DATA = readUPK();
+  if (event.key === STORAGE_UPT) UPT_BRANCHES = readUPT();
+  buildAreaOptions();
+  render();
+});
+
+document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('id-ID', {
+  weekday:'short', day:'numeric', month:'long', year:'numeric'
+});
+
+buildAreaOptions();
+render();
+</script>
+<script src="sidebar.js"></script>
+</body>
+</html>
