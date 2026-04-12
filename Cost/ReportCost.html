@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Report Cost — Sistem Anggaran</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f4f7fc;
+      --bg-soft:#e9eff9;
+      --line:#d7e2f1;
+      --line-soft:#e7eef7;
+      --primary:#3972B8;
+      --primary-2:#2a5d9a;
+      --primary-soft:rgba(57,114,184,.10);
+      --accent:#F68B21;
+      --accent-soft:rgba(246,139,33,.12);
+      --success:#217a4a;
+      --success-soft:rgba(33,122,74,.10);
+      --warning:#c07010;
+      --warning-soft:rgba(192,112,16,.12);
+      --danger:#d94040;
+      --danger-soft:rgba(217,64,64,.10);
+      --text:#1a2333;
+      --text-soft:#60718f;
+      --text-muted:#8ea0ba;
+      --white:#fff;
+      --shadow-sm:0 2px 10px rgba(57,114,184,.07);
+      --shadow:0 10px 28px rgba(57,114,184,.12);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:'Plus Jakarta Sans',sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      min-height:100vh;
+    }
+    .main{margin-left:240px;min-height:100vh;display:flex;flex-direction:column}
+    .topbar{
+      position:sticky;top:0;z-index:50;
+      background:rgba(244,247,252,.92);
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--line);
+      padding:14px 34px;
+      display:flex;justify-content:space-between;align-items:center;gap:16px;
+    }
+    .breadcrumb{display:flex;gap:6px;flex-wrap:wrap;font-size:13px;color:var(--text-muted)}
+    .breadcrumb b{color:var(--text);font-weight:700}
+    .topbar-right{display:flex;align-items:center;gap:10px}
+    .chip-info,.topbar-date{
+      padding:7px 12px;border-radius:999px;background:var(--bg-soft);
+      border:1px solid var(--line);font-size:12px;color:var(--text-soft);white-space:nowrap;
+    }
+
+    .content{padding:30px 34px 42px;display:flex;flex-direction:column;gap:22px}
+    .page-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+    .page-title{font-family:'Lora',serif;font-size:28px;line-height:1.25}
+    .page-title em{color:var(--primary);font-style:italic}
+    .page-sub{margin-top:8px;max-width:820px;font-size:13.5px;line-height:1.7;color:var(--text-soft)}
+    .page-actions{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{
+      border:none;border-radius:11px;padding:10px 16px;display:inline-flex;align-items:center;gap:8px;
+      font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:.18s;
+      font-family:'Plus Jakarta Sans',sans-serif;
+    }
+    .btn i{font-size:12px}
+    .btn-primary{background:var(--primary);color:#fff;box-shadow:0 6px 18px rgba(57,114,184,.24)}
+    .btn-primary:hover{transform:translateY(-1px);background:#467ec1}
+    .btn-ghost{background:#fff;color:var(--text-soft);border:1.5px solid var(--line)}
+    .btn-ghost:hover{background:var(--bg);color:var(--text)}
+    .btn-accent{background:var(--accent);color:#fff;box-shadow:0 6px 18px rgba(246,139,33,.24)}
+    .btn-accent:hover{transform:translateY(-1px);background:#ff9d3a}
+
+    .hero{
+      background:linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
+      color:#fff;border-radius:22px;padding:24px 26px;
+      box-shadow:0 16px 36px rgba(57,114,184,.22);
+      display:grid;grid-template-columns:1.2fr .9fr;gap:18px;position:relative;overflow:hidden;
+    }
+    .hero::before,.hero::after{
+      content:'';position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.12);
+    }
+    .hero::before{width:180px;height:180px;top:-50px;right:-20px}
+    .hero::after{width:120px;height:120px;bottom:-45px;right:90px}
+    .hero-left,.hero-right{position:relative;z-index:1}
+    .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:1.8px;color:rgba(255,255,255,.65);margin-bottom:8px}
+    .hero-title{font-family:'Lora',serif;font-size:28px;line-height:1.25;max-width:720px}
+    .hero-sub{margin-top:10px;font-size:13px;line-height:1.7;color:rgba(255,255,255,.76);max-width:650px}
+    .hero-actions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
+    .hero-chip{
+      display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-radius:999px;
+      background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.12);font-size:12px;font-weight:700;
+    }
+    .hero-right{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .hero-mini{
+      background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;padding:15px 16px;
+    }
+    .hero-mini-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.62);margin-bottom:7px}
+    .hero-mini-value{font-family:'DM Mono',monospace;font-size:20px;font-weight:500}
+    .hero-mini-sub{margin-top:6px;font-size:12px;color:rgba(255,255,255,.66)}
+
+    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .stat-card{
+      background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px 18px 16px;
+      box-shadow:var(--shadow-sm);position:relative;overflow:hidden;transition:.18s;
+    }
+    .stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+    .stat-card::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px}
+    .c-primary::after{background:var(--primary)}
+    .c-accent::after{background:var(--accent)}
+    .c-success::after{background:var(--success)}
+    .c-warning::after{background:var(--warning)}
+    .stat-icon{
+      width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+      margin-bottom:12px;font-size:16px;
+    }
+    .c-primary .stat-icon{background:var(--primary-soft);color:var(--primary)}
+    .c-accent .stat-icon{background:var(--accent-soft);color:var(--accent)}
+    .c-success .stat-icon{background:var(--success-soft);color:var(--success)}
+    .c-warning .stat-icon{background:var(--warning-soft);color:var(--warning)}
+    .stat-label{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);font-weight:700;margin-bottom:5px}
+    .stat-value{font-family:'DM Mono',monospace;font-size:23px;line-height:1}
+    .stat-sub{margin-top:6px;font-size:12px;color:var(--text-muted)}
+
+    .toolbar{
+      display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+      background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 16px;box-shadow:var(--shadow-sm);
+    }
+    .search-wrap{position:relative;flex:1;min-width:240px}
+    .search-icon{position:absolute;top:50%;left:13px;transform:translateY(-50%);color:var(--text-muted);font-size:13px}
+    .search-input,.filter-select{
+      width:100%;border:1.5px solid var(--line);background:#fff;border-radius:11px;
+      padding:10px 12px;font-size:13px;color:var(--text);outline:none;transition:.18s;
+      font-family:'Plus Jakarta Sans',sans-serif;
+    }
+    .search-input{padding-left:36px}
+    .search-input:focus,.filter-select:focus{
+      border-color:var(--primary);box-shadow:0 0 0 3px rgba(57,114,184,.16)
+    }
+
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .panel{
+      background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-sm);
+    }
+    .panel-head{
+      padding:16px 20px;border-bottom:1px solid var(--line-soft);
+      display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+    }
+    .panel-title{font-size:14px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px}
+    .panel-sub{font-size:12px;color:var(--text-muted);margin-top:2px}
+    .panel-body{padding:18px}
+
+    .bar-list{display:grid;gap:12px}
+    .bar-item{display:grid;gap:6px}
+    .bar-row{display:flex;justify-content:space-between;gap:10px;align-items:center}
+    .bar-label{font-size:13px;font-weight:700;color:var(--text)}
+    .bar-value{font-size:12px;color:var(--text-soft);font-family:'DM Mono',monospace}
+    .bar-track{width:100%;height:10px;background:var(--bg-soft);border-radius:999px;overflow:hidden}
+    .bar-fill{height:100%;border-radius:999px;background:var(--primary)}
+
+    .table-wrap{overflow-x:auto}
+    table{width:100%;border-collapse:collapse}
+    thead th{
+      text-align:left;padding:11px 16px;background:var(--bg);border-bottom:1px solid var(--line);
+      font-size:10.5px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);white-space:nowrap;
+    }
+    tbody tr{border-bottom:1px solid var(--line-soft)}
+    tbody tr:last-child{border-bottom:none}
+    tbody tr:hover{background:rgba(57,114,184,.025)}
+    tbody td{padding:14px 16px;font-size:13px;color:var(--text-soft);vertical-align:top}
+    .title-cell{color:var(--text);font-weight:700}
+    .title-sub{margin-top:3px;font-size:11.5px;color:var(--text-muted)}
+    .mono{font-family:'DM Mono',monospace;color:var(--text)}
+    .badge{
+      display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:999px;
+      font-size:11px;font-weight:700;white-space:nowrap;
+    }
+    .badge-primary{background:var(--primary-soft);color:var(--primary)}
+    .badge-accent{background:var(--accent-soft);color:#a05a00}
+    .badge-success{background:var(--success-soft);color:var(--success)}
+    .badge-warning{background:var(--warning-soft);color:var(--warning)}
+    .badge-danger{background:var(--danger-soft);color:var(--danger)}
+
+    .empty-state{padding:62px 16px;text-align:center}
+    .empty-state i{font-size:36px;color:#c9d8ea;margin-bottom:12px}
+    .empty-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:5px}
+    .empty-sub{font-size:13px;color:var(--text-muted)}
+
+    @media (max-width:1200px){
+      .hero{grid-template-columns:1fr}
+      .stats-row{grid-template-columns:repeat(2,1fr)}
+      .grid-2{grid-template-columns:1fr}
+    }
+    @media (max-width:900px){.main{margin-left:0}}
+    @media (max-width:720px){
+      .content{padding:20px 16px 34px}
+      .topbar{padding:12px 16px}
+      .stats-row,.hero-right{grid-template-columns:1fr}
+      .page-header{flex-direction:column}
+    }
+  </style>
+</head>
+<body data-page="reportcost">
+  <div id="sb-root"></div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="breadcrumb">
+        Sistem Anggaran <span>›</span> Perencanaan <span>›</span> Cost <span>›</span> <b>Report Cost</b>
+      </div>
+      <div class="topbar-right">
+        <div class="chip-info"><i class="fa-solid fa-chart-column"></i> Ringkasan anggaran & realisasi cost</div>
+        <div class="topbar-date" id="topbarDate">—</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Report <em>Cost</em></div>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-ghost" onclick="window.location.reload()"><i class="fa-solid fa-rotate"></i> Refresh</button>
+          <button class="btn btn-primary" onclick="exportSummaryCSV()"><i class="fa-solid fa-file-csv"></i> Export Ringkasan</button>
+        </div>
+      </div>
+
+      <section class="hero">
+        <div class="hero-left">
+          <div class="hero-title">Sample Data Cost</div>
+          <div class="hero-sub">
+            Banner Dummy For Sample Data
+          </div>
+        </div>
+        <div class="hero-right">
+          <div class="hero-mini">
+            <div class="hero-mini-label">Total Pagu</div>
+            <div class="hero-mini-value" id="heroPagu">Rp 0</div>
+            <div class="hero-mini-sub">Akumulasi semua anggaran</div>
+          </div>
+          <div class="hero-mini">
+            <div class="hero-mini-label">Total Realisasi</div>
+            <div class="hero-mini-value" id="heroActual">Rp 0</div>
+            <div class="hero-mini-sub">Biaya yang sudah dipakai</div>
+          </div>
+          <div class="hero-mini">
+            <div class="hero-mini-label">Sisa Pagu</div>
+            <div class="hero-mini-value" id="heroRemain">Rp 0</div>
+            <div class="hero-mini-sub">Saldo tersedia</div>
+          </div>
+          <div class="hero-mini">
+            <div class="hero-mini-label">Over Budget</div>
+            <div class="hero-mini-value" id="heroOver">0</div>
+            <div class="hero-mini-sub">Head perlu perhatian</div>
+          </div>
+        </div>
+      </section>
+
+      <div class="stats-row">
+        <div class="stat-card c-primary">
+          <div class="stat-icon"><i class="fa-solid fa-folder-tree"></i></div>
+          <div class="stat-label">Head Anggaran</div>
+          <div class="stat-value" id="statBudgets">0</div>
+          <div class="stat-sub">Semua head cost</div>
+        </div>
+        <div class="stat-card c-accent">
+          <div class="stat-icon"><i class="fa-solid fa-file-lines"></i></div>
+          <div class="stat-label">Baris Realisasi</div>
+          <div class="stat-value" id="statRealizations">0</div>
+          <div class="stat-sub">Detail cost</div>
+        </div>
+        <div class="stat-card c-success">
+          <div class="stat-icon"><i class="fa-solid fa-percent"></i></div>
+          <div class="stat-label">Utilisasi</div>
+          <div class="stat-value" id="statUtilization">0%</div>
+          <div class="stat-sub">Pemakaian terhadap pagu</div>
+        </div>
+        <div class="stat-card c-warning">
+          <div class="stat-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+          <div class="stat-label">Pending Accurate</div>
+          <div class="stat-value" id="statPending">0</div>
+          <div class="stat-sub">Belum push</div>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <div class="search-wrap">
+          <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+          <input class="search-input" id="searchInput" type="text" placeholder="Cari entitas, head anggaran, atau kategori..." oninput="renderAll()">
+        </div>
+
+        <select class="filter-select" id="filterEntitas" onchange="renderAll()">
+          <option value="">Semua Entitas</option>
+          <option value="Klinik">Klinik</option>
+          <option value="Yayasan">Yayasan</option>
+          <option value="Universitas">Universitas</option>
+        </select>
+
+        <select class="filter-select" id="filterStatus" onchange="renderAll()">
+          <option value="">Semua Kondisi</option>
+          <option value="normal">Normal</option>
+          <option value="over">Over Budget</option>
+        </select>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title"><i class="fa-solid fa-building" style="color:var(--primary)"></i> Ringkasan per Entitas</div>
+              <div class="panel-sub">Pagu, realisasi, dan sisa menurut entitas.</div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div id="entitySummary" class="bar-list"></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title"><i class="fa-solid fa-tags" style="color:var(--accent)"></i> Top Kategori Cost</div>
+              <div class="panel-sub">Kategori realisasi dengan nominal terbesar.</div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div id="categorySummary" class="bar-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title"><i class="fa-solid fa-table-list" style="color:var(--primary)"></i> Ringkasan Head Anggaran Cost</div>
+            <div class="panel-sub">Daftar pagu, realisasi, sisa, dan status tiap head anggaran.</div>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Entitas</th>
+                <th>Head Anggaran</th>
+                <th>Tahun</th>
+                <th>Pagu</th>
+                <th>Realisasi</th>
+                <th>Sisa</th>
+                <th>Utilisasi</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="budgetSummaryBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title"><i class="fa-solid fa-circle-exclamation" style="color:var(--danger)"></i> Daftar Over Budget</div>
+            <div class="panel-sub">Head anggaran yang realisasinya sudah melebihi pagu.</div>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Entitas</th>
+                <th>Head Anggaran</th>
+                <th>Pagu</th>
+                <th>Realisasi</th>
+                <th>Selisih</th>
+                <th>Detail</th>
+              </tr>
+            </thead>
+            <tbody id="overBudgetBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_BUDGETS = 'APP_COST_BUDGETS_V1';
+    const STORAGE_REALIZATIONS = 'APP_COST_REALIZATIONS_V1';
+
+    function readJson(key){
+      try { return JSON.parse(localStorage.getItem(key)) || []; }
+      catch { return []; }
+    }
+
+    function fmtCurrency(n){
+      return 'Rp ' + (Number(n || 0)).toLocaleString('id-ID');
+    }
+
+    function fmtShortCurrency(n){
+      const num = Number(n || 0);
+      if(num >= 1000000000) return 'Rp ' + (num / 1000000000).toFixed(num % 1000000000 === 0 ? 0 : 1) + ' M';
+      if(num >= 1000000) return 'Rp ' + (num / 1000000).toFixed(num % 1000000 === 0 ? 0 : 1) + ' jt';
+      return fmtCurrency(num);
+    }
+
+    function escapeHtml(str){
+      return String(str ?? '')
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;')
+        .replace(/'/g,'&#39;');
+    }
+
+    function getFilteredData(){
+      const budgets = readJson(STORAGE_BUDGETS);
+      const realizations = readJson(STORAGE_REALIZATIONS);
+
+      const q = document.getElementById('searchInput').value.trim().toLowerCase();
+      const entitas = document.getElementById('filterEntitas').value;
+      const status = document.getElementById('filterStatus').value;
+
+      const budgetSummaries = budgets.map(b => {
+        const details = realizations.filter(r => Number(r.budgetId) === Number(b.id));
+        const actual = details.reduce((sum, r) => sum + Number(r.total || 0), 0);
+        const remain = Number(b.nominal || 0) - actual;
+        const utilization = Number(b.nominal || 0) > 0 ? Math.round((actual / Number(b.nominal)) * 100) : 0;
+        const over = actual > Number(b.nominal || 0);
+
+        return {
+          ...b,
+          details,
+          actual,
+          remain,
+          utilization,
+          over
+        };
+      });
+
+      return budgetSummaries.filter(item => {
+        if (entitas && item.entitas !== entitas) return false;
+        if (status === 'normal' && item.over) return false;
+        if (status === 'over' && !item.over) return false;
+
+        if (q) {
+          const hay = [
+            item.entitas,
+            item.kode,
+            item.nama,
+            item.catatan || '',
+            ...item.details.map(d => `${d.kategori} ${d.detail} ${d.catatan || ''}`)
+          ].join(' ').toLowerCase();
+
+          if (!hay.includes(q)) return false;
+        }
+
+        return true;
+      });
+    }
+
+    function renderStats(data){
+      const totalPagu = data.reduce((sum, x) => sum + Number(x.nominal || 0), 0);
+      const totalActual = data.reduce((sum, x) => sum + Number(x.actual || 0), 0);
+      const totalRemain = totalPagu - totalActual;
+      const totalOver = data.filter(x => x.over).length;
+      const totalPending = data.reduce((sum, x) => sum + x.details.filter(d => d.accurateStatus !== 'Sudah Push').length, 0);
+      const totalRealizations = data.reduce((sum, x) => sum + x.details.length, 0);
+      const utilization = totalPagu > 0 ? Math.round((totalActual / totalPagu) * 100) : 0;
+
+      document.getElementById('heroPagu').textContent = fmtShortCurrency(totalPagu);
+      document.getElementById('heroActual').textContent = fmtShortCurrency(totalActual);
+      document.getElementById('heroRemain').textContent = fmtShortCurrency(totalRemain);
+      document.getElementById('heroOver').textContent = totalOver;
+
+      document.getElementById('statBudgets').textContent = data.length;
+      document.getElementById('statRealizations').textContent = totalRealizations;
+      document.getElementById('statUtilization').textContent = `${utilization}%`;
+      document.getElementById('statPending').textContent = totalPending;
+    }
+
+    function renderEntitySummary(data){
+      const grouped = {};
+      data.forEach(item => {
+        if (!grouped[item.entitas]) grouped[item.entitas] = { pagu:0, actual:0 };
+        grouped[item.entitas].pagu += Number(item.nominal || 0);
+        grouped[item.entitas].actual += Number(item.actual || 0);
+      });
+
+      const values = Object.entries(grouped).map(([name, v]) => ({
+        name,
+        pagu: v.pagu,
+        actual: v.actual,
+        pct: v.pagu > 0 ? Math.min(100, Math.round((v.actual / v.pagu) * 100)) : 0
+      })).sort((a,b) => b.actual - a.actual);
+
+      const max = Math.max(1, ...values.map(v => v.actual));
+      const el = document.getElementById('entitySummary');
+
+      if (!values.length) {
+        el.innerHTML = `<div class="empty-state"><i class="fa-solid fa-building"></i><div class="empty-title">Belum ada data entitas</div><div class="empty-sub">Tidak ada ringkasan yang bisa ditampilkan.</div></div>`;
+        return;
+      }
+
+      el.innerHTML = values.map(v => `
+        <div class="bar-item">
+          <div class="bar-row">
+            <div class="bar-label">${escapeHtml(v.name)}</div>
+            <div class="bar-value">${fmtShortCurrency(v.actual)} / ${fmtShortCurrency(v.pagu)}</div>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="width:${(v.actual/max)*100}%;"></div></div>
+        </div>
+      `).join('');
+    }
+
+    function renderCategorySummary(data){
+      const grouped = {};
+      data.forEach(item => {
+        item.details.forEach(d => {
+          const key = d.kategori || 'Tanpa Kategori';
+          grouped[key] = (grouped[key] || 0) + Number(d.total || 0);
+        });
+      });
+
+      const values = Object.entries(grouped)
+        .map(([name, total]) => ({ name, total }))
+        .sort((a,b) => b.total - a.total)
+        .slice(0, 8);
+
+      const max = Math.max(1, ...values.map(v => v.total));
+      const el = document.getElementById('categorySummary');
+
+      if (!values.length) {
+        el.innerHTML = `<div class="empty-state"><i class="fa-solid fa-tags"></i><div class="empty-title">Belum ada kategori</div><div class="empty-sub">Kategori cost akan muncul setelah ada realisasi.</div></div>`;
+        return;
+      }
+
+      el.innerHTML = values.map(v => `
+        <div class="bar-item">
+          <div class="bar-row">
+            <div class="bar-label">${escapeHtml(v.name)}</div>
+            <div class="bar-value">${fmtShortCurrency(v.total)}</div>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="width:${(v.total/max)*100}%;background:var(--accent);"></div></div>
+        </div>
+      `).join('');
+    }
+
+    function renderBudgetSummary(data){
+      const tbody = document.getElementById('budgetSummaryBody');
+
+      if (!data.length) {
+        tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><i class="fa-solid fa-folder-open"></i><div class="empty-title">Belum ada head anggaran</div><div class="empty-sub">Tambahkan Anggaran Cost terlebih dahulu.</div></div></td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = data
+        .sort((a,b) => b.actual - a.actual)
+        .map(item => `
+          <tr>
+            <td><span class="badge badge-primary">${escapeHtml(item.entitas)}</span></td>
+            <td>
+              <div class="title-cell">${escapeHtml(item.nama)}</div>
+              <div class="title-sub">${escapeHtml(item.kode || '-')}</div>
+            </td>
+            <td class="mono">${escapeHtml(item.tahun || '-')}</td>
+            <td class="mono">${fmtCurrency(item.nominal)}</td>
+            <td class="mono">${fmtCurrency(item.actual)}</td>
+            <td class="mono" style="color:${item.remain < 0 ? 'var(--danger)' : 'var(--text)'}">${fmtCurrency(item.remain)}</td>
+            <td><span class="badge ${item.over ? 'badge-danger' : 'badge-success'}">${item.utilization}%</span></td>
+            <td>${item.over
+              ? '<span class="badge badge-danger"><i class="fa-solid fa-triangle-exclamation"></i>Over Budget</span>'
+              : '<span class="badge badge-success"><i class="fa-solid fa-circle-check"></i>Normal</span>'}
+            </td>
+          </tr>
+        `).join('');
+    }
+
+    function renderOverBudget(data){
+      const tbody = document.getElementById('overBudgetBody');
+      const overItems = data.filter(x => x.over);
+
+      if (!overItems.length) {
+        tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><i class="fa-solid fa-shield"></i><div class="empty-title">Tidak ada over budget</div><div class="empty-sub">Semua head anggaran masih dalam batas pagu.</div></div></td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = overItems
+        .sort((a,b) => (b.actual - b.nominal) - (a.actual - a.nominal))
+        .map(item => `
+          <tr>
+            <td><span class="badge badge-primary">${escapeHtml(item.entitas)}</span></td>
+            <td>
+              <div class="title-cell">${escapeHtml(item.nama)}</div>
+              <div class="title-sub">${escapeHtml(item.kode || '-')}</div>
+            </td>
+            <td class="mono">${fmtCurrency(item.nominal)}</td>
+            <td class="mono">${fmtCurrency(item.actual)}</td>
+            <td class="mono" style="color:var(--danger)">${fmtCurrency(item.actual - item.nominal)}</td>
+            <td>
+              <div class="title-cell">${item.details.length} realisasi</div>
+              <div class="title-sub">${escapeHtml(item.details.map(x => x.kategori).filter(Boolean).slice(0,3).join(', ') || '-')}</div>
+            </td>
+          </tr>
+        `).join('');
+    }
+
+    function exportSummaryCSV(){
+      const data = getFilteredData();
+      const rows = data.map(item => [
+        item.entitas,
+        item.kode,
+        item.nama,
+        item.tahun,
+        item.nominal,
+        item.actual,
+        item.remain,
+        item.utilization,
+        item.over ? 'Over Budget' : 'Normal'
+      ]);
+
+      const header = ['Entitas','Kode Anggaran','Nama Anggaran','Tahun','Pagu','Realisasi','Sisa','Utilisasi %','Status'];
+      const csv = [header, ...rows]
+        .map(row => row.map(col => `"${String(col ?? '').replace(/"/g,'""')}"`).join(','))
+        .join('\n');
+
+      const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'report_cost_summary.csv';
+      link.click();
+    }
+
+    function renderAll(){
+      const data = getFilteredData();
+      renderStats(data);
+      renderEntitySummary(data);
+      renderCategorySummary(data);
+      renderBudgetSummary(data);
+      renderOverBudget(data);
+    }
+
+    document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('id-ID', {
+      weekday:'short', day:'numeric', month:'long', year:'numeric'
+    });
+
+    renderAll();
+
+    window.addEventListener('storage', renderAll);
+  </script>
+
+  <script src="/sidebar.js" defer></script>
+</body>
+</html>

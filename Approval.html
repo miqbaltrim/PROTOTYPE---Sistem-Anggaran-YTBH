@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Approval — Sistem Anggaran</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f4f7fc;
+      --bg-soft:#e9eff9;
+      --line:#d7e2f1;
+      --line-soft:#e7eef7;
+      --primary:#3972B8;
+      --primary-2:#2a5d9a;
+      --primary-soft:rgba(57,114,184,.10);
+      --accent:#F68B21;
+      --accent-soft:rgba(246,139,33,.12);
+      --success:#217a4a;
+      --success-soft:rgba(33,122,74,.10);
+      --warning:#c07010;
+      --warning-soft:rgba(192,112,16,.12);
+      --danger:#d94040;
+      --danger-soft:rgba(217,64,64,.10);
+      --text:#1a2333;
+      --text-soft:#60718f;
+      --text-muted:#8ea0ba;
+      --shadow-sm:0 2px 10px rgba(57,114,184,.07);
+      --shadow:0 10px 28px rgba(57,114,184,.12);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:'Plus Jakarta Sans',sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      min-height:100vh;
+    }
+
+    .main{margin-left:240px;min-height:100vh;display:flex;flex-direction:column}
+    .topbar{
+      position:sticky;top:0;z-index:50;
+      background:rgba(244,247,252,.92);
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--line);
+      padding:14px 34px;
+      display:flex;justify-content:space-between;align-items:center;gap:16px;
+    }
+    .breadcrumb{display:flex;gap:6px;flex-wrap:wrap;font-size:13px;color:var(--text-muted)}
+    .breadcrumb b{color:var(--text);font-weight:700}
+    .topbar-right{display:flex;align-items:center;gap:10px}
+    .chip-info,.topbar-date{
+      padding:7px 12px;border-radius:999px;background:var(--bg-soft);
+      border:1px solid var(--line);font-size:12px;color:var(--text-soft);white-space:nowrap;
+    }
+
+    .content{padding:30px 34px 42px;display:flex;flex-direction:column;gap:22px}
+    .page-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+    .page-title{font-family:'Lora',serif;font-size:28px;line-height:1.25}
+    .page-title em{color:var(--primary);font-style:italic}
+    .page-sub{margin-top:8px;max-width:860px;font-size:13.5px;line-height:1.7;color:var(--text-soft)}
+    .page-actions{display:flex;gap:10px;flex-wrap:wrap}
+
+    .btn{
+      border:none;border-radius:11px;padding:10px 16px;display:inline-flex;align-items:center;gap:8px;
+      font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:.18s;
+      font-family:'Plus Jakarta Sans',sans-serif;
+    }
+    .btn i{font-size:12px}
+    .btn-primary{background:var(--primary);color:#fff;box-shadow:0 6px 18px rgba(57,114,184,.24)}
+    .btn-primary:hover{transform:translateY(-1px);background:#467ec1}
+    .btn-ghost{background:#fff;color:var(--text-soft);border:1.5px solid var(--line)}
+    .btn-ghost:hover{background:var(--bg);color:var(--text)}
+    .btn-success{background:var(--success);color:#fff;box-shadow:0 6px 18px rgba(33,122,74,.24)}
+    .btn-success:hover{transform:translateY(-1px);background:#2b8a57}
+    .btn-danger{background:var(--danger);color:#fff;box-shadow:0 6px 18px rgba(217,64,64,.22)}
+    .btn-danger:hover{transform:translateY(-1px);background:#e55353}
+    .btn-sm{padding:7px 12px;font-size:12px}
+
+    .hero{
+      background:linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
+      color:#fff;border-radius:22px;padding:24px 26px;
+      box-shadow:0 16px 36px rgba(57,114,184,.22);
+      display:grid;grid-template-columns:1.2fr .9fr;gap:18px;position:relative;overflow:hidden;
+    }
+    .hero::before,.hero::after{
+      content:'';position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.12);
+    }
+    .hero::before{width:180px;height:180px;top:-50px;right:-20px}
+    .hero::after{width:120px;height:120px;bottom:-45px;right:90px}
+    .hero-left,.hero-right{position:relative;z-index:1}
+    .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:1.8px;color:rgba(255,255,255,.65);margin-bottom:8px}
+    .hero-title{font-family:'Lora',serif;font-size:28px;line-height:1.25;max-width:720px}
+    .hero-sub{margin-top:10px;font-size:13px;line-height:1.7;color:rgba(255,255,255,.76);max-width:690px}
+    .hero-actions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
+    .hero-chip{
+      display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-radius:999px;
+      background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.12);font-size:12px;font-weight:700;
+    }
+    .hero-right{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .hero-mini{
+      background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;padding:15px 16px;
+    }
+    .hero-mini-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.62);margin-bottom:7px}
+    .hero-mini-value{font-family:'DM Mono',monospace;font-size:20px;font-weight:500}
+    .hero-mini-sub{margin-top:6px;font-size:12px;color:rgba(255,255,255,.66)}
+
+    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .stat-card{
+      background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px 18px 16px;
+      box-shadow:var(--shadow-sm);position:relative;overflow:hidden;transition:.18s;
+    }
+    .stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+    .stat-card::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px}
+    .c-primary::after{background:var(--primary)}
+    .c-accent::after{background:var(--accent)}
+    .c-success::after{background:var(--success)}
+    .c-warning::after{background:var(--warning)}
+    .stat-icon{
+      width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+      margin-bottom:12px;font-size:16px;
+    }
+    .c-primary .stat-icon{background:var(--primary-soft);color:var(--primary)}
+    .c-accent .stat-icon{background:var(--accent-soft);color:var(--accent)}
+    .c-success .stat-icon{background:var(--success-soft);color:var(--success)}
+    .c-warning .stat-icon{background:var(--warning-soft);color:var(--warning)}
+    .stat-label{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);font-weight:700;margin-bottom:5px}
+    .stat-value{font-family:'DM Mono',monospace;font-size:23px;line-height:1}
+    .stat-sub{margin-top:6px;font-size:12px;color:var(--text-muted)}
+
+    .toolbar{
+      display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+      background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 16px;box-shadow:var(--shadow-sm);
+    }
+    .search-wrap{position:relative;flex:1;min-width:240px}
+    .search-icon{position:absolute;top:50%;left:13px;transform:translateY(-50%);color:var(--text-muted);font-size:13px}
+    .search-input,.filter-select,.form-input,.form-select,.form-textarea{
+      width:100%;border:1.5px solid var(--line);background:#fff;border-radius:11px;
+      padding:10px 12px;font-size:13px;color:var(--text);outline:none;transition:.18s;
+      font-family:'Plus Jakarta Sans',sans-serif;
+    }
+    .search-input{padding-left:36px}
+    .search-input:focus,.filter-select:focus,.form-input:focus,.form-select:focus,.form-textarea:focus{
+      border-color:var(--primary);box-shadow:0 0 0 3px rgba(57,114,184,.16)
+    }
+
+    .panel{
+      background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-sm);
+    }
+    .panel-head{
+      padding:16px 20px;border-bottom:1px solid var(--line-soft);
+      display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+    }
+    .panel-title{font-size:14px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px}
+    .panel-sub{font-size:12px;color:var(--text-muted);margin-top:2px}
+    .table-wrap{overflow-x:auto}
+    table{width:100%;border-collapse:collapse}
+    thead th{
+      text-align:left;padding:11px 16px;background:var(--bg);border-bottom:1px solid var(--line);
+      font-size:10.5px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);white-space:nowrap;
+    }
+    tbody tr{border-bottom:1px solid var(--line-soft)}
+    tbody tr:last-child{border-bottom:none}
+    tbody tr:hover{background:rgba(57,114,184,.025)}
+    tbody td{padding:14px 16px;font-size:13px;color:var(--text-soft);vertical-align:top}
+    .title-cell{color:var(--text);font-weight:700}
+    .title-sub{margin-top:3px;font-size:11.5px;color:var(--text-muted)}
+    .mono{font-family:'DM Mono',monospace;color:var(--text)}
+    .badge{
+      display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:999px;
+      font-size:11px;font-weight:700;white-space:nowrap;
+    }
+    .badge-primary{background:var(--primary-soft);color:var(--primary)}
+    .badge-accent{background:var(--accent-soft);color:#a05a00}
+    .badge-success{background:var(--success-soft);color:var(--success)}
+    .badge-warning{background:var(--warning-soft);color:var(--warning)}
+    .badge-danger{background:var(--danger-soft);color:var(--danger)}
+
+    .actions-inline{display:inline-flex;gap:5px;white-space:nowrap}
+    .act-btn{
+      width:31px;height:31px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--text-soft);
+      cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:.16s;font-size:12px;
+    }
+    .act-btn:hover{background:var(--bg);color:var(--text)}
+    .act-btn.primary:hover{background:var(--primary-soft);color:var(--primary)}
+
+    .overlay-modal{
+      position:fixed;inset:0;background:rgba(26,35,51,.42);backdrop-filter:blur(4px);z-index:300;display:none;
+      align-items:center;justify-content:center;padding:16px;
+    }
+    .overlay-modal.open{display:flex}
+    .modal{
+      width:820px;max-width:100%;max-height:calc(100vh - 32px);overflow:auto;background:#fff;border:1px solid var(--line);
+      border-radius:20px;box-shadow:0 24px 48px rgba(16,24,40,.18);
+    }
+    .modal-head{
+      padding:20px 22px 16px;border-bottom:1px solid var(--line-soft);
+      display:flex;justify-content:space-between;gap:12px;align-items:flex-start;
+    }
+    .modal-title{font-family:'Lora',serif;font-size:20px;line-height:1.3}
+    .modal-sub{margin-top:3px;font-size:12.5px;color:var(--text-muted)}
+    .modal-close{
+      width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--text-muted);cursor:pointer;
+    }
+    .modal-body{padding:20px 22px}
+    .modal-footer{padding:16px 22px;border-top:1px solid var(--line-soft);display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+
+    .detail-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:16px}
+    .detail-box{
+      background:var(--bg);border:1px solid var(--line-soft);border-radius:14px;padding:14px;
+    }
+    .detail-label{
+      font-size:10.5px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);font-weight:800;margin-bottom:6px;
+    }
+    .detail-value{font-size:13px;color:var(--text);font-weight:700;line-height:1.55}
+    .history-list{display:grid;gap:10px;margin-top:10px}
+    .history-item{
+      border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff;
+    }
+    .history-title{font-size:13px;font-weight:700;color:var(--text)}
+    .history-sub{margin-top:4px;font-size:12px;color:var(--text-muted);line-height:1.6}
+
+    .toast-stack{position:fixed;right:22px;bottom:22px;z-index:500;display:flex;flex-direction:column;gap:8px}
+    .toast{
+      background:var(--text);color:#fff;padding:12px 16px;border-radius:12px;display:flex;align-items:center;gap:9px;
+      box-shadow:0 10px 22px rgba(0,0,0,.2);font-size:13px;max-width:340px;
+    }
+    .toast.success{background:#1b6b41}
+    .toast.warning{background:#8d5807}
+    .toast.danger{background:#8a2d2d}
+
+    @media (max-width:1200px){
+      .hero{grid-template-columns:1fr}
+      .stats-row,.detail-grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media (max-width:900px){.main{margin-left:0}}
+    @media (max-width:720px){
+      .content{padding:20px 16px 34px}
+      .topbar{padding:12px 16px}
+      .stats-row,.hero-right,.detail-grid{grid-template-columns:1fr}
+      .page-header{flex-direction:column}
+    }
+  </style>
+</head>
+<body data-page="approval">
+  <div id="sb-root"></div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="breadcrumb">
+        Sistem Anggaran <span>›</span> Proses <span>›</span> <b>Approval</b>
+      </div>
+      <div class="topbar-right">
+        <div class="chip-info"><i class="fa-solid fa-check-double"></i> Proses persetujuan anggaran</div>
+        <div class="topbar-date" id="topbarDate">—</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Halaman <em>Approval</em></div>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-ghost" onclick="seedRequests()"><i class="fa-solid fa-database"></i> Reset Sample</button>
+        </div>
+      </div>
+
+      <section class="hero">
+        <div class="hero-left">
+          <div class="hero-title">Sample Data Approval</div>
+          <div class="hero-sub">
+            Banner Dummy For Sample Data
+          </div>
+        </div>
+        <div class="hero-right">
+          <div class="hero-mini">
+            <div class="hero-mini-label">Pending</div>
+            <div class="hero-mini-value" id="heroPending">0</div>
+            <div class="hero-mini-sub">Menunggu keputusan</div>
+          </div>
+          <div class="hero-mini">
+            <div class="hero-mini-label">Approved</div>
+            <div class="hero-mini-value" id="heroApproved">0</div>
+            <div class="hero-mini-sub">Sudah disetujui</div>
+          </div>
+          <div class="hero-mini">
+            <div class="hero-mini-label">Rejected</div>
+            <div class="hero-mini-value" id="heroRejected">0</div>
+            <div class="hero-mini-sub">Sudah ditolak</div>
+          </div>
+          <div class="hero-mini">
+            <div class="hero-mini-label">Bisa Di-approve</div>
+            <div class="hero-mini-value" id="heroAllowed">0</div>
+            <div class="hero-mini-sub">Oleh akun terpilih</div>
+          </div>
+        </div>
+      </section>
+
+      <div class="stats-row">
+        <div class="stat-card c-primary">
+          <div class="stat-icon"><i class="fa-solid fa-file-signature"></i></div>
+          <div class="stat-label">Total Request</div>
+          <div class="stat-value" id="statTotal">0</div>
+          <div class="stat-sub">Semua transaksi approval</div>
+        </div>
+        <div class="stat-card c-accent">
+          <div class="stat-icon"><i class="fa-solid fa-user-check"></i></div>
+          <div class="stat-label">Akun Simulasi</div>
+          <div class="stat-value" id="statUser">—</div>
+          <div class="stat-sub">Approver aktif</div>
+        </div>
+        <div class="stat-card c-success">
+          <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
+          <div class="stat-label">Bisa Approve</div>
+          <div class="stat-value" id="statAllowed">0</div>
+          <div class="stat-sub">Request yang sesuai mapping</div>
+        </div>
+        <div class="stat-card c-warning">
+          <div class="stat-icon"><i class="fa-solid fa-ban"></i></div>
+          <div class="stat-label">Tidak Bisa</div>
+          <div class="stat-value" id="statDenied">0</div>
+          <div class="stat-sub">Di luar hak approval</div>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <select class="filter-select" id="currentApprover" onchange="renderAll()"></select>
+
+        <div class="search-wrap">
+          <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+          <input class="search-input" id="searchInput" type="text" placeholder="Cari nomor request, entitas, atau requester..." oninput="renderAll()">
+        </div>
+
+        <select class="filter-select" id="filterType" onchange="renderAll()">
+          <option value="">Semua Jenis Approval</option>
+          <option value="Buat Anggaran">Buat Anggaran</option>
+          <option value="Perubahan Anggaran">Perubahan Anggaran</option>
+          <option value="Pindah Anggaran">Pindah Anggaran</option>
+          <option value="Hapus Anggaran">Hapus Anggaran</option>
+        </select>
+
+        <select class="filter-select" id="filterEntity" onchange="renderAll()">
+          <option value="">Semua Entitas</option>
+          <option value="Klinik">Klinik</option>
+          <option value="Yayasan">Yayasan</option>
+          <option value="Universitas">Universitas</option>
+        </select>
+
+        <select class="filter-select" id="filterStatus" onchange="renderAll()">
+          <option value="">Semua Status</option>
+          <option value="Pending">Pending</option>
+          <option value="Approved">Approved</option>
+          <option value="Rejected">Rejected</option>
+        </select>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title"><i class="fa-solid fa-list-check" style="color:var(--primary)"></i> Daftar Request Approval</div>
+            <div class="panel-sub" id="tableSubtitle">Memuat data...</div>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>No. Request</th>
+                <th>Entitas</th>
+                <th>Jenis Approval</th>
+                <th>Requester</th>
+                <th>Nilai</th>
+                <th>Status</th>
+                <th>Akses Akun</th>
+                <th style="text-align:right;">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="requestTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay-modal" id="modalDetail" onclick="closeModalIfBg(event,'modalDetail')">
+    <div class="modal">
+      <div class="modal-head">
+        <div>
+          <div class="modal-title" id="modalTitle">Detail Approval</div>
+          <div class="modal-sub" id="modalSub">—</div>
+        </div>
+        <button class="modal-close" onclick="closeModal('modalDetail')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="detail-grid" id="detailGrid"></div>
+
+        <div class="panel" style="box-shadow:none;">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title"><i class="fa-solid fa-clock-rotate-left" style="color:var(--primary)"></i> Riwayat Approval</div>
+              <div class="panel-sub">Jejak audit keputusan request.</div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="history-list" id="historyList"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer" id="modalFooter"></div>
+    </div>
+  </div>
+
+  <div class="toast-stack" id="toastStack"></div>
+
+  <script>
+    const MASTER_KEY = 'APP_APPROVAL_MASTER_V2';
+    const REQUEST_KEY = 'APP_APPROVAL_REQUESTS_V1';
+
+    const fallbackMaster = [
+      {
+        id: 1, code:'APR-001', name:'Muhammad Iqbal', role:'Administrator Keuangan', entity:'Semua', level:'Keuangan', status:'Aktif',
+        permissions:{ create:true, update:true, move:true, delete:false }, note:''
+      },
+      {
+        id: 2, code:'APR-002', name:'Kepala Klinik', role:'Pimpinan Unit Klinik', entity:'Klinik', level:'Unit', status:'Aktif',
+        permissions:{ create:true, update:true, move:false, delete:false }, note:''
+      },
+      {
+        id: 3, code:'APR-003', name:'Direktur Yayasan', role:'Pimpinan Yayasan', entity:'Yayasan', level:'Pimpinan', status:'Aktif',
+        permissions:{ create:true, update:true, move:true, delete:true }, note:''
+      },
+      {
+        id: 4, code:'APR-004', name:'Rektor UBTH', role:'Pimpinan Universitas', entity:'Universitas', level:'Pimpinan', status:'Aktif',
+        permissions:{ create:true, update:true, move:true, delete:true }, note:''
+      }
+    ];
+
+    const seedApprovalRequests = [
+      {
+        id: 1,
+        number: 'REQ-APR-0001',
+        date: '2026-04-12',
+        entity: 'Klinik',
+        unit: 'Klinik BTH',
+        type: 'Buat Anggaran',
+        requester: 'Staff Klinik',
+        amount: 80000000,
+        oldAmount: 0,
+        newAmount: 80000000,
+        lineFrom: '-',
+        lineTo: 'Belanja Stok Obat',
+        note: 'Usulan line anggaran baru untuk stok obat triwulan 2.',
+        status: 'Pending',
+        history: []
+      },
+      {
+        id: 2,
+        number: 'REQ-APR-0002',
+        date: '2026-04-13',
+        entity: 'Yayasan',
+        unit: 'YBTH',
+        type: 'Perubahan Anggaran',
+        requester: 'Admin Yayasan',
+        amount: 15000000,
+        oldAmount: 35000000,
+        newAmount: 50000000,
+        lineFrom: 'Belanja Publikasi',
+        lineTo: 'Belanja Publikasi',
+        note: 'Penyesuaian nominal pada line yang sama.',
+        status: 'Pending',
+        history: []
+      },
+      {
+        id: 3,
+        number: 'REQ-APR-0003',
+        date: '2026-04-14',
+        entity: 'Universitas',
+        unit: 'UBTH',
+        type: 'Pindah Anggaran',
+        requester: 'Staff Fakultas',
+        amount: 25000000,
+        oldAmount: 25000000,
+        newAmount: 25000000,
+        lineFrom: 'Belanja Seminar',
+        lineTo: 'Belanja Praktikum',
+        note: 'Perpindahan anggaran antar line untuk kebutuhan praktikum.',
+        status: 'Pending',
+        history: []
+      },
+      {
+        id: 4,
+        number: 'REQ-APR-0004',
+        date: '2026-04-15',
+        entity: 'Yayasan',
+        unit: 'YBTH',
+        type: 'Hapus Anggaran',
+        requester: 'Admin Yayasan',
+        amount: 12000000,
+        oldAmount: 12000000,
+        newAmount: 0,
+        lineFrom: 'Belanja Event Internal',
+        lineTo: '-',
+        note: 'Penghapusan line karena program dibatalkan.',
+        status: 'Pending',
+        history: []
+      }
+    ];
+
+    let master = [];
+    let requests = [];
+    let selectedRequestId = null;
+
+    function readJson(key){
+      try { return JSON.parse(localStorage.getItem(key)) || []; }
+      catch { return []; }
+    }
+
+    function writeJson(key, data){
+      localStorage.setItem(key, JSON.stringify(data));
+    }
+
+    function ensureSeed(){
+      if(!localStorage.getItem(MASTER_KEY)){
+        writeJson(MASTER_KEY, fallbackMaster);
+      }
+      if(!localStorage.getItem(REQUEST_KEY)){
+        writeJson(REQUEST_KEY, seedApprovalRequests);
+      }
+    }
+
+    function seedRequests(){
+      if(!confirm('Reset sample request approval?')) return;
+      writeJson(REQUEST_KEY, seedApprovalRequests);
+      requests = readJson(REQUEST_KEY);
+      renderAll();
+      showToast('success', 'fa-database', 'Sample request approval berhasil direset.');
+    }
+
+    function fmtCurrency(n){
+      return 'Rp ' + (Number(n || 0)).toLocaleString('id-ID');
+    }
+
+    function escapeHtml(str){
+      return String(str ?? '')
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;')
+        .replace(/'/g,'&#39;');
+    }
+
+    function showToast(type, icon, message){
+      const stack = document.getElementById('toastStack');
+      const el = document.createElement('div');
+      el.className = `toast ${type}`;
+      el.innerHTML = `<i class="fa-solid ${icon}"></i><span>${message}</span>`;
+      stack.appendChild(el);
+      setTimeout(() => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateX(18px)';
+        el.style.transition = 'all .24s ease';
+        setTimeout(() => el.remove(), 240);
+      }, 3200);
+    }
+
+    function populateApproverSelect(){
+      const select = document.getElementById('currentApprover');
+      const activeMaster = master.filter(item => item.status === 'Aktif');
+
+      select.innerHTML = activeMaster.map(item =>
+        `<option value="${item.id}">${escapeHtml(item.name)} · ${escapeHtml(item.entity)} · ${escapeHtml(item.level)}</option>`
+      ).join('');
+
+      if(activeMaster.length && !select.value){
+        select.value = String(activeMaster[0].id);
+      }
+    }
+
+    function getCurrentApprover(){
+      const id = Number(document.getElementById('currentApprover').value || 0);
+      return master.find(item => Number(item.id) === id) || null;
+    }
+
+    function typeToPermissionKey(type){
+      if(type === 'Buat Anggaran') return 'create';
+      if(type === 'Perubahan Anggaran') return 'update';
+      if(type === 'Pindah Anggaran') return 'move';
+      if(type === 'Hapus Anggaran') return 'delete';
+      return '';
+    }
+
+    function canCurrentApproverApprove(request, approver){
+      if(!approver) return false;
+      if(approver.status !== 'Aktif') return false;
+      if(request.status !== 'Pending') return false;
+
+      const permissionKey = typeToPermissionKey(request.type);
+      if(!permissionKey) return false;
+      if(!approver.permissions[permissionKey]) return false;
+
+      const entityMatch = approver.entity === 'Semua' || approver.entity === request.entity;
+      if(!entityMatch) return false;
+
+      return true;
+    }
+
+    function getFilteredRequests(){
+      const q = document.getElementById('searchInput').value.trim().toLowerCase();
+      const type = document.getElementById('filterType').value;
+      const entity = document.getElementById('filterEntity').value;
+      const status = document.getElementById('filterStatus').value;
+
+      return requests.filter(item => {
+        if(type && item.type !== type) return false;
+        if(entity && item.entity !== entity) return false;
+        if(status && item.status !== status) return false;
+
+        if(q){
+          const hay = [item.number, item.entity, item.unit, item.type, item.requester, item.note].join(' ').toLowerCase();
+          if(!hay.includes(q)) return false;
+        }
+        return true;
+      });
+    }
+
+    function updateStats(data){
+      const current = getCurrentApprover();
+      const pending = data.filter(x => x.status === 'Pending').length;
+      const approved = data.filter(x => x.status === 'Approved').length;
+      const rejected = data.filter(x => x.status === 'Rejected').length;
+      const allowed = data.filter(x => canCurrentApproverApprove(x, current)).length;
+      const denied = data.filter(x => x.status === 'Pending' && !canCurrentApproverApprove(x, current)).length;
+
+      document.getElementById('heroPending').textContent = pending;
+      document.getElementById('heroApproved').textContent = approved;
+      document.getElementById('heroRejected').textContent = rejected;
+      document.getElementById('heroAllowed').textContent = allowed;
+
+      document.getElementById('statTotal').textContent = data.length;
+      document.getElementById('statUser').textContent = current ? current.name.split(' ')[0] : '—';
+      document.getElementById('statAllowed').textContent = allowed;
+      document.getElementById('statDenied').textContent = denied;
+    }
+
+    function renderTable(data){
+      const tbody = document.getElementById('requestTableBody');
+      const current = getCurrentApprover();
+
+      document.getElementById('tableSubtitle').textContent = `Menampilkan ${data.length} request approval`;
+
+      if(!data.length){
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8">
+              <div style="padding:50px 16px;text-align:center;">
+                <div style="font-size:36px;color:#cad7e8;margin-bottom:12px;"><i class="fa-solid fa-inbox"></i></div>
+                <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:5px;">Tidak ada request</div>
+                <div style="font-size:13px;color:var(--text-muted);">Coba ubah filter atau reset sample data.</div>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = data.map(item => {
+        const can = canCurrentApproverApprove(item, current);
+        const statusBadge =
+          item.status === 'Approved'
+            ? '<span class="badge badge-success">Approved</span>'
+            : item.status === 'Rejected'
+              ? '<span class="badge badge-danger">Rejected</span>'
+              : '<span class="badge badge-warning">Pending</span>';
+
+        const accessBadge =
+          item.status !== 'Pending'
+            ? '<span class="badge badge-primary">Read Only</span>'
+            : can
+              ? '<span class="badge badge-success">Bisa Approve</span>'
+              : '<span class="badge badge-danger">Tidak Bisa</span>';
+
+        return `
+          <tr>
+            <td>
+              <div class="title-cell">${escapeHtml(item.number)}</div>
+              <div class="title-sub">${escapeHtml(item.date)}</div>
+            </td>
+            <td>
+              <div class="title-cell">${escapeHtml(item.entity)}</div>
+              <div class="title-sub">${escapeHtml(item.unit)}</div>
+            </td>
+            <td><span class="badge badge-accent">${escapeHtml(item.type)}</span></td>
+            <td>
+              <div class="title-cell">${escapeHtml(item.requester)}</div>
+              <div class="title-sub">${escapeHtml(item.note || '-')}</div>
+            </td>
+            <td class="mono">${fmtCurrency(item.amount)}</td>
+            <td>${statusBadge}</td>
+            <td>${accessBadge}</td>
+            <td style="text-align:right;">
+              <div class="actions-inline">
+                <button class="act-btn primary" onclick="openDetail(${item.id})" title="Detail">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function openDetail(id){
+      selectedRequestId = id;
+      const item = requests.find(x => x.id === id);
+      const current = getCurrentApprover();
+      if(!item) return;
+
+      document.getElementById('modalTitle').textContent = item.number;
+      document.getElementById('modalSub').textContent = `${item.type} · ${item.entity} · ${item.unit}`;
+
+      document.getElementById('detailGrid').innerHTML = `
+        <div class="detail-box">
+          <div class="detail-label">Requester</div>
+          <div class="detail-value">${escapeHtml(item.requester)}</div>
+        </div>
+        <div class="detail-box">
+          <div class="detail-label">Tanggal</div>
+          <div class="detail-value">${escapeHtml(item.date)}</div>
+        </div>
+        <div class="detail-box">
+          <div class="detail-label">Line Asal</div>
+          <div class="detail-value">${escapeHtml(item.lineFrom || '-')}</div>
+        </div>
+        <div class="detail-box">
+          <div class="detail-label">Line Tujuan</div>
+          <div class="detail-value">${escapeHtml(item.lineTo || '-')}</div>
+        </div>
+        <div class="detail-box">
+          <div class="detail-label">Nilai Lama</div>
+          <div class="detail-value">${fmtCurrency(item.oldAmount || 0)}</div>
+        </div>
+        <div class="detail-box">
+          <div class="detail-label">Nilai Baru</div>
+          <div class="detail-value">${fmtCurrency(item.newAmount || 0)}</div>
+        </div>
+        <div class="detail-box">
+          <div class="detail-label">Nominal Request</div>
+          <div class="detail-value">${fmtCurrency(item.amount || 0)}</div>
+        </div>
+        <div class="detail-box">
+          <div class="detail-label">Status</div>
+          <div class="detail-value">${escapeHtml(item.status)}</div>
+        </div>
+      `;
+
+      const history = item.history || [];
+      document.getElementById('historyList').innerHTML = history.length
+        ? history.map(h => `
+            <div class="history-item">
+              <div class="history-title">${escapeHtml(h.action)} oleh ${escapeHtml(h.by)}</div>
+              <div class="history-sub">${escapeHtml(h.time)}${h.note ? ' · ' + escapeHtml(h.note) : ''}</div>
+            </div>
+          `).join('')
+        : `
+            <div class="history-item">
+              <div class="history-title">Belum ada riwayat</div>
+              <div class="history-sub">Request ini belum pernah diproses.</div>
+            </div>
+          `;
+
+      const can = canCurrentApproverApprove(item, current);
+
+      document.getElementById('modalFooter').innerHTML = item.status !== 'Pending'
+        ? `<button class="btn btn-ghost" onclick="closeModal('modalDetail')">Tutup</button>`
+        : can
+          ? `
+              <button class="btn btn-ghost" onclick="closeModal('modalDetail')">Batal</button>
+              <button class="btn btn-danger" onclick="processRequest('Rejected')"><i class="fa-solid fa-xmark"></i> Reject</button>
+              <button class="btn btn-success" onclick="processRequest('Approved')"><i class="fa-solid fa-check"></i> Approve</button>
+            `
+          : `
+              <button class="btn btn-ghost" onclick="closeModal('modalDetail')">Tutup</button>
+              <button class="btn btn-ghost" disabled style="opacity:.6;cursor:not-allowed;">
+                <i class="fa-solid fa-lock"></i> Akun ini tidak memiliki hak approval
+              </button>
+            `;
+
+      openModal('modalDetail');
+    }
+
+    function processRequest(decision){
+      const current = getCurrentApprover();
+      const item = requests.find(x => x.id === selectedRequestId);
+      if(!item || !current) return;
+
+      if(!canCurrentApproverApprove(item, current)){
+        showToast('danger', 'fa-ban', 'Akun ini tidak berhak melakukan approval pada request ini.');
+        return;
+      }
+
+      item.status = decision;
+      item.history = item.history || [];
+      item.history.push({
+        action: decision,
+        by: current.name,
+        time: new Date().toLocaleString('id-ID'),
+        note: `${current.role} · ${current.entity}`
+      });
+
+      writeJson(REQUEST_KEY, requests);
+      closeModal('modalDetail');
+      renderAll();
+      showToast(decision === 'Approved' ? 'success' : 'warning',
+        decision === 'Approved' ? 'fa-circle-check' : 'fa-circle-xmark',
+        `Request ${item.number} berhasil di-${decision.toLowerCase()}.`);
+    }
+
+    function openModal(id){ document.getElementById(id).classList.add('open'); }
+    function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+    function closeModalIfBg(event,id){ if(event.target === document.getElementById(id)) closeModal(id); }
+
+    function renderAll(){
+      master = readJson(MASTER_KEY);
+      requests = readJson(REQUEST_KEY);
+
+      populateApproverSelect();
+      const data = getFilteredRequests();
+      updateStats(data);
+      renderTable(data);
+    }
+
+    ensureSeed();
+    master = readJson(MASTER_KEY);
+    requests = readJson(REQUEST_KEY);
+
+    document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('id-ID', {
+      weekday:'short', day:'numeric', month:'long', year:'numeric'
+    });
+
+    renderAll();
+
+    window.addEventListener('storage', (event) => {
+      if(event.key === MASTER_KEY || event.key === REQUEST_KEY){
+        renderAll();
+      }
+    });
+  </script>
+
+  <script src="/sidebar.js" defer></script>
+</body>
+</html>
