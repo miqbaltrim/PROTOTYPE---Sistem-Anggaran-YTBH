@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Master Risk — Sistem Anggaran</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="sidebar.css">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:        #f4f7fc;
+    --cream-mid:    #e8eef8;
+    --cream-dark:   #d5e0f0;
+    --sand:         #c2d0e6;
+    --amber:        #F68B21;
+    --amber-light:  #ffaa50;
+    --amber-dim:    rgba(246,139,33,0.12);
+    --sage:         #3972B8;
+    --sage-light:   #5a90d6;
+    --sage-dim:     rgba(57,114,184,0.1);
+    --sage-glow:    rgba(57,114,184,0.18);
+    --ink:          #1a2333;
+    --ink-mid:      #2e3f5c;
+    --ink-soft:     #5a6e8a;
+    --ink-muted:    #8fa0b8;
+    --white:        #ffffff;
+    --danger:       #d94040;
+    --danger-dim:   rgba(217,64,64,0.1);
+    --danger-bdr:   rgba(217,64,64,0.25);
+    --warning:      #c07010;
+    --warning-dim:  rgba(192,112,16,0.12);
+    --success:      #217a4a;
+    --success-dim:  rgba(33,122,74,0.1);
+
+    /* Risk-specific palette */
+    --risk-kritis:   #8B1C1C;
+    --risk-kritis-bg:rgba(139,28,28,0.09);
+    --risk-kritis-bdr:rgba(139,28,28,0.22);
+    --risk-tinggi:   #c73a1a;
+    --risk-tinggi-bg:rgba(199,58,26,0.09);
+    --risk-tinggi-bdr:rgba(199,58,26,0.22);
+    --risk-sedang:   #b06010;
+    --risk-sedang-bg:rgba(176,96,16,0.10);
+    --risk-sedang-bdr:rgba(176,96,16,0.22);
+    --risk-rendah:   #1e6e40;
+    --risk-rendah-bg:rgba(30,110,64,0.09);
+    --risk-rendah-bdr:rgba(30,110,64,0.2);
+
+    --radius:       16px;
+    --radius-sm:    10px;
+    --radius-xs:    7px;
+    --shadow-sm:    0 1px 4px rgba(57,114,184,0.07);
+    --shadow:       0 2px 12px rgba(57,114,184,0.1);
+    --shadow-md:    0 6px 28px rgba(57,114,184,0.14);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--cream); color:var(--ink); min-height:100vh; }
+
+  /* ══ SIDEBAR ══ */
+  .sb { width:240px; flex-shrink:0; background:var(--white); border-right:1px solid var(--cream-dark); display:flex; flex-direction:column; padding:0 0 24px; position:fixed; top:0; left:0; bottom:0; z-index:200; transition:transform .3s cubic-bezier(.4,0,.2,1); font-family:'Plus Jakarta Sans',sans-serif; }
+  .sb-logo { display:flex; align-items:center; gap:10px; padding:22px 22px 20px; border-bottom:1px solid var(--cream-mid); text-decoration:none; }
+  .sb-logo-mark { width:34px; height:34px; border-radius:9px; background:var(--sage); display:flex; align-items:center; justify-content:center; font-family:'Lora',serif; font-size:15px; font-weight:700; color:white; flex-shrink:0; box-shadow:0 3px 10px rgba(57,114,184,0.28); }
+  .sb-logo-text { font-family:'Lora',serif; font-size:15px; font-weight:700; color:var(--ink); letter-spacing:-0.2px; line-height:1.2; }
+  .sb-logo-sub  { font-size:10px; color:var(--ink-muted); font-weight:400; }
+  .sb-body { flex:1; overflow-y:auto; padding:12px 0; scrollbar-width:none; }
+  .sb-body::-webkit-scrollbar { display:none; }
+  .sb-section { padding:0 12px; margin-bottom:4px; }
+  .sb-section-label { font-size:10px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase; color:var(--ink-muted); padding:10px 10px 4px; display:block; }
+  .sb-item { display:flex; align-items:center; gap:10px; padding:10px; border-radius:var(--radius-sm); color:var(--ink-soft); font-size:13.5px; font-weight:500; cursor:pointer; transition:background .15s,color .15s; text-decoration:none; position:relative; white-space:nowrap; }
+  .sb-item-icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0; transition:background .15s; }
+  .sb-item:hover { background:var(--cream); color:var(--ink); }
+  .sb-item:hover .sb-item-icon { background:var(--cream-mid); }
+  .sb-item.active { background:var(--sage-dim); color:var(--sage); font-weight:600; }
+  .sb-item.active .sb-item-icon { background:rgba(57,114,184,0.12); color:var(--sage); }
+  .sb-item.active::before { content:''; position:absolute; left:-12px; top:22%; bottom:22%; width:3px; border-radius:0 3px 3px 0; background:var(--sage); }
+  .sb-badge { margin-left:auto; background:var(--danger); color:white; font-size:10px; font-weight:700; padding:2px 7px; border-radius:20px; line-height:1.5; }
+  .sb-divider { height:1px; background:var(--cream-mid); margin:8px 22px; }
+  .sb-footer { padding:14px 12px 0; border-top:1px solid var(--cream-mid); flex-shrink:0; }
+  .sb-user { display:flex; align-items:center; gap:10px; padding:10px; border-radius:var(--radius-sm); cursor:pointer; transition:background .15s; text-decoration:none; }
+  .sb-user:hover { background:var(--cream); }
+  .sb-avatar { width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,var(--sage),var(--amber)); display:flex; align-items:center; justify-content:center; font-family:'Lora',serif; font-size:13px; font-weight:700; color:white; flex-shrink:0; position:relative; }
+  .sb-avatar::after { content:''; position:absolute; bottom:0; right:0; width:8px; height:8px; border-radius:50%; background:#2da86e; border:2px solid var(--white); }
+  .sb-user-info { flex:1; min-width:0; }
+  .sb-user-name { font-size:13px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .sb-user-role { font-size:11px; color:var(--ink-muted); }
+  .sb-logout { width:28px; height:28px; border-radius:7px; border:1px solid var(--cream-dark); background:transparent; color:var(--ink-muted); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; transition:all .15s; flex-shrink:0; }
+  .sb-logout:hover { background:rgba(217,64,64,0.08); border-color:rgba(217,64,64,0.25); color:var(--danger); }
+  .sb-overlay { display:none; position:fixed; inset:0; background:rgba(26,35,51,0.45); backdrop-filter:blur(3px); z-index:199; opacity:0; transition:opacity .3s; }
+  .sb-overlay.show { opacity:1; }
+  .sb-toggle { display:none; position:fixed; top:14px; left:14px; width:38px; height:38px; z-index:300; border-radius:var(--radius-sm); border:1px solid var(--cream-dark); background:var(--white); cursor:pointer; align-items:center; justify-content:center; color:var(--ink-soft); font-size:15px; box-shadow:0 2px 8px rgba(57,114,184,0.1); transition:all .2s; }
+  .sb-toggle:hover { background:var(--cream); color:var(--ink); }
+  @media(max-width:900px){
+    .sb{transform:translateX(-100%)} .sb.is-open{transform:translateX(0);box-shadow:8px 0 32px rgba(26,35,51,0.15);}
+    .sb-overlay{display:block;} .sb-toggle{display:inline-flex;} .main{margin-left:0!important;}
+  }
+
+  /* ══ LAYOUT ══ */
+  .main { margin-left:240px; min-height:100vh; display:flex; flex-direction:column; }
+
+  /* ══ TOPBAR ══ */
+  .topbar { position:sticky; top:0; z-index:90; background:rgba(244,247,252,0.92); backdrop-filter:blur(12px); border-bottom:1px solid var(--cream-dark); padding:14px 36px; display:flex; align-items:center; justify-content:space-between; }
+  .topbar-left { display:flex; align-items:center; gap:12px; }
+  .breadcrumb  { font-size:13px; color:var(--ink-muted); display:flex; align-items:center; gap:6px; }
+  .breadcrumb-cur { color:var(--ink); font-weight:600; }
+  .topbar-right { display:flex; align-items:center; gap:10px; }
+  .topbar-date  { font-size:12.5px; color:var(--ink-muted); background:var(--cream-mid); padding:6px 12px; border-radius:20px; border:1px solid var(--cream-dark); }
+  .topbar-icon-btn { width:36px; height:36px; border-radius:var(--radius-sm); border:1px solid var(--cream-dark); background:var(--white); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink-soft); font-size:14px; transition:all .18s; position:relative; }
+  .topbar-icon-btn:hover { background:var(--cream); color:var(--ink); }
+  .notif-dot { width:7px; height:7px; background:var(--danger); border-radius:50%; position:absolute; top:6px; right:6px; border:1.5px solid var(--cream); }
+
+  /* ══ CONTENT ══ */
+  .content { padding:32px 36px 48px; animation:fadeIn .35s ease both; flex:1; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ══ PAGE HEADER ══ */
+  .page-header { margin-bottom:28px; display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .page-title  { font-family:'Lora',serif; font-size:24px; font-weight:700; color:var(--ink); letter-spacing:-0.3px; line-height:1.3; }
+  .page-title em { font-style:italic; color:var(--sage); }
+  .page-sub    { font-size:13.5px; color:var(--ink-soft); margin-top:5px; font-weight:300; max-width:600px; line-height:1.6; }
+  .page-actions { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+
+  /* ══ PHASE BANNER ══ */
+  .phase-banner {
+    background: var(--white);
+    border: 1px solid var(--cream-dark);
+    border-radius: var(--radius);
+    padding: 16px 22px;
+    margin-bottom: 24px;
+    display: flex; align-items: center; gap: 16px;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden; position: relative;
+  }
+  .phase-banner::before {
+    content:''; position:absolute; left:0; top:0; bottom:0; width:4px;
+    background: linear-gradient(180deg, var(--sage), var(--sage-light));
+  }
+  .phase-steps { display:flex; align-items:center; gap:0; flex:1; flex-wrap:wrap; }
+  .phase-item {
+    display:flex; align-items:center; gap:8px;
+    padding:6px 14px 6px 10px; border-radius:20px;
+    font-size:12px; font-weight:600; white-space:nowrap;
+  }
+  .phase-item.done  { background:var(--sage-dim); color:var(--sage); }
+  .phase-item.active{ background:var(--sage); color:white; box-shadow:0 2px 8px rgba(57,114,184,0.3); }
+  .phase-item.next  { background:var(--cream-mid); color:var(--ink-muted); }
+  .phase-arrow { color:var(--cream-dark); font-size:11px; margin:0 2px; flex-shrink:0; }
+  .phase-item .ph-num { width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:800; flex-shrink:0; }
+  .phase-item.done   .ph-num { background:rgba(57,114,184,0.2); }
+  .phase-item.active .ph-num { background:rgba(255,255,255,0.25); }
+  .phase-item.next   .ph-num { background:var(--cream-dark); color:var(--ink-muted); }
+
+  /* ══ BUTTONS ══ */
+  .btn { display:inline-flex; align-items:center; gap:7px; padding:9px 16px; border-radius:var(--radius-sm); font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; border:none; transition:all .18s; text-decoration:none; }
+  .btn i { font-size:12px; }
+  .btn-primary { background:var(--sage); color:white; box-shadow:0 4px 14px rgba(57,114,184,0.28); }
+  .btn-primary:hover { background:var(--sage-light); transform:translateY(-1px); }
+  .btn-ghost { background:var(--white); color:var(--ink-soft); border:1.5px solid var(--cream-dark); }
+  .btn-ghost:hover { border-color:var(--sand); color:var(--ink); background:var(--cream); }
+  .btn-danger-ghost { background:var(--white); color:var(--danger); border:1.5px solid var(--danger-bdr); }
+  .btn-danger-ghost:hover { background:var(--danger-dim); }
+  .btn-sm { padding:6px 12px; font-size:12px; }
+
+  /* ══ STAT CARDS ══ */
+  .stats-row { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:24px; }
+  .stat-card { background:var(--white); border:1px solid var(--cream-dark); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow-sm); transition:all .2s; animation:cardIn .4s ease both; position:relative; overflow:hidden; cursor:default; }
+  .stat-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); }
+  .stat-card::after { content:''; position:absolute; bottom:0; left:0; right:0; height:3px; border-radius:0 0 var(--radius) var(--radius); }
+  .stat-card.c-sage::after    { background:var(--sage); }
+  .stat-card.c-kritis::after  { background:var(--risk-kritis); }
+  .stat-card.c-tinggi::after  { background:var(--risk-tinggi); }
+  .stat-card.c-sedang::after  { background:var(--risk-sedang); }
+  .stat-card.c-rendah::after  { background:var(--risk-rendah); }
+  .stat-card:nth-child(1){animation-delay:.04s} .stat-card:nth-child(2){animation-delay:.08s}
+  .stat-card:nth-child(3){animation-delay:.12s} .stat-card:nth-child(4){animation-delay:.16s}
+  .stat-card:nth-child(5){animation-delay:.20s}
+  @keyframes cardIn { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+  .stat-icon { width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:15px; margin-bottom:10px; }
+  .stat-card.c-sage   .stat-icon { background:var(--sage-dim); color:var(--sage); }
+  .stat-card.c-kritis .stat-icon { background:var(--risk-kritis-bg); color:var(--risk-kritis); }
+  .stat-card.c-tinggi .stat-icon { background:var(--risk-tinggi-bg); color:var(--risk-tinggi); }
+  .stat-card.c-sedang .stat-icon { background:var(--risk-sedang-bg); color:var(--risk-sedang); }
+  .stat-card.c-rendah .stat-icon { background:var(--risk-rendah-bg); color:var(--risk-rendah); }
+  .stat-label { font-size:10.5px; text-transform:uppercase; letter-spacing:1.2px; color:var(--ink-muted); font-weight:600; margin-bottom:3px; }
+  .stat-value { font-family:'DM Mono',monospace; font-size:22px; font-weight:500; color:var(--ink); letter-spacing:-0.5px; line-height:1; }
+  .stat-sub   { font-size:11px; color:var(--ink-muted); margin-top:4px; }
+
+  /* ══ TOOLBAR ══ */
+  .toolbar { display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
+  .search-wrap { position:relative; flex:1; min-width:220px; }
+  .search-icon { position:absolute; left:13px; top:50%; transform:translateY(-50%); font-size:13px; color:var(--ink-muted); pointer-events:none; }
+  .search-input { width:100%; padding:9px 13px 9px 36px; background:var(--white); border:1.5px solid var(--cream-dark); border-radius:var(--radius-sm); font-family:'Plus Jakarta Sans',sans-serif; font-size:13.5px; color:var(--ink); outline:none; transition:all .18s; }
+  .search-input::placeholder { color:var(--ink-muted); }
+  .search-input:focus { border-color:var(--sage); box-shadow:0 0 0 3px var(--sage-glow); }
+  .filter-select { padding:8px 12px; background:var(--white); border:1.5px solid var(--cream-dark); border-radius:var(--radius-sm); font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; color:var(--ink-soft); outline:none; cursor:pointer; transition:all .18s; }
+  .filter-select:focus { border-color:var(--sage); }
+  .toolbar-right { display:flex; gap:8px; margin-left:auto; }
+
+  /* ══ VIEW TOGGLE ══ */
+  .view-toggle { display:flex; background:var(--white); border:1.5px solid var(--cream-dark); border-radius:var(--radius-sm); overflow:hidden; }
+  .view-btn { padding:7px 13px; font-size:12px; font-weight:600; cursor:pointer; border:none; background:transparent; color:var(--ink-muted); transition:all .15s; font-family:'Plus Jakarta Sans',sans-serif; display:flex; align-items:center; gap:5px; }
+  .view-btn.active { background:var(--sage); color:white; }
+  .view-btn:not(.active):hover { background:var(--cream); color:var(--ink); }
+
+  /* ══ TABLE CARD ══ */
+  .table-card { background:var(--white); border:1px solid var(--cream-dark); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow-sm); }
+  .table-card-header { padding:15px 22px; border-bottom:1px solid var(--cream-mid); display:flex; align-items:center; justify-content:space-between; }
+  .table-card-title { font-size:14px; font-weight:700; color:var(--ink); display:flex; align-items:center; gap:8px; }
+  .table-card-sub   { font-size:12px; color:var(--ink-muted); margin-top:2px; }
+  .tbl-wrap { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; }
+  thead th { padding:11px 14px; text-align:left; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1.2px; color:var(--ink-muted); background:var(--cream); border-bottom:1px solid var(--cream-dark); white-space:nowrap; }
+  thead th.sortable { cursor:pointer; user-select:none; }
+  thead th.sortable:hover { color:var(--sage); }
+  tbody tr { border-bottom:1px solid var(--cream-mid); transition:background .12s; }
+  tbody tr:last-child { border-bottom:none; }
+  tbody tr:hover { background:rgba(57,114,184,0.025); }
+  tbody td { padding:13px 14px; font-size:13px; color:var(--ink-soft); vertical-align:middle; }
+  .td-code { font-family:'DM Mono',monospace; font-size:12.5px; font-weight:600; color:var(--ink); letter-spacing:0.3px; }
+  .td-name { font-weight:600; color:var(--ink); font-size:13.5px; line-height:1.35; }
+  .td-name-sub { font-size:11.5px; color:var(--ink-muted); margin-top:2px; font-weight:400; }
+
+  /* ══ RISK LEVEL BADGE ══ */
+  .risk-badge { display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:20px; font-size:11px; font-weight:700; white-space:nowrap; border:1px solid transparent; }
+  .risk-kritis { background:var(--risk-kritis-bg); color:var(--risk-kritis); border-color:var(--risk-kritis-bdr); }
+  .risk-tinggi { background:var(--risk-tinggi-bg); color:var(--risk-tinggi); border-color:var(--risk-tinggi-bdr); }
+  .risk-sedang { background:var(--risk-sedang-bg); color:var(--risk-sedang); border-color:var(--risk-sedang-bdr); }
+  .risk-rendah { background:var(--risk-rendah-bg); color:var(--risk-rendah); border-color:var(--risk-rendah-bdr); }
+  .risk-dot { width:6px; height:6px; border-radius:50%; }
+  .dot-kritis { background:var(--risk-kritis); box-shadow:0 0 5px var(--risk-kritis); }
+  .dot-tinggi { background:var(--risk-tinggi); box-shadow:0 0 5px var(--risk-tinggi); }
+  .dot-sedang { background:var(--risk-sedang); }
+  .dot-rendah { background:var(--risk-rendah); }
+
+  /* kategori badge */
+  .kat-badge { display:inline-flex; align-items:center; padding:3px 9px; border-radius:20px; font-size:10.5px; font-weight:600; white-space:nowrap; }
+  .kat-operasional { background:var(--sage-dim); color:var(--sage); }
+  .kat-keuangan    { background:var(--amber-dim); color:#a05a00; }
+  .kat-hukum       { background:rgba(122,48,192,0.09); color:#6030a0; }
+  .kat-reputasi    { background:rgba(33,122,74,0.09); color:#196040; }
+  .kat-strategis   { background:rgba(199,58,26,0.09); color:var(--risk-tinggi); }
+  .kat-teknologi   { background:rgba(57,114,184,0.09); color:var(--sage); }
+
+  /* status badge */
+  .st-badge { display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600; padding:3px 9px; border-radius:20px; }
+  .st-aktif    { background:rgba(33,122,74,0.1); color:#196040; }
+  .st-review   { background:var(--amber-dim); color:#a05a00; }
+  .st-mitigasi { background:var(--sage-dim); color:var(--sage); }
+  .st-closed   { background:var(--cream-mid); color:var(--ink-muted); }
+  .st-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+  .std-aktif    { background:#2da86e; }
+  .std-review   { background:var(--amber); }
+  .std-mitigasi { background:var(--sage); }
+  .std-closed   { background:var(--ink-muted); }
+
+  /* act buttons */
+  .act-btn { width:30px; height:30px; border-radius:7px; border:1px solid var(--cream-dark); background:var(--white); color:var(--ink-soft); display:inline-flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; transition:all .15s; }
+  .act-btn:hover        { border-color:rgba(57,114,184,0.35); background:var(--sage-dim); color:var(--sage); }
+  .act-btn.danger:hover { border-color:var(--danger-bdr); background:var(--danger-dim); color:var(--danger); }
+
+  /* ══ CARD GRID VIEW ══ */
+  .risk-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(330px,1fr)); gap:16px; }
+  .risk-card {
+    background:var(--white); border:1px solid var(--cream-dark); border-radius:var(--radius);
+    padding:0; box-shadow:var(--shadow-sm); transition:all .2s;
+    animation:cardIn .4s ease both; overflow:hidden; cursor:pointer;
+    display:flex; flex-direction:column;
+  }
+  .risk-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-md); }
+  .risk-card-stripe { height:4px; }
+  .risk-card-body   { padding:18px 20px; flex:1; }
+  .risk-card-head   { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:12px; }
+  .risk-card-code   { font-family:'DM Mono',monospace; font-size:11px; color:var(--ink-muted); font-weight:500; }
+  .risk-card-title  { font-size:14px; font-weight:700; color:var(--ink); line-height:1.4; margin-top:3px; }
+  .risk-card-desc   { font-size:12.5px; color:var(--ink-soft); line-height:1.6; margin-bottom:14px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .risk-card-meta   { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:14px; }
+  .risk-card-foot   { padding:12px 20px; background:var(--cream); border-top:1px solid var(--cream-mid); display:flex; align-items:center; justify-content:space-between; gap:8px; }
+  .risk-card-foot-label { font-size:11px; color:var(--ink-muted); }
+  .risk-card-foot-val   { font-family:'DM Mono',monospace; font-size:12px; font-weight:600; color:var(--ink); }
+
+  /* ══ HEATMAP ══ */
+  .heatmap-wrap { background:var(--white); border:1px solid var(--cream-dark); border-radius:var(--radius); padding:22px 24px; box-shadow:var(--shadow-sm); margin-bottom:20px; }
+  .heatmap-title { font-size:14px; font-weight:700; color:var(--ink); margin-bottom:4px; display:flex; align-items:center; gap:8px; }
+  .heatmap-sub   { font-size:12px; color:var(--ink-muted); margin-bottom:20px; }
+  .heatmap-grid  { display:flex; gap:0; }
+  .heatmap-y-axis { display:flex; flex-direction:column-reverse; justify-content:space-between; padding-right:12px; padding-top:20px; padding-bottom:0; }
+  .heatmap-y-label { font-size:10.5px; color:var(--ink-muted); font-weight:600; text-align:right; height:44px; display:flex; align-items:center; justify-content:flex-end; }
+  .heatmap-main { flex:1; }
+  .heatmap-cells { display:grid; grid-template-columns:repeat(5,1fr); gap:4px; margin-bottom:8px; }
+  .heatmap-cell {
+    height:44px; border-radius:var(--radius-xs); display:flex; align-items:center; justify-content:center;
+    font-family:'DM Mono',monospace; font-size:13px; font-weight:700; cursor:pointer;
+    transition:all .2s; border:1px solid transparent; position:relative;
+  }
+  .heatmap-cell:hover { transform:scale(1.06); z-index:2; }
+  .heatmap-cell.hm-rendah  { background:var(--risk-rendah-bg); color:var(--risk-rendah); border-color:var(--risk-rendah-bdr); }
+  .heatmap-cell.hm-sedang  { background:var(--risk-sedang-bg); color:var(--risk-sedang); border-color:var(--risk-sedang-bdr); }
+  .heatmap-cell.hm-tinggi  { background:var(--risk-tinggi-bg); color:var(--risk-tinggi); border-color:var(--risk-tinggi-bdr); }
+  .heatmap-cell.hm-kritis  { background:var(--risk-kritis-bg); color:var(--risk-kritis); border-color:var(--risk-kritis-bdr); }
+  .heatmap-cell.hm-empty   { background:var(--cream); color:var(--ink-muted); border-color:var(--cream-mid); }
+  .heatmap-x-labels { display:grid; grid-template-columns:repeat(5,1fr); gap:4px; }
+  .heatmap-x-label  { font-size:10.5px; color:var(--ink-muted); font-weight:600; text-align:center; }
+  .heatmap-legend   { display:flex; align-items:center; gap:14px; margin-top:16px; flex-wrap:wrap; }
+  .hm-leg-item      { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--ink-soft); }
+  .hm-leg-dot       { width:10px; height:10px; border-radius:3px; }
+
+  /* ══ PAGINATION ══ */
+  .pagination { padding:14px 20px; border-top:1px solid var(--cream-mid); display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+  .pagination-info { font-size:12.5px; color:var(--ink-muted); }
+  .pagination-btns { display:flex; gap:4px; }
+  .pg-btn { width:32px; height:32px; border-radius:var(--radius-xs); border:1px solid var(--cream-dark); background:var(--white); color:var(--ink-soft); display:flex; align-items:center; justify-content:center; font-size:12.5px; cursor:pointer; transition:all .15s; font-family:'Plus Jakarta Sans',sans-serif; font-weight:500; }
+  .pg-btn:hover   { background:var(--cream); color:var(--ink); }
+  .pg-btn.active  { background:var(--sage); color:white; border-color:var(--sage); }
+  .pg-btn:disabled{ opacity:.4; cursor:default; }
+
+  /* ══ EMPTY ══ */
+  .empty-state { padding:64px 20px; text-align:center; }
+  .empty-icon  { font-size:36px; color:var(--cream-dark); margin-bottom:14px; }
+  .empty-title { font-size:15px; font-weight:700; color:var(--ink-mid); margin-bottom:6px; }
+  .empty-sub   { font-size:13px; color:var(--ink-muted); }
+
+  /* ══ MODAL ══ */
+  .overlay-modal { display:none; position:fixed; inset:0; background:rgba(26,35,51,0.4); z-index:500; backdrop-filter:blur(4px); align-items:center; justify-content:center; padding:16px; }
+  .overlay-modal.open { display:flex; }
+  .modal { background:var(--white); border:1px solid var(--cream-dark); border-radius:var(--radius); width:580px; max-width:100%; max-height:calc(100vh - 32px); overflow-y:auto; box-shadow:var(--shadow-md); animation:modalIn .28s cubic-bezier(.34,1.56,.64,1); }
+  .modal-lg { width:700px; }
+  @keyframes modalIn { from{opacity:0;transform:scale(.92) translateY(10px)} to{opacity:1;transform:scale(1) translateY(0)} }
+  .modal-header { padding:22px 24px 18px; border-bottom:1px solid var(--cream-mid); display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+  .modal-title  { font-family:'Lora',serif; font-size:18px; font-weight:700; color:var(--ink); }
+  .modal-sub    { font-size:12.5px; color:var(--ink-muted); margin-top:3px; }
+  .modal-close  { width:32px; height:32px; border-radius:8px; border:1px solid var(--cream-dark); background:transparent; color:var(--ink-muted); cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center; transition:all .15s; flex-shrink:0; }
+  .modal-close:hover { background:var(--danger-dim); color:var(--danger); border-color:var(--danger-bdr); }
+  .modal-body   { padding:22px 24px; }
+  .modal-footer { padding:16px 24px; border-top:1px solid var(--cream-mid); display:flex; justify-content:flex-end; gap:10px; }
+
+  .form-row  { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+  .form-row.full { grid-template-columns:1fr; }
+  .form-row.col3 { grid-template-columns:1fr 1fr 1fr; }
+  .form-group { display:flex; flex-direction:column; gap:5px; margin-bottom:14px; }
+  .form-label { font-size:11.5px; font-weight:700; color:var(--ink-mid); letter-spacing:0.5px; text-transform:uppercase; }
+  .form-label .req { color:var(--danger); margin-left:2px; }
+  .input-wrap  { position:relative; }
+  .input-icon  { position:absolute; left:12px; top:50%; transform:translateY(-50%); font-size:13px; color:var(--ink-muted); pointer-events:none; }
+  .form-input, .form-select, .form-textarea {
+    width:100%; padding:9px 12px; background:var(--cream); border:1.5px solid var(--cream-dark);
+    border-radius:var(--radius-sm); font-family:'Plus Jakarta Sans',sans-serif;
+    font-size:13.5px; color:var(--ink); outline:none; transition:all .18s;
+  }
+  .form-input.has-icon { padding-left:36px; }
+  .form-input:focus,.form-select:focus,.form-textarea:focus { border-color:var(--sage); background:var(--white); box-shadow:0 0 0 3px var(--sage-glow); }
+  .form-textarea { resize:vertical; min-height:80px; }
+  .form-hint  { font-size:11.5px; color:var(--ink-muted); }
+  .form-section-title { font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink-muted); margin-bottom:14px; margin-top:6px; display:flex; align-items:center; gap:8px; }
+  .form-section-title::after { content:''; flex:1; height:1px; background:var(--cream-mid); }
+
+  /* risk level selector */
+  .level-selector { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+  .level-opt { padding:10px 8px; border-radius:var(--radius-sm); border:1.5px solid var(--cream-dark); background:var(--cream); text-align:center; cursor:pointer; transition:all .18s; }
+  .level-opt:hover { border-color:var(--sage); }
+  .level-opt input[type=radio] { display:none; }
+  .level-opt.sel-kritis { border-color:var(--risk-kritis); background:var(--risk-kritis-bg); }
+  .level-opt.sel-tinggi { border-color:var(--risk-tinggi); background:var(--risk-tinggi-bg); }
+  .level-opt.sel-sedang { border-color:var(--risk-sedang); background:var(--risk-sedang-bg); }
+  .level-opt.sel-rendah { border-color:var(--risk-rendah); background:var(--risk-rendah-bg); }
+  .level-opt-icon { font-size:16px; margin-bottom:4px; }
+  .level-opt-label { font-size:11.5px; font-weight:700; }
+  .level-opt.sel-kritis .level-opt-label { color:var(--risk-kritis); }
+  .level-opt.sel-tinggi .level-opt-label { color:var(--risk-tinggi); }
+  .level-opt.sel-sedang .level-opt-label { color:var(--risk-sedang); }
+  .level-opt.sel-rendah .level-opt-label { color:var(--risk-rendah); }
+
+  /* detail modal */
+  .detail-band { height:6px; border-radius:var(--radius) var(--radius) 0 0; }
+  .detail-section { margin-bottom:20px; }
+  .detail-section-title { font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:1.2px; color:var(--ink-muted); margin-bottom:10px; }
+  .detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .detail-field { background:var(--cream); border-radius:var(--radius-sm); padding:11px 14px; }
+  .detail-field-label { font-size:10px; font-weight:700; color:var(--ink-muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:4px; }
+  .detail-field-value { font-size:13.5px; font-weight:600; color:var(--ink); }
+  .next-phase-box { background:linear-gradient(135deg,var(--sage) 0%,#2558a0 100%); border-radius:var(--radius-sm); padding:14px 18px; display:flex; align-items:center; gap:14px; }
+  .next-phase-box-icon { width:36px; height:36px; border-radius:9px; background:rgba(255,255,255,0.18); display:flex; align-items:center; justify-content:center; font-size:16px; color:white; flex-shrink:0; }
+  .next-phase-box-text { }
+  .next-phase-box-title { font-size:13px; font-weight:700; color:white; margin-bottom:2px; }
+  .next-phase-box-sub   { font-size:11.5px; color:rgba(255,255,255,0.72); }
+
+  /* ══ TOAST ══ */
+  .toast-stack { position:fixed; bottom:24px; right:24px; z-index:999; display:flex; flex-direction:column; gap:8px; pointer-events:none; }
+  .toast { background:var(--ink); color:white; padding:12px 18px; border-radius:var(--radius-sm); font-size:13px; font-weight:500; display:flex; align-items:center; gap:9px; box-shadow:0 6px 24px rgba(0,0,0,0.2); pointer-events:all; animation:toastIn .28s cubic-bezier(.34,1.56,.64,1); max-width:320px; }
+  @keyframes toastIn { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:translateX(0)} }
+  .toast.success { background:#1a5c36; }
+  .toast.warning { background:#7a4500; }
+  .toast i { font-size:14px; flex-shrink:0; }
+
+  ::-webkit-scrollbar { width:4px; height:4px; }
+  ::-webkit-scrollbar-track { background:transparent; }
+  ::-webkit-scrollbar-thumb { background:var(--cream-dark); border-radius:2px; }
+
+  @media(max-width:1200px) { .stats-row { grid-template-columns:repeat(3,1fr); } }
+  @media(max-width:900px)  { .stats-row { grid-template-columns:repeat(2,1fr); } }
+  @media(max-width:700px)  {
+    .content { padding:20px 16px 36px; } .topbar { padding:12px 16px; }
+    .page-header { flex-direction:column; align-items:flex-start; }
+    .form-row,.form-row.col3 { grid-template-columns:1fr; }
+    .detail-grid { grid-template-columns:1fr; }
+    .level-selector { grid-template-columns:1fr 1fr; }
+  }
+</style>
+</head>
+<body data-page="masterrisk">
+
+<div class="app-shell">
+  <div id="sb-root"></div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <span class="breadcrumb">
+          Sistem Anggaran
+          <span style="color:var(--cream-dark)">›</span>
+          Master Data
+          <span style="color:var(--cream-dark)">›</span>
+          <span class="breadcrumb-cur">Master Risk</span>
+        </span>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-date" id="topbarDate"></div>
+        <div class="topbar-icon-btn"><i class="fa-solid fa-bell"></i><div class="notif-dot"></div></div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- PAGE HEADER -->
+      <div class="page-header">
+        <div>
+          <div class="page-title">Master <em>Risk</em></div>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-ghost" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Export</button>
+          <button class="btn btn-primary" onclick="openAddModal()"><i class="fa-solid fa-plus"></i> Daftarkan Risiko</button>
+        </div>
+      </div>
+
+      <!-- PHASE BANNER -->
+      <div class="phase-banner">
+        <div style="font-size:11px;font-weight:700;color:var(--ink-muted);text-transform:uppercase;letter-spacing:1.2px;white-space:nowrap;">Roadmap Modul</div>
+        <div class="phase-steps">
+          <div class="phase-item active">
+            <div class="ph-num">1</div>
+            <i class="fa-solid fa-list-check" style="font-size:11px;"></i> Risk Register
+          </div>
+          <i class="fa-solid fa-chevron-right phase-arrow"></i>
+          <div class="phase-item next">
+            <div class="ph-num">2</div>
+            <i class="fa-solid fa-shield-halved" style="font-size:11px;"></i> Mitigasi
+          </div>
+          <i class="fa-solid fa-chevron-right phase-arrow"></i>
+          <div class="phase-item next">
+            <div class="ph-num">3</div>
+            <i class="fa-solid fa-star-half-stroke" style="font-size:11px;"></i> Scoring
+          </div>
+          <i class="fa-solid fa-chevron-right phase-arrow"></i>
+          <div class="phase-item next">
+            <div class="ph-num">4</div>
+            <i class="fa-solid fa-chart-line" style="font-size:11px;"></i> Monitoring
+          </div>
+        </div>
+        <div style="font-size:11.5px;color:var(--sage);font-weight:600;white-space:nowrap;flex-shrink:0;">
+          <i class="fa-solid fa-circle-dot" style="font-size:9px;"></i> Fase 1 Aktif
+        </div>
+      </div>
+
+      <!-- STAT CARDS -->
+      <div class="stats-row">
+        <div class="stat-card c-sage">
+          <div class="stat-icon"><i class="fa-solid fa-clipboard-list"></i></div>
+          <div class="stat-label">Total Risiko</div>
+          <div class="stat-value" id="statTotal">—</div>
+          <div class="stat-sub">Terdaftar di register</div>
+        </div>
+        <div class="stat-card c-kritis">
+          <div class="stat-icon"><i class="fa-solid fa-circle-radiation"></i></div>
+          <div class="stat-label">Kritis</div>
+          <div class="stat-value" id="statKritis">—</div>
+          <div class="stat-sub">Perlu tindakan segera</div>
+        </div>
+        <div class="stat-card c-tinggi">
+          <div class="stat-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+          <div class="stat-label">Tinggi</div>
+          <div class="stat-value" id="statTinggi">—</div>
+          <div class="stat-sub">Prioritas tinggi</div>
+        </div>
+        <div class="stat-card c-sedang">
+          <div class="stat-icon"><i class="fa-solid fa-circle-exclamation"></i></div>
+          <div class="stat-label">Sedang</div>
+          <div class="stat-value" id="statSedang">—</div>
+          <div class="stat-sub">Perlu pemantauan</div>
+        </div>
+        <div class="stat-card c-rendah">
+          <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
+          <div class="stat-label">Rendah</div>
+          <div class="stat-value" id="statRendah">—</div>
+          <div class="stat-sub">Dapat dikelola rutin</div>
+        </div>
+      </div>
+
+      <!-- HEATMAP -->
+      <div class="heatmap-wrap">
+        <div class="heatmap-title">
+          <i class="fa-solid fa-grid-2" style="color:var(--sage);font-size:13px;"></i>
+          Risk Heatmap — Kemungkinan × Dampak
+        </div>
+        <div class="heatmap-sub">Distribusi risiko berdasarkan level kemungkinan terjadi dan besaran dampak. Klik sel untuk filter.</div>
+        <div class="heatmap-grid">
+          <div class="heatmap-y-axis" id="hmYAxis"></div>
+          <div class="heatmap-main">
+            <div class="heatmap-cells" id="hmCells"></div>
+            <div class="heatmap-x-labels" id="hmXLabels"></div>
+            <div class="heatmap-legend">
+              <div class="hm-leg-item"><div class="hm-leg-dot" style="background:var(--risk-rendah-bg);border:1px solid var(--risk-rendah-bdr);"></div>Rendah</div>
+              <div class="hm-leg-item"><div class="hm-leg-dot" style="background:var(--risk-sedang-bg);border:1px solid var(--risk-sedang-bdr);"></div>Sedang</div>
+              <div class="hm-leg-item"><div class="hm-leg-dot" style="background:var(--risk-tinggi-bg);border:1px solid var(--risk-tinggi-bdr);"></div>Tinggi</div>
+              <div class="hm-leg-item"><div class="hm-leg-dot" style="background:var(--risk-kritis-bg);border:1px solid var(--risk-kritis-bdr);"></div>Kritis</div>
+              <div style="margin-left:auto;font-size:11px;color:var(--ink-muted);" id="hmFilterLabel"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOOLBAR -->
+      <div class="toolbar">
+        <div class="search-wrap">
+          <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+          <input class="search-input" id="searchInput" type="text" placeholder="Cari kode register, nama risiko, atau PIC…" oninput="applyFilters()">
+        </div>
+        <select class="filter-select" id="filterLevel" onchange="applyFilters()">
+          <option value="">Semua Level</option>
+          <option value="Kritis">Kritis</option>
+          <option value="Tinggi">Tinggi</option>
+          <option value="Sedang">Sedang</option>
+          <option value="Rendah">Rendah</option>
+        </select>
+        <select class="filter-select" id="filterKat" onchange="applyFilters()">
+          <option value="">Semua Kategori</option>
+          <option value="Operasional">Operasional</option>
+          <option value="Keuangan">Keuangan</option>
+          <option value="Hukum">Hukum & Kepatuhan</option>
+          <option value="Reputasi">Reputasi</option>
+          <option value="Strategis">Strategis</option>
+          <option value="Teknologi">Teknologi</option>
+        </select>
+        <select class="filter-select" id="filterStatus" onchange="applyFilters()">
+          <option value="">Semua Status</option>
+          <option value="Aktif">Aktif</option>
+          <option value="Review">Dalam Review</option>
+          <option value="Mitigasi">Dalam Mitigasi</option>
+          <option value="Closed">Closed</option>
+        </select>
+        <div class="toolbar-right">
+          <button class="btn btn-ghost btn-sm" id="btnClearFilter" onclick="clearHmFilter()" style="display:none;">
+            <i class="fa-solid fa-filter-circle-xmark"></i> Reset Filter
+          </button>
+          <div class="view-toggle">
+            <button class="view-btn active" id="btnTable" onclick="setView('table')"><i class="fa-solid fa-table-list"></i> Tabel</button>
+            <button class="view-btn" id="btnGrid" onclick="setView('grid')"><i class="fa-solid fa-grip"></i> Kartu</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TABLE VIEW -->
+      <div id="viewTable">
+        <div class="table-card">
+          <div class="table-card-header">
+            <div>
+              <div class="table-card-title"><i class="fa-solid fa-clipboard-list" style="color:var(--sage);font-size:13px;"></i> Risk Register</div>
+              <div class="table-card-sub" id="tableSubtitle">Memuat…</div>
+            </div>
+          </div>
+          <div class="tbl-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th class="sortable" data-col="kode" onclick="sortBy('kode')">Kode Register <i class="fa-solid fa-sort" style="font-size:9px;"></i></th>
+                  <th class="sortable" data-col="nama" onclick="sortBy('nama')">Nama Risiko <i class="fa-solid fa-sort" style="font-size:9px;"></i></th>
+                  <th>Kategori</th>
+                  <th>Level Risiko</th>
+                  <th>Kemungkinan</th>
+                  <th>Dampak</th>
+                  <th>UPT / Unit</th>
+                  <th>PIC</th>
+                  <th>Status</th>
+                  <th style="text-align:right;">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="riskTbody"></tbody>
+            </table>
+          </div>
+          <div id="emptyTable" class="empty-state" style="display:none;">
+            <div class="empty-icon"><i class="fa-solid fa-filter-circle-xmark"></i></div>
+            <div class="empty-title">Tidak ada risiko ditemukan</div>
+            <div class="empty-sub">Coba ubah filter atau kata kunci pencarian</div>
+          </div>
+          <div class="pagination" id="paginationTable"></div>
+        </div>
+      </div>
+
+      <!-- GRID VIEW -->
+      <div id="viewGrid" style="display:none;">
+        <div class="risk-grid" id="riskGrid"></div>
+        <div id="emptyGrid" class="empty-state" style="display:none;">
+          <div class="empty-icon"><i class="fa-solid fa-filter-circle-xmark"></i></div>
+          <div class="empty-title">Tidak ada risiko ditemukan</div>
+          <div class="empty-sub">Coba ubah filter atau kata kunci pencarian</div>
+        </div>
+        <div class="pagination" id="paginationGrid" style="background:var(--white);border:1px solid var(--cream-dark);border-radius:var(--radius);margin-top:12px;"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL TAMBAH/EDIT ══ -->
+<div class="overlay-modal" id="modalForm" onclick="closeModalIfBg(event,'modalForm')">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modalFormTitle">Daftarkan Risiko Baru</div>
+        <div class="modal-sub" id="modalFormSub">Isi identitas dan parameter risiko</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modalForm')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+
+      <div class="form-section-title">Identitas Risiko</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Kode Register <span class="req">*</span></label>
+          <div class="input-wrap">
+            <span class="input-icon"><i class="fa-solid fa-hashtag"></i></span>
+            <input class="form-input has-icon" id="fKode" type="text" placeholder="mis. RSK-001" readonly style="background:var(--cream-mid);cursor:default;">
+          </div>
+          <span class="form-hint">Kode di-generate otomatis</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Kategori Risiko <span class="req">*</span></label>
+          <select class="form-select" id="fKategori">
+            <option value="">— Pilih Kategori —</option>
+            <option value="Operasional">Operasional</option>
+            <option value="Keuangan">Keuangan</option>
+            <option value="Hukum">Hukum & Kepatuhan</option>
+            <option value="Reputasi">Reputasi</option>
+            <option value="Strategis">Strategis</option>
+            <option value="Teknologi">Teknologi</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nama / Judul Risiko <span class="req">*</span></label>
+        <input class="form-input" id="fNama" type="text" placeholder="Deskripsi singkat risiko…">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Uraian Risiko</label>
+        <textarea class="form-textarea" id="fUraian" placeholder="Jelaskan lebih detail kejadian, penyebab, dan potensi dampak risiko ini…"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">UPT / Unit Terkait</label>
+          <select class="form-select" id="fUpt">
+            <option value="Semua">Semua UPT</option>
+            <option value="Dinas Pendidikan">Dinas Pendidikan</option>
+            <option value="Dinas Kesehatan">Dinas Kesehatan</option>
+            <option value="Dinas PUPR">Dinas PUPR</option>
+            <option value="BPKD">BPKD</option>
+            <option value="Bappeda">Bappeda</option>
+            <option value="PTSP">PTSP</option>
+            <option value="BKPSDM">BKPSDM</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Penanggung Jawab (PIC) <span class="req">*</span></label>
+          <div class="input-wrap">
+            <span class="input-icon"><i class="fa-solid fa-user-tie"></i></span>
+            <input class="form-input has-icon" id="fPic" type="text" placeholder="Nama PIC…">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section-title">Penilaian Awal</div>
+      <div class="form-row col3">
+        <div class="form-group">
+          <label class="form-label">Kemungkinan <span class="req">*</span></label>
+          <select class="form-select" id="fKemungkinan" onchange="autoLevel()">
+            <option value="">—</option>
+            <option value="1">1 — Jarang</option>
+            <option value="2">2 — Kadang</option>
+            <option value="3">3 — Mungkin</option>
+            <option value="4">4 — Sering</option>
+            <option value="5">5 — Hampir Pasti</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Dampak <span class="req">*</span></label>
+          <select class="form-select" id="fDampak" onchange="autoLevel()">
+            <option value="">—</option>
+            <option value="1">1 — Sangat Kecil</option>
+            <option value="2">2 — Kecil</option>
+            <option value="3">3 — Sedang</option>
+            <option value="4">4 — Besar</option>
+            <option value="5">5 — Sangat Besar</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Skor Risiko</label>
+          <div id="skorDisplay" style="padding:9px 12px;background:var(--cream);border:1.5px solid var(--cream-dark);border-radius:var(--radius-sm);font-family:'DM Mono',monospace;font-size:18px;font-weight:700;color:var(--ink-muted);text-align:center;">—</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Level Risiko <span class="req">*</span></label>
+        <div class="level-selector" id="levelSelector">
+          <label class="level-opt" id="lopt-Kritis">
+            <input type="radio" name="riskLevel" value="Kritis">
+            <div class="level-opt-icon">🔴</div>
+            <div class="level-opt-label">Kritis</div>
+            <div style="font-size:10px;color:var(--ink-muted);margin-top:2px;">Skor 15–25</div>
+          </label>
+          <label class="level-opt" id="lopt-Tinggi">
+            <input type="radio" name="riskLevel" value="Tinggi">
+            <div class="level-opt-icon">🟠</div>
+            <div class="level-opt-label">Tinggi</div>
+            <div style="font-size:10px;color:var(--ink-muted);margin-top:2px;">Skor 8–14</div>
+          </label>
+          <label class="level-opt" id="lopt-Sedang">
+            <input type="radio" name="riskLevel" value="Sedang">
+            <div class="level-opt-icon">🟡</div>
+            <div class="level-opt-label">Sedang</div>
+            <div style="font-size:10px;color:var(--ink-muted);margin-top:2px;">Skor 4–7</div>
+          </label>
+          <label class="level-opt" id="lopt-Rendah">
+            <input type="radio" name="riskLevel" value="Rendah">
+            <div class="level-opt-icon">🟢</div>
+            <div class="level-opt-label">Rendah</div>
+            <div style="font-size:10px;color:var(--ink-muted);margin-top:2px;">Skor 1–3</div>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-section-title">Tambahan</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Tanggal Identifikasi</label>
+          <input class="form-input" id="fTanggal" type="date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Status <span class="req">*</span></label>
+          <select class="form-select" id="fStatus">
+            <option value="Aktif">Aktif</option>
+            <option value="Review">Dalam Review</option>
+            <option value="Mitigasi">Dalam Mitigasi</option>
+            <option value="Closed">Closed</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Penyebab Utama</label>
+        <textarea class="form-textarea" id="fPenyebab" style="min-height:60px;" placeholder="Faktor-faktor penyebab risiko ini terjadi…"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalForm')">Batal</button>
+      <button class="btn btn-primary" onclick="saveRisk()"><i class="fa-solid fa-floppy-disk"></i> Simpan Risiko</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL DETAIL ══ -->
+<div class="overlay-modal" id="modalDetail" onclick="closeModalIfBg(event,'modalDetail')">
+  <div class="modal modal-lg">
+    <div class="detail-band" id="detailBand"></div>
+    <div class="modal-header" style="border-top:none;">
+      <div>
+        <div class="modal-title" id="detailTitle">Detail Risiko</div>
+        <div class="modal-sub"  id="detailSub"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modalDetail')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body" id="detailBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalDetail')">Tutup</button>
+      <button class="btn btn-primary" id="detailEditBtn"><i class="fa-solid fa-pen"></i> Edit Risiko</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-stack" id="toastStack"></div>
+
+<script>
+// ═══════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════
+let RISKS = [
+  { id:1,  kode:'RSK-001', nama:'Ketidaksesuaian realisasi anggaran dengan pagu',          kategori:'Keuangan',    kemungkinan:4, dampak:5, level:'Kritis',  upt:'BPKD',              pic:'Dra. Endang Sulistyowati', status:'Aktif',    tgl:'2026-01-10', uraian:'Realisasi belanja melebihi atau jauh di bawah pagu anggaran yang ditetapkan, mengakibatkan ketidakseimbangan fiskal daerah.', penyebab:'Perencanaan anggaran tidak akurat, perubahan kebijakan mendadak.' },
+  { id:2,  kode:'RSK-002', nama:'Kegagalan sistem informasi keuangan',                      kategori:'Teknologi',   kemungkinan:3, dampak:5, level:'Kritis',  upt:'BPKD',              pic:'Muhammad Iqbal',            status:'Aktif',    tgl:'2026-01-12', uraian:'Sistem informasi keuangan mengalami gangguan atau kegagalan sehingga proses pencatatan dan pelaporan terhambat.', penyebab:'Infrastruktur IT tidak memadai, serangan siber, human error.' },
+  { id:3,  kode:'RSK-003', nama:'Penyimpangan pengadaan barang dan jasa',                  kategori:'Hukum',       kemungkinan:3, dampak:4, level:'Tinggi',  upt:'Semua',             pic:'H. Rudi Hartanto',          status:'Aktif',    tgl:'2026-01-15', uraian:'Proses pengadaan tidak sesuai ketentuan, berpotensi korupsi, kolusi, dan nepotisme.', penyebab:'Pengawasan lemah, kompleksitas regulasi, konflik kepentingan.' },
+  { id:4,  kode:'RSK-004', nama:'Keterlambatan penyampaian laporan keuangan',               kategori:'Operasional', kemungkinan:4, dampak:3, level:'Tinggi',  upt:'Semua',             pic:'Dra. Endang Sulistyowati', status:'Review',   tgl:'2026-01-18', uraian:'Laporan keuangan tidak disampaikan tepat waktu kepada pihak yang berwenang.', penyebab:'SDM kurang, sistem tidak terintegrasi, data tidak akurat.' },
+  { id:5,  kode:'RSK-005', nama:'Kehilangan data akibat bencana alam',                      kategori:'Operasional', kemungkinan:2, dampak:5, level:'Tinggi',  upt:'Semua',             pic:'Muhammad Iqbal',            status:'Mitigasi', tgl:'2026-01-20', uraian:'Data keuangan dan dokumen penting hilang akibat bencana alam seperti gempa, banjir, atau kebakaran.', penyebab:'Tidak ada backup data yang memadai, gedung tidak tahan bencana.' },
+  { id:6,  kode:'RSK-006', nama:'Turnover SDM keuangan yang tinggi',                        kategori:'Operasional', kemungkinan:3, dampak:3, level:'Sedang',  upt:'BKPSDM',            pic:'Drs. H. Syaiful Anwar',    status:'Aktif',    tgl:'2026-01-22', uraian:'Staf keuangan sering berganti sehingga pengetahuan dan keahlian tidak terjaga.', penyebab:'Kompensasi tidak kompetitif, budaya kerja, peluang lebih baik.' },
+  { id:7,  kode:'RSK-007', nama:'Perubahan regulasi keuangan daerah yang mendadak',         kategori:'Hukum',       kemungkinan:3, dampak:3, level:'Sedang',  upt:'Semua',             pic:'Dra. Endang Sulistyowati', status:'Aktif',    tgl:'2026-01-25', uraian:'Perubahan peraturan dari pusat yang memerlukan penyesuaian sistem dan prosedur dalam waktu singkat.', penyebab:'Kebijakan pemerintah pusat yang dinamis.' },
+  { id:8,  kode:'RSK-008', nama:'Risiko kredit piutang daerah tidak tertagih',              kategori:'Keuangan',    kemungkinan:3, dampak:3, level:'Sedang',  upt:'BPKD',              pic:'Dra. Endang Sulistyowati', status:'Review',   tgl:'2026-02-01', uraian:'Piutang daerah yang tidak dapat ditagih mengakibatkan kerugian keuangan daerah.', penyebab:'Debitur mengalami kebangkrutan, lemahnya penagihan.' },
+  { id:9,  kode:'RSK-009', nama:'Ketidakakuratan data aset daerah',                         kategori:'Operasional', kemungkinan:4, dampak:2, level:'Sedang',  upt:'BPKD',              pic:'Budi Santoso, SE.',         status:'Aktif',    tgl:'2026-02-05', uraian:'Data inventaris dan aset daerah tidak akurat, tidak mutakhir, atau tidak sesuai kondisi fisik.', penyebab:'Pencatatan manual, mutasi aset tidak tercatat, aset rusak tidak dihapus.' },
+  { id:10, kode:'RSK-010', nama:'Penurunan pendapatan asli daerah',                         kategori:'Keuangan',    kemungkinan:3, dampak:3, level:'Sedang',  upt:'Semua',             pic:'Prof. Dr. Wahyu Purnomo',  status:'Aktif',    tgl:'2026-02-08', uraian:'Target PAD tidak tercapai akibat kondisi ekonomi atau lemahnya pungutan.', penyebab:'Perlambatan ekonomi, kebocoran penerimaan.' },
+  { id:11, kode:'RSK-011', nama:'Gangguan layanan publik akibat krisis anggaran',            kategori:'Strategis',   kemungkinan:2, dampak:4, level:'Tinggi',  upt:'Semua',             pic:'Prof. Dr. Wahyu Purnomo',  status:'Aktif',    tgl:'2026-02-10', uraian:'Kekurangan anggaran menyebabkan terhentinya layanan dasar kepada masyarakat.', penyebab:'Defisit anggaran, keterlambatan transfer dana pusat.' },
+  { id:12, kode:'RSK-012', nama:'Kelemahan pengendalian internal',                           kategori:'Operasional', kemungkinan:2, dampak:3, level:'Sedang',  upt:'Semua',             pic:'Dra. Endang Sulistyowati', status:'Mitigasi', tgl:'2026-02-12', uraian:'Sistem pengendalian internal yang lemah membuka celah penyimpangan dan kecurangan.', penyebab:'SOP tidak lengkap, pengawasan minim, budaya kepatuhan rendah.' },
+  { id:13, kode:'RSK-013', nama:'Risiko reputasi akibat temuan BPK',                         kategori:'Reputasi',    kemungkinan:2, dampak:4, level:'Tinggi',  upt:'BPKD',              pic:'Dra. Endang Sulistyowati', status:'Aktif',    tgl:'2026-02-15', uraian:'Temuan pemeriksaan BPK yang berulang merusak citra dan kepercayaan publik.', penyebab:'Kelemahan tata kelola, ketidakpatuhan prosedur.' },
+  { id:14, kode:'RSK-014', nama:'Dependensi sistem pada vendor tunggal',                     kategori:'Teknologi',   kemungkinan:2, dampak:3, level:'Sedang',  upt:'BPKD',              pic:'Muhammad Iqbal',            status:'Aktif',    tgl:'2026-02-18', uraian:'Sistem keuangan bergantung pada satu vendor sehingga rentan terhadap kegagalan dukungan teknis.', penyebab:'Kontrak tidak fleksibel, tidak ada vendor cadangan.' },
+  { id:15, kode:'RSK-015', nama:'Kesalahan input data transaksi keuangan',                   kategori:'Operasional', kemungkinan:4, dampak:1, level:'Rendah',  upt:'Semua',             pic:'Budi Santoso, SE.',         status:'Aktif',    tgl:'2026-02-20', uraian:'Kesalahan data entry pada transaksi keuangan yang menyebabkan laporan tidak akurat.', penyebab:'Human error, sistem tidak memiliki validasi yang cukup.' },
+  { id:16, kode:'RSK-016', nama:'Keterlambatan proses approval anggaran',                    kategori:'Operasional', kemungkinan:3, dampak:2, level:'Rendah',  upt:'Semua',             pic:'H. Rudi Hartanto',          status:'Closed',   tgl:'2026-02-22', uraian:'Proses persetujuan anggaran yang lambat menghambat pelaksanaan program.', penyebab:'Alur approval terlalu panjang, pejabat tidak tersedia.' },
+  { id:17, kode:'RSK-017', nama:'Ketidaksesuaian COA antar entitas',                         kategori:'Keuangan',    kemungkinan:2, dampak:2, level:'Rendah',  upt:'BPKD',              pic:'Dra. Endang Sulistyowati', status:'Closed',   tgl:'2026-02-25', uraian:'Perbedaan chart of accounts antar entitas menyulitkan konsolidasi laporan keuangan.', penyebab:'Belum ada standarisasi COA, migrasi sistem tidak sempurna.' },
+];
+
+// ═══════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════
+let state = {
+  view      : 'table',
+  sortCol   : 'kode',
+  sortDir   : 'asc',
+  search    : '',
+  filterLevel : '',
+  filterKat   : '',
+  filterStatus: '',
+  hmFilter  : null,   // { kem, dmp } atau null
+  page      : 1,
+  perPage   : 12,
+  editingId : null,
+};
+
+// ═══════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════
+const LEVEL_COLOR = { Kritis:'kritis', Tinggi:'tinggi', Sedang:'sedang', Rendah:'rendah' };
+const KAT_CLASS   = { Operasional:'kat-operasional', Keuangan:'kat-keuangan', Hukum:'kat-hukum', Reputasi:'kat-reputasi', Strategis:'kat-strategis', Teknologi:'kat-teknologi' };
+const STATUS_CLASS = { Aktif:'st-aktif', Review:'st-review', Mitigasi:'st-mitigasi', Closed:'st-closed' };
+const STATUS_DOT   = { Aktif:'std-aktif', Review:'std-review', Mitigasi:'std-mitigasi', Closed:'std-closed' };
+const STATUS_LABEL = { Aktif:'Aktif', Review:'Dalam Review', Mitigasi:'Dalam Mitigasi', Closed:'Closed' };
+const KEM_LABEL  = ['','Jarang','Kadang','Mungkin','Sering','Hampir Pasti'];
+const DMP_LABEL  = ['','Sangat Kecil','Kecil','Sedang','Besar','Sangat Besar'];
+
+function riskBadge(level) {
+  const c = LEVEL_COLOR[level] || 'rendah';
+  const emoji = { Kritis:'🔴', Tinggi:'🟠', Sedang:'🟡', Rendah:'🟢' }[level] || '';
+  return `<span class="risk-badge risk-${c}"><span class="risk-dot dot-${c}"></span>${level}</span>`;
+}
+function katBadge(kat) {
+  return `<span class="kat-badge ${KAT_CLASS[kat]||''}">${kat}</span>`;
+}
+function stBadge(st) {
+  return `<span class="st-badge ${STATUS_CLASS[st]||''}"><span class="st-dot ${STATUS_DOT[st]||''}"></span>${STATUS_LABEL[st]||st}</span>`;
+}
+function levelFromScore(s) {
+  if (s >= 15) return 'Kritis';
+  if (s >= 8)  return 'Tinggi';
+  if (s >= 4)  return 'Sedang';
+  return 'Rendah';
+}
+function stripeColor(level) {
+  return { Kritis:['#8B1C1C','#b03030'], Tinggi:['#c73a1a','#e05830'], Sedang:['#b06010','#d08030'], Rendah:['#1e6e40','#2da86e'] }[level] || ['var(--sage)','var(--sage-light)'];
+}
+
+// ═══════════════════════════════════════════
+//  STATS
+// ═══════════════════════════════════════════
+function updateStats() {
+  document.getElementById('statTotal').textContent   = RISKS.length;
+  document.getElementById('statKritis').textContent  = RISKS.filter(r=>r.level==='Kritis').length;
+  document.getElementById('statTinggi').textContent  = RISKS.filter(r=>r.level==='Tinggi').length;
+  document.getElementById('statSedang').textContent  = RISKS.filter(r=>r.level==='Sedang').length;
+  document.getElementById('statRendah').textContent  = RISKS.filter(r=>r.level==='Rendah').length;
+}
+
+// ═══════════════════════════════════════════
+//  HEATMAP
+// ═══════════════════════════════════════════
+function renderHeatmap() {
+  const yLabels = ['Hampir Pasti (5)','Sering (4)','Mungkin (3)','Kadang (2)','Jarang (1)'];
+  document.getElementById('hmYAxis').innerHTML = yLabels.map(l =>
+    `<div class="heatmap-y-label">${l}</div>`).join('');
+
+  const xLabels = ['Sangat Kecil','Kecil','Sedang','Besar','Sangat Besar'];
+  document.getElementById('hmXLabels').innerHTML = xLabels.map(l =>
+    `<div class="heatmap-x-label">${l}</div>`).join('');
+
+  let cells = '';
+  for (let kem = 5; kem >= 1; kem--) {
+    for (let dmp = 1; dmp <= 5; dmp++) {
+      const score = kem * dmp;
+      const cnt   = RISKS.filter(r => r.kemungkinan === kem && r.dampak === dmp).length;
+      let cls = 'hm-empty';
+      if      (score >= 15) cls = 'hm-kritis';
+      else if (score >= 8)  cls = 'hm-tinggi';
+      else if (score >= 4)  cls = 'hm-sedang';
+      else                   cls = 'hm-rendah';
+      const isActive = state.hmFilter && state.hmFilter.kem === kem && state.hmFilter.dmp === dmp;
+      const title = `K${kem}×D${dmp}=Skor ${score} · ${cnt} risiko`;
+      cells += `<div class="heatmap-cell ${cnt===0?'hm-empty':cls}" onclick="toggleHmFilter(${kem},${dmp})"
+        title="${title}" style="${isActive?'outline:2px solid var(--ink);outline-offset:2px;':''}">${cnt||''}</div>`;
+    }
+  }
+  document.getElementById('hmCells').innerHTML = cells;
+}
+
+function toggleHmFilter(kem, dmp) {
+  if (state.hmFilter && state.hmFilter.kem === kem && state.hmFilter.dmp === dmp) {
+    state.hmFilter = null;
+    document.getElementById('btnClearFilter').style.display = 'none';
+    document.getElementById('hmFilterLabel').textContent = '';
+  } else {
+    state.hmFilter = { kem, dmp };
+    document.getElementById('btnClearFilter').style.display = 'inline-flex';
+    document.getElementById('hmFilterLabel').textContent = `Filter: K${kem}×D${dmp} — Skor ${kem*dmp}`;
+  }
+  state.page = 1;
+  renderHeatmap();
+  render();
+}
+
+function clearHmFilter() {
+  state.hmFilter = null;
+  document.getElementById('btnClearFilter').style.display = 'none';
+  document.getElementById('hmFilterLabel').textContent = '';
+  renderHeatmap();
+  render();
+}
+
+// ═══════════════════════════════════════════
+//  FILTER + SORT
+// ═══════════════════════════════════════════
+function applyFilters() {
+  state.search       = document.getElementById('searchInput').value.toLowerCase();
+  state.filterLevel  = document.getElementById('filterLevel').value;
+  state.filterKat    = document.getElementById('filterKat').value;
+  state.filterStatus = document.getElementById('filterStatus').value;
+  state.page = 1;
+  render();
+}
+
+function getFiltered() {
+  return RISKS.filter(r => {
+    if (state.filterLevel  && r.level    !== state.filterLevel)  return false;
+    if (state.filterKat    && r.kategori !== state.filterKat)    return false;
+    if (state.filterStatus && r.status   !== state.filterStatus) return false;
+    if (state.hmFilter && (r.kemungkinan !== state.hmFilter.kem || r.dampak !== state.hmFilter.dmp)) return false;
+    if (state.search) {
+      const q = state.search;
+      if (!r.kode.toLowerCase().includes(q) && !r.nama.toLowerCase().includes(q) && !r.pic.toLowerCase().includes(q)) return false;
+    }
+    return true;
+  }).sort((a,b) => {
+    const levelOrder = { Kritis:0, Tinggi:1, Sedang:2, Rendah:3 };
+    let av = state.sortCol === 'level' ? levelOrder[a.level] : a[state.sortCol];
+    let bv = state.sortCol === 'level' ? levelOrder[b.level] : b[state.sortCol];
+    if (typeof av === 'string') return state.sortDir==='asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+    return state.sortDir==='asc' ? av-bv : bv-av;
+  });
+}
+
+function sortBy(col) {
+  state.sortDir = state.sortCol === col && state.sortDir === 'asc' ? 'desc' : 'asc';
+  state.sortCol = col;
+  render();
+}
+
+// ═══════════════════════════════════════════
+//  VIEW TOGGLE
+// ═══════════════════════════════════════════
+function setView(v) {
+  state.view = v;
+  document.getElementById('viewTable').style.display = v==='table' ? 'block' : 'none';
+  document.getElementById('viewGrid').style.display  = v==='grid'  ? 'block' : 'none';
+  document.getElementById('btnTable').classList.toggle('active', v==='table');
+  document.getElementById('btnGrid').classList.toggle('active', v==='grid');
+  render();
+}
+
+// ═══════════════════════════════════════════
+//  RENDER
+// ═══════════════════════════════════════════
+function render() {
+  const data  = getFiltered();
+  const start = (state.page-1)*state.perPage;
+  const page  = data.slice(start, start+state.perPage);
+  if (state.view==='table') renderTable(data,page);
+  else                      renderGrid(data,page);
+}
+
+/* ── TABLE ── */
+function renderTable(data, page) {
+  const tbody = document.getElementById('riskTbody');
+  const empty = document.getElementById('emptyTable');
+  document.getElementById('tableSubtitle').textContent = `Menampilkan ${data.length} dari ${RISKS.length} risiko`;
+  if (!page.length) { tbody.innerHTML=''; empty.style.display='block'; document.getElementById('paginationTable').innerHTML=''; return; }
+  empty.style.display='none';
+  tbody.innerHTML = page.map(r => `
+    <tr style="animation:fadeIn .3s ease both;">
+      <td class="td-code">${r.kode}</td>
+      <td style="max-width:260px;">
+        <div class="td-name">${r.nama}</div>
+        <div class="td-name-sub">${r.uraian ? r.uraian.slice(0,80)+'…' : ''}</div>
+      </td>
+      <td>${katBadge(r.kategori)}</td>
+      <td>${riskBadge(r.level)}</td>
+      <td><span style="font-family:'DM Mono',monospace;font-size:13px;font-weight:600;">${r.kemungkinan}</span><span style="font-size:11px;color:var(--ink-muted);"> · ${KEM_LABEL[r.kemungkinan]||''}</span></td>
+      <td><span style="font-family:'DM Mono',monospace;font-size:13px;font-weight:600;">${r.dampak}</span><span style="font-size:11px;color:var(--ink-muted);"> · ${DMP_LABEL[r.dampak]||''}</span></td>
+      <td style="font-size:12.5px;">${r.upt}</td>
+      <td style="font-size:12.5px;max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.pic}</td>
+      <td>${stBadge(r.status)}</td>
+      <td style="text-align:right;white-space:nowrap;">
+        <button class="act-btn" onclick="openDetail(${r.id})" title="Detail"><i class="fa-solid fa-eye"></i></button>
+        <button class="act-btn" onclick="openEditModal(${r.id})" title="Edit" style="margin-left:4px;"><i class="fa-solid fa-pen"></i></button>
+        <button class="act-btn danger" onclick="deleteRisk(${r.id})" title="Hapus" style="margin-left:4px;"><i class="fa-solid fa-trash"></i></button>
+      </td>
+    </tr>`).join('');
+  renderPagination(data.length,'paginationTable');
+}
+
+/* ── GRID ── */
+function renderGrid(data, page) {
+  const grid  = document.getElementById('riskGrid');
+  const empty = document.getElementById('emptyGrid');
+  if (!page.length) { grid.innerHTML=''; empty.style.display='block'; document.getElementById('paginationGrid').innerHTML=''; return; }
+  empty.style.display='none';
+  const [c1,c2] = stripeColor(page[0]?.level||'Rendah');
+  grid.innerHTML = page.map((r,i) => {
+    const [sc1,sc2] = stripeColor(r.level);
+    const skor = r.kemungkinan * r.dampak;
+    return `<div class="risk-card" style="animation-delay:${i*.04}s" onclick="openDetail(${r.id})">
+      <div class="risk-card-stripe" style="background:linear-gradient(90deg,${sc1},${sc2});"></div>
+      <div class="risk-card-body">
+        <div class="risk-card-head">
+          <div style="flex:1;">
+            <div class="risk-card-code">${r.kode} · ${r.tgl||''}</div>
+            <div class="risk-card-title">${r.nama}</div>
+          </div>
+          ${riskBadge(r.level)}
+        </div>
+        <div class="risk-card-desc">${r.uraian||''}</div>
+        <div class="risk-card-meta">
+          ${katBadge(r.kategori)}
+          ${stBadge(r.status)}
+          <span style="background:var(--cream-mid);color:var(--ink-muted);font-size:10.5px;font-weight:600;padding:3px 8px;border-radius:20px;">${r.upt}</span>
+        </div>
+      </div>
+      <div class="risk-card-foot">
+        <div>
+          <div class="risk-card-foot-label">Kemungkinan × Dampak</div>
+          <div class="risk-card-foot-val">${r.kemungkinan} × ${r.dampak} = <span style="color:${stripeColor(r.level)[0]};">${skor}</span></div>
+        </div>
+        <div style="text-align:right;">
+          <div class="risk-card-foot-label">PIC</div>
+          <div style="font-size:12px;font-weight:600;color:var(--ink);">${r.pic.split(',')[0].split(' ').slice(0,2).join(' ')}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  renderPagination(data.length,'paginationGrid');
+}
+
+/* ── PAGINATION ── */
+function renderPagination(total, elId) {
+  const pages = Math.ceil(total/state.perPage);
+  const start = (state.page-1)*state.perPage+1;
+  const end   = Math.min(state.page*state.perPage, total);
+  if (!total) { document.getElementById(elId).innerHTML=''; return; }
+  let btns='';
+  for (let i=1;i<=pages;i++){
+    if (pages>7 && i>2 && i<pages-1 && Math.abs(i-state.page)>1){ if(i===3||i===pages-2) btns+=`<span class="pg-btn" style="pointer-events:none;">…</span>`; continue; }
+    btns+=`<button class="pg-btn ${i===state.page?'active':''}" onclick="goPage(${i})">${i}</button>`;
+  }
+  document.getElementById(elId).innerHTML=`
+    <div class="pagination-info">Menampilkan ${start}–${end} dari ${total} risiko</div>
+    <div class="pagination-btns">
+      <button class="pg-btn" onclick="goPage(${state.page-1})" ${state.page<=1?'disabled':''}><i class="fa-solid fa-chevron-left" style="font-size:10px;"></i></button>
+      ${btns}
+      <button class="pg-btn" onclick="goPage(${state.page+1})" ${state.page>=pages?'disabled':''}><i class="fa-solid fa-chevron-right" style="font-size:10px;"></i></button>
+    </div>`;
+}
+function goPage(p) { state.page=Math.max(1,Math.min(p,Math.ceil(getFiltered().length/state.perPage))); render(); }
+
+// ═══════════════════════════════════════════
+//  MODAL FORM
+// ═══════════════════════════════════════════
+function nextKode() {
+  const nums = RISKS.map(r => parseInt(r.kode.split('-')[1]||0)).filter(Boolean);
+  const next = nums.length ? Math.max(...nums)+1 : 1;
+  return `RSK-${String(next).padStart(3,'0')}`;
+}
+
+function openAddModal() {
+  state.editingId = null;
+  document.getElementById('modalFormTitle').textContent = 'Daftarkan Risiko Baru';
+  document.getElementById('modalFormSub').textContent   = 'Isi identitas dan parameter risiko';
+  document.getElementById('fKode').value       = nextKode();
+  document.getElementById('fNama').value       = '';
+  document.getElementById('fUraian').value     = '';
+  document.getElementById('fKategori').value   = '';
+  document.getElementById('fUpt').value        = 'Semua';
+  document.getElementById('fPic').value        = '';
+  document.getElementById('fKemungkinan').value= '';
+  document.getElementById('fDampak').value     = '';
+  document.getElementById('fPenyebab').value   = '';
+  document.getElementById('fStatus').value     = 'Aktif';
+  document.getElementById('fTanggal').value    = new Date().toISOString().split('T')[0];
+  document.getElementById('skorDisplay').textContent = '—';
+  document.getElementById('skorDisplay').style.color = 'var(--ink-muted)';
+  document.querySelectorAll('.level-opt').forEach(el => el.className='level-opt');
+  document.querySelectorAll('input[name=riskLevel]').forEach(r => r.checked=false);
+  openModal('modalForm');
+}
+
+function openEditModal(id) {
+  const r = RISKS.find(x => x.id===id);
+  if (!r) return;
+  state.editingId = id;
+  document.getElementById('modalFormTitle').textContent = 'Edit Risiko';
+  document.getElementById('modalFormSub').textContent   = r.kode+' — '+r.nama;
+  document.getElementById('fKode').value       = r.kode;
+  document.getElementById('fNama').value       = r.nama;
+  document.getElementById('fUraian').value     = r.uraian||'';
+  document.getElementById('fKategori').value   = r.kategori;
+  document.getElementById('fUpt').value        = r.upt;
+  document.getElementById('fPic').value        = r.pic;
+  document.getElementById('fKemungkinan').value= r.kemungkinan;
+  document.getElementById('fDampak').value     = r.dampak;
+  document.getElementById('fPenyebab').value   = r.penyebab||'';
+  document.getElementById('fStatus').value     = r.status;
+  document.getElementById('fTanggal').value    = r.tgl||'';
+  selectLevel(r.level);
+  autoLevel();
+  closeModal('modalDetail');
+  openModal('modalForm');
+}
+
+function autoLevel() {
+  const k = parseInt(document.getElementById('fKemungkinan').value)||0;
+  const d = parseInt(document.getElementById('fDampak').value)||0;
+  if (!k||!d) { document.getElementById('skorDisplay').textContent='—'; document.getElementById('skorDisplay').style.color='var(--ink-muted)'; return; }
+  const skor = k*d;
+  const level = levelFromScore(skor);
+  const colors = { Kritis:['#8B1C1C','#e05050'], Tinggi:['#c73a1a','#e08060'], Sedang:['#b06010','#d09040'], Rendah:['#1e6e40','#2da86e'] };
+  const [c] = colors[level]||['var(--sage)'];
+  document.getElementById('skorDisplay').textContent = skor;
+  document.getElementById('skorDisplay').style.color = c;
+  selectLevel(level);
+}
+
+function selectLevel(level) {
+  document.querySelectorAll('.level-opt').forEach(el => {
+    el.className = 'level-opt';
+  });
+  const opt = document.getElementById('lopt-'+level);
+  if (opt) opt.className = 'level-opt sel-'+level.toLowerCase();
+  const radio = document.querySelector(`input[name=riskLevel][value="${level}"]`);
+  if (radio) radio.checked = true;
+}
+
+function saveRisk() {
+  const nama     = document.getElementById('fNama').value.trim();
+  const kategori = document.getElementById('fKategori').value;
+  const pic      = document.getElementById('fPic').value.trim();
+  const kem      = parseInt(document.getElementById('fKemungkinan').value)||0;
+  const dmp      = parseInt(document.getElementById('fDampak').value)||0;
+  const levelRadio = document.querySelector('input[name=riskLevel]:checked');
+  if (!nama||!kategori||!pic||!kem||!dmp) { showToast('warning','fa-triangle-exclamation','Lengkapi semua field wajib.'); return; }
+  if (!levelRadio) { showToast('warning','fa-triangle-exclamation','Pilih level risiko.'); return; }
+  const payload = {
+    nama, kategori, pic,
+    kemungkinan: kem, dampak: dmp, level: levelRadio.value,
+    uraian  : document.getElementById('fUraian').value.trim(),
+    upt     : document.getElementById('fUpt').value,
+    penyebab: document.getElementById('fPenyebab').value.trim(),
+    status  : document.getElementById('fStatus').value,
+    tgl     : document.getElementById('fTanggal').value,
+  };
+  if (state.editingId) {
+    const idx = RISKS.findIndex(r => r.id===state.editingId);
+    if (idx>=0) Object.assign(RISKS[idx], payload);
+    showToast('success','fa-circle-check','Risiko berhasil diperbarui.');
+  } else {
+    RISKS.push({ id:Date.now(), kode: document.getElementById('fKode').value, ...payload });
+    showToast('success','fa-circle-check','Risiko berhasil didaftarkan.');
+  }
+  closeModal('modalForm');
+  updateStats();
+  renderHeatmap();
+  render();
+}
+
+// ═══════════════════════════════════════════
+//  DELETE
+// ═══════════════════════════════════════════
+function deleteRisk(id) {
+  const r = RISKS.find(x=>x.id===id);
+  if (!r) return;
+  if (!confirm(`Hapus risiko "${r.nama}"?\n\nTindakan ini tidak dapat dibatalkan.`)) return;
+  RISKS = RISKS.filter(x=>x.id!==id);
+  showToast('success','fa-trash','Risiko berhasil dihapus dari register.');
+  updateStats();
+  renderHeatmap();
+  render();
+}
+
+// ═══════════════════════════════════════════
+//  DETAIL MODAL
+// ═══════════════════════════════════════════
+function openDetail(id) {
+  const r = RISKS.find(x=>x.id===id);
+  if (!r) return;
+  const [c1,c2] = stripeColor(r.level);
+  const skor = r.kemungkinan * r.dampak;
+  document.getElementById('detailBand').style.background = `linear-gradient(90deg,${c1},${c2})`;
+  document.getElementById('detailTitle').textContent = r.nama;
+  document.getElementById('detailSub').innerHTML   = `${r.kode} &nbsp;·&nbsp; ${r.tgl||''} &nbsp;·&nbsp; ${riskBadge(r.level)}`;
+  document.getElementById('detailEditBtn').onclick = () => openEditModal(id);
+  document.getElementById('detailBody').innerHTML  = `
+    <div class="detail-section">
+      <div class="detail-section-title">Ringkasan Penilaian</div>
+      <div class="detail-grid">
+        <div class="detail-field">
+          <div class="detail-field-label">Skor Risiko</div>
+          <div class="detail-field-value" style="font-family:'DM Mono',monospace;font-size:26px;color:${c1};">${skor}</div>
+          <div style="font-size:11.5px;color:var(--ink-muted);margin-top:4px;">${r.kemungkinan}×${r.dampak} = ${skor}</div>
+        </div>
+        <div class="detail-field">
+          <div class="detail-field-label">Level Risiko</div>
+          <div class="detail-field-value" style="margin-top:4px;">${riskBadge(r.level)}</div>
+        </div>
+        <div class="detail-field">
+          <div class="detail-field-label">Kemungkinan</div>
+          <div class="detail-field-value">${r.kemungkinan} — ${KEM_LABEL[r.kemungkinan]||''}</div>
+        </div>
+        <div class="detail-field">
+          <div class="detail-field-label">Dampak</div>
+          <div class="detail-field-value">${r.dampak} — ${DMP_LABEL[r.dampak]||''}</div>
+        </div>
+        <div class="detail-field">
+          <div class="detail-field-label">Kategori</div>
+          <div class="detail-field-value" style="margin-top:4px;">${katBadge(r.kategori)}</div>
+        </div>
+        <div class="detail-field">
+          <div class="detail-field-label">Status</div>
+          <div class="detail-field-value" style="margin-top:4px;">${stBadge(r.status)}</div>
+        </div>
+        <div class="detail-field">
+          <div class="detail-field-label">UPT / Unit</div>
+          <div class="detail-field-value">${r.upt}</div>
+        </div>
+        <div class="detail-field">
+          <div class="detail-field-label">PIC</div>
+          <div class="detail-field-value">${r.pic}</div>
+        </div>
+      </div>
+    </div>
+    ${r.uraian ? `<div class="detail-section">
+      <div class="detail-section-title">Uraian Risiko</div>
+      <div style="background:var(--cream);border-radius:var(--radius-sm);padding:13px 16px;font-size:13.5px;color:var(--ink-soft);line-height:1.7;">${r.uraian}</div>
+    </div>` : ''}
+    ${r.penyebab ? `<div class="detail-section">
+      <div class="detail-section-title">Penyebab Utama</div>
+      <div style="background:var(--cream);border-radius:var(--radius-sm);padding:13px 16px;font-size:13.5px;color:var(--ink-soft);line-height:1.7;">${r.penyebab}</div>
+    </div>` : ''}
+    <div class="next-phase-box">
+      <div class="next-phase-box-icon"><i class="fa-solid fa-shield-halved"></i></div>
+      <div class="next-phase-box-text">
+        <div class="next-phase-box-title">Phase 2: Mitigasi Risiko</div>
+        <div class="next-phase-box-sub">Modul mitigasi untuk risiko ini tersedia di fase pengembangan berikutnya — termasuk rencana tindak, penanggung jawab, dan timeline.</div>
+      </div>
+    </div>`;
+  openModal('modalDetail');
+}
+
+// ═══════════════════════════════════════════
+//  EXPORT
+// ═══════════════════════════════════════════
+function exportCSV() {
+  const data = getFiltered();
+  const hdr  = ['Kode Register','Nama Risiko','Kategori','Level','Kemungkinan','Dampak','Skor','UPT','PIC','Status','Tanggal','Uraian','Penyebab'];
+  const rows = data.map(r => [r.kode,r.nama,r.kategori,r.level,r.kemungkinan,r.dampak,r.kemungkinan*r.dampak,r.upt,r.pic,r.status,r.tgl||'',r.uraian||'',r.penyebab||'']);
+  const csv  = [hdr,...rows].map(r=>r.map(c=>`"${c}"`).join(',')).join('\n');
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
+  link.download = 'master_risk_register.csv';
+  link.click();
+  showToast('success','fa-file-csv',`Berhasil mengekspor ${data.length} risiko ke CSV.`);
+}
+
+// ═══════════════════════════════════════════
+//  MODAL UTILS
+// ═══════════════════════════════════════════
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function closeModalIfBg(e,id) { if(e.target===document.getElementById(id)) closeModal(id); }
+
+// ═══════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════
+function showToast(type,icon,msg) {
+  const stack=document.getElementById('toastStack');
+  const t=document.createElement('div');
+  t.className=`toast ${type}`;
+  t.innerHTML=`<i class="fa-solid ${icon}"></i><span>${msg}</span>`;
+  stack.appendChild(t);
+  setTimeout(()=>{t.style.cssText='opacity:0;transform:translateX(20px);transition:all .3s;';setTimeout(()=>t.remove(),300);},3500);
+}
+
+// ═══════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════
+document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('id-ID',{weekday:'short',day:'numeric',month:'long',year:'numeric'});
+updateStats();
+renderHeatmap();
+render();
+</script>
+
+<script src="sidebar.js"></script>
+</body>
+</html>

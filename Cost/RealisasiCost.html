@@ -370,11 +370,11 @@
       <div class="toolbar">
         <div class="search-wrap">
           <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-          <input class="search-input" id="searchInput" type="text" placeholder="Cari detail, kategori, entitas, atau head anggaran..." oninput="applyFilters()">
+          <input class="search-input" id="searchInput" type="text" placeholder="Cari detail, kategori, UPK, UPT, atau risiko..." oninput="applyFilters()">
         </div>
 
         <select class="filter-select" id="filterEntitas" onchange="applyFilters()">
-          <option value="">Semua Entitas</option>
+          <option value="">Semua UPK</option>
           <option value="Klinik">Klinik</option>
           <option value="Yayasan">Yayasan</option>
           <option value="Universitas">Universitas</option>
@@ -410,9 +410,10 @@
             <thead>
               <tr>
                 <th>Tanggal</th>
-                <th>Entitas</th>
-                <th>Head Anggaran</th>
+                <th>UPK</th>
+                <th>UPT</th>
                 <th>Detail Realisasi</th>
+                <th>Risiko</th>
                 <th>Kategori</th>
                 <th>Nominal</th>
                 <th>Status Budget</th>
@@ -454,14 +455,14 @@
             <input class="form-input" id="fTanggal" type="date">
           </div>
           <div class="form-group">
-            <label class="form-label">Head Anggaran <span class="req">*</span></label>
+            <label class="form-label">UPT / Head Anggaran <span class="req">*</span></label>
             <select class="form-select" id="fBudget" onchange="updateBudgetInfo()"></select>
           </div>
         </div>
 
         <div class="budget-box">
           <div class="budget-box-title">Info Head Anggaran</div>
-          <div class="budget-box-value" id="budgetInfo">Pilih head anggaran terlebih dahulu</div>
+          <div class="budget-box-value" id="budgetInfo">Pilih UPT / head anggaran terlebih dahulu</div>
         </div>
 
         <div class="section-title">Detail Realisasi</div>
@@ -623,7 +624,7 @@
       const select = document.getElementById('fBudget');
       const activeBudgets = BUDGETS.filter(b => b.status !== 'Tutup');
 
-      select.innerHTML = '<option value="">— Pilih Head Anggaran —</option>' +
+      select.innerHTML = '<option value="">— Pilih UPT / Head Anggaran —</option>' +
         activeBudgets.map(b => `<option value="${b.id}">${b.kode} · ${b.entitas} · ${b.nama}</option>`).join('');
 
       if(selected) select.value = String(selected);
@@ -634,13 +635,13 @@
       const budgetId = document.getElementById('fBudget').value;
       const budget = getBudgetById(budgetId);
       if(!budget){
-        document.getElementById('budgetInfo').textContent = 'Pilih head anggaran terlebih dahulu';
+        document.getElementById('budgetInfo').textContent = 'Pilih UPT / head anggaran terlebih dahulu';
         return;
       }
 
       const sisa = remainingBeforeInput(budgetId, state.editingId);
       document.getElementById('budgetInfo').textContent =
-        `${budget.entitas} | ${budget.nama} | Pagu: ${fmtCurrency(budget.nominal)} | Sisa saat ini: ${fmtCurrency(sisa)}`;
+        `${budget.entitas} | ${budget.nama} | Risiko: ${budget.risikoNama || '-'}${budget.risikoSkala ? ` (${budget.risikoSkala})` : ''} | Pagu: ${fmtCurrency(budget.nominal)} | Sisa saat ini: ${fmtCurrency(sisa)}`;
     }
 
     function updateTotalPreview(){
@@ -674,7 +675,9 @@
         ...item,
         entitas: budget?.entitas || '-',
         budgetKode: budget?.kode || '-',
-        budgetNama: budget?.nama || '-'
+        budgetNama: budget?.nama || '-',
+        risikoNama: budget?.risikoNama || '',
+        risikoSkala: budget?.risikoSkala || ''
       };
     }
 
@@ -699,6 +702,8 @@
             item.entitas,
             item.budgetKode,
             item.budgetNama,
+            item.risikoNama || '',
+            item.risikoSkala || '',
             item.kategori,
             item.detail,
             item.catatan || ''
@@ -746,6 +751,11 @@
           <td>
             <div class="title-cell">${item.detail}</div>
             <div class="title-sub">${item.catatan || '-'}</div>
+          </td>
+          <td>
+            ${item.risikoNama
+              ? `<div class="title-cell">${item.risikoNama}</div><div class="title-sub">${item.risikoSkala || '-'}</div>`
+              : '<span class="badge badge-accent">-</span>'}
           </td>
           <td><span class="badge badge-accent">${item.kategori}</span></td>
           <td class="mono">${fmtCurrency(item.total)}</td>
@@ -845,7 +855,7 @@
       };
 
       if(!payload.budgetId || !payload.tanggal || !payload.kategori || !payload.detail || total <= 0){
-        showToast('warning', 'fa-triangle-exclamation', 'Head anggaran, tanggal, kategori, detail, qty, dan nominal wajib diisi.');
+        showToast('warning', 'fa-triangle-exclamation', 'UPT / head anggaran, tanggal, kategori, detail, qty, dan nominal wajib diisi.');
         return;
       }
 
@@ -968,7 +978,7 @@
         ];
       });
 
-      const header = ['Tanggal','Entitas','Kode Anggaran','Nama Anggaran','Kategori','Detail','Qty','Harga Satuan','Total','Status Budget','Status Accurate','Catatan'];
+      const header = ['Tanggal','UPK','Kode Anggaran','UPT','Nama Resiko','Skala Risiko','Kategori','Detail','Qty','Harga Satuan','Total','Status Budget','Status Accurate','Catatan'];
       const csv = [header, ...rows]
         .map(row => row.map(col => `"${String(col).replace(/"/g,'""')}"`).join(','))
         .join('\n');

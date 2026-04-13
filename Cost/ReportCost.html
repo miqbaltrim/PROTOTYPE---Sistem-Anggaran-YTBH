@@ -290,11 +290,11 @@
       <div class="toolbar">
         <div class="search-wrap">
           <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-          <input class="search-input" id="searchInput" type="text" placeholder="Cari entitas, head anggaran, atau kategori..." oninput="renderAll()">
+          <input class="search-input" id="searchInput" type="text" placeholder="Cari UPK, UPT, risiko, atau kategori..." oninput="renderAll()">
         </div>
 
         <select class="filter-select" id="filterEntitas" onchange="renderAll()">
-          <option value="">Semua Entitas</option>
+          <option value="">Semua UPK</option>
           <option value="Klinik">Klinik</option>
           <option value="Yayasan">Yayasan</option>
           <option value="Universitas">Universitas</option>
@@ -311,8 +311,8 @@
         <div class="panel">
           <div class="panel-head">
             <div>
-              <div class="panel-title"><i class="fa-solid fa-building" style="color:var(--primary)"></i> Ringkasan per Entitas</div>
-              <div class="panel-sub">Pagu, realisasi, dan sisa menurut entitas.</div>
+              <div class="panel-title"><i class="fa-solid fa-building" style="color:var(--primary)"></i> Ringkasan per UPK</div>
+              <div class="panel-sub">Pagu, realisasi, dan sisa menurut UPK.</div>
             </div>
           </div>
           <div class="panel-body">
@@ -345,8 +345,9 @@
           <table>
             <thead>
               <tr>
-                <th>Entitas</th>
-                <th>Head Anggaran</th>
+                <th>UPK</th>
+                <th>UPT</th>
+                <th>Risiko</th>
                 <th>Tahun</th>
                 <th>Pagu</th>
                 <th>Realisasi</th>
@@ -372,10 +373,11 @@
           <table>
             <thead>
               <tr>
-                <th>Entitas</th>
-                <th>Head Anggaran</th>
+                <th>UPK</th>
+                <th>UPT</th>
                 <th>Pagu</th>
                 <th>Realisasi</th>
+                <th>Risiko</th>
                 <th>Selisih</th>
                 <th>Detail</th>
               </tr>
@@ -451,6 +453,8 @@
             item.entitas,
             item.kode,
             item.nama,
+            item.risikoNama || '',
+            item.risikoSkala || '',
             item.catatan || '',
             ...item.details.map(d => `${d.kategori} ${d.detail} ${d.catatan || ''}`)
           ].join(' ').toLowerCase();
@@ -553,7 +557,7 @@
       const tbody = document.getElementById('budgetSummaryBody');
 
       if (!data.length) {
-        tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><i class="fa-solid fa-folder-open"></i><div class="empty-title">Belum ada head anggaran</div><div class="empty-sub">Tambahkan Anggaran Cost terlebih dahulu.</div></div></td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9"><div class="empty-state"><i class="fa-solid fa-folder-open"></i><div class="empty-title">Belum ada head anggaran</div><div class="empty-sub">Tambahkan Anggaran Cost terlebih dahulu.</div></div></td></tr>`;
         return;
       }
 
@@ -565,6 +569,11 @@
             <td>
               <div class="title-cell">${escapeHtml(item.nama)}</div>
               <div class="title-sub">${escapeHtml(item.kode || '-')}</div>
+            </td>
+            <td>
+              ${item.risikoNama
+                ? `<div class="title-cell">${escapeHtml(item.risikoNama)}</div><div class="title-sub">${escapeHtml(item.risikoSkala || '-')}</div>`
+                : '<span class="badge badge-accent">-</span>'}
             </td>
             <td class="mono">${escapeHtml(item.tahun || '-')}</td>
             <td class="mono">${fmtCurrency(item.nominal)}</td>
@@ -584,7 +593,7 @@
       const overItems = data.filter(x => x.over);
 
       if (!overItems.length) {
-        tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><i class="fa-solid fa-shield"></i><div class="empty-title">Tidak ada over budget</div><div class="empty-sub">Semua head anggaran masih dalam batas pagu.</div></div></td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><i class="fa-solid fa-shield"></i><div class="empty-title">Tidak ada over budget</div><div class="empty-sub">Semua head anggaran masih dalam batas pagu.</div></div></td></tr>`;
         return;
       }
 
@@ -599,6 +608,7 @@
             </td>
             <td class="mono">${fmtCurrency(item.nominal)}</td>
             <td class="mono">${fmtCurrency(item.actual)}</td>
+            <td>${item.risikoNama ? `<div class="title-cell">${escapeHtml(item.risikoNama)}</div><div class="title-sub">${escapeHtml(item.risikoSkala || '-')}</div>` : '<span class="badge badge-accent">-</span>'}</td>
             <td class="mono" style="color:var(--danger)">${fmtCurrency(item.actual - item.nominal)}</td>
             <td>
               <div class="title-cell">${item.details.length} realisasi</div>
@@ -614,6 +624,9 @@
         item.entitas,
         item.kode,
         item.nama,
+        item.risikoId || '',
+        item.risikoNama || '',
+        item.risikoSkala || '',
         item.tahun,
         item.nominal,
         item.actual,
@@ -622,7 +635,7 @@
         item.over ? 'Over Budget' : 'Normal'
       ]);
 
-      const header = ['Entitas','Kode Anggaran','Nama Anggaran','Tahun','Pagu','Realisasi','Sisa','Utilisasi %','Status'];
+      const header = ['UPK','Kode Anggaran','UPT','ID Risiko','Nama Resiko','Skala Risiko','Tahun','Pagu','Realisasi','Sisa','Utilisasi %','Status'];
       const csv = [header, ...rows]
         .map(row => row.map(col => `"${String(col ?? '').replace(/"/g,'""')}"`).join(','))
         .join('\n');
