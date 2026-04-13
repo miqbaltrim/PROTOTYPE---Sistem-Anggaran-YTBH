@@ -374,7 +374,7 @@
       <div class="toolbar">
         <div class="search-wrap">
           <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-          <input class="search-input" id="searchInput" type="text" placeholder="Cari kode, UPK, atau UPT..." oninput="applyFilters()">
+          <input class="search-input" id="searchInput" type="text" placeholder="Cari kode, UPK, UPT, atau mata anggaran..." oninput="applyFilters()">
         </div>
 
         <select class="filter-select" id="filterEntitas" onchange="applyFilters()">
@@ -410,7 +410,7 @@
               <tr>
                 <th class="sortable" onclick="sortBy('kode')">Kode</th>
                 <th class="sortable" onclick="sortBy('entitas')">UPK</th>
-                <th class="sortable" onclick="sortBy('nama')">UPT</th>
+                <th class="sortable" onclick="sortBy('nama')">UPT / Mata Anggaran</th>
                 <th>Risiko</th>
                 <th class="sortable" onclick="sortBy('tahun')">Tahun</th>
                 <th class="sortable" onclick="sortBy('nominal')">Pagu</th>
@@ -445,48 +445,54 @@
         <button class="modal-close" onclick="closeModal('modalForm')"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
-      <div class="modal-body">
+      
+<div class="modal-body">
         <div class="section-title">Identitas Head Anggaran</div>
+
+        <input type="hidden" id="fMataId">
+        <input type="hidden" id="fMataNama">
 
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">Kode Anggaran <span class="req">*</span></label>
-            <input class="form-input" id="fKode" type="text" placeholder="Pilih dari dropdown + search atau isi manual" oninput="syncUPTLookupFromForm()">
-          </div>
-          <div class="form-group">
             <label class="form-label">UPK <span class="req">*</span></label>
-            <select class="form-select" id="fEntitas" onchange="handleUPKReferenceChange()">
+            <select class="form-select" id="fEntitas" onchange="handleUPKChange()">
               <option value="">— Pilih UPK —</option>
               <option value="Klinik">Klinik</option>
               <option value="Yayasan">Yayasan</option>
               <option value="Universitas">Universitas</option>
             </select>
           </div>
+          <div class="form-group">
+            <label class="form-label">UPT <span class="req">*</span></label>
+            <select class="form-select" id="fUpt" onchange="handleUPTChange()">
+              <option value="">— Pilih UPT —</option>
+            </select>
+          </div>
         </div>
 
         <div class="form-group" style="margin-bottom:14px;">
-          <label class="form-label">Dropdown + Search Kode / Nama UPT</label>
+          <label class="form-label">Dropdown + Search Mata Anggaran <span class="req">*</span></label>
           <div class="lookup-wrap">
             <input
               class="form-input"
-              id="fMasterSearch"
+              id="fMataSearch"
               type="text"
               autocomplete="off"
-              placeholder="Ketik kode atau nama UPT, mis. B.KLINIK.I.02 / Tunjangan BPJS Ketenagakerjaan"
-              oninput="renderUPTLookup()"
-              onfocus="renderUPTLookup()"
-              onblur="hideUPTLookup()"
+              placeholder="Ketik kode atau nama mata anggaran"
+              oninput="renderMataLookup()"
+              onfocus="renderMataLookup()"
+              onblur="hideMataLookup()"
             >
-            <div class="lookup-results" id="uptLookupResults"></div>
+            <div class="lookup-results" id="mataLookupResults"></div>
           </div>
-          <div class="lookup-help" id="uptLookupHelp">Pilih UPK terlebih dahulu untuk menampilkan referensi UPT.</div>
-          <div class="lookup-selected" id="uptLookupSelected"></div>
+          <div class="lookup-help" id="mataLookupHelp">Pilih UPK dan UPT terlebih dahulu untuk menampilkan mata anggaran.</div>
+          <div class="lookup-selected" id="mataLookupSelected"></div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">UPT <span class="req">*</span></label>
-            <input class="form-input" id="fNama" type="text" placeholder="Pilih dari dropdown + search atau isi manual" oninput="syncUPTLookupFromForm()">
+            <label class="form-label">Kode Anggaran <span class="req">*</span></label>
+            <input class="form-input" id="fKode" type="text" placeholder="Mengikuti mata anggaran terpilih" readonly>
           </div>
           <div class="form-group">
             <label class="form-label">Tahun Anggaran <span class="req">*</span></label>
@@ -503,13 +509,35 @@
           <select class="form-select" id="fRisk">
             <option value="">— Pilih Risiko —</option>
           </select>
-          <div class="lookup-help">Daftar risiko diambil dari Master Risiko.</div>
+          <div class="lookup-help">Otomatis mengikuti mata anggaran, tetapi masih bisa diubah manual.</div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
+            <label class="form-label">Qty <span class="req">*</span></label>
+            <input class="form-input" id="fQty" type="number" min="1" value="1" oninput="updateNominalPreview()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Satuan <span class="req">*</span></label>
+            <input class="form-input" id="fSatuan" type="text" placeholder="Mengikuti mata anggaran" readonly>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Harga Satuan (Rp) <span class="req">*</span></label>
+            <input class="form-input" id="fHargaSatuan" type="number" min="0" placeholder="0" oninput="updateNominalPreview()">
+          </div>
+          <div class="form-group">
             <label class="form-label">Nilai Pagu (Rp) <span class="req">*</span></label>
-            <input class="form-input" id="fNominal" type="number" min="0" placeholder="0" oninput="updateNominalPreview()">
+            <input class="form-input" id="fNominal" type="number" min="0" placeholder="0" readonly>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Preview Nilai</label>
+            <div class="form-input" id="nominalPreview" style="background:var(--bg);font-family:'DM Mono',monospace;">Rp 0</div>
           </div>
           <div class="form-group">
             <label class="form-label">Status</label>
@@ -521,14 +549,9 @@
           </div>
         </div>
 
-        <div class="form-group" style="margin-bottom:14px;">
-          <label class="form-label">Preview Nilai</label>
-          <div class="form-input" id="nominalPreview" style="background:var(--bg);font-family:'DM Mono',monospace;">Rp 0</div>
-        </div>
-
         <div class="form-group">
           <label class="form-label">Catatan</label>
-          <textarea class="form-textarea" id="fCatatan" placeholder="Contoh: Head anggaran untuk stok obat, gaji tenaga medis, dan operasional klinik."></textarea>
+          <textarea class="form-textarea" id="fCatatan" placeholder="Contoh: pagu untuk pengadaan item sesuai mata anggaran terpilih."></textarea>
         </div>
       </div>
 
@@ -541,48 +564,152 @@
 
   <div class="toast-stack" id="toastStack"></div>
 
-  <script>
+  
+<script>
     const STORAGE_BUDGETS = 'APP_COST_BUDGETS_V1';
     const STORAGE_REALIZATIONS = 'APP_COST_REALIZATIONS_V1';
     const STORAGE_RISKS = 'APP_MASTER_RISIKO_V1';
+    const STORAGE_UPK = 'APP_MASTER_UPK_V1';
+    const STORAGE_UPT = 'APP_MASTER_UPT_V1';
+    const STORAGE_MATA_ANGGARAN = 'APP_MASTER_MATA_ANGGARAN_V1';
 
     const seedBudgets = [
       {
         id: 1,
-        kode: 'AC-CLK-001',
+        kode: 'MA-CLK-001',
         entitas: 'Klinik',
-        nama: 'Operasional Klinik 2026',
+        uptId: 'UPT-002',
+        uptKode: 'B.KLINIK.II.05',
+        uptNama: 'Perlengkapan Kesehatan',
+        nama: 'Perlengkapan Kesehatan',
+        mataAnggaranId: 1,
+        mataAnggaranKode: 'MA-CLK-001',
+        mataAnggaranNama: 'Pembelian Obat Umum',
+        qty: 12,
+        satuan: 'box',
+        hargaSatuan: 275000,
+        risikoId: 1,
+        risikoNama: 'Risiko over budget operasional',
+        risikoSkala: 'Tinggi',
         tahun: 2026,
-        nominal: 300000000,
+        nominal: 3300000,
         status: 'Aktif',
-        catatan: 'Head anggaran Klinik untuk stok, gaji, dan operasional umum.'
+        catatan: 'Pagu untuk stok obat umum klinik.'
       },
       {
         id: 2,
-        kode: 'AC-YYS-001',
-        entitas: 'Yayasan',
-        nama: 'Operasional Yayasan 2026',
+        kode: 'MA-CLK-002',
+        entitas: 'Klinik',
+        uptId: 'UPT-001',
+        uptKode: 'B.KLINIK.I.01',
+        uptNama: 'Gaji Pegawai',
+        nama: 'Gaji Pegawai',
+        mataAnggaranId: 2,
+        mataAnggaranKode: 'MA-CLK-002',
+        mataAnggaranNama: 'ATK Front Office',
+        qty: 4,
+        satuan: 'paket',
+        hargaSatuan: 950000,
+        risikoId: 3,
+        risikoNama: 'Risiko ketidaksesuaian dokumentasi',
+        risikoSkala: 'Rendah',
         tahun: 2026,
-        nominal: 250000000,
-        status: 'Aktif',
-        catatan: 'Head anggaran Yayasan untuk administrasi, kegiatan pembinaan, dan umum.'
+        nominal: 3800000,
+        status: 'Draft',
+        catatan: 'Kebutuhan ATK front office.'
       },
       {
         id: 3,
-        kode: 'AC-UNI-001',
+        kode: 'MA-UNI-001',
         entitas: 'Universitas',
-        nama: 'Operasional Universitas 2026',
+        uptId: 'UPT-004',
+        uptKode: 'B.UNTA.II.01',
+        uptNama: 'Operasional Akademik',
+        nama: 'Operasional Akademik',
+        mataAnggaranId: 3,
+        mataAnggaranKode: 'MA-UNI-001',
+        mataAnggaranNama: 'Listrik Gedung Fakultas',
+        qty: 12,
+        satuan: 'bulan',
+        hargaSatuan: 14500000,
+        risikoId: 2,
+        risikoNama: 'Risiko keterlambatan vendor',
+        risikoSkala: 'Sedang',
         tahun: 2026,
-        nominal: 1200000000,
+        nominal: 174000000,
         status: 'Aktif',
-        catatan: 'Head anggaran Universitas untuk PBM, gaji, dan operasional fakultas.'
+        catatan: 'Pagu listrik untuk gedung fakultas.'
       }
     ];
 
     const seedRisks = [
-      { id: 1, nama: 'Risiko keterlambatan pembayaran vendor' },
-      { id: 2, nama: 'Risiko over budget operasional' },
-      { id: 3, nama: 'Risiko ketidaksesuaian dokumentasi' }
+      { id: 1, nama: 'Risiko over budget operasional', skala: 'Tinggi' },
+      { id: 2, nama: 'Risiko keterlambatan vendor', skala: 'Sedang' },
+      { id: 3, nama: 'Risiko ketidaksesuaian dokumentasi', skala: 'Rendah' }
+    ];
+
+    const seedUPK = [
+      { id:'UPK-001', kode:'KLINIK', nama:'Klinik' },
+      { id:'UPK-002', kode:'YAYASAN', nama:'Yayasan' },
+      { id:'UPK-003', kode:'UNIVERSITAS', nama:'Universitas' }
+    ];
+
+    const seedUPT = [
+      { id:'UPT-001', upkId:'UPK-001', kode:'B.KLINIK.I.01', nama:'Gaji Pegawai' },
+      { id:'UPT-002', upkId:'UPK-001', kode:'B.KLINIK.II.05', nama:'Perlengkapan Kesehatan' },
+      { id:'UPT-003', upkId:'UPK-002', kode:'B.YAYASAN.II.01', nama:'Administrasi Yayasan' },
+      { id:'UPT-004', upkId:'UPK-003', kode:'B.UNTA.II.01', nama:'Operasional Akademik' }
+    ];
+
+    const seedMataAnggaran = [
+      {
+        id:1,
+        kodeAnggaran:'MA-CLK-001',
+        namaMataAnggaran:'Pembelian Obat Umum',
+        idUpk:'UPK-001',
+        namaUpk:'Klinik',
+        idUpt:'UPT-002',
+        namaUpt:'Perlengkapan Kesehatan',
+        satuan:'box',
+        hargaSatuan:275000,
+        idCoa:'COA-002',
+        coaLabel:'06.1.01.02.18 · Biaya pembelian obat dan alat kesehatan - TP',
+        idRisk:1,
+        riskLabel:'Risiko over budget operasional',
+        riskSkala:'Tinggi'
+      },
+      {
+        id:2,
+        kodeAnggaran:'MA-CLK-002',
+        namaMataAnggaran:'ATK Front Office',
+        idUpk:'UPK-001',
+        namaUpk:'Klinik',
+        idUpt:'',
+        namaUpt:'',
+        satuan:'paket',
+        hargaSatuan:950000,
+        idCoa:'COA-003',
+        coaLabel:'06.1.01.03.02 · Biaya Alat Tulis Kantor - TP',
+        idRisk:3,
+        riskLabel:'Risiko ketidaksesuaian dokumentasi',
+        riskSkala:'Rendah'
+      },
+      {
+        id:3,
+        kodeAnggaran:'MA-UNI-001',
+        namaMataAnggaran:'Listrik Gedung Fakultas',
+        idUpk:'UPK-003',
+        namaUpk:'Universitas',
+        idUpt:'UPT-004',
+        namaUpt:'Operasional Akademik',
+        satuan:'bulan',
+        hargaSatuan:14500000,
+        idCoa:'COA-004',
+        coaLabel:'06.1.01.06.01 · Biaya Listrik - TP',
+        idRisk:2,
+        riskLabel:'Risiko keterlambatan vendor',
+        riskSkala:'Sedang'
+      }
     ];
 
     const seedRealizations = [
@@ -593,8 +720,8 @@
         kategori: 'Pembelian Stok',
         detail: 'Pembelian stok obat bulan Januari',
         qty: 1,
-        unitPrice: 50000000,
-        total: 50000000,
+        unitPrice: 1500000,
+        total: 1500000,
         accurateStatus: 'Pending',
         overBudget: false
       },
@@ -602,39 +729,32 @@
         id: 2,
         budgetId: 1,
         tanggal: '2026-01-25',
-        kategori: 'Gaji',
-        detail: 'Gaji tenaga medis Januari',
+        kategori: 'Pembelian Stok',
+        detail: 'Pembelian stok obat bulan Februari',
         qty: 1,
-        unitPrice: 40000000,
-        total: 40000000,
+        unitPrice: 800000,
+        total: 800000,
         accurateStatus: 'Pending',
         overBudget: false
       },
       {
         id: 3,
-        budgetId: 2,
-        tanggal: '2026-01-15',
-        kategori: 'Administrasi',
-        detail: 'ATK dan administrasi yayasan',
-        qty: 1,
-        unitPrice: 20000000,
-        total: 20000000,
-        accurateStatus: 'Pending',
-        overBudget: false
-      },
-      {
-        id: 4,
         budgetId: 3,
         tanggal: '2026-02-01',
         kategori: 'Operasional Akademik',
-        detail: 'Kebutuhan PBM semester genap',
+        detail: 'Pembayaran tagihan listrik',
         qty: 1,
-        unitPrice: 150000000,
-        total: 150000000,
+        unitPrice: 14500000,
+        total: 14500000,
         accurateStatus: 'Pending',
         overBudget: false
       }
     ];
+
+    function readJson(key){
+      try { return JSON.parse(localStorage.getItem(key)) || []; }
+      catch { return []; }
+    }
 
     function ensureSeed(){
       if(!localStorage.getItem(STORAGE_BUDGETS)){
@@ -646,32 +766,33 @@
       if(!localStorage.getItem(STORAGE_RISKS)){
         localStorage.setItem(STORAGE_RISKS, JSON.stringify(seedRisks));
       }
+      if(!localStorage.getItem(STORAGE_UPK)){
+        localStorage.setItem(STORAGE_UPK, JSON.stringify(seedUPK));
+      }
+      if(!localStorage.getItem(STORAGE_UPT)){
+        localStorage.setItem(STORAGE_UPT, JSON.stringify(seedUPT));
+      }
+      if(!localStorage.getItem(STORAGE_MATA_ANGGARAN)){
+        localStorage.setItem(STORAGE_MATA_ANGGARAN, JSON.stringify(seedMataAnggaran));
+      }
     }
 
-    function readBudgets(){
-      try { return JSON.parse(localStorage.getItem(STORAGE_BUDGETS)) || []; }
-      catch { return []; }
-    }
-
-    function writeBudgets(data){
-      localStorage.setItem(STORAGE_BUDGETS, JSON.stringify(data));
-    }
-
-    function readRealizations(){
-      try { return JSON.parse(localStorage.getItem(STORAGE_REALIZATIONS)) || []; }
-      catch { return []; }
-    }
-
-    function readRisks(){
-      try { return JSON.parse(localStorage.getItem(STORAGE_RISKS)) || []; }
-      catch { return []; }
-    }
+    function readBudgets(){ return readJson(STORAGE_BUDGETS); }
+    function writeBudgets(data){ localStorage.setItem(STORAGE_BUDGETS, JSON.stringify(data)); }
+    function readRealizations(){ return readJson(STORAGE_REALIZATIONS); }
+    function readRisks(){ return readJson(STORAGE_RISKS); }
+    function readUpks(){ return readJson(STORAGE_UPK); }
+    function readUpts(){ return readJson(STORAGE_UPT); }
+    function readMataAnggaran(){ return readJson(STORAGE_MATA_ANGGARAN); }
 
     ensureSeed();
 
     let BUDGETS = readBudgets();
     let REALIZATIONS = readRealizations();
     let RISKS = readRisks();
+    let UPKS = readUpks();
+    let UPTS = readUpts();
+    let MATA_ANGGARAN = readMataAnggaran();
 
     const state = {
       search: '',
@@ -684,438 +805,9 @@
       editingId: null
     };
 
-    const UPT_REFERENCE_MAP = {
-      "Klinik": [
-            {
-                  "upk": "Klinik",
-                  "group": "PENERIMAAN",
-                  "kode": "P.KLINIK.I.01",
-                  "nama": "JPKM PSAA Amanah",
-                  "accurateKode": "04.1.01.04.15",
-                  "accurateNama": "Pendapatan JPKM - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "PENERIMAAN",
-                  "kode": "P.KLINIK.I.02",
-                  "nama": "Iuran Peserta BPJS",
-                  "accurateKode": "04.1.01.04.21",
-                  "accurateNama": "Pendapatan dari BPJS Kesehatan - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "PENERIMAAN",
-                  "kode": "P.KLINIK.I.03",
-                  "nama": "Pendapatan Tes kesehatan Calon Mahasiswa Universitas BTH",
-                  "accurateKode": "04.1.01.04.04",
-                  "accurateNama": "Pendapatan Tes kesehatan Calon Mahasiswa Universitas BTH - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "PENERIMAAN",
-                  "kode": "P.KLINIK.I.04",
-                  "nama": "Pemeriksaan Pasien Klinik Umum",
-                  "accurateKode": "04.1.01.04.20",
-                  "accurateNama": "Pendapatan dari Pelayanan Umum - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "PENERIMAAN",
-                  "kode": "P.KLINIK.I.05",
-                  "nama": "Pemeriksaan Pasien Laboratorium",
-                  "accurateKode": "04.1.01.04.06",
-                  "accurateNama": "Pemeriksaan Pasien Laboratorium - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "PENERIMAAN",
-                  "kode": "P.KLINIK.I.06",
-                  "nama": "Pemeriksaan Pasien Klinik Therapy",
-                  "accurateKode": "04.1.01.04.20",
-                  "accurateNama": "Pendapatan dari Pelayanan Umum - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "PENERIMAAN",
-                  "kode": "P.KLINIK.I.07",
-                  "nama": "Penerimaan Hasil Kerjasama",
-                  "accurateKode": "04.1.01.04.08",
-                  "accurateNama": "Penerimaan Hasil Kerjasama - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "PENERIMAAN",
-                  "kode": "P.KLINIK.I.08",
-                  "nama": "Pendapatan Tes Kesehatan Mahasiswa Apoteker Universitas BTH",
-                  "accurateKode": "04.1.01.04.09",
-                  "accurateNama": "Pendapatan Tes Kesehatan Mahasiswa Apoteker Universitas BTH - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "PENERIMAAN",
-                  "kode": "P.KLINIK.I.09",
-                  "nama": "Penerimaan Calon Siswa SMKN 2 Tasikmalaya",
-                  "accurateKode": "04.1.01.04.10",
-                  "accurateNama": "Penerimaan Calon Siswa SMKN 2 Tasikmalaya - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "PENERIMAAN",
-                  "kode": "P.KLINIK.I.10",
-                  "nama": "Pendapatan Instalasi Farmasi",
-                  "accurateKode": "04.1.01.04.13",
-                  "accurateNama": "Pendapatan Resep Umum - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "I. BELANJA PEGAWAI",
-                  "kode": "B.KLINIK.I.01",
-                  "nama": "Gaji Pegawai",
-                  "accurateKode": "06.1.01.01.01",
-                  "accurateNama": "Gaji pokok karyawan - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "I. BELANJA PEGAWAI",
-                  "kode": "B.KLINIK.I.02",
-                  "nama": "Tunjangan BPJS Ketenagakerjaan",
-                  "accurateKode": "06.1.01.01.09",
-                  "accurateNama": "Tunjangan BPJS Ketenagakerjaan - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "I. BELANJA PEGAWAI",
-                  "kode": "B.KLINIK.I.03",
-                  "nama": "Tunjangan BPJS Kesehatan",
-                  "accurateKode": "06.1.01.01.10",
-                  "accurateNama": "Tunjangan BPJS Kesehatan - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "I. BELANJA PEGAWAI",
-                  "kode": "B.KLINIK.I.04",
-                  "nama": "Tunjangan Hari Raya",
-                  "accurateKode": "06.1.01.01.06",
-                  "accurateNama": "Tunjangan Hari Raya - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "I. BELANJA PEGAWAI",
-                  "kode": "B.KLINIK.I.05",
-                  "nama": "Uang lembur dan piket",
-                  "accurateKode": "06.1.01.01.15",
-                  "accurateNama": "Upah Lembur dan Piket - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "I. BELANJA PEGAWAI",
-                  "kode": "B.KLINIK.I.06",
-                  "nama": "Bantuan Pengembangan Diri",
-                  "accurateKode": "06.1.01.07.03",
-                  "accurateNama": "Bantuan Pengembangan Diri - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "II. BELANJA BARANG",
-                  "kode": "B.KLINIK.II.01",
-                  "nama": "Alat Tulis Kantor",
-                  "accurateKode": "06.1.01.03.02",
-                  "accurateNama": "Biaya Alat Tulis Kantor - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "II. BELANJA BARANG",
-                  "kode": "B.KLINIK.II.02",
-                  "nama": "Biaya Fotocopy, cetak jilid",
-                  "accurateKode": "06.1.01.03.11",
-                  "accurateNama": "Belanja Fotocopy, Jilid, Laminating dan Materai - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "II. BELANJA BARANG",
-                  "kode": "B.KLINIK.II.03",
-                  "nama": "Biaya Surat menyurat, materai, fee pengurusan administrasi",
-                  "accurateKode": "06.1.01.02.17",
-                  "accurateNama": "Administrasi Bank, umum dan surat menyurat - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "II. BELANJA BARANG",
-                  "kode": "B.KLINIK.II.04",
-                  "nama": "Kartu pasien dan blanko pemeriksaan",
-                  "accurateKode": "06.1.01.02.18",
-                  "accurateNama": "Biaya pembelian obat dan alat kesehatan - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "II. BELANJA BARANG",
-                  "kode": "B.KLINIK.II.05",
-                  "nama": "Perlengkapan Kesehatan",
-                  "accurateKode": "06.1.01.02.18",
-                  "accurateNama": "Biaya pembelian obat dan alat kesehatan - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "II. BELANJA BARANG",
-                  "kode": "B.KLINIK.II.06",
-                  "nama": "Peralatan Kesehatan",
-                  "accurateKode": "06.1.01.02.18",
-                  "accurateNama": "Biaya pembelian obat dan alat kesehatan - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "II. BELANJA BARANG",
-                  "kode": "B.KLINIK.II.07",
-                  "nama": "Peralatan dan Perlengkapan  kantor",
-                  "accurateKode": "06.1.01.03.00",
-                  "accurateNama": "Belanja Rumah Tangga & Belanja Barang - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "II. BELANJA BARANG",
-                  "kode": "B.KLINIK.II.08",
-                  "nama": "Rumah tangga, kebersihan, keamanan",
-                  "accurateKode": "06.1.01.03.00",
-                  "accurateNama": "Belanja Rumah Tangga & Belanja Barang - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "II. BELANJA BARANG",
-                  "kode": "B.KLINIK.II.09",
-                  "nama": "Konsumsi rapat",
-                  "accurateKode": "06.1.01.03.09",
-                  "accurateNama": "Biaya Konsumsi Rapat - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "II. BELANJA BARANG",
-                  "kode": "B.KLINIK.II.10",
-                  "nama": "Konsumsi Tamu",
-                  "accurateKode": "06.1.01.03.10",
-                  "accurateNama": "Biaya Konsumsi Tamu - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "III. BELANJA PEMELIHARAAN",
-                  "kode": "B.KLINIK.III.01",
-                  "nama": "Biaya Pemeliharaan Gedung",
-                  "accurateKode": "06.1.01.04.01",
-                  "accurateNama": "Pemeliharaan Gedung, Halaman, dan Graha Husada - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "III. BELANJA PEMELIHARAAN",
-                  "kode": "B.KLINIK.III.02",
-                  "nama": "Biaya Pembuangan Limbah Medis",
-                  "accurateKode": "06.1.01.03.16",
-                  "accurateNama": "Pembuangan limbah Medis - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "III. BELANJA PEMELIHARAAN",
-                  "kode": "B.KLINIK.III.03",
-                  "nama": "Biaya Pemeliharaan  Mesin dan alat kantor",
-                  "accurateKode": "06.1.01.04.02",
-                  "accurateNama": "Pemeliharaan Perlengkapan Kantor, Laboratorium, Perpustakaan - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "III. BELANJA PEMELIHARAAN",
-                  "kode": "B.KLINIK.III.04",
-                  "nama": "Biaya Pemeliharaan alat Kesehatan",
-                  "accurateKode": "06.1.01.04.03",
-                  "accurateNama": "Pemeliharaan alat Kesehatan - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "IV. BELANJA PERJALANAN",
-                  "kode": "B.KLINIK.IV.01",
-                  "nama": "Perjalanan Dinas (Luar Kota)",
-                  "accurateKode": "06.1.01.05.01",
-                  "accurateNama": "Perjalanan dinas - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "IV. BELANJA PERJALANAN",
-                  "kode": "B.KLINIK.IV.02",
-                  "nama": "Transport lokal",
-                  "accurateKode": "06.1.01.05.02",
-                  "accurateNama": "Transport lokal dan parkir - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "IV. BELANJA PERJALANAN",
-                  "kode": "B.KLINIK.IV.03",
-                  "nama": "Transport untuk penyuluhan",
-                  "accurateKode": "06.1.01.05.02",
-                  "accurateNama": "Transport lokal dan parkir - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "V. BELANJA ENERGI",
-                  "kode": "B.KLINIK.V.01",
-                  "nama": "Listrik",
-                  "accurateKode": "06.1.01.06.01",
-                  "accurateNama": "Biaya Listrik - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "V. BELANJA ENERGI",
-                  "kode": "B.KLINIK.V.02",
-                  "nama": "PDAM",
-                  "accurateKode": "06.1.01.06.03",
-                  "accurateNama": "Biaya PDAM - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "V. BELANJA ENERGI",
-                  "kode": "B.KLINIK.V.03",
-                  "nama": "Telepon dan Speedy",
-                  "accurateKode": "06.1.01.06.02",
-                  "accurateNama": "Biaya telepon/fax/internet - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "V. BELANJA ENERGI",
-                  "kode": "B.KLINIK.V.04",
-                  "nama": "BBM (Bahan Bakar Minyak)",
-                  "accurateKode": "06.1.01.06.05",
-                  "accurateNama": "Pembelian Bahan Bakar Minyak (BBM) - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "VI. BELANJA ADMINISTRASI DAN UMUM",
-                  "kode": "B.KLINIK.VI.01",
-                  "nama": "Representasi",
-                  "accurateKode": "06.1.01.03.13",
-                  "accurateNama": "Biaya Representasi - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "VI. BELANJA ADMINISTRASI DAN UMUM",
-                  "kode": "B.KLINIK.VI.02",
-                  "nama": "Administrasi pengurusan Ijin Institusi",
-                  "accurateKode": "06.1.01.02.24",
-                  "accurateNama": "Administrasi pengurusan ijin institusi - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "VI. BELANJA ADMINISTRASI DAN UMUM",
-                  "kode": "B.KLINIK.VI.03",
-                  "nama": "Administrasi dan  bank",
-                  "accurateKode": "06.1.01.02.17",
-                  "accurateNama": "Administrasi Bank, umum dan surat menyurat - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "VI. BELANJA ADMINISTRASI DAN UMUM",
-                  "kode": "B.KLINIK.VI.04",
-                  "nama": "Iuran Institusi",
-                  "accurateKode": "06.1.01.02.25",
-                  "accurateNama": "Iuran institusi - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "VI. BELANJA ADMINISTRASI DAN UMUM",
-                  "kode": "B.KLINIK.VI.05",
-                  "nama": "Visitasi Akreditasi",
-                  "accurateKode": "06.1.01.02.26",
-                  "accurateNama": "Visitasi Akreditasi - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "VII. BELANJA PENGEMBANGAN SDM",
-                  "kode": "B.KLINIK.VII.01",
-                  "nama": "Seminar,Pelatihan",
-                  "accurateKode": "06.1.01.07.01",
-                  "accurateNama": "Biaya pelatihan, workshop, minat dan bakat karyawan - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "VIII. JASA  PELAYANAN",
-                  "kode": "B.KLINIK.VIII.01",
-                  "nama": "Jasa Pelayanan umum",
-                  "accurateKode": "06.1.01.08.01",
-                  "accurateNama": "Jasa pelayanan pasien umum - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "VIII. JASA  PELAYANAN",
-                  "kode": "B.KLINIK.VIII.02",
-                  "nama": "Jasa Pelayanan Bpjs",
-                  "accurateKode": "06.1.01.08.02",
-                  "accurateNama": "Jasa pelayanan pasien bpjs - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "VIII. JASA  PELAYANAN",
-                  "kode": "B.KLINIK.VIII.03",
-                  "nama": "Jasa pelayanan pasien jpkm & jpk",
-                  "accurateKode": "06.1.01.08.03",
-                  "accurateNama": "Jasa pelayanan pasien jpkm & jpk - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "VIII. JASA  PELAYANAN",
-                  "kode": "B.KLINIK.VIII.04",
-                  "nama": "Uang duduk tenaga medis",
-                  "accurateKode": "06.1.01.08.04",
-                  "accurateNama": "Uang duduk tenaga medis - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "VIII. JASA  PELAYANAN",
-                  "kode": "B.KLINIK.VIII.05",
-                  "nama": "Jasa Pemeriksaan Swab",
-                  "accurateKode": "06.1.01.08.01",
-                  "accurateNama": "Jasa pelayanan pasien umum - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "IX. BELANJA PROMOSI",
-                  "kode": "B.KLINIK.IX.01",
-                  "nama": "Belanja Promosi",
-                  "accurateKode": "06.2.01.09.00",
-                  "accurateNama": "Belanja promosi,Publikasi dan Kehumasan - DP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "X. DANA ABADI",
-                  "kode": "B.KLINIK.X.01",
-                  "nama": "Dana Abadi",
-                  "accurateKode": "09.1.01.02.01",
-                  "accurateNama": "Dana Abadi - TP"
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "X. DANA ABADI",
-                  "kode": "P.KLINIK.I",
-                  "nama": "Pendapatan Klinik",
-                  "accurateKode": "",
-                  "accurateNama": ""
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "X. DANA ABADI",
-                  "kode": "P.KLINIK.II",
-                  "nama": "Pendapatan Apotek",
-                  "accurateKode": "",
-                  "accurateNama": ""
-            },
-            {
-                  "upk": "Klinik",
-                  "group": "X. DANA ABADI",
-                  "kode": "P.KLINIK.III",
-                  "nama": "Otorisasi Yayasan",
-                  "accurateKode": "",
-                  "accurateNama": ""
-            }
-      ]
-};
-
-    const uptLookupState = {
+    const mataLookupState = {
       matches: [],
-      selectedKey: ''
+      selectedId: ''
     };
 
     function fmtCurrency(n){
@@ -1129,7 +821,6 @@
       return fmtCurrency(num);
     }
 
-    
     function normalizeText(value){
       return String(value || '')
         .toLowerCase()
@@ -1147,167 +838,7 @@
         .replace(/'/g,'&#39;');
     }
 
-    function getUPTReferences(upk){
-      return UPT_REFERENCE_MAP[upk] || [];
-    }
-
-    function setUPTLookupHelp(message){
-      document.getElementById('uptLookupHelp').textContent = message;
-    }
-
-    function clearUPTLookup(resetSearch = false){
-      const results = document.getElementById('uptLookupResults');
-      const selected = document.getElementById('uptLookupSelected');
-      results.innerHTML = '';
-      results.classList.remove('open');
-      selected.innerHTML = '';
-      selected.style.display = 'none';
-      uptLookupState.matches = [];
-      uptLookupState.selectedKey = '';
-      if(resetSearch){
-        document.getElementById('fMasterSearch').value = '';
-      }
-    }
-
-    function renderUPTLookup(){
-      const upk = document.getElementById('fEntitas').value;
-      const query = document.getElementById('fMasterSearch').value.trim();
-      const results = document.getElementById('uptLookupResults');
-
-      if(!upk){
-        clearUPTLookup(false);
-        setUPTLookupHelp('Pilih UPK terlebih dahulu untuk menampilkan referensi UPT.');
-        return;
-      }
-
-      const references = getUPTReferences(upk);
-      if(!references.length){
-        clearUPTLookup(false);
-        setUPTLookupHelp(`Referensi UPT untuk UPK ${upk} belum tersedia. Anda masih bisa isi manual.`);
-        return;
-      }
-
-      const needle = normalizeText(query);
-      const matches = references.filter(item => {
-        if(!needle) return true;
-        return [item.kode, item.nama, item.accurateKode, item.accurateNama, item.group]
-          .some(value => normalizeText(value).includes(needle));
-      }).slice(0, 20);
-
-      uptLookupState.matches = matches;
-      setUPTLookupHelp(`Referensi ${upk}: ${references.length} akun. Cari dengan kode atau nama UPT.`);
-
-      if(!matches.length){
-        results.innerHTML = '<div class="lookup-empty">Data tidak ditemukan. Coba kode atau nama UPT lain.</div>';
-        results.classList.add('open');
-        return;
-      }
-
-      results.innerHTML = matches.map((item, index) => `
-        <button type="button" class="lookup-item" onmousedown="selectUPTReference(${index}); return false;">
-          <div class="lookup-item-top">
-            <span class="lookup-code">${escapeHtml(item.kode)}</span>
-            <span class="lookup-group">${escapeHtml(item.group || 'Referensi')}</span>
-          </div>
-          <div class="lookup-name">${escapeHtml(item.nama)}</div>
-          <div class="lookup-accurate">${escapeHtml(item.accurateKode || '-')} · ${escapeHtml(item.accurateNama || 'Tanpa mapping Accurate')}</div>
-        </button>
-      `).join('');
-      results.classList.add('open');
-    }
-
-    function selectUPTReference(index){
-      const item = uptLookupState.matches[index];
-      if(!item) return;
-
-      document.getElementById('fKode').value = item.kode;
-      document.getElementById('fNama').value = item.nama;
-      document.getElementById('fMasterSearch').value = `${item.kode} — ${item.nama}`;
-      uptLookupState.selectedKey = `${item.kode}__${item.nama}`;
-
-      const selected = document.getElementById('uptLookupSelected');
-      selected.innerHTML = `
-        <strong>${escapeHtml(item.kode)} · ${escapeHtml(item.nama)}</strong>
-        <span>${escapeHtml(item.group || 'Referensi')}<br>Accurate: ${escapeHtml(item.accurateKode || '-')} · ${escapeHtml(item.accurateNama || 'Tanpa mapping Accurate')}</span>
-      `;
-      selected.style.display = 'flex';
-      document.getElementById('uptLookupResults').classList.remove('open');
-    }
-
-    function hideUPTLookup(){
-      setTimeout(() => {
-        document.getElementById('uptLookupResults').classList.remove('open');
-      }, 140);
-    }
-
-    function handleUPKReferenceChange(){
-      clearUPTLookup(true);
-      const upk = document.getElementById('fEntitas').value;
-      if(!upk){
-        setUPTLookupHelp('Pilih UPK terlebih dahulu untuk menampilkan referensi UPT.');
-        return;
-      }
-      const references = getUPTReferences(upk);
-      if(!references.length){
-        setUPTLookupHelp(`Referensi UPT untuk UPK ${upk} belum tersedia. Anda masih bisa isi manual.`);
-        return;
-      }
-      setUPTLookupHelp(`Referensi ${upk}: ${references.length} akun. Cari dengan kode atau nama UPT.`);
-      renderUPTLookup();
-    }
-
-    function syncUPTLookupFromForm(){
-      const upk = document.getElementById('fEntitas').value;
-      const kode = document.getElementById('fKode').value.trim();
-      const nama = document.getElementById('fNama').value.trim();
-      const selected = document.getElementById('uptLookupSelected');
-      const searchField = document.getElementById('fMasterSearch');
-
-      if(!upk || (!kode && !nama)){
-        selected.innerHTML = '';
-        selected.style.display = 'none';
-        uptLookupState.selectedKey = '';
-        if(searchField) searchField.value = '';
-        return;
-      }
-
-      const found = getUPTReferences(upk).find(item => {
-        const sameKode = kode && normalizeText(item.kode) === normalizeText(kode);
-        const sameNama = nama && normalizeText(item.nama) === normalizeText(nama);
-        return sameKode || sameNama;
-      });
-
-      if(!found){
-        uptLookupState.selectedKey = '';
-        if(searchField && searchField.value.includes('—')) searchField.value = '';
-        selected.innerHTML = '';
-        selected.style.display = 'none';
-        return;
-      }
-
-      searchField.value = `${found.kode} — ${found.nama}`;
-      uptLookupState.selectedKey = `${found.kode}__${found.nama}`;
-      selected.innerHTML = `
-        <strong>${escapeHtml(found.kode)} · ${escapeHtml(found.nama)}</strong>
-        <span>${escapeHtml(found.group || 'Referensi')}<br>Accurate: ${escapeHtml(found.accurateKode || '-')} · ${escapeHtml(found.accurateNama || 'Tanpa mapping Accurate')}</span>
-      `;
-      selected.style.display = 'flex';
-    }
-
-    function populateRiskOptions(selected = ''){
-      RISKS = readRisks();
-      const select = document.getElementById('fRisk');
-      const options = RISKS
-        .slice()
-        .sort((a, b) => String(a.nama || '').localeCompare(String(b.nama || '')))
-        .map(item => `<option value="${escapeHtml(item.nama)}">${escapeHtml(item.nama)}</option>`)
-        .join('');
-      select.innerHTML = '<option value="">— Pilih Risiko —</option>' + options;
-      if(selected) select.value = selected;
-    }
-
-
-function getUsage(budgetId){
+    function getUsage(budgetId){
       const used = REALIZATIONS
         .filter(r => Number(r.budgetId) === Number(budgetId))
         .reduce((sum, r) => sum + Number(r.total || 0), 0);
@@ -1318,6 +849,242 @@ function getUsage(budgetId){
       const pct = nominal > 0 ? Math.min(100, Math.round((used / nominal) * 100)) : 0;
 
       return { used, remain, pct };
+    }
+
+    function getRiskById(id){
+      return RISKS.find(r => String(r.id) === String(id));
+    }
+
+    function getRiskByName(name){
+      return RISKS.find(r => normalizeText(r.nama) === normalizeText(name));
+    }
+
+    function getUpkByName(name){
+      return UPKS.find(item => normalizeText(item.nama) === normalizeText(name));
+    }
+
+    function getUptById(id){
+      return UPTS.find(item => String(item.id) === String(id));
+    }
+
+    function getMataById(id){
+      return MATA_ANGGARAN.find(item => String(item.id) === String(id));
+    }
+
+    function getUptsForEntitas(entitas){
+      const upk = getUpkByName(entitas);
+      if(!upk) return [];
+      return UPTS
+        .filter(item => String(item.upkId) === String(upk.id))
+        .sort((a,b) => String(a.nama || '').localeCompare(String(b.nama || '')));
+    }
+
+    function populateUptOptions(selected = ''){
+      const entitas = document.getElementById('fEntitas').value;
+      const select = document.getElementById('fUpt');
+      const options = getUptsForEntitas(entitas);
+      select.innerHTML = '<option value="">— Pilih UPT —</option>' + options.map(item => (
+        `<option value="${escapeHtml(item.id)}">${escapeHtml(item.kode || '-')} · ${escapeHtml(item.nama || '-')}</option>`
+      )).join('');
+      if(selected) select.value = String(selected);
+    }
+
+    function populateRiskOptions(selected = ''){
+      RISKS = readRisks();
+      const select = document.getElementById('fRisk');
+      const options = RISKS
+        .slice()
+        .sort((a, b) => String(a.nama || '').localeCompare(String(b.nama || '')))
+        .map(item => `<option value="${escapeHtml(String(item.id))}">${escapeHtml(item.nama)}${item.skala ? ` · ${escapeHtml(item.skala)}` : ''}</option>`)
+        .join('');
+      select.innerHTML = '<option value="">— Pilih Risiko —</option>' + options;
+
+      if(selected){
+        const byId = getRiskById(selected);
+        if(byId){
+          select.value = String(byId.id);
+          return;
+        }
+        const byName = getRiskByName(selected);
+        if(byName){
+          select.value = String(byName.id);
+        }
+      }
+    }
+
+    function setMataLookupHelp(message){
+      document.getElementById('mataLookupHelp').textContent = message;
+    }
+
+    function clearMataLookup(resetSearch = false){
+      const results = document.getElementById('mataLookupResults');
+      const selected = document.getElementById('mataLookupSelected');
+      results.innerHTML = '';
+      results.classList.remove('open');
+      selected.innerHTML = '';
+      selected.style.display = 'none';
+      mataLookupState.matches = [];
+      mataLookupState.selectedId = '';
+      document.getElementById('fMataId').value = '';
+      document.getElementById('fMataNama').value = '';
+      document.getElementById('fKode').value = '';
+      document.getElementById('fSatuan').value = '';
+      document.getElementById('fHargaSatuan').value = '';
+      if(resetSearch){
+        document.getElementById('fMataSearch').value = '';
+      }
+      updateNominalPreview();
+    }
+
+    function getFilteredMataAnggaran(){
+      const entitas = document.getElementById('fEntitas').value;
+      const uptId = document.getElementById('fUpt').value;
+      const query = document.getElementById('fMataSearch').value.trim();
+      const upk = getUpkByName(entitas);
+
+      if(!entitas || !upk){
+        setMataLookupHelp('Pilih UPK terlebih dahulu untuk menampilkan mata anggaran.');
+        return [];
+      }
+      if(!uptId){
+        setMataLookupHelp('Pilih UPT terlebih dahulu untuk memfilter mata anggaran.');
+        return [];
+      }
+
+      const needle = normalizeText(query);
+      const matches = MATA_ANGGARAN
+        .filter(item => String(item.idUpk) === String(upk.id))
+        .filter(item => !item.idUpt || String(item.idUpt) === String(uptId))
+        .filter(item => {
+          if(!needle) return true;
+          return [
+            item.kodeAnggaran,
+            item.namaMataAnggaran,
+            item.satuan,
+            item.namaUpt,
+            item.coaLabel,
+            item.riskLabel
+          ].some(value => normalizeText(value).includes(needle));
+        })
+        .sort((a, b) => String(a.namaMataAnggaran || '').localeCompare(String(b.namaMataAnggaran || '')))
+        .slice(0, 20);
+
+      setMataLookupHelp(`Mata anggaran tersedia: ${matches.length}. Cari dengan kode atau nama mata anggaran.`);
+      return matches;
+    }
+
+    function renderMataLookup(){
+      const results = document.getElementById('mataLookupResults');
+      const entitas = document.getElementById('fEntitas').value;
+      const uptId = document.getElementById('fUpt').value;
+
+      if(!entitas){
+        clearMataLookup(false);
+        setMataLookupHelp('Pilih UPK terlebih dahulu untuk menampilkan mata anggaran.');
+        return;
+      }
+      if(!uptId){
+        results.innerHTML = '';
+        results.classList.remove('open');
+        setMataLookupHelp('Pilih UPT terlebih dahulu untuk memfilter mata anggaran.');
+        return;
+      }
+
+      const matches = getFilteredMataAnggaran();
+      mataLookupState.matches = matches;
+
+      if(!matches.length){
+        results.innerHTML = '<div class="lookup-empty">Data mata anggaran tidak ditemukan untuk kombinasi UPK dan UPT ini.</div>';
+        results.classList.add('open');
+        return;
+      }
+
+      results.innerHTML = matches.map((item, index) => `
+        <button type="button" class="lookup-item" onmousedown="selectMataAnggaran(${index}); return false;">
+          <div class="lookup-item-top">
+            <span class="lookup-code">${escapeHtml(item.kodeAnggaran)}</span>
+            <span class="lookup-group">${escapeHtml(item.satuan || '-')}</span>
+          </div>
+          <div class="lookup-name">${escapeHtml(item.namaMataAnggaran)}</div>
+          <div class="lookup-accurate">${fmtCurrency(item.hargaSatuan)} · ${escapeHtml(item.namaUpt || 'Semua UPT pada UPK ini')} · ${escapeHtml(item.riskLabel || 'Tanpa risk')}</div>
+        </button>
+      `).join('');
+      results.classList.add('open');
+    }
+
+    function selectMataAnggaran(index){
+      const item = mataLookupState.matches[index];
+      if(!item) return;
+
+      document.getElementById('fMataId').value = item.id;
+      document.getElementById('fMataNama').value = item.namaMataAnggaran || '';
+      document.getElementById('fMataSearch').value = `${item.kodeAnggaran} — ${item.namaMataAnggaran}`;
+      document.getElementById('fKode').value = item.kodeAnggaran || '';
+      document.getElementById('fSatuan').value = item.satuan || '';
+      document.getElementById('fHargaSatuan').value = Number(item.hargaSatuan || 0);
+      mataLookupState.selectedId = String(item.id);
+
+      if(!Number(document.getElementById('fQty').value || 0)){
+        document.getElementById('fQty').value = 1;
+      }
+
+      if(item.idRisk){
+        const risk = getRiskById(item.idRisk);
+        if(risk){
+          document.getElementById('fRisk').value = String(risk.id);
+        }
+      }
+
+      const selected = document.getElementById('mataLookupSelected');
+      selected.innerHTML = `
+        <strong>${escapeHtml(item.kodeAnggaran)} · ${escapeHtml(item.namaMataAnggaran)}</strong>
+        <span>UPT: ${escapeHtml(item.namaUpt || 'Semua UPT pada UPK ini')}<br>Satuan: ${escapeHtml(item.satuan || '-')} · Harga: ${fmtCurrency(item.hargaSatuan)}<br>Risk: ${escapeHtml(item.riskLabel || '-')} ${item.riskSkala ? `(${escapeHtml(item.riskSkala)})` : ''}</span>
+      `;
+      selected.style.display = 'flex';
+      document.getElementById('mataLookupResults').classList.remove('open');
+      updateNominalPreview();
+    }
+
+    function hideMataLookup(){
+      setTimeout(() => {
+        document.getElementById('mataLookupResults').classList.remove('open');
+      }, 140);
+    }
+
+    function handleUPKChange(){
+      populateUptOptions();
+      clearMataLookup(true);
+      document.getElementById('fRisk').value = '';
+      setMataLookupHelp('Pilih UPT terlebih dahulu untuk memfilter mata anggaran.');
+    }
+
+    function handleUPTChange(){
+      clearMataLookup(true);
+      document.getElementById('fRisk').value = '';
+      setMataLookupHelp('Ketik kode atau nama mata anggaran untuk memilih item yang sesuai.');
+      renderMataLookup();
+    }
+
+    function setCustomMataDisplay(item){
+      const selected = document.getElementById('mataLookupSelected');
+      if(!item) {
+        selected.innerHTML = '';
+        selected.style.display = 'none';
+        return;
+      }
+      selected.innerHTML = `
+        <strong>${escapeHtml(item.kode || item.mataAnggaranKode || '-')} · ${escapeHtml(item.mataAnggaranNama || item.nama || '-')}</strong>
+        <span>UPT: ${escapeHtml(item.uptNama || item.nama || '-')}<br>Satuan: ${escapeHtml(item.satuan || '-')} · Harga: ${fmtCurrency(item.hargaSatuan || 0)}</span>
+      `;
+      selected.style.display = 'flex';
+    }
+
+    function updateNominalPreview(){
+      const qty = Number(document.getElementById('fQty').value || 0);
+      const harga = Number(document.getElementById('fHargaSatuan').value || 0);
+      const total = qty * harga;
+      document.getElementById('fNominal').value = total;
+      document.getElementById('nominalPreview').textContent = fmtCurrency(total);
     }
 
     function budgetBadge(status){
@@ -1364,7 +1131,19 @@ function getUsage(budgetId){
           if(state.filterStatus && item.status !== state.filterStatus) return false;
 
           if(state.search){
-            const hay = [item.kode, item.entitas, item.nama, item.catatan].join(' ').toLowerCase();
+            const hay = [
+              item.kode,
+              item.entitas,
+              item.nama,
+              item.uptKode || '',
+              item.uptNama || '',
+              item.mataAnggaranKode || '',
+              item.mataAnggaranNama || '',
+              item.risikoNama || '',
+              item.catatan || '',
+              item.satuan || ''
+            ].join(' ').toLowerCase();
+
             if(!hay.includes(state.search)) return false;
           }
 
@@ -1373,8 +1152,8 @@ function getUsage(budgetId){
         .sort((a,b) => {
           let av = a[state.sortCol];
           let bv = b[state.sortCol];
-          if(typeof av === 'string') return state.sortDir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
-          return state.sortDir === 'asc' ? av - bv : bv - av;
+          if(typeof av === 'string') return state.sortDir === 'asc' ? String(av || '').localeCompare(String(bv || '')) : String(bv || '').localeCompare(String(av || ''));
+          return Number(state.sortDir === 'asc' ? (av || 0) - (bv || 0) : (bv || 0) - (av || 0));
         });
     }
 
@@ -1413,19 +1192,24 @@ function getUsage(budgetId){
         const usage = getUsage(item.id);
         const pct = Number(item.nominal) > 0 ? Math.min(100, Math.round((usage.used / Number(item.nominal)) * 100)) : 0;
         const color = progressColor(pct, usage.remain);
+        const uptLabel = item.uptNama || item.nama || '-';
+        const uptCode = item.uptKode || '';
+        const mataLabel = item.mataAnggaranNama || '-';
+        const qtyLabel = item.qty ? `${Number(item.qty).toLocaleString('id-ID')} ${item.satuan || ''}`.trim() : '-';
+        const priceLabel = item.hargaSatuan ? fmtCurrency(item.hargaSatuan) : '-';
 
         return `
           <tr>
-            <td class="mono">${item.kode}</td>
-            <td><span class="badge badge-primary">${item.entitas}</span></td>
+            <td class="mono">${escapeHtml(item.kode || '-')}</td>
+            <td><span class="badge badge-primary">${escapeHtml(item.entitas || '-')}</span></td>
             <td>
-              <div class="title-cell">${item.nama}</div>
-              <div class="title-sub">${item.catatan || '-'}</div>
+              <div class="title-cell">${escapeHtml(uptLabel)}</div>
+              <div class="title-sub">${escapeHtml(mataLabel)}${uptCode ? ` · ${escapeHtml(uptCode)}` : ''}${qtyLabel !== '-' ? ` · ${escapeHtml(qtyLabel)}` : ''}${priceLabel !== '-' ? ` × ${escapeHtml(priceLabel)}` : ''}</div>
             </td>
             <td>
               <span class="badge badge-accent">${item.risikoNama ? escapeHtml(item.risikoNama) : '-'}</span>
             </td>
-            <td class="mono">${item.tahun}</td>
+            <td class="mono">${escapeHtml(item.tahun || '-')}</td>
             <td class="mono">${fmtCurrency(item.nominal)}</td>
             <td>
               <div class="progress-wrap">
@@ -1484,18 +1268,19 @@ function getUsage(budgetId){
     function openAddModal(){
       state.editingId = null;
       document.getElementById('modalTitle').textContent = 'Tambah Anggaran Cost';
-      document.getElementById('modalSub').textContent = 'Buat head anggaran / pagu maksimal.';
-      document.getElementById('fKode').value = '';
+      document.getElementById('modalSub').textContent = 'Buat head anggaran / pagu maksimal berdasarkan mata anggaran.';
       document.getElementById('fEntitas').value = '';
-      document.getElementById('fNama').value = '';
+      populateUptOptions();
       document.getElementById('fTahun').value = '2026';
-      document.getElementById('fRisk').value = '';
+      document.getElementById('fQty').value = 1;
+      document.getElementById('fSatuan').value = '';
+      document.getElementById('fHargaSatuan').value = '';
       document.getElementById('fNominal').value = '';
       document.getElementById('fStatus').value = 'Aktif';
       document.getElementById('fCatatan').value = '';
       populateRiskOptions();
-      clearUPTLookup(true);
-      setUPTLookupHelp('Pilih UPK terlebih dahulu untuk menampilkan referensi UPT.');
+      clearMataLookup(true);
+      setMataLookupHelp('Pilih UPK dan UPT terlebih dahulu untuk menampilkan mata anggaran.');
       updateNominalPreview();
       openModal('modalForm');
     }
@@ -1506,46 +1291,90 @@ function getUsage(budgetId){
 
       state.editingId = id;
       document.getElementById('modalTitle').textContent = 'Edit Anggaran Cost';
-      document.getElementById('modalSub').textContent = `${item.kode} — ${item.nama}`;
-      document.getElementById('fKode').value = item.kode || '';
+      document.getElementById('modalSub').textContent = `${item.kode || '-'} — ${item.mataAnggaranNama || item.uptNama || item.nama || '-'}`;
       document.getElementById('fEntitas').value = item.entitas || '';
-      document.getElementById('fNama').value = item.nama || '';
+      populateUptOptions(item.uptId || '');
       document.getElementById('fTahun').value = item.tahun || '2026';
-      populateRiskOptions(item.risikoNama || '');
-      document.getElementById('fNominal').value = item.nominal || 0;
+      populateRiskOptions(item.risikoId || item.risikoNama || '');
+      document.getElementById('fQty').value = item.qty || 1;
+      document.getElementById('fSatuan').value = item.satuan || '';
+      document.getElementById('fHargaSatuan').value = item.hargaSatuan || (Number(item.nominal || 0) / Math.max(1, Number(item.qty || 1)));
       document.getElementById('fStatus').value = item.status || 'Aktif';
       document.getElementById('fCatatan').value = item.catatan || '';
-      clearUPTLookup(true);
-      handleUPKReferenceChange();
-      syncUPTLookupFromForm();
+      document.getElementById('fKode').value = item.kode || item.mataAnggaranKode || '';
+      document.getElementById('fNominal').value = item.nominal || 0;
+
+      const mata = item.mataAnggaranId ? getMataById(item.mataAnggaranId) : null;
+      clearMataLookup(true);
+
+      if(mata){
+        document.getElementById('fMataId').value = mata.id;
+        document.getElementById('fMataNama').value = mata.namaMataAnggaran || '';
+        document.getElementById('fMataSearch').value = `${mata.kodeAnggaran} — ${mata.namaMataAnggaran}`;
+        mataLookupState.selectedId = String(mata.id);
+        setCustomMataDisplay({
+          kode: mata.kodeAnggaran,
+          mataAnggaranNama: mata.namaMataAnggaran,
+          uptNama: mata.namaUpt || item.uptNama,
+          satuan: mata.satuan,
+          hargaSatuan: mata.hargaSatuan
+        });
+      } else {
+        document.getElementById('fMataId').value = item.mataAnggaranId || '';
+        document.getElementById('fMataNama').value = item.mataAnggaranNama || '';
+        document.getElementById('fMataSearch').value = item.mataAnggaranNama ? `${item.kode || item.mataAnggaranKode || ''} — ${item.mataAnggaranNama}` : (item.kode || '');
+        setCustomMataDisplay({
+          kode: item.kode || item.mataAnggaranKode,
+          mataAnggaranNama: item.mataAnggaranNama,
+          uptNama: item.uptNama || item.nama,
+          satuan: item.satuan,
+          hargaSatuan: item.hargaSatuan
+        });
+      }
+
+      setMataLookupHelp('Ketik kode atau nama mata anggaran untuk mengganti item.');
       updateNominalPreview();
       openModal('modalForm');
     }
 
-    function updateNominalPreview(){
-      const value = Number(document.getElementById('fNominal').value || 0);
-      document.getElementById('nominalPreview').textContent = fmtCurrency(value);
-    }
-
     function saveBudget(){
+      const entitas = document.getElementById('fEntitas').value;
+      const uptId = document.getElementById('fUpt').value;
+      const upt = getUptById(uptId);
+      const qty = Number(document.getElementById('fQty').value || 0);
+      const hargaSatuan = Number(document.getElementById('fHargaSatuan').value || 0);
+      const nominal = qty * hargaSatuan;
+      const risk = getRiskById(document.getElementById('fRisk').value);
+
       const payload = {
         kode: document.getElementById('fKode').value.trim(),
-        entitas: document.getElementById('fEntitas').value,
-        nama: document.getElementById('fNama').value.trim(),
-        risikoNama: document.getElementById('fRisk').value,
+        entitas,
+        uptId: upt?.id || '',
+        uptKode: upt?.kode || '',
+        uptNama: upt?.nama || '',
+        nama: upt?.nama || '',
+        mataAnggaranId: document.getElementById('fMataId').value ? Number(document.getElementById('fMataId').value) : '',
+        mataAnggaranKode: document.getElementById('fKode').value.trim(),
+        mataAnggaranNama: document.getElementById('fMataNama').value.trim(),
+        qty,
+        satuan: document.getElementById('fSatuan').value.trim(),
+        hargaSatuan,
+        risikoId: risk?.id || '',
+        risikoNama: risk?.nama || '',
+        risikoSkala: risk?.skala || '',
         tahun: Number(document.getElementById('fTahun').value || 2026),
-        nominal: Number(document.getElementById('fNominal').value || 0),
+        nominal,
         status: document.getElementById('fStatus').value,
         catatan: document.getElementById('fCatatan').value.trim()
       };
 
-      if(!payload.kode || !payload.entitas || !payload.nama || payload.nominal <= 0){
-        showToast('warning', 'fa-triangle-exclamation', 'Kode, UPK, UPT, dan nominal wajib diisi.');
+      if(!payload.entitas || !payload.uptId || !payload.kode || !payload.mataAnggaranNama || payload.qty <= 0 || !payload.satuan || payload.hargaSatuan <= 0 || payload.nominal <= 0){
+        showToast('warning', 'fa-triangle-exclamation', 'UPK, UPT, mata anggaran, qty, satuan, dan harga satuan wajib diisi.');
         return;
       }
 
       const duplicate = BUDGETS.find(b =>
-        b.kode.toLowerCase() === payload.kode.toLowerCase() &&
+        String(b.kode || '').toLowerCase() === payload.kode.toLowerCase() &&
         Number(b.id) !== Number(state.editingId)
       );
 
@@ -1562,7 +1391,7 @@ function getUsage(budgetId){
           showToast('success', 'fa-circle-check', 'Anggaran berhasil diperbarui.');
         }
       } else {
-        const newId = Math.max(0, ...BUDGETS.map(b => Number(b.id))) + 1;
+        const newId = Math.max(0, ...BUDGETS.map(b => Number(b.id || 0))) + 1;
         BUDGETS.unshift({ id: newId, ...payload });
         writeBudgets(BUDGETS);
         showToast('success', 'fa-circle-check', 'Anggaran baru berhasil ditambahkan.');
@@ -1578,11 +1407,11 @@ function getUsage(budgetId){
       if(!item) return;
 
       if(usage > 0){
-        showToast('warning', 'fa-link', `Anggaran "${item.nama}" sudah memiliki ${usage} realisasi. Tidak bisa dihapus.`);
+        showToast('warning', 'fa-link', `Anggaran "${item.mataAnggaranNama || item.uptNama || item.nama}" sudah memiliki ${usage} realisasi. Tidak bisa dihapus.`);
         return;
       }
 
-      if(!confirm(`Hapus head anggaran "${item.nama}"?`)) return;
+      if(!confirm(`Hapus head anggaran "${item.mataAnggaranNama || item.uptNama || item.nama}"?`)) return;
       BUDGETS = BUDGETS.filter(b => Number(b.id) !== Number(id));
       writeBudgets(BUDGETS);
       render();
@@ -1595,7 +1424,12 @@ function getUsage(budgetId){
         return [
           item.kode,
           item.entitas,
-          item.nama,
+          item.uptKode || '',
+          item.uptNama || item.nama || '',
+          item.mataAnggaranNama || '',
+          item.qty || 0,
+          item.satuan || '',
+          item.hargaSatuan || 0,
           item.risikoNama || '',
           item.tahun,
           item.nominal,
@@ -1606,9 +1440,9 @@ function getUsage(budgetId){
         ];
       });
 
-      const header = ['Kode','UPK','UPT','Risiko','Tahun','Pagu','Terpakai','Sisa','Status','Catatan'];
+      const header = ['Kode','UPK','Kode UPT','UPT','Mata Anggaran','Qty','Satuan','Harga Satuan','Risiko','Tahun','Pagu','Terpakai','Sisa','Status','Catatan'];
       const csv = [header, ...rows]
-        .map(row => row.map(col => `"${String(col).replace(/"/g,'""')}"`).join(','))
+        .map(row => row.map(col => `"${String(col ?? '').replace(/"/g,'""')}"`).join(','))
         .join('\n');
 
       const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
@@ -1621,13 +1455,19 @@ function getUsage(budgetId){
     }
 
     function seedDefaultData(){
-      if(!confirm('Reset sample data Anggaran Cost dan Realisasi Cost?')) return;
+      if(!confirm('Reset sample data Anggaran Cost, Realisasi Cost, master UPK/UPT, dan mata anggaran?')) return;
       localStorage.setItem(STORAGE_BUDGETS, JSON.stringify(seedBudgets));
       localStorage.setItem(STORAGE_REALIZATIONS, JSON.stringify(seedRealizations));
       localStorage.setItem(STORAGE_RISKS, JSON.stringify(seedRisks));
+      localStorage.setItem(STORAGE_UPK, JSON.stringify(seedUPK));
+      localStorage.setItem(STORAGE_UPT, JSON.stringify(seedUPT));
+      localStorage.setItem(STORAGE_MATA_ANGGARAN, JSON.stringify(seedMataAnggaran));
       BUDGETS = readBudgets();
       REALIZATIONS = readRealizations();
       RISKS = readRisks();
+      UPKS = readUpks();
+      UPTS = readUpts();
+      MATA_ANGGARAN = readMataAnggaran();
       render();
       showToast('success', 'fa-database', 'Sample data berhasil direset.');
     }
@@ -1654,6 +1494,9 @@ function getUsage(budgetId){
       if(event.key === STORAGE_BUDGETS) BUDGETS = readBudgets();
       if(event.key === STORAGE_REALIZATIONS) REALIZATIONS = readRealizations();
       if(event.key === STORAGE_RISKS) RISKS = readRisks();
+      if(event.key === STORAGE_UPK) UPKS = readUpks();
+      if(event.key === STORAGE_UPT) UPTS = readUpts();
+      if(event.key === STORAGE_MATA_ANGGARAN) MATA_ANGGARAN = readMataAnggaran();
       render();
     });
 
@@ -1661,11 +1504,11 @@ function getUsage(budgetId){
       weekday:'short', day:'numeric', month:'long', year:'numeric'
     });
 
-    setUPTLookupHelp('Pilih UPK terlebih dahulu untuk menampilkan referensi UPT.');
     populateRiskOptions();
     render();
   </script>
 
   <script src="../sidebar.js"></script>
+
 </body>
 </html>

@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Master Mata Anggaran — Sistem Anggaran</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f4f7fc;
+      --bg-soft:#e9eff9;
+      --line:#d7e2f1;
+      --line-soft:#e7eef7;
+      --primary:#3972B8;
+      --primary-2:#2a5d9a;
+      --primary-soft:rgba(57,114,184,.10);
+      --accent:#F68B21;
+      --accent-soft:rgba(246,139,33,.12);
+      --success:#217a4a;
+      --success-soft:rgba(33,122,74,.10);
+      --warning:#c07010;
+      --warning-soft:rgba(192,112,16,.12);
+      --danger:#d94040;
+      --danger-soft:rgba(217,64,64,.10);
+      --text:#1a2333;
+      --text-soft:#60718f;
+      --text-muted:#8ea0ba;
+      --white:#fff;
+      --shadow-sm:0 2px 10px rgba(57,114,184,.07);
+      --shadow:0 10px 28px rgba(57,114,184,.12);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:'Plus Jakarta Sans',sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      min-height:100vh;
+    }
+    .main{margin-left:240px;min-height:100vh;display:flex;flex-direction:column}
+    .topbar{
+      position:sticky;top:0;z-index:50;
+      background:rgba(244,247,252,.92);
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--line);
+      padding:14px 34px;
+      display:flex;justify-content:space-between;align-items:center;gap:16px;
+    }
+    .breadcrumb{display:flex;gap:6px;flex-wrap:wrap;font-size:13px;color:var(--text-muted)}
+    .breadcrumb b{color:var(--text);font-weight:700}
+    .topbar-right{display:flex;align-items:center;gap:10px}
+    .chip-info,.topbar-date{
+      padding:7px 12px;border-radius:999px;background:var(--bg-soft);
+      border:1px solid var(--line);font-size:12px;color:var(--text-soft);white-space:nowrap;
+    }
+
+    .content{padding:30px 34px 42px;display:flex;flex-direction:column;gap:22px}
+    .page-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+    .page-title{font-family:'Lora',serif;font-size:28px;line-height:1.25}
+    .page-title em{color:var(--primary);font-style:italic}
+    .page-actions{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{
+      border:none;border-radius:11px;padding:10px 16px;display:inline-flex;align-items:center;gap:8px;
+      font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:.18s;
+      font-family:'Plus Jakarta Sans',sans-serif;
+    }
+    .btn i{font-size:12px}
+    .btn-primary{background:var(--primary);color:#fff;box-shadow:0 6px 18px rgba(57,114,184,.24)}
+    .btn-primary:hover{transform:translateY(-1px);background:#467ec1}
+    .btn-ghost{background:#fff;color:var(--text-soft);border:1.5px solid var(--line)}
+    .btn-ghost:hover{background:var(--bg);color:var(--text)}
+    .btn-accent{background:var(--accent);color:#fff;box-shadow:0 6px 18px rgba(246,139,33,.24)}
+    .btn-accent:hover{transform:translateY(-1px);background:#ff9d3a}
+    .btn-sm{padding:7px 12px;font-size:12px}
+
+    .hero{
+      background:linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
+      color:#fff;border-radius:22px;padding:24px 26px;
+      box-shadow:0 16px 36px rgba(57,114,184,.22);
+      display:grid;grid-template-columns:1.2fr .9fr;gap:18px;position:relative;overflow:hidden;
+    }
+    .hero::before,.hero::after{
+      content:'';position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.12);
+    }
+    .hero::before{width:180px;height:180px;top:-50px;right:-20px}
+    .hero::after{width:120px;height:120px;bottom:-45px;right:90px}
+    .hero-left,.hero-right{position:relative;z-index:1}
+    .hero-title{font-family:'Lora',serif;font-size:28px;line-height:1.25;max-width:720px}
+    .hero-sub{margin-top:10px;font-size:13px;line-height:1.7;color:rgba(255,255,255,.76);max-width:700px}
+    .hero-right{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .hero-mini{
+      background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;padding:15px 16px;
+    }
+    .hero-mini-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.62);margin-bottom:7px}
+    .hero-mini-value{font-family:'DM Mono',monospace;font-size:20px;font-weight:500}
+    .hero-mini-sub{margin-top:6px;font-size:12px;color:rgba(255,255,255,.66)}
+
+    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .stat-card{
+      background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px 18px 16px;
+      box-shadow:var(--shadow-sm);position:relative;overflow:hidden;transition:.18s;
+    }
+    .stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+    .stat-card::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px}
+    .c-primary::after{background:var(--primary)}
+    .c-accent::after{background:var(--accent)}
+    .c-success::after{background:var(--success)}
+    .c-warning::after{background:var(--warning)}
+    .stat-icon{
+      width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+      margin-bottom:12px;font-size:16px;
+    }
+    .c-primary .stat-icon{background:var(--primary-soft);color:var(--primary)}
+    .c-accent .stat-icon{background:var(--accent-soft);color:var(--accent)}
+    .c-success .stat-icon{background:var(--success-soft);color:var(--success)}
+    .c-warning .stat-icon{background:var(--warning-soft);color:var(--warning)}
+    .stat-label{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);font-weight:700;margin-bottom:5px}
+    .stat-value{font-family:'DM Mono',monospace;font-size:23px;line-height:1}
+    .stat-sub{margin-top:6px;font-size:12px;color:var(--text-muted)}
+
+    .toolbar{
+      display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+      background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 16px;box-shadow:var(--shadow-sm);
+    }
+    .search-wrap{position:relative;flex:1;min-width:240px}
+    .search-icon{position:absolute;top:50%;left:13px;transform:translateY(-50%);color:var(--text-muted);font-size:13px}
+    .search-input,.filter-select,.form-input,.form-select,.form-textarea{
+      width:100%;border:1.5px solid var(--line);background:#fff;border-radius:11px;
+      padding:10px 12px;font-size:13px;color:var(--text);outline:none;transition:.18s;
+      font-family:'Plus Jakarta Sans',sans-serif;
+    }
+    .search-input{padding-left:36px}
+    .search-input:focus,.filter-select:focus,.form-input:focus,.form-select:focus,.form-textarea:focus{
+      border-color:var(--primary);box-shadow:0 0 0 3px rgba(57,114,184,.16)
+    }
+    .toolbar-right{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+
+    .panel{
+      background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-sm);
+    }
+    .panel-head{
+      padding:16px 20px;border-bottom:1px solid var(--line-soft);
+      display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+    }
+    .panel-title{font-size:14px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px}
+    .panel-sub{font-size:12px;color:var(--text-muted);margin-top:2px}
+    .table-wrap{overflow-x:auto}
+    table{width:100%;border-collapse:collapse}
+    thead th{
+      text-align:left;padding:11px 16px;background:var(--bg);border-bottom:1px solid var(--line);
+      font-size:10.5px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);white-space:nowrap;
+    }
+    tbody tr{border-bottom:1px solid var(--line-soft)}
+    tbody tr:last-child{border-bottom:none}
+    tbody tr:hover{background:rgba(57,114,184,.025)}
+    tbody td{padding:14px 16px;font-size:13px;color:var(--text-soft);vertical-align:top}
+    .title-cell{color:var(--text);font-weight:700}
+    .title-sub{margin-top:3px;font-size:11.5px;color:var(--text-muted)}
+    .mono{font-family:'DM Mono',monospace;color:var(--text)}
+    .badge{
+      display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:999px;
+      font-size:11px;font-weight:700;white-space:nowrap;
+    }
+    .badge-primary{background:var(--primary-soft);color:var(--primary)}
+    .badge-accent{background:var(--accent-soft);color:#a05a00}
+    .badge-success{background:var(--success-soft);color:var(--success)}
+    .badge-warning{background:var(--warning-soft);color:var(--warning)}
+    .badge-danger{background:var(--danger-soft);color:var(--danger)}
+    .actions-inline{display:inline-flex;gap:5px;white-space:nowrap}
+    .act-btn{
+      width:31px;height:31px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--text-soft);
+      cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:.16s;font-size:12px
+    }
+    .act-btn:hover{background:var(--bg);color:var(--text)}
+    .act-btn.primary:hover{background:var(--primary-soft);color:var(--primary)}
+    .act-btn.danger:hover{background:var(--danger-soft);color:var(--danger)}
+
+    .pagination{
+      padding:14px 20px;border-top:1px solid var(--line-soft);
+      display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap
+    }
+    .pagination-info{font-size:12.5px;color:var(--text-muted)}
+    .pagination-btns{display:flex;gap:4px;flex-wrap:wrap}
+    .pg-btn{
+      width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--text-soft);
+      display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;font-weight:700
+    }
+    .pg-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+    .pg-btn:disabled{opacity:.45;cursor:default}
+
+    .empty-state{padding:60px 16px;text-align:center}
+    .empty-state i{font-size:36px;color:#c9d8ea;margin-bottom:12px}
+    .empty-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:5px}
+    .empty-sub{font-size:13px;color:var(--text-muted)}
+
+    .overlay-modal{
+      position:fixed;inset:0;background:rgba(26,35,51,.42);backdrop-filter:blur(4px);z-index:300;display:none;
+      align-items:center;justify-content:center;padding:16px
+    }
+    .overlay-modal.open{display:flex}
+    .modal{
+      width:820px;max-width:100%;max-height:calc(100vh - 32px);overflow:auto;background:#fff;border:1px solid var(--line);
+      border-radius:20px;box-shadow:0 24px 48px rgba(16,24,40,.18)
+    }
+    .modal-head{
+      padding:20px 22px 16px;border-bottom:1px solid var(--line-soft);
+      display:flex;justify-content:space-between;gap:12px;align-items:flex-start
+    }
+    .modal-title{font-family:'Lora',serif;font-size:20px;line-height:1.3}
+    .modal-sub{margin-top:3px;font-size:12.5px;color:var(--text-muted)}
+    .modal-close{
+      width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--text-muted);cursor:pointer
+    }
+    .modal-body{padding:20px 22px}
+    .modal-footer{padding:16px 22px;border-top:1px solid var(--line-soft);display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+    .section-title{
+      font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.4px;color:var(--text-muted);
+      margin-bottom:12px;display:flex;align-items:center;gap:8px
+    }
+    .section-title::after{content:'';flex:1;height:1px;background:var(--line-soft)}
+    .form-row{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:14px}
+    .form-group{display:flex;flex-direction:column;gap:6px}
+    .form-label{font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--text)}
+    .req{color:var(--danger)}
+    .helper{font-size:12px;color:var(--text-muted);line-height:1.6}
+    .preview-box{
+      background:var(--bg);border:1px solid var(--line-soft);border-radius:14px;padding:12px 14px;margin-bottom:14px
+    }
+    .preview-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);font-weight:800;margin-bottom:6px}
+    .preview-value{font-family:'DM Mono',monospace;font-size:16px;color:var(--text);font-weight:500}
+
+    .toast-stack{position:fixed;right:22px;bottom:22px;z-index:500;display:flex;flex-direction:column;gap:8px}
+    .toast{
+      background:var(--text);color:#fff;padding:12px 16px;border-radius:12px;display:flex;align-items:center;gap:9px;
+      box-shadow:0 10px 22px rgba(0,0,0,.2);font-size:13px;max-width:340px
+    }
+    .toast.success{background:#1b6b41}
+    .toast.warning{background:#8d5807}
+    .toast.danger{background:#8a2d2d}
+
+    @media (max-width:1200px){
+      .hero{grid-template-columns:1fr}
+      .stats-row{grid-template-columns:repeat(2,1fr)}
+    }
+    @media (max-width:900px){.main{margin-left:0}}
+    @media (max-width:720px){
+      .content{padding:20px 16px 34px}
+      .topbar{padding:12px 16px}
+      .stats-row,.form-row,.hero-right{grid-template-columns:1fr}
+      .page-header{flex-direction:column}
+      .toolbar-right{width:100%;margin-left:0;justify-content:space-between}
+    }
+  </style>
+</head>
+<body data-page="mastermataanggaran">
+  <div id="sb-root"></div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="breadcrumb">
+        Sistem Anggaran <span>›</span> Master Data <span>›</span> <b>Master Mata Anggaran</b>
+      </div>
+      <div class="topbar-right">
+        <div class="chip-info"><i class="fa-solid fa-list-check"></i> Referensi item anggaran per UPK / UPT</div>
+        <div class="topbar-date" id="topbarDate">—</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Master <em>Mata Anggaran</em></div>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-ghost" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Export</button>
+          <button class="btn btn-primary" onclick="openAddModal()"><i class="fa-solid fa-plus"></i> Tambah Mata Anggaran</button>
+        </div>
+      </div>
+
+      <section class="hero">
+        <div class="hero-left">
+          <div class="hero-title">Master referensi item anggaran</div>
+          <div class="hero-sub">
+            Setiap mata anggaran menyimpan <b>Kode Anggaran</b>, <b>Nama Mata Anggaran</b>, <b>id_upk</b> wajib,
+            <b>id_upt</b> opsional, <b>Satuan</b>, <b>Harga Satuan</b>, <b>id_coa</b>, dan <b>id_risk</b>.
+          </div>
+        </div>
+        <div class="hero-right">
+          <div class="hero-mini">
+            <div class="hero-mini-label">Total Mata Anggaran</div>
+            <div class="hero-mini-value" id="heroTotal">—</div>
+            <div class="hero-mini-sub">Data master terdaftar</div>
+          </div>
+          <div class="hero-mini">
+            <div class="hero-mini-label">UPK Terhubung</div>
+            <div class="hero-mini-value" id="heroUPK">—</div>
+            <div class="hero-mini-sub">Jumlah UPK yang terpakai</div>
+          </div>
+          <div class="hero-mini">
+            <div class="hero-mini-label">UPT Terhubung</div>
+            <div class="hero-mini-value" id="heroUPT">—</div>
+            <div class="hero-mini-sub">Relasi UPT opsional</div>
+          </div>
+          <div class="hero-mini">
+            <div class="hero-mini-label">Total Estimasi</div>
+            <div class="hero-mini-value" id="heroEstimate">—</div>
+            <div class="hero-mini-sub">Akumulasi harga satuan</div>
+          </div>
+        </div>
+      </section>
+
+      <div class="stats-row">
+        <div class="stat-card c-primary">
+          <div class="stat-icon"><i class="fa-solid fa-cubes-stacked"></i></div>
+          <div class="stat-label">Jumlah Item</div>
+          <div class="stat-value" id="statTotal">—</div>
+          <div class="stat-sub">Master mata anggaran</div>
+        </div>
+        <div class="stat-card c-accent">
+          <div class="stat-icon"><i class="fa-solid fa-building"></i></div>
+          <div class="stat-label">Tanpa UPT</div>
+          <div class="stat-value" id="statWithoutUPT">—</div>
+          <div class="stat-sub">Hanya di level UPK</div>
+        </div>
+        <div class="stat-card c-success">
+          <div class="stat-icon"><i class="fa-solid fa-book"></i></div>
+          <div class="stat-label">COA Terhubung</div>
+          <div class="stat-value" id="statCOA">—</div>
+          <div class="stat-sub">Mapping akun tersedia</div>
+        </div>
+        <div class="stat-card c-warning">
+          <div class="stat-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+          <div class="stat-label">Risk Terhubung</div>
+          <div class="stat-value" id="statRisk">—</div>
+          <div class="stat-sub">Mapping risiko tersedia</div>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <div class="search-wrap">
+          <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+          <input class="search-input" id="searchInput" type="text" placeholder="Cari kode, nama mata anggaran, COA, risk, UPK, atau UPT..." oninput="applyFilters()">
+        </div>
+
+        <select class="filter-select" id="filterUPK" onchange="applyFilters()">
+          <option value="">Semua UPK</option>
+        </select>
+
+        <select class="filter-select" id="filterRelation" onchange="applyFilters()">
+          <option value="">Semua Relasi</option>
+          <option value="with_upt">Ada UPT</option>
+          <option value="without_upt">Tanpa UPT</option>
+        </select>
+
+        <div class="toolbar-right">
+          <button class="btn btn-accent btn-sm" onclick="seedDefaultData()"><i class="fa-solid fa-database"></i> Reset Sample</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title"><i class="fa-solid fa-table-list" style="color:var(--primary)"></i> Daftar Master Mata Anggaran</div>
+            <div class="panel-sub" id="tableSubtitle">Memuat data...</div>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Kode Anggaran</th>
+                <th>Nama Mata Anggaran</th>
+                <th>UPK</th>
+                <th>UPT</th>
+                <th>Satuan</th>
+                <th>Harga Satuan</th>
+                <th>COA</th>
+                <th>Risk</th>
+                <th style="text-align:right;">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="mataTbody"></tbody>
+          </table>
+        </div>
+
+        <div class="empty-state" id="emptyState" style="display:none;">
+          <i class="fa-solid fa-folder-open"></i>
+          <div class="empty-title">Mata anggaran tidak ditemukan</div>
+          <div class="empty-sub">Coba ubah pencarian atau filter.</div>
+        </div>
+
+        <div class="pagination" id="pagination"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay-modal" id="modalForm" onclick="closeModalIfBg(event,'modalForm')">
+    <div class="modal">
+      <div class="modal-head">
+        <div>
+          <div class="modal-title" id="modalTitle">Tambah Mata Anggaran</div>
+          <div class="modal-sub" id="modalSub">Buat referensi item anggaran.</div>
+        </div>
+        <button class="modal-close" onclick="closeModal('modalForm')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="section-title">Identitas Mata Anggaran</div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Kode Anggaran <span class="req">*</span></label>
+            <input class="form-input" id="fKode" type="text" placeholder="mis. MA-CLK-001">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nama Mata Anggaran <span class="req">*</span></label>
+            <input class="form-input" id="fNama" type="text" placeholder="mis. Pembelian Obat Umum">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">id_upk <span class="req">*</span></label>
+            <select class="form-select" id="fUpk" onchange="handleUPKChange()"></select>
+            <div class="helper">Wajib terhubung ke UPK.</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">id_upt</label>
+            <select class="form-select" id="fUpt"></select>
+            <div class="helper">Opsional. Jika diisi, UPT akan difilter berdasarkan UPK terpilih.</div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Satuan <span class="req">*</span></label>
+            <input class="form-input" id="fSatuan" type="text" placeholder="mis. box, pcs, bulan, paket">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Harga Satuan <span class="req">*</span></label>
+            <input class="form-input" id="fHarga" type="number" min="0" placeholder="0" oninput="updatePreview()">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">id_coa <span class="req">*</span></label>
+            <select class="form-select" id="fCoa"></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">id_risk <span class="req">*</span></label>
+            <select class="form-select" id="fRisk"></select>
+          </div>
+        </div>
+
+        <div class="preview-box">
+          <div class="preview-title">Preview Harga Satuan</div>
+          <div class="preview-value" id="hargaPreview">Rp 0</div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('modalForm')">Batal</button>
+        <button class="btn btn-primary" onclick="saveItem()"><i class="fa-solid fa-floppy-disk"></i> Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-stack" id="toastStack"></div>
+
+  <script>
+    const STORAGE_ITEMS = 'APP_MASTER_MATA_ANGGARAN_V1';
+    const STORAGE_UPK = 'APP_MASTER_UPK_V1';
+    const STORAGE_UPT = 'APP_MASTER_UPT_V1';
+    const STORAGE_COA = 'APP_MASTER_COA_V1';
+    const STORAGE_RISK = 'APP_MASTER_RISIKO_V1';
+
+    const seedUPK = [
+      { id:'UPK-001', kode:'KLINIK', nama:'Klinik' },
+      { id:'UPK-002', kode:'YAYASAN', nama:'Yayasan' },
+      { id:'UPK-003', kode:'UNIVERSITAS', nama:'Universitas' }
+    ];
+
+    const seedUPT = [
+      { id:'UPT-001', upkId:'UPK-001', kode:'B.KLINIK.I.01', nama:'Gaji Pegawai' },
+      { id:'UPT-002', upkId:'UPK-001', kode:'B.KLINIK.II.05', nama:'Perlengkapan Kesehatan' },
+      { id:'UPT-003', upkId:'UPK-002', kode:'B.YAYASAN.II.01', nama:'Administrasi Yayasan' },
+      { id:'UPT-004', upkId:'UPK-003', kode:'B.UNTA.II.01', nama:'Operasional Akademik' }
+    ];
+
+    const seedCOA = [
+      { id:'COA-001', kode:'06.1.01.01.01', nama:'Gaji pokok karyawan - TP' },
+      { id:'COA-002', kode:'06.1.01.02.18', nama:'Biaya pembelian obat dan alat kesehatan - TP' },
+      { id:'COA-003', kode:'06.1.01.03.02', nama:'Biaya Alat Tulis Kantor - TP' },
+      { id:'COA-004', kode:'06.1.01.06.01', nama:'Biaya Listrik - TP' }
+    ];
+
+    const seedRisk = [
+      { id:1, nama:'Risiko over budget operasional', skala:'Tinggi' },
+      { id:2, nama:'Risiko keterlambatan vendor', skala:'Sedang' },
+      { id:3, nama:'Risiko ketidaksesuaian dokumentasi', skala:'Rendah' }
+    ];
+
+    const seedItems = [
+      {
+        id:1,
+        kodeAnggaran:'MA-CLK-001',
+        namaMataAnggaran:'Pembelian Obat Umum',
+        idUpk:'UPK-001',
+        namaUpk:'Klinik',
+        idUpt:'UPT-002',
+        namaUpt:'Perlengkapan Kesehatan',
+        satuan:'box',
+        hargaSatuan:275000,
+        idCoa:'COA-002',
+        coaLabel:'06.1.01.02.18 · Biaya pembelian obat dan alat kesehatan - TP',
+        idRisk:1,
+        riskLabel:'Risiko over budget operasional',
+        riskSkala:'Tinggi'
+      },
+      {
+        id:2,
+        kodeAnggaran:'MA-CLK-002',
+        namaMataAnggaran:'ATK Front Office',
+        idUpk:'UPK-001',
+        namaUpk:'Klinik',
+        idUpt:'',
+        namaUpt:'',
+        satuan:'paket',
+        hargaSatuan:950000,
+        idCoa:'COA-003',
+        coaLabel:'06.1.01.03.02 · Biaya Alat Tulis Kantor - TP',
+        idRisk:3,
+        riskLabel:'Risiko ketidaksesuaian dokumentasi',
+        riskSkala:'Rendah'
+      },
+      {
+        id:3,
+        kodeAnggaran:'MA-UNI-001',
+        namaMataAnggaran:'Listrik Gedung Fakultas',
+        idUpk:'UPK-003',
+        namaUpk:'Universitas',
+        idUpt:'UPT-004',
+        namaUpt:'Operasional Akademik',
+        satuan:'bulan',
+        hargaSatuan:14500000,
+        idCoa:'COA-004',
+        coaLabel:'06.1.01.06.01 · Biaya Listrik - TP',
+        idRisk:2,
+        riskLabel:'Risiko keterlambatan vendor',
+        riskSkala:'Sedang'
+      }
+    ];
+
+    function readJson(key){
+      try { return JSON.parse(localStorage.getItem(key)) || []; }
+      catch { return []; }
+    }
+
+    function writeJson(key, data){
+      localStorage.setItem(key, JSON.stringify(data));
+    }
+
+    function ensureSeed(){
+      if(!localStorage.getItem(STORAGE_UPK)) writeJson(STORAGE_UPK, seedUPK);
+      if(!localStorage.getItem(STORAGE_UPT)) writeJson(STORAGE_UPT, seedUPT);
+      if(!localStorage.getItem(STORAGE_COA)) writeJson(STORAGE_COA, seedCOA);
+      if(!localStorage.getItem(STORAGE_RISK)) writeJson(STORAGE_RISK, seedRisk);
+      if(!localStorage.getItem(STORAGE_ITEMS)) writeJson(STORAGE_ITEMS, seedItems);
+    }
+
+    function fmtCurrency(n){
+      return 'Rp ' + (Number(n || 0)).toLocaleString('id-ID');
+    }
+
+    function escapeHtml(str){
+      return String(str ?? '')
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;')
+        .replace(/'/g,'&#39;');
+    }
+
+    function normalizeUPKs(items){
+      return (items || []).map((item, index) => ({
+        id: String(item.id ?? item.id_upk ?? item.kode ?? `UPK-AUTO-${index+1}`),
+        kode: String(item.kode ?? item.code ?? item.entitas ?? item.nama ?? item.name ?? `UPK ${index+1}`),
+        nama: String(item.nama ?? item.name ?? item.entitas ?? item.kode ?? `UPK ${index+1}`)
+      }));
+    }
+
+    function normalizeUPTs(items){
+      return (items || []).map((item, index) => ({
+        id: String(item.id ?? item.id_upt ?? item.kode ?? `UPT-AUTO-${index+1}`),
+        upkId: String(item.upkId ?? item.idUpk ?? item.id_upk ?? item.parentId ?? item.upk_id ?? ''),
+        kode: String(item.kode ?? item.code ?? item.nama ?? item.name ?? `UPT ${index+1}`),
+        nama: String(item.nama ?? item.name ?? item.kode ?? `UPT ${index+1}`)
+      }));
+    }
+
+    function normalizeCOAs(items){
+      return (items || []).map((item, index) => ({
+        id: String(item.id ?? item.id_coa ?? item.kode ?? `COA-AUTO-${index+1}`),
+        kode: String(item.kode ?? item.code ?? item.id ?? `COA-${index+1}`),
+        nama: String(item.nama ?? item.name ?? item.keterangan ?? item.kode ?? `COA ${index+1}`)
+      }));
+    }
+
+    function normalizeRisks(items){
+      return (items || []).map((item, index) => ({
+        id: String(item.id ?? item.id_risk ?? `RISK-AUTO-${index+1}`),
+        nama: String(item.nama ?? item.name ?? `Risk ${index+1}`),
+        skala: String(item.skala ?? item.level ?? item.risikoSkala ?? '-')
+      }));
+    }
+
+    ensureSeed();
+
+    let ITEMS = readJson(STORAGE_ITEMS);
+    let UPKS = normalizeUPKs(readJson(STORAGE_UPK));
+    let UPTS = normalizeUPTs(readJson(STORAGE_UPT));
+    let COAS = normalizeCOAs(readJson(STORAGE_COA));
+    let RISKS = normalizeRisks(readJson(STORAGE_RISK));
+
+    const state = {
+      search: '',
+      filterUPK: '',
+      filterRelation: '',
+      page: 1,
+      perPage: 8,
+      editingId: null
+    };
+
+    function refreshSources(){
+      ITEMS = readJson(STORAGE_ITEMS);
+      UPKS = normalizeUPKs(readJson(STORAGE_UPK));
+      UPTS = normalizeUPTs(readJson(STORAGE_UPT));
+      COAS = normalizeCOAs(readJson(STORAGE_COA));
+      RISKS = normalizeRisks(readJson(STORAGE_RISK));
+    }
+
+    function getUPKLabel(id){
+      const found = UPKS.find(x => String(x.id) === String(id));
+      return found ? `${found.nama}` : '-';
+    }
+
+    function getUPTLabel(id){
+      const found = UPTS.find(x => String(x.id) === String(id));
+      return found ? `${found.kode} · ${found.nama}` : '-';
+    }
+
+    function getCOALabel(id){
+      const found = COAS.find(x => String(x.id) === String(id));
+      return found ? `${found.kode} · ${found.nama}` : '-';
+    }
+
+    function getRiskRecord(id){
+      return RISKS.find(x => String(x.id) === String(id));
+    }
+
+    function populateStaticFilters(){
+      const filter = document.getElementById('filterUPK');
+      const current = filter.value;
+      filter.innerHTML = '<option value="">Semua UPK</option>' +
+        UPKS.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.nama)}</option>`).join('');
+      filter.value = current || '';
+    }
+
+    function populateUPKOptions(selected=''){
+      const select = document.getElementById('fUpk');
+      select.innerHTML = '<option value="">— Pilih UPK —</option>' +
+        UPKS.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.id)} · ${escapeHtml(item.nama)}</option>`).join('');
+      if(selected) select.value = String(selected);
+    }
+
+    function populateUPTOptions(upkId='', selected=''){
+      const select = document.getElementById('fUpt');
+      const items = UPTS.filter(item => !upkId || String(item.upkId) === String(upkId));
+      select.innerHTML = '<option value="">— Tanpa UPT —</option>' +
+        items.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.id)} · ${escapeHtml(item.kode)} · ${escapeHtml(item.nama)}</option>`).join('');
+      if(selected) select.value = String(selected);
+    }
+
+    function populateCOAOptions(selected=''){
+      const select = document.getElementById('fCoa');
+      select.innerHTML = '<option value="">— Pilih COA —</option>' +
+        COAS.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.id)} · ${escapeHtml(item.kode)} · ${escapeHtml(item.nama)}</option>`).join('');
+      if(selected) select.value = String(selected);
+    }
+
+    function populateRiskOptions(selected=''){
+      const select = document.getElementById('fRisk');
+      select.innerHTML = '<option value="">— Pilih Risk —</option>' +
+        RISKS.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.id)} · ${escapeHtml(item.nama)}${item.skala && item.skala !== '-' ? ` (${escapeHtml(item.skala)})` : ''}</option>`).join('');
+      if(selected) select.value = String(selected);
+    }
+
+    function updateStats(data){
+      const uniqueUpk = new Set(data.map(x => x.idUpk).filter(Boolean)).size;
+      const uniqueUpt = new Set(data.map(x => x.idUpt).filter(Boolean)).size;
+      const withoutUpt = data.filter(x => !x.idUpt).length;
+      const coaLinked = data.filter(x => x.idCoa).length;
+      const riskLinked = data.filter(x => x.idRisk).length;
+      const totalEstimate = data.reduce((sum, x) => sum + Number(x.hargaSatuan || 0), 0);
+
+      document.getElementById('heroTotal').textContent = data.length;
+      document.getElementById('heroUPK').textContent = uniqueUpk;
+      document.getElementById('heroUPT').textContent = uniqueUpt;
+      document.getElementById('heroEstimate').textContent = fmtCurrency(totalEstimate);
+
+      document.getElementById('statTotal').textContent = data.length;
+      document.getElementById('statWithoutUPT').textContent = withoutUpt;
+      document.getElementById('statCOA').textContent = coaLinked;
+      document.getElementById('statRisk').textContent = riskLinked;
+    }
+
+    function applyFilters(){
+      state.search = document.getElementById('searchInput').value.trim().toLowerCase();
+      state.filterUPK = document.getElementById('filterUPK').value;
+      state.filterRelation = document.getElementById('filterRelation').value;
+      state.page = 1;
+      render();
+    }
+
+    function getFiltered(){
+      return ITEMS.filter(item => {
+        if(state.filterUPK && String(item.idUpk) !== String(state.filterUPK)) return false;
+        if(state.filterRelation === 'with_upt' && !item.idUpt) return false;
+        if(state.filterRelation === 'without_upt' && item.idUpt) return false;
+
+        if(state.search){
+          const hay = [
+            item.kodeAnggaran,
+            item.namaMataAnggaran,
+            item.idUpk,
+            item.namaUpk,
+            item.idUpt,
+            item.namaUpt,
+            item.satuan,
+            item.idCoa,
+            item.coaLabel,
+            item.idRisk,
+            item.riskLabel,
+            item.riskSkala
+          ].join(' ').toLowerCase();
+          if(!hay.includes(state.search)) return false;
+        }
+        return true;
+      }).sort((a,b) => String(a.kodeAnggaran).localeCompare(String(b.kodeAnggaran)));
+    }
+
+    function render(){
+      refreshSources();
+      populateStaticFilters();
+
+      const data = getFiltered();
+      updateStats(data);
+
+      const start = (state.page - 1) * state.perPage;
+      const page = data.slice(start, start + state.perPage);
+
+      document.getElementById('tableSubtitle').textContent = `Menampilkan ${data.length} dari ${ITEMS.length} mata anggaran`;
+
+      const tbody = document.getElementById('mataTbody');
+      const empty = document.getElementById('emptyState');
+
+      if(!page.length){
+        tbody.innerHTML = '';
+        empty.style.display = 'block';
+        document.getElementById('pagination').innerHTML = '';
+        return;
+      }
+
+      empty.style.display = 'none';
+
+      tbody.innerHTML = page.map(item => `
+        <tr>
+          <td class="mono">${escapeHtml(item.kodeAnggaran)}</td>
+          <td>
+            <div class="title-cell">${escapeHtml(item.namaMataAnggaran)}</div>
+            <div class="title-sub">ID: ${escapeHtml(item.id ?? '-')}</div>
+          </td>
+          <td>
+            <span class="badge badge-primary">${escapeHtml(item.idUpk)}</span>
+            <div class="title-sub">${escapeHtml(item.namaUpk || getUPKLabel(item.idUpk))}</div>
+          </td>
+          <td>
+            ${item.idUpt
+              ? `<span class="badge badge-accent">${escapeHtml(item.idUpt)}</span><div class="title-sub">${escapeHtml(item.namaUpt || getUPTLabel(item.idUpt))}</div>`
+              : '<span class="badge badge-warning">Tanpa UPT</span>'}
+          </td>
+          <td><span class="badge badge-primary">${escapeHtml(item.satuan || '-')}</span></td>
+          <td class="mono">${fmtCurrency(item.hargaSatuan)}</td>
+          <td>
+            <div class="title-cell">${escapeHtml(item.idCoa || '-')}</div>
+            <div class="title-sub">${escapeHtml(item.coaLabel || getCOALabel(item.idCoa))}</div>
+          </td>
+          <td>
+            <div class="title-cell">${escapeHtml(item.idRisk || '-')}</div>
+            <div class="title-sub">${escapeHtml(item.riskLabel || (getRiskRecord(item.idRisk)?.nama || '-'))}${item.riskSkala ? ` · ${escapeHtml(item.riskSkala)}` : ''}</div>
+          </td>
+          <td style="text-align:right;">
+            <div class="actions-inline">
+              <button class="act-btn primary" onclick="openEditModal(${item.id})" title="Edit"><i class="fa-solid fa-pen"></i></button>
+              <button class="act-btn danger" onclick="deleteItem(${item.id})" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+
+      renderPagination(data.length);
+    }
+
+    function renderPagination(total){
+      const pages = Math.ceil(total / state.perPage);
+      const start = (state.page - 1) * state.perPage + 1;
+      const end = Math.min(state.page * state.perPage, total);
+
+      let buttons = '';
+      for(let i=1;i<=pages;i++){
+        buttons += `<button class="pg-btn ${i===state.page?'active':''}" onclick="goPage(${i})">${i}</button>`;
+      }
+
+      document.getElementById('pagination').innerHTML = `
+        <div class="pagination-info">Menampilkan ${start}-${end} dari ${total} data</div>
+        <div class="pagination-btns">
+          <button class="pg-btn" onclick="goPage(${state.page-1})" ${state.page<=1?'disabled':''}><i class="fa-solid fa-chevron-left"></i></button>
+          ${buttons}
+          <button class="pg-btn" onclick="goPage(${state.page+1})" ${state.page>=pages?'disabled':''}><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+      `;
+    }
+
+    function goPage(page){
+      const total = getFiltered().length;
+      const maxPage = Math.max(1, Math.ceil(total / state.perPage));
+      state.page = Math.max(1, Math.min(page, maxPage));
+      render();
+    }
+
+    function updatePreview(){
+      document.getElementById('hargaPreview').textContent = fmtCurrency(document.getElementById('fHarga').value || 0);
+    }
+
+    function handleUPKChange(selectedUpt=''){
+      const upkId = document.getElementById('fUpk').value;
+      populateUPTOptions(upkId, selectedUpt);
+    }
+
+    function openAddModal(){
+      state.editingId = null;
+      document.getElementById('modalTitle').textContent = 'Tambah Mata Anggaran';
+      document.getElementById('modalSub').textContent = 'Buat referensi item anggaran.';
+      document.getElementById('fKode').value = '';
+      document.getElementById('fNama').value = '';
+      populateUPKOptions();
+      populateUPTOptions();
+      populateCOAOptions();
+      populateRiskOptions();
+      document.getElementById('fSatuan').value = '';
+      document.getElementById('fHarga').value = '';
+      updatePreview();
+      openModal('modalForm');
+    }
+
+    function openEditModal(id){
+      const item = ITEMS.find(x => Number(x.id) === Number(id));
+      if(!item) return;
+
+      state.editingId = id;
+      document.getElementById('modalTitle').textContent = 'Edit Mata Anggaran';
+      document.getElementById('modalSub').textContent = `${item.kodeAnggaran} — ${item.namaMataAnggaran}`;
+      document.getElementById('fKode').value = item.kodeAnggaran || '';
+      document.getElementById('fNama').value = item.namaMataAnggaran || '';
+      populateUPKOptions(item.idUpk || '');
+      populateUPTOptions(item.idUpk || '', item.idUpt || '');
+      populateCOAOptions(item.idCoa || '');
+      populateRiskOptions(item.idRisk || '');
+      document.getElementById('fSatuan').value = item.satuan || '';
+      document.getElementById('fHarga').value = item.hargaSatuan || 0;
+      updatePreview();
+      openModal('modalForm');
+    }
+
+    function saveItem(){
+      const idUpk = document.getElementById('fUpk').value;
+      const idUpt = document.getElementById('fUpt').value;
+      const idCoa = document.getElementById('fCoa').value;
+      const idRisk = document.getElementById('fRisk').value;
+      const upk = UPKS.find(x => String(x.id) === String(idUpk));
+      const upt = UPTS.find(x => String(x.id) === String(idUpt));
+      const coa = COAS.find(x => String(x.id) === String(idCoa));
+      const risk = getRiskRecord(idRisk);
+
+      const payload = {
+        kodeAnggaran: document.getElementById('fKode').value.trim(),
+        namaMataAnggaran: document.getElementById('fNama').value.trim(),
+        idUpk,
+        namaUpk: upk?.nama || '',
+        idUpt,
+        namaUpt: upt?.nama || '',
+        satuan: document.getElementById('fSatuan').value.trim(),
+        hargaSatuan: Number(document.getElementById('fHarga').value || 0),
+        idCoa,
+        coaLabel: coa ? `${coa.kode} · ${coa.nama}` : '',
+        idRisk,
+        riskLabel: risk?.nama || '',
+        riskSkala: risk?.skala || ''
+      };
+
+      if(!payload.kodeAnggaran || !payload.namaMataAnggaran || !payload.idUpk || !payload.satuan || payload.hargaSatuan <= 0 || !payload.idCoa || !payload.idRisk){
+        showToast('warning', 'fa-triangle-exclamation', 'Kode, nama, id_upk, satuan, harga satuan, id_coa, dan id_risk wajib diisi.');
+        return;
+      }
+
+      if(payload.idUpt){
+        const uptFound = UPTS.find(x => String(x.id) === String(payload.idUpt));
+        if(!uptFound || String(uptFound.upkId) !== String(payload.idUpk)){
+          showToast('warning', 'fa-link', 'id_upt harus berada di bawah UPK yang dipilih.');
+          return;
+        }
+      }
+
+      const duplicate = ITEMS.find(item =>
+        String(item.kodeAnggaran).toLowerCase() === String(payload.kodeAnggaran).toLowerCase() &&
+        Number(item.id) !== Number(state.editingId)
+      );
+
+      if(duplicate){
+        showToast('warning', 'fa-copy', 'Kode anggaran sudah digunakan.');
+        return;
+      }
+
+      if(state.editingId){
+        const idx = ITEMS.findIndex(x => Number(x.id) === Number(state.editingId));
+        if(idx >= 0){
+          ITEMS[idx] = { ...ITEMS[idx], ...payload };
+        }
+        showToast('success', 'fa-circle-check', 'Mata anggaran berhasil diperbarui.');
+      } else {
+        const newId = Math.max(0, ...ITEMS.map(x => Number(x.id || 0))) + 1;
+        ITEMS.unshift({ id:newId, ...payload });
+        showToast('success', 'fa-circle-check', 'Mata anggaran berhasil ditambahkan.');
+      }
+
+      writeJson(STORAGE_ITEMS, ITEMS);
+      closeModal('modalForm');
+      render();
+    }
+
+    function deleteItem(id){
+      const item = ITEMS.find(x => Number(x.id) === Number(id));
+      if(!item) return;
+      if(!confirm(`Hapus mata anggaran "${item.namaMataAnggaran}"?`)) return;
+      ITEMS = ITEMS.filter(x => Number(x.id) !== Number(id));
+      writeJson(STORAGE_ITEMS, ITEMS);
+      render();
+      showToast('success', 'fa-trash', 'Mata anggaran berhasil dihapus.');
+    }
+
+    function exportCSV(){
+      const rows = ITEMS.map(item => [
+        item.id,
+        item.kodeAnggaran,
+        item.namaMataAnggaran,
+        item.idUpk,
+        item.namaUpk,
+        item.idUpt || '',
+        item.namaUpt || '',
+        item.satuan,
+        item.hargaSatuan,
+        item.idCoa,
+        item.coaLabel,
+        item.idRisk,
+        item.riskLabel,
+        item.riskSkala || ''
+      ]);
+
+      const header = ['ID','Kode Anggaran','Nama Mata Anggaran','id_upk','Nama UPK','id_upt','Nama UPT','Satuan','Harga Satuan','id_coa','COA','id_risk','Risk','Skala Risk'];
+      const csv = [header, ...rows]
+        .map(row => row.map(col => `"${String(col ?? '').replace(/"/g,'""')}"`).join(','))
+        .join('\n');
+
+      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'master_mata_anggaran.csv';
+      link.click();
+      showToast('success', 'fa-file-csv', 'Export CSV berhasil.');
+    }
+
+    function seedDefaultData(){
+      if(!confirm('Reset sample Master Mata Anggaran beserta master referensinya?')) return;
+      writeJson(STORAGE_UPK, seedUPK);
+      writeJson(STORAGE_UPT, seedUPT);
+      writeJson(STORAGE_COA, seedCOA);
+      writeJson(STORAGE_RISK, seedRisk);
+      writeJson(STORAGE_ITEMS, seedItems);
+      refreshSources();
+      render();
+      showToast('success', 'fa-database', 'Sample master mata anggaran berhasil direset.');
+    }
+
+    function openModal(id){ document.getElementById(id).classList.add('open'); }
+    function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+    function closeModalIfBg(event,id){ if(event.target === document.getElementById(id)) closeModal(id); }
+
+    function showToast(type, icon, message){
+      const stack = document.getElementById('toastStack');
+      const el = document.createElement('div');
+      el.className = `toast ${type}`;
+      el.innerHTML = `<i class="fa-solid ${icon}"></i><span>${message}</span>`;
+      stack.appendChild(el);
+      setTimeout(() => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateX(18px)';
+        el.style.transition = 'all .24s ease';
+        setTimeout(() => el.remove(), 240);
+      }, 3200);
+    }
+
+    window.addEventListener('storage', (event) => {
+      if([STORAGE_ITEMS, STORAGE_UPK, STORAGE_UPT, STORAGE_COA, STORAGE_RISK].includes(event.key)){
+        refreshSources();
+        render();
+      }
+    });
+
+    document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('id-ID', {
+      weekday:'short', day:'numeric', month:'long', year:'numeric'
+    });
+
+    render();
+  </script>
+
+  <script src="/sidebar.js" defer></script>
+</body>
+</html>

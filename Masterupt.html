@@ -3,317 +3,234 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Master UPT — Unit Pelaksana Teknis & RKA</title>
+<title>Master UPT — Struktur UPT & Sub UPT</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="sidebar.css">
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg:           #f4f7fc;
-    --bg-soft:      #eaf0fa;
-    --line:         #d7e2f1;
-    --line-soft:    #e7eef7;
-    --primary:      #3972B8;
-    --primary-2:    #2a5d9a;
-    --primary-soft: rgba(57,114,184,.10);
-    --accent:       #F68B21;
-    --accent-soft:  rgba(246,139,33,.12);
-    --success:      #217a4a;
-    --success-soft: rgba(33,122,74,.10);
-    --warning:      #c07010;
-    --warning-soft: rgba(192,112,16,.12);
-    --danger:       #d94040;
-    --danger-soft:  rgba(217,64,64,.10);
-    --text:         #1a2333;
-    --text-soft:    #60718f;
-    --text-muted:   #8ea0ba;
-    --white:        #ffffff;
-    --radius:       18px;
-    --radius-sm:    11px;
-    --shadow-sm:    0 2px 10px rgba(57,114,184,.07);
-    --shadow:       0 10px 28px rgba(57,114,184,.12);
+  :root{
+    --bg:#f4f7fc;
+    --bg-soft:#eaf0fa;
+    --line:#d7e2f1;
+    --line-soft:#e7eef7;
+    --primary:#3972B8;
+    --primary-2:#2a5d9a;
+    --primary-soft:rgba(57,114,184,.10);
+    --accent:#F68B21;
+    --accent-soft:rgba(246,139,33,.12);
+    --success:#217a4a;
+    --success-soft:rgba(33,122,74,.10);
+    --warning:#c07010;
+    --warning-soft:rgba(192,112,16,.12);
+    --danger:#d94040;
+    --danger-soft:rgba(217,64,64,.10);
+    --text:#1a2333;
+    --text-soft:#60718f;
+    --text-muted:#8ea0ba;
+    --white:#fff;
+    --shadow-sm:0 2px 10px rgba(57,114,184,.07);
+    --shadow:0 10px 28px rgba(57,114,184,.12);
   }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+  .main{margin-left:240px;min-height:100vh;display:flex;flex-direction:column}
+  .topbar{
+    position:sticky;top:0;z-index:50;background:rgba(244,247,252,.92);backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line);padding:14px 34px;display:flex;justify-content:space-between;align-items:center;gap:16px
+  }
+  .breadcrumb{display:flex;gap:6px;flex-wrap:wrap;font-size:13px;color:var(--text-muted)}
+  .breadcrumb b{color:var(--text);font-weight:700}
+  .topbar-right{display:flex;align-items:center;gap:10px}
+  .chip-info,.topbar-date{padding:7px 12px;border-radius:999px;background:var(--bg-soft);border:1px solid var(--line);font-size:12px;color:var(--text-soft)}
 
-  * { box-sizing:border-box; margin:0; padding:0; }
-  body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
-  .main { margin-left:240px; min-height:100vh; display:flex; flex-direction:column; }
+  .content{padding:30px 34px 42px;display:flex;flex-direction:column;gap:22px}
+  .page-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+  .page-title{font-family:'Lora',serif;font-size:28px;line-height:1.25}
+  .page-title em{color:var(--primary);font-style:italic}
+  .page-sub{margin-top:8px;max-width:860px;font-size:13.5px;line-height:1.7;color:var(--text-soft)}
+  .page-actions{display:flex;gap:10px;flex-wrap:wrap}
 
-  .topbar {
-    position:sticky;
-    top:0;
-    z-index:50;
-    background:rgba(244,247,252,.92);
-    backdrop-filter:blur(12px);
-    border-bottom:1px solid var(--line);
-    padding:14px 34px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:16px;
+  .btn{
+    border:none;border-radius:11px;padding:10px 16px;display:inline-flex;align-items:center;gap:8px;
+    font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:.18s;font-family:'Plus Jakarta Sans',sans-serif
   }
+  .btn i{font-size:12px}
+  .btn-primary{background:var(--primary);color:#fff;box-shadow:0 6px 18px rgba(57,114,184,.24)}
+  .btn-primary:hover{transform:translateY(-1px);background:#467ec1}
+  .btn-ghost{background:#fff;color:var(--text-soft);border:1.5px solid var(--line)}
+  .btn-ghost:hover{background:var(--bg);color:var(--text)}
+  .btn-accent{background:var(--accent);color:#fff;box-shadow:0 6px 18px rgba(246,139,33,.24)}
+  .btn-accent:hover{transform:translateY(-1px);background:#ff9d3a}
+  .btn-sm{padding:7px 12px;font-size:12px}
+  .btn-danger-ghost{background:#fff;color:var(--danger);border:1.5px solid rgba(217,64,64,.24)}
+  .btn-danger-ghost:hover{background:var(--danger-soft)}
 
-  .breadcrumb {
-    display:flex;
-    flex-wrap:wrap;
-    gap:6px;
-    align-items:center;
-    font-size:13px;
-    color:var(--text-muted);
+  .hero{
+    background:linear-gradient(135deg,var(--primary) 0%, var(--primary-2) 100%);color:#fff;border-radius:22px;padding:24px 26px;
+    box-shadow:0 16px 36px rgba(57,114,184,.22);display:grid;grid-template-columns:1.2fr .9fr;gap:18px;position:relative;overflow:hidden
   }
-  .breadcrumb b { color:var(--text); font-weight:700; }
-  .topbar-right { display:flex; align-items:center; gap:10px; }
-  .topbar-date, .chip-info {
-    padding:7px 12px;
-    border-radius:999px;
-    background:var(--bg-soft);
-    border:1px solid var(--line);
-    font-size:12px;
-    color:var(--text-soft);
-    white-space:nowrap;
-  }
-  .icon-btn {
-    width:38px; height:38px; border-radius:11px; border:1px solid var(--line); background:#fff; color:var(--text-soft);
-    display:flex; align-items:center; justify-content:center; cursor:pointer; position:relative; transition:.18s;
-  }
-  .icon-btn:hover { background:var(--bg); color:var(--text); }
-  .notif-dot { width:7px; height:7px; border-radius:50%; background:var(--danger); position:absolute; top:7px; right:8px; border:1.5px solid var(--bg); }
+  .hero::before,.hero::after{content:'';position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.12)}
+  .hero::before{width:180px;height:180px;top:-50px;right:-20px}
+  .hero::after{width:120px;height:120px;bottom:-45px;right:90px}
+  .hero-left,.hero-right{position:relative;z-index:1}
+  .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:1.8px;color:rgba(255,255,255,.65);margin-bottom:8px}
+  .hero-title{font-family:'Lora',serif;font-size:28px;line-height:1.25;max-width:720px}
+  .hero-sub{margin-top:10px;font-size:13px;line-height:1.7;color:rgba(255,255,255,.76);max-width:650px}
+  .hero-chip{display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.12);font-size:12px;font-weight:700}
+  .hero-actions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
+  .hero-right{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .hero-mini{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:15px 16px}
+  .hero-mini-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.62);margin-bottom:7px}
+  .hero-mini-value{font-family:'DM Mono',monospace;font-size:20px;font-weight:500}
+  .hero-mini-sub{margin-top:6px;font-size:12px;color:rgba(255,255,255,.66)}
 
-  .content { padding:30px 34px 42px; display:flex; flex-direction:column; gap:22px; }
-  .page-header { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap; }
-  .page-title { font-family:'Lora',serif; font-size:28px; letter-spacing:-.4px; line-height:1.25; }
-  .page-title em { color:var(--primary); font-style:italic; }
-  .page-sub { margin-top:7px; max-width:760px; font-size:13.5px; line-height:1.7; color:var(--text-soft); }
-  .page-actions { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .stat-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px 18px 16px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden;transition:.18s}
+  .stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+  .stat-card::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px}
+  .c-primary::after{background:var(--primary)}
+  .c-accent::after{background:var(--accent)}
+  .c-success::after{background:var(--success)}
+  .c-warning::after{background:var(--warning)}
+  .stat-icon{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-size:16px}
+  .c-primary .stat-icon{background:var(--primary-soft);color:var(--primary)}
+  .c-accent .stat-icon{background:var(--accent-soft);color:var(--accent)}
+  .c-success .stat-icon{background:var(--success-soft);color:var(--success)}
+  .c-warning .stat-icon{background:var(--warning-soft);color:var(--warning)}
+  .stat-label{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);font-weight:700;margin-bottom:5px}
+  .stat-value{font-family:'DM Mono',monospace;font-size:23px;line-height:1}
+  .stat-sub{margin-top:6px;font-size:12px;color:var(--text-muted)}
 
-  .btn {
-    border:none; border-radius:11px; padding:10px 16px; display:inline-flex; align-items:center; gap:8px;
-    font-size:13px; font-weight:700; cursor:pointer; text-decoration:none; transition:.18s; font-family:'Plus Jakarta Sans',sans-serif;
+  .toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .search-wrap{position:relative;flex:1;min-width:240px}
+  .search-icon{position:absolute;top:50%;left:13px;transform:translateY(-50%);color:var(--text-muted);font-size:13px}
+  .search-input,.filter-select,.form-input,.form-select,.form-textarea{
+    width:100%;border:1.5px solid var(--line);background:#fff;border-radius:11px;padding:10px 12px;font-size:13px;color:var(--text);outline:none;transition:.18s;font-family:'Plus Jakarta Sans',sans-serif
   }
-  .btn i { font-size:12px; }
-  .btn-primary { background:var(--primary); color:#fff; box-shadow:0 6px 18px rgba(57,114,184,.24); }
-  .btn-primary:hover { transform:translateY(-1px); background:#467ec1; }
-  .btn-ghost { background:#fff; color:var(--text-soft); border:1.5px solid var(--line); }
-  .btn-ghost:hover { background:var(--bg); color:var(--text); }
-  .btn-accent { background:var(--accent); color:#fff; box-shadow:0 6px 18px rgba(246,139,33,.24); }
-  .btn-accent:hover { transform:translateY(-1px); background:#ff9d3a; }
-  .btn-sm { padding:7px 12px; font-size:12px; }
-  .btn-danger-ghost { background:#fff; color:var(--danger); border:1.5px solid rgba(217,64,64,.24); }
-  .btn-danger-ghost:hover { background:var(--danger-soft); }
+  .search-input{padding-left:36px}
+  .search-input:focus,.filter-select:focus,.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(57,114,184,.16)}
+  .toolbar-right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .view-toggle{display:flex;background:#fff;border:1.5px solid var(--line);border-radius:11px;overflow:hidden}
+  .view-btn{border:none;background:transparent;padding:8px 13px;font-size:12px;font-weight:700;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;gap:6px;font-family:'Plus Jakarta Sans',sans-serif}
+  .view-btn.active{background:var(--primary);color:#fff}
 
-  .hero {
-    background:linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
-    color:#fff; border-radius:22px; padding:24px 26px; box-shadow:0 16px 36px rgba(57,114,184,.22);
-    display:grid; grid-template-columns:1.2fr .9fr; gap:18px; position:relative; overflow:hidden;
-  }
-  .hero::before, .hero::after { content:''; position:absolute; border-radius:50%; border:1px solid rgba(255,255,255,.12); }
-  .hero::before { width:180px; height:180px; top:-50px; right:-20px; }
-  .hero::after  { width:120px; height:120px; bottom:-45px; right:90px; }
-  .hero-left, .hero-right { position:relative; z-index:1; }
-  .eyebrow { font-size:11px; text-transform:uppercase; letter-spacing:1.8px; color:rgba(255,255,255,.65); margin-bottom:8px; }
-  .hero-title { font-family:'Lora',serif; font-size:28px; line-height:1.25; max-width:720px; }
-  .hero-sub { margin-top:10px; font-size:13px; line-height:1.7; color:rgba(255,255,255,.76); max-width:650px; }
-  .hero-actions { margin-top:16px; display:flex; gap:10px; flex-wrap:wrap; }
-  .hero-chip {
-    display:inline-flex; align-items:center; gap:7px; padding:8px 12px; border-radius:999px;
-    background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.12); font-size:12px; font-weight:700;
-  }
-  .hero-right { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
-  .hero-mini { background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.12); border-radius:16px; padding:15px 16px; }
-  .hero-mini-label { font-size:11px; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,.62); margin-bottom:7px; }
-  .hero-mini-value { font-family:'DM Mono',monospace; font-size:20px; font-weight:500; }
-  .hero-mini-sub { margin-top:6px; font-size:12px; color:rgba(255,255,255,.66); }
+  .panel{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-sm)}
+  .panel-head{padding:16px 20px;border-bottom:1px solid var(--line-soft);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+  .panel-title{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
+  .panel-sub{font-size:12px;color:var(--text-muted);margin-top:2px}
+  .panel-body{padding:18px}
 
-  .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
-  .stat-card { background:#fff; border:1px solid var(--line); border-radius:18px; padding:18px 18px 16px; box-shadow:var(--shadow-sm); position:relative; overflow:hidden; transition:.18s; }
-  .stat-card:hover { transform:translateY(-2px); box-shadow:var(--shadow); }
-  .stat-card::after { content:''; position:absolute; left:0; right:0; bottom:0; height:3px; }
-  .stat-card.c-primary::after { background:var(--primary); }
-  .stat-card.c-accent::after { background:var(--accent); }
-  .stat-card.c-success::after { background:var(--success); }
-  .stat-card.c-warning::after { background:var(--warning); }
-  .stat-icon { width:38px; height:38px; border-radius:11px; display:flex; align-items:center; justify-content:center; margin-bottom:12px; font-size:16px; }
-  .c-primary .stat-icon { background:var(--primary-soft); color:var(--primary); }
-  .c-accent .stat-icon { background:var(--accent-soft); color:var(--accent); }
-  .c-success .stat-icon { background:var(--success-soft); color:var(--success); }
-  .c-warning .stat-icon { background:var(--warning-soft); color:var(--warning); }
-  .stat-label { font-size:11px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-muted); font-weight:700; margin-bottom:5px; }
-  .stat-value { font-family:'DM Mono',monospace; font-size:23px; color:var(--text); line-height:1; }
-  .stat-sub { margin-top:6px; font-size:12px; color:var(--text-muted); }
+  .accordion-list{display:grid;gap:14px}
+  .tree-card{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-sm)}
+  .tree-summary{list-style:none;cursor:pointer;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(180deg,#fff 0%, #fbfdff 100%)}
+  .tree-summary::-webkit-details-marker{display:none}
+  .tree-summary-left{display:flex;gap:12px;align-items:flex-start;min-width:0}
+  .tree-icon{width:40px;height:40px;border-radius:12px;background:var(--primary-soft);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+  .tree-title{font-weight:800;color:var(--text);font-size:14px;line-height:1.45}
+  .tree-code{font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);margin-top:3px}
+  .tree-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .tree-summary-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+  .count-pill{padding:6px 10px;border-radius:999px;background:var(--bg-soft);border:1px solid var(--line);font-size:11px;font-weight:800;color:var(--text-soft)}
+  .chev{width:30px;height:30px;border-radius:9px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:.18s;background:#fff}
+  details[open] .chev{transform:rotate(180deg);color:var(--primary)}
+  .tree-body{padding:0 18px 18px;border-top:1px solid var(--line-soft);background:#fff}
+  .tree-info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+  .info-box{background:var(--bg);border:1px solid var(--line-soft);border-radius:14px;padding:12px 14px}
+  .info-label{font-size:10.5px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);font-weight:800;margin-bottom:4px}
+  .info-value{font-size:13px;color:var(--text);font-weight:700;line-height:1.6}
+  .tree-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}
+  .sub-section-title{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);font-weight:800;margin:18px 0 10px;display:flex;align-items:center;gap:8px}
+  .sub-section-title::after{content:'';flex:1;height:1px;background:var(--line-soft)}
+  .child-list{display:grid;gap:10px}
+  .child-card{background:var(--bg);border:1px solid var(--line-soft);border-radius:16px;padding:14px 14px 14px 16px;position:relative}
+  .child-card::before{content:'';position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:999px;background:var(--accent)}
+  .child-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+  .child-title{font-weight:800;color:var(--text);font-size:13px;line-height:1.5}
+  .child-code{font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);margin-top:3px}
+  .child-sub{margin-top:6px;font-size:12px;color:var(--text-soft);line-height:1.7}
+  .child-meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+  .child-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+  .empty-child{padding:14px;border:1px dashed var(--line);border-radius:14px;background:#fbfdff;color:var(--text-muted);font-size:12px}
 
-  .toolbar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
-  .search-wrap { position:relative; flex:1; min-width:240px; }
-  .search-icon { position:absolute; top:50%; left:13px; transform:translateY(-50%); color:var(--text-muted); font-size:13px; pointer-events:none; }
-  .search-input, .filter-select, .form-input, .form-select, .form-textarea {
-    width:100%; border:1.5px solid var(--line); background:#fff; border-radius:11px; padding:10px 12px;
-    font-size:13px; color:var(--text); outline:none; transition:.18s; font-family:'Plus Jakarta Sans',sans-serif;
-  }
-  .search-input { padding-left:36px; }
-  .search-input:focus, .filter-select:focus, .form-input:focus, .form-select:focus, .form-textarea:focus {
-    border-color:var(--primary); box-shadow:0 0 0 3px rgba(57,114,184,.16);
-  }
-  .toolbar-right { margin-left:auto; display:flex; gap:8px; align-items:center; }
-  .view-toggle { display:flex; background:#fff; border:1.5px solid var(--line); border-radius:11px; overflow:hidden; }
-  .view-btn { border:none; background:transparent; padding:8px 13px; font-size:12px; font-weight:700; color:var(--text-muted); cursor:pointer; display:flex; align-items:center; gap:6px; font-family:'Plus Jakarta Sans',sans-serif; }
-  .view-btn.active { background:var(--primary); color:#fff; }
+  .table-wrap{overflow-x:auto}
+  table{width:100%;border-collapse:collapse}
+  thead th{text-align:left;padding:11px 16px;background:var(--bg);border-bottom:1px solid var(--line);font-size:10.5px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);white-space:nowrap}
+  thead th.sortable{cursor:pointer}
+  tbody tr{border-bottom:1px solid var(--line-soft)}
+  tbody tr:last-child{border-bottom:none}
+  tbody tr:hover{background:rgba(57,114,184,.025)}
+  tbody td{padding:14px 16px;font-size:13px;color:var(--text-soft);vertical-align:top}
+  .mono{font-family:'DM Mono',monospace;color:var(--text)}
+  .title-cell{color:var(--text);font-weight:700}
+  .title-sub{margin-top:3px;font-size:11.5px;color:var(--text-muted)}
+  .indent-0{padding-left:0}
+  .indent-1{padding-left:18px}
+  .indent-2{padding-left:36px}
+  .indent-3{padding-left:54px}
+  .indent-wrap{display:flex;align-items:flex-start;gap:8px}
+  .indent-mark{margin-top:3px;color:var(--text-muted)}
 
-  .panel { background:#fff; border:1px solid var(--line); border-radius:18px; overflow:hidden; box-shadow:var(--shadow-sm); }
-  .panel-head { padding:16px 20px; border-bottom:1px solid var(--line-soft); display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; }
-  .panel-title { font-size:14px; font-weight:700; color:var(--text); display:flex; align-items:center; gap:8px; }
-  .panel-sub { font-size:12px; color:var(--text-muted); margin-top:2px; }
-  .table-wrap { overflow-x:auto; }
-  table { width:100%; border-collapse:collapse; }
-  thead th { text-align:left; padding:11px 16px; background:var(--bg); border-bottom:1px solid var(--line); font-size:10.5px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-muted); white-space:nowrap; }
-  thead th.sortable { cursor:pointer; user-select:none; }
-  thead th.sortable:hover { color:var(--primary); }
-  tbody tr { border-bottom:1px solid var(--line-soft); }
-  tbody tr:last-child { border-bottom:none; }
-  tbody tr:hover { background:rgba(57,114,184,.025); }
-  tbody td { padding:14px 16px; font-size:13px; color:var(--text-soft); vertical-align:top; }
-  .mono { font-family:'DM Mono',monospace; color:var(--text); }
-  .title-cell { color:var(--text); font-weight:700; }
-  .title-sub { margin-top:3px; font-size:11.5px; color:var(--text-muted); }
+  .badge{display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:700;white-space:nowrap}
+  .badge-primary{background:var(--primary-soft);color:var(--primary)}
+  .badge-accent{background:var(--accent-soft);color:#a05a00}
+  .badge-success{background:var(--success-soft);color:var(--success)}
+  .badge-warning{background:var(--warning-soft);color:var(--warning)}
+  .badge-danger{background:var(--danger-soft);color:var(--danger)}
+  .badge-neutral{background:var(--bg-soft);color:var(--text-muted)}
 
-  .badge { display:inline-flex; align-items:center; gap:6px; padding:4px 9px; border-radius:999px; font-size:11px; font-weight:700; white-space:nowrap; }
-  .badge-primary { background:var(--primary-soft); color:var(--primary); }
-  .badge-accent { background:var(--accent-soft); color:#a05a00; }
-  .badge-success { background:var(--success-soft); color:var(--success); }
-  .badge-warning { background:var(--warning-soft); color:var(--warning); }
-  .badge-neutral { background:var(--bg-soft); color:var(--text-muted); }
-  .badge-danger { background:var(--danger-soft); color:var(--danger); }
+  .actions-inline{display:inline-flex;gap:5px;white-space:nowrap}
+  .act-btn{width:31px;height:31px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--text-soft);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:.16s;font-size:12px}
+  .act-btn:hover{background:var(--bg);color:var(--text)}
+  .act-btn.primary:hover{background:var(--primary-soft);color:var(--primary)}
+  .act-btn.accent:hover{background:var(--accent-soft);color:var(--accent)}
+  .act-btn.danger:hover{background:var(--danger-soft);color:var(--danger)}
+  .act-btn.success:hover{background:var(--success-soft);color:var(--success)}
 
-  .dot { width:7px; height:7px; border-radius:50%; display:inline-block; }
-  .dot-success { background:#29a26b; }
-  .dot-warning { background:var(--warning); }
-  .dot-muted { background:var(--text-muted); }
+  .empty-state{padding:60px 16px;text-align:center}
+  .empty-state i{font-size:36px;color:#c9d8ea;margin-bottom:12px}
+  .empty-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:5px}
+  .empty-sub{font-size:13px;color:var(--text-muted)}
 
-  .upk-breadcrumb {
-    display:flex; align-items:center; gap:6px; flex-wrap:wrap; font-size:11px; color:var(--text-muted);
-  }
-  .upk-breadcrumb strong { color:var(--primary); font-weight:800; }
+  .overlay-modal{position:fixed;inset:0;background:rgba(26,35,51,.42);backdrop-filter:blur(4px);z-index:300;display:none;align-items:center;justify-content:center;padding:16px}
+  .overlay-modal.open{display:flex}
+  .modal{width:760px;max-width:100%;max-height:calc(100vh - 32px);overflow:auto;background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 24px 48px rgba(16,24,40,.18)}
+  .modal-head{padding:20px 22px 16px;border-bottom:1px solid var(--line-soft);display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+  .modal-title{font-family:'Lora',serif;font-size:20px;line-height:1.3}
+  .modal-sub{margin-top:3px;font-size:12.5px;color:var(--text-muted)}
+  .modal-close{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--text-muted);cursor:pointer}
+  .modal-body{padding:20px 22px}
+  .modal-footer{padding:16px 22px;border-top:1px solid var(--line-soft);display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+  .section-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.4px;color:var(--text-muted);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+  .section-title::after{content:'';flex:1;height:1px;background:var(--line-soft)}
+  .form-row{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:14px}
+  .form-group{display:flex;flex-direction:column;gap:6px}
+  .form-label{font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--text)}
+  .req{color:var(--danger)}
+  .form-textarea{resize:vertical;min-height:90px}
+  .field-note{font-size:11.5px;color:var(--text-muted);line-height:1.6}
+  .helper-box{background:var(--bg);border:1px solid var(--line-soft);border-radius:14px;padding:12px 14px;margin-bottom:14px;font-size:12px;color:var(--text-soft);line-height:1.7}
+  .helper-box b{color:var(--text)}
 
-  .budget-wrap { display:flex; align-items:center; gap:10px; }
-  .budget-track { flex:1; min-width:90px; height:7px; border-radius:999px; background:var(--bg-soft); overflow:hidden; }
-  .budget-fill { height:100%; border-radius:999px; }
-  .budget-label { width:38px; font-size:11px; font-weight:800; color:var(--text-soft); text-align:right; }
+  .toast-stack{position:fixed;right:22px;bottom:22px;z-index:500;display:flex;flex-direction:column;gap:8px}
+  .toast{background:var(--text);color:#fff;padding:12px 16px;border-radius:12px;display:flex;align-items:center;gap:9px;box-shadow:0 10px 22px rgba(0,0,0,.2);font-size:13px;max-width:340px}
+  .toast.success{background:#1b6b41}
+  .toast.warning{background:#8d5807}
+  .toast.danger{background:#8a2d2d}
 
-  .actions-inline { display:inline-flex; align-items:center; gap:5px; white-space:nowrap; }
-  .act-btn {
-    width:31px; height:31px; border-radius:9px; border:1px solid var(--line); background:#fff; color:var(--text-soft);
-    cursor:pointer; display:inline-flex; align-items:center; justify-content:center; transition:.16s; font-size:12px;
+  @media (max-width:1200px){
+    .hero{grid-template-columns:1fr}
+    .stats-row{grid-template-columns:repeat(2,1fr)}
+    .tree-info-grid{grid-template-columns:repeat(2,1fr)}
   }
-  .act-btn:hover { background:var(--bg); color:var(--text); }
-  .act-btn.primary:hover { background:var(--primary-soft); color:var(--primary); border-color:rgba(57,114,184,.25); }
-  .act-btn.accent:hover { background:var(--accent-soft); color:var(--accent); border-color:rgba(246,139,33,.25); }
-  .act-btn.danger:hover { background:var(--danger-soft); color:var(--danger); border-color:rgba(217,64,64,.25); }
-
-  .card-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:16px; }
-  .branch-card {
-    background:#fff; border:1px solid var(--line); border-radius:18px; padding:18px; box-shadow:var(--shadow-sm);
-    transition:.18s; display:flex; flex-direction:column; gap:14px; position:relative; overflow:hidden;
-  }
-  .branch-card::before { content:''; position:absolute; left:0; right:0; top:0; height:3px; background:var(--primary); }
-  .branch-card:hover { transform:translateY(-3px); box-shadow:var(--shadow); border-color:#c4d8ef; }
-  .card-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
-  .card-icon {
-    width:42px; height:42px; border-radius:12px; background:var(--primary-soft); color:var(--primary);
-    display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;
-  }
-  .card-title { font-family:'Lora',serif; font-size:15px; line-height:1.35; color:var(--text); font-weight:700; }
-  .card-code { margin-top:4px; font-family:'DM Mono',monospace; font-size:11px; color:var(--text-muted); }
-  .card-meta { display:flex; flex-wrap:wrap; gap:7px; }
-  .card-stats { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; padding-top:14px; border-top:1px solid var(--line-soft); }
-  .stat-mini-label { font-size:10.5px; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); font-weight:700; margin-bottom:3px; }
-  .stat-mini-value { font-size:13px; color:var(--text); font-weight:700; line-height:1.45; }
-
-  .empty-state { padding:62px 16px; text-align:center; }
-  .empty-state i { font-size:36px; color:#c9d8ea; margin-bottom:12px; }
-  .empty-title { font-size:15px; font-weight:700; color:var(--text); margin-bottom:5px; }
-  .empty-sub { font-size:13px; color:var(--text-muted); }
-
-  .pagination { padding:14px 20px; border-top:1px solid var(--line-soft); display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
-  .pagination-info { font-size:12.5px; color:var(--text-muted); }
-  .pagination-btns { display:flex; gap:4px; align-items:center; }
-  .pg-btn {
-    width:32px; height:32px; border-radius:8px; border:1px solid var(--line); background:#fff; color:var(--text-soft);
-    display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; font-family:'Plus Jakarta Sans',sans-serif; font-weight:700;
-  }
-  .pg-btn:hover { background:var(--bg); color:var(--text); }
-  .pg-btn.active { background:var(--primary); color:#fff; border-color:var(--primary); }
-  .pg-btn:disabled { opacity:.45; cursor:default; }
-
-  .overlay-modal {
-    position:fixed; inset:0; background:rgba(26,35,51,.42); backdrop-filter:blur(4px); z-index:300; display:none;
-    align-items:center; justify-content:center; padding:16px;
-  }
-  .overlay-modal.open { display:flex; }
-  .modal {
-    width:720px; max-width:100%; max-height:calc(100vh - 32px); overflow:auto; background:#fff; border:1px solid var(--line);
-    border-radius:20px; box-shadow:0 24px 48px rgba(16,24,40,.18); animation:modalIn .24s ease;
-  }
-  .modal-lg { width:900px; }
-  @keyframes modalIn { from { opacity:0; transform:translateY(12px) scale(.97); } to { opacity:1; transform:none; } }
-  .modal-head { padding:20px 22px 16px; border-bottom:1px solid var(--line-soft); display:flex; justify-content:space-between; gap:12px; align-items:flex-start; }
-  .modal-title { font-family:'Lora',serif; font-size:20px; color:var(--text); line-height:1.3; }
-  .modal-sub { margin-top:3px; font-size:12.5px; color:var(--text-muted); }
-  .modal-close { width:34px; height:34px; border-radius:10px; border:1px solid var(--line); background:#fff; color:var(--text-muted); cursor:pointer; }
-  .modal-close:hover { background:var(--danger-soft); color:var(--danger); }
-  .modal-body { padding:20px 22px; }
-  .modal-footer { padding:16px 22px; border-top:1px solid var(--line-soft); display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap; }
-  .section-title {
-    font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1.4px; color:var(--text-muted);
-    margin-bottom:12px; display:flex; align-items:center; gap:8px;
-  }
-  .section-title::after { content:''; flex:1; height:1px; background:var(--line-soft); }
-  .form-row { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-bottom:14px; }
-  .form-row.col3 { grid-template-columns:repeat(3,1fr); }
-  .form-group { display:flex; flex-direction:column; gap:6px; }
-  .form-label { font-size:11.5px; font-weight:800; text-transform:uppercase; letter-spacing:.5px; color:var(--text); }
-  .req { color:var(--danger); }
-  .form-textarea { resize:vertical; min-height:92px; }
-  .form-hint { font-size:11.5px; color:var(--text-muted); }
-
-  .detail-banner {
-    background:linear-gradient(135deg,var(--primary) 0%, var(--primary-2) 100%); color:#fff; border-radius:18px; padding:16px 18px;
-    display:flex; align-items:flex-start; gap:14px; margin-bottom:18px;
-  }
-  .detail-banner-icon {
-    width:42px; height:42px; flex-shrink:0; border-radius:12px; background:rgba(255,255,255,.15);
-    display:flex; align-items:center; justify-content:center; font-size:18px;
-  }
-  .detail-banner-title { font-family:'Lora',serif; font-size:16px; line-height:1.3; }
-  .detail-banner-sub { margin-top:4px; font-size:12px; line-height:1.6; color:rgba(255,255,255,.74); }
-  .detail-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-bottom:18px; }
-  .detail-box { background:var(--bg); border-radius:14px; padding:13px 14px; }
-  .detail-label { font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); margin-bottom:4px; }
-  .detail-value { font-size:13.5px; color:var(--text); font-weight:700; line-height:1.6; }
-  .hierarchy-box {
-    background:var(--bg); border:1px solid var(--line-soft); border-radius:16px; padding:14px 16px; margin-bottom:18px;
-  }
-  .hierarchy-path { display:flex; align-items:center; gap:8px; flex-wrap:wrap; color:var(--text-soft); font-size:13px; }
-  .hierarchy-path .current { color:var(--text); font-weight:800; }
-  .hierarchy-path .parent { color:var(--primary); font-weight:800; }
-
-  .toast-stack { position:fixed; right:22px; bottom:22px; z-index:500; display:flex; flex-direction:column; gap:8px; }
-  .toast {
-    background:var(--text); color:#fff; padding:12px 16px; border-radius:12px; display:flex; align-items:center; gap:9px;
-    box-shadow:0 10px 22px rgba(0,0,0,.2); font-size:13px; animation:toastIn .2s ease; max-width:320px;
-  }
-  .toast.success { background:#1b6b41; }
-  .toast.warning { background:#8d5807; }
-  .toast.danger { background:#8a2d2d; }
-  @keyframes toastIn { from { opacity:0; transform:translateX(18px); } to { opacity:1; transform:none; } }
-
-  @media (max-width:1200px) {
-    .hero { grid-template-columns:1fr; }
-    .stats-row { grid-template-columns:repeat(2,1fr); }
-  }
-  @media (max-width:900px) { .main { margin-left:0; } }
-  @media (max-width:720px) {
-    .content { padding:20px 16px 34px; }
-    .topbar { padding:12px 16px; }
-    .stats-row, .form-row, .form-row.col3, .detail-grid, .card-stats, .hero-right { grid-template-columns:1fr; }
-    .page-header { flex-direction:column; }
-    .toolbar-right { width:100%; margin-left:0; justify-content:space-between; }
+  @media (max-width:900px){.main{margin-left:0}}
+  @media (max-width:720px){
+    .content{padding:20px 16px 34px}
+    .topbar{padding:12px 16px}
+    .stats-row,.hero-right,.form-row,.tree-info-grid{grid-template-columns:1fr}
+    .page-header{flex-direction:column}
+    .toolbar-right{width:100%;margin-left:0;justify-content:space-between}
+    .tree-summary{flex-direction:column;align-items:flex-start}
+    .tree-summary-right{justify-content:flex-start}
   }
 </style>
 </head>
@@ -325,58 +242,89 @@
       Sistem Anggaran <span>›</span> Master Organisasi <span>›</span> <b>Master UPT</b>
     </div>
     <div class="topbar-right">
+      <div class="chip-info"><i class="fa-solid fa-sitemap"></i> Mendukung struktur UPT &amp; Sub UPT</div>
       <div class="topbar-date" id="topbarDate">—</div>
-      <div class="chip-info"><i class="fa-solid fa-link"></i> Terkait UPK induk</div>
-      <button class="icon-btn" type="button" aria-label="Notifikasi">
-        <i class="fa-solid fa-bell"></i>
-        <span class="notif-dot"></span>
-      </button>
     </div>
   </div>
 
   <div class="content">
     <div class="page-header">
       <div>
-        <div class="page-title">Master <em>UPT</em> &amp; Penyusunan RKA</div>
+        <div class="page-title">Master <em>UPT</em> dengan Struktur Sub UPT</div>
       </div>
       <div class="page-actions">
         <button class="btn btn-ghost" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Export UPT</button>
-        <button class="btn btn-accent" onclick="focusHierarchyFilter()"><i class="fa-solid fa-filter-circle-dollar"></i> Filter per UPK</button>
+        <button class="btn btn-accent" onclick="resetSampleData()"><i class="fa-solid fa-database"></i> Reset Sample</button>
         <button class="btn btn-primary" onclick="openAddModal()"><i class="fa-solid fa-plus"></i> Tambah UPT</button>
       </div>
     </div>
+
+    <section class="hero">
+      <div class="hero-left">
+        <div class="eyebrow">Master Organisasi</div>
+        <div class="hero-title">Struktur UPT sekarang mendukung <em>UPT induk</em> dan <em>sub UPT</em>.</div>
+        <div class="hero-sub">Contohnya, <b>Wakil Rektor Bidang SDM, Humas dan Kerjasama</b> dapat memiliki turunan seperti <b>Bagian SDM</b>, <b>Bagian Humas dan Kerjasama</b>, serta <b>Bagian Pusat Karir</b>. Input sub UPT dilakukan dari form yang sama melalui field <b>Sub UPT dari</b>.</div>
+        <div class="hero-actions">
+          <span class="hero-chip"><i class="fa-solid fa-layer-group"></i> Sample data siap dipakai</span>
+          <span class="hero-chip"><i class="fa-solid fa-pen-to-square"></i> Input, edit, delete aktif</span>
+          <span class="hero-chip"><i class="fa-solid fa-chevron-down"></i> Accordion struktur hierarki</span>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="hero-mini">
+          <div class="hero-mini-label">Total UPT</div>
+          <div class="hero-mini-value" id="heroTotalUpt">0</div>
+          <div class="hero-mini-sub">Seluruh UPT &amp; sub UPT</div>
+        </div>
+        <div class="hero-mini">
+          <div class="hero-mini-label">UPT Induk</div>
+          <div class="hero-mini-value" id="heroRootUpt">0</div>
+          <div class="hero-mini-sub">UPT level utama</div>
+        </div>
+        <div class="hero-mini">
+          <div class="hero-mini-label">Sub UPT</div>
+          <div class="hero-mini-value" id="heroChildUpt">0</div>
+          <div class="hero-mini-sub">Turunan dari UPT induk</div>
+        </div>
+        <div class="hero-mini">
+          <div class="hero-mini-label">UPK Induk</div>
+          <div class="hero-mini-value" id="heroTotalUpk">0</div>
+          <div class="hero-mini-sub">Relasi ke master UPK</div>
+        </div>
+      </div>
+    </section>
 
     <div class="stats-row">
       <div class="stat-card c-primary">
         <div class="stat-icon"><i class="fa-solid fa-code-branch"></i></div>
         <div class="stat-label">Total UPT</div>
-        <div class="stat-value" id="statTotalUpt">—</div>
-        <div class="stat-sub">Seluruh unit teknis terdaftar</div>
+        <div class="stat-value" id="statTotalUpt">0</div>
+        <div class="stat-sub">Termasuk sub UPT</div>
       </div>
       <div class="stat-card c-accent">
-        <div class="stat-icon"><i class="fa-solid fa-building"></i></div>
-        <div class="stat-label">UPK Induk</div>
-        <div class="stat-value" id="statTotalUpk">—</div>
-        <div class="stat-sub">UPK yang menaungi UPT</div>
+        <div class="stat-icon"><i class="fa-solid fa-layer-group"></i></div>
+        <div class="stat-label">UPT Utama</div>
+        <div class="stat-value" id="statRootUpt">0</div>
+        <div class="stat-sub">UPT tanpa parent</div>
       </div>
       <div class="stat-card c-success">
-        <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
-        <div class="stat-label">UPT Aktif</div>
-        <div class="stat-value" id="statActiveUpt">—</div>
-        <div class="stat-sub">UPT masih beroperasi</div>
+        <div class="stat-icon"><i class="fa-solid fa-diagram-project"></i></div>
+        <div class="stat-label">Sub UPT</div>
+        <div class="stat-value" id="statChildUpt">0</div>
+        <div class="stat-sub">UPT dengan parent UPT</div>
       </div>
       <div class="stat-card c-warning">
-        <div class="stat-icon"><i class="fa-solid fa-file-invoice-dollar"></i></div>
-        <div class="stat-label">Total Pagu</div>
-        <div class="stat-value" id="statBudget">—</div>
-        <div class="stat-sub">Akumulasi pagu unit</div>
+        <div class="stat-icon"><i class="fa-solid fa-building"></i></div>
+        <div class="stat-label">UPK Terpakai</div>
+        <div class="stat-value" id="statTotalUpk">0</div>
+        <div class="stat-sub">UPK yang punya UPT</div>
       </div>
     </div>
 
     <div class="toolbar">
       <div class="search-wrap">
         <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-        <input class="search-input" id="searchInput" type="text" placeholder="Cari kode UPT, nama unit, kepala unit, atau UPK induk..." oninput="applyFilters()">
+        <input class="search-input" id="searchInput" type="text" placeholder="Cari kode, nama UPT, kepala unit, parent UPT, atau UPK..." oninput="applyFilters()">
       </div>
 
       <select class="filter-select" id="filterUpk" onchange="applyFilters()">
@@ -385,12 +333,12 @@
 
       <select class="filter-select" id="filterTipe" onchange="applyFilters()">
         <option value="">Semua Jenis</option>
+        <option value="Lembaga">Lembaga</option>
         <option value="Bagian">Bagian</option>
-        <option value="Unit">Unit</option>
         <option value="Pusat">Pusat</option>
-        <option value="Program">Program</option>
+        <option value="Unit">Unit</option>
         <option value="Fakultas">Fakultas</option>
-            <option value="Fakultas">Fakultas</option>
+        <option value="Program">Program</option>
       </select>
 
       <select class="filter-select" id="filterStatus" onchange="applyFilters()">
@@ -399,63 +347,60 @@
         <option value="Nonaktif">Nonaktif</option>
       </select>
 
-      <select class="filter-select" id="filterRka" onchange="applyFilters()">
-        <option value="">Semua Kondisi RKA</option>
-        <option value="ada">Ada pagu</option>
-        <option value="tidak">Belum ada pagu</option>
-      </select>
-
       <div class="toolbar-right">
         <div class="view-toggle">
-          <button class="view-btn active" id="btnTable" onclick="setView('table')"><i class="fa-solid fa-table-list"></i> Tabel</button>
-          <button class="view-btn" id="btnGrid" onclick="setView('grid')"><i class="fa-solid fa-grip"></i> Kartu</button>
+          <button class="view-btn active" id="btnAccordion" onclick="setView('accordion')"><i class="fa-solid fa-bars-staggered"></i> Accordion</button>
+          <button class="view-btn" id="btnTable" onclick="setView('table')"><i class="fa-solid fa-table-list"></i> Tabel</button>
         </div>
       </div>
     </div>
 
-    <div id="viewTable">
-      <div class="panel">
-        <div class="panel-head">
-          <div>
-            <div class="panel-title"><i class="fa-solid fa-code-branch" style="color:var(--primary)"></i> Daftar Master UPT</div>
-            <div class="panel-sub" id="tableSubtitle">Memuat data...</div>
-          </div>
+    <div id="accordionView" class="panel">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title"><i class="fa-solid fa-sitemap" style="color:var(--primary)"></i> Struktur UPT &amp; Sub UPT</div>
+          <div class="panel-sub" id="accordionSubtitle">Menampilkan struktur organisasi secara bertingkat.</div>
         </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th class="sortable" data-col="kode" onclick="sortBy('kode')">Kode <i class="fa-solid fa-sort"></i></th>
-                <th class="sortable" data-col="nama" onclick="sortBy('nama')">Nama UPT <i class="fa-solid fa-sort"></i></th>
-                <th>UPK Induk</th>
-                <th>Jenis</th>
-                <th>Kepala UPT</th>
-                <th class="sortable" data-col="pagu" onclick="sortBy('pagu')">Pagu RKA <i class="fa-solid fa-sort"></i></th>
-                <th>Progress RKA</th>
-                <th>Status</th>
-                <th style="text-align:right;">Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="uptTbody"></tbody>
-          </table>
+      </div>
+      <div class="panel-body">
+        <div id="accordionList" class="accordion-list"></div>
+        <div class="empty-state" id="emptyAccordion" style="display:none;">
+          <i class="fa-solid fa-sitemap"></i>
+          <div class="empty-title">Data UPT tidak ditemukan</div>
+          <div class="empty-sub">Coba ubah pencarian atau filter yang digunakan.</div>
         </div>
-        <div class="empty-state" id="emptyTable" style="display:none;">
-          <i class="fa-solid fa-code-branch"></i>
-          <div class="empty-title">UPT tidak ditemukan</div>
-          <div class="empty-sub">Coba ganti kata kunci atau filter yang digunakan.</div>
-        </div>
-        <div class="pagination" id="paginationTable"></div>
       </div>
     </div>
 
-    <div id="viewGrid" style="display:none;">
-      <div class="card-grid" id="uptGrid"></div>
-      <div class="empty-state" id="emptyGrid" style="display:none; background:#fff; border:1px solid var(--line); border-radius:18px;">
-        <i class="fa-solid fa-code-branch"></i>
-        <div class="empty-title">UPT tidak ditemukan</div>
-        <div class="empty-sub">Coba ganti kata kunci atau filter yang digunakan.</div>
+    <div id="tableView" class="panel" style="display:none;">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title"><i class="fa-solid fa-table-list" style="color:var(--primary)"></i> Daftar UPT</div>
+          <div class="panel-sub" id="tableSubtitle">Menampilkan daftar UPT dalam bentuk tabel.</div>
+        </div>
       </div>
-      <div class="pagination" id="paginationGrid" style="background:#fff; border:1px solid var(--line); border-radius:18px;"></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th class="sortable" onclick="sortBy('kode')">Kode</th>
+              <th class="sortable" onclick="sortBy('nama')">Nama UPT</th>
+              <th>UPK</th>
+              <th>Parent UPT</th>
+              <th class="sortable" onclick="sortBy('tipe')">Jenis</th>
+              <th>Kepala</th>
+              <th>Status</th>
+              <th style="text-align:right;">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="uptTableBody"></tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="emptyTable" style="display:none;">
+        <i class="fa-solid fa-folder-open"></i>
+        <div class="empty-title">Tidak ada data untuk ditampilkan</div>
+        <div class="empty-sub">Coba ganti pencarian atau filter.</div>
+      </div>
     </div>
   </div>
 </div>
@@ -464,94 +409,42 @@
   <div class="modal">
     <div class="modal-head">
       <div>
-        <div class="modal-title" id="modalFormTitle">Tambah UPT</div>
-        <div class="modal-sub" id="modalFormSub">Isi data UPT dan hubungkan ke UPK induk sebagai dasar penyusunan RKA.</div>
+        <div class="modal-title" id="modalTitle">Tambah UPT</div>
+        <div class="modal-sub" id="modalSub">Isi data UPT, lalu pilih parent jika ingin menjadikannya sub UPT.</div>
       </div>
       <button class="modal-close" onclick="closeModal('modalForm')"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="modal-body">
-      <div class="section-title">Relasi Struktur</div>
+      <div class="helper-box" id="parentHintBox">
+        <b>Tips:</b> Kosongkan field <b>Sub UPT dari</b> jika data ini adalah UPT utama. Pilih parent UPT jika data ini ingin menjadi turunan/sub UPT.
+      </div>
+
+      <div class="section-title">Relasi Organisasi</div>
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">UPK Induk <span class="req">*</span></label>
-          <select class="form-select" id="fUpk"></select>
+          <select class="form-select" id="fUpk" onchange="handleFormUpkChange()"></select>
+          <div class="field-note">UPK wajib dipilih agar struktur UPT konsisten.</div>
         </div>
         <div class="form-group">
-          <label class="form-label">Jenis UPT <span class="req">*</span></label>
-          <select class="form-select" id="fTipe">
-            <option value="">— Pilih Jenis —</option>
-            <option value="Bagian">Bagian</option>
-            <option value="Unit">Unit</option>
-            <option value="Pusat">Pusat</option>
-            <option value="Program">Program</option>
-            <option value="Fakultas">Fakultas</option>
-          </select>
+          <label class="form-label">Sub UPT dari</label>
+          <select class="form-select" id="fParent" onchange="handleParentChange()"></select>
+          <div class="field-note">Opsional. Jika dipilih, data akan disimpan sebagai turunan dari UPT induk tersebut.</div>
         </div>
       </div>
 
       <div class="section-title">Identitas UPT</div>
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">Kode UPT <span class="req">*</span></label>
-          <input class="form-input" id="fKode" type="text" placeholder="mis. UPT-013">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Nama UPT <span class="req">*</span></label>
-          <input class="form-input" id="fNama" type="text" placeholder="mis. Bagian Keuangan & Akuntansi">
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Deskripsi UPT</label>
-        <textarea class="form-textarea" id="fDeskripsi" placeholder="Ringkasan fungsi unit, ruang lingkup operasional, dan perannya dalam penyusunan RKA..."></textarea>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Penanggung Jawab UPT <span class="req">*</span></label>
-          <input class="form-input" id="fKepala" type="text" placeholder="Nama kepala unit">
-        </div>
-        <div class="form-group">
-          <label class="form-label">NIP Kepala</label>
-          <input class="form-input" id="fNip" type="text" placeholder="19xxxxxxxxxxxxxxxx">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Telepon</label>
-          <input class="form-input" id="fTelp" type="text" placeholder="021-xxxxxxx">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Email</label>
-          <input class="form-input" id="fEmail" type="email" placeholder="upt@instansi.go.id">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Alamat</label>
-          <input class="form-input" id="fAlamat" type="text" placeholder="Jl. ...">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Jumlah Personel</label>
-          <input class="form-input" id="fPegawai" type="number" min="0" placeholder="0">
-        </div>
-      </div>
-
-      <div class="section-title">Anggaran UPT</div>
-      <div class="form-row col3">
-        <div class="form-group">
-          <label class="form-label">Tahun Anggaran</label>
-          <select class="form-select" id="fTahun">
-            <option value="2026">2026</option>
-            <option value="2025">2025</option>
-            <option value="2024">2024</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Sumber Dana</label>
-          <select class="form-select" id="fSumber">
-            <option value="APBD">APBD</option>
-            <option value="APBN">APBN</option>
-            <option value="Hibah">Hibah</option>
-            <option value="Lainnya">Lainnya</option>
+          <label class="form-label">Jenis UPT <span class="req">*</span></label>
+          <select class="form-select" id="fTipe">
+            <option value="">— Pilih Jenis —</option>
+            <option value="Lembaga">Lembaga</option>
+            <option value="Bagian">Bagian</option>
+            <option value="Pusat">Pusat</option>
+            <option value="Unit">Unit</option>
+            <option value="Fakultas">Fakultas</option>
+            <option value="Program">Program</option>
           </select>
         </div>
         <div class="form-group">
@@ -564,38 +457,44 @@
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">Pagu RKA (Rp)</label>
-          <input class="form-input" id="fPagu" type="number" min="0" placeholder="0" oninput="updatePaguPreview()">
-          <span class="form-hint" id="paguPreview">—</span>
+          <label class="form-label">Kode UPT <span class="req">*</span></label>
+          <input class="form-input" id="fKode" type="text" placeholder="mis. UPT-LPPM-001">
         </div>
         <div class="form-group">
-          <label class="form-label">Realisasi (Rp)</label>
-          <input class="form-input" id="fRealisasi" type="number" min="0" placeholder="0">
-          <span class="form-hint">Kosongkan 0 jika belum ada realisasi.</span>
+          <label class="form-label">Nama UPT <span class="req">*</span></label>
+          <input class="form-input" id="fNama" type="text" placeholder="mis. Wakil Rektor Bidang SDM, Humas dan Kerjasama">
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:14px;">
+        <label class="form-label">Deskripsi</label>
+        <textarea class="form-textarea" id="fDeskripsi" placeholder="Ringkasan fungsi unit dan tanggung jawabnya..."></textarea>
+      </div>
+
+      <div class="section-title">Penanggung Jawab</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Kepala / PIC UPT <span class="req">*</span></label>
+          <input class="form-input" id="fKepala" type="text" placeholder="Nama penanggung jawab unit">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Jumlah Personel</label>
+          <input class="form-input" id="fPegawai" type="number" min="0" placeholder="0">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input class="form-input" id="fEmail" type="email" placeholder="upt@domain.ac.id">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Telepon</label>
+          <input class="form-input" id="fTelp" type="text" placeholder="0265-xxxxxxx">
         </div>
       </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modalForm')">Batal</button>
-      <button class="btn btn-primary" onclick="saveUPT()"><i class="fa-solid fa-floppy-disk"></i> Simpan UPT</button>
-    </div>
-  </div>
-</div>
-
-<div class="overlay-modal" id="modalDetail" onclick="closeModalIfBg(event,'modalDetail')">
-  <div class="modal modal-lg">
-    <div class="modal-head">
-      <div>
-        <div class="modal-title" id="detailTitle">Detail UPT</div>
-        <div class="modal-sub" id="detailSub">—</div>
-      </div>
-      <button class="modal-close" onclick="closeModal('modalDetail')"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <div class="modal-body" id="detailBody"></div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('modalDetail')">Tutup</button>
-      <button class="btn btn-accent" id="detailHierarchyBtn"><i class="fa-solid fa-sitemap"></i> Lihat Induk</button>
-      <button class="btn btn-primary" id="detailEditBtn"><i class="fa-solid fa-pen"></i> Edit UPT</button>
+      <button class="btn btn-primary" onclick="saveUPT()"><i class="fa-solid fa-floppy-disk"></i> Simpan</button>
     </div>
   </div>
 </div>
@@ -603,721 +502,682 @@
 <div class="toast-stack" id="toastStack"></div>
 
 <script>
-const STORAGE_UPK = 'APP_ORG_UPK_DIVISIONS_V2';
-const STORAGE_UPT = 'APP_ORG_UPT_BRANCHES_V2';
+const STORAGE_UPK = 'APP_MASTER_UPK_V1';
+const STORAGE_UPT = 'APP_MASTER_UPT_V1';
+const LEGACY_UPK_KEYS = ['APP_ORG_UPK_DIVISIONS_V2'];
+const LEGACY_UPT_KEYS = ['APP_ORG_UPT_BRANCHES_V2'];
 
 const seedUPK = [
-  { id: 1, kode: 'UPK-001', nama: 'Yayasan Bakti Tunas Husada', area: 'Yayasan Pusat', status:'Aktif' },
-  { id: 2, kode: 'UPK-002', nama: 'Universitas Bakti Tunas Husada', area: 'Perguruan Tinggi', status:'Aktif' },
-  { id: 3, kode: 'UPK-003', nama: 'Klinik Bakti Tunas Husada', area: 'Layanan Kesehatan', status:'Aktif' },
-  { id: 4, kode: 'UPK-004', nama: 'BTH Student House', area: 'Asrama & Pembinaan', status:'Aktif' },
-  { id: 5, kode: 'UPK-005', nama: 'LKSA Amanah', area: 'Sosial & Pengasuhan', status:'Aktif' },
-  { id: 6, kode: 'UPK-006', nama: 'Dana Sosial YBTH', area: 'Program Sosial', status:'Nonaktif' }
+  { id:1, kode:'UPK-001', nama:'Yayasan Bakti Tunas Husada', area:'Yayasan Pusat', status:'Aktif' },
+  { id:2, kode:'UPK-002', nama:'Universitas Bakti Tunas Husada', area:'Perguruan Tinggi', status:'Aktif' },
+  { id:3, kode:'UPK-003', nama:'Klinik Bakti Tunas Husada', area:'Layanan Kesehatan', status:'Aktif' },
+  { id:4, kode:'UPK-004', nama:'BTH Student House', area:'Asrama & Pembinaan', status:'Aktif' }
 ];
 
 const seedUPT = [
   {
-    id:1, kode:'UPT-001', nama:'Sekretariat Yayasan', upkId:1, upkKode:'UPK-001', upkNama:'Yayasan Bakti Tunas Husada', tipe:'Bagian',
-    deskripsi:'Koordinasi administrasi, kesekretariatan, dan dokumentasi kegiatan yayasan.',
-    kepala:'Kepala Sekretariat', nip:'-', telp:'0265-0001001', email:'sekretariat@ybth.ac.id', alamat:'Kampus YBTH Pusat',
-    pegawai:14, status:'Aktif', tahun:2026, pagu:2250000000, realisasi:875000000, sumber:'Yayasan'
+    id:1, kode:'UPT-UBTH-WR-SDM', nama:'Wakil Rektor Bidang SDM, Humas dan Kerjasama', tipe:'Bidang',
+    upkId:2, id_upk:2, parentId:null, id_parent_upt:null,
+    deskripsi:'UPT induk yang menaungi pengelolaan SDM, humas, kerja sama, dan pusat karir di lingkungan universitas.',
+    kepala:'Wakil Rektor Bidang SDM, Humas dan Kerjasama', pegawai:14, email:'wr.sdmhumas@bth.ac.id', telp:'0265-1002001', status:'Aktif'
   },
   {
-    id:2, kode:'UPT-002', nama:'Bagian Keuangan & Akuntansi', upkId:1, upkKode:'UPK-001', upkNama:'Yayasan Bakti Tunas Husada', tipe:'Bagian',
-    deskripsi:'Mengelola akuntansi, pelaporan, kas, dan dukungan anggaran yayasan.',
-    kepala:'Manajer Keuangan', nip:'-', telp:'0265-0001002', email:'keuangan@ybth.ac.id', alamat:'Kampus YBTH Pusat',
-    pegawai:10, status:'Aktif', tahun:2026, pagu:3100000000, realisasi:1420000000, sumber:'Yayasan'
+    id:2, kode:'SUB-WR-SDM', nama:'Bagian SDM', tipe:'Bagian',
+    upkId:2, id_upk:2, parentId:1, id_parent_upt:1,
+    deskripsi:'Sub UPT yang menangani perencanaan kebutuhan pegawai, administrasi SDM, dan pengembangan pegawai.',
+    kepala:'Kepala Bagian SDM', pegawai:6, email:'sdm@bth.ac.id', telp:'0265-1002002', status:'Aktif'
   },
   {
-    id:3, kode:'UPT-003', nama:'Bagian SDM & Umum', upkId:1, upkKode:'UPK-001', upkNama:'Yayasan Bakti Tunas Husada', tipe:'Bagian',
-    deskripsi:'Mengelola SDM, administrasi umum, dan layanan pendukung yayasan.',
-    kepala:'Koordinator SDM', nip:'-', telp:'0265-0001003', email:'sdm@ybth.ac.id', alamat:'Kampus YBTH Pusat',
-    pegawai:11, status:'Aktif', tahun:2026, pagu:1850000000, realisasi:690000000, sumber:'Yayasan'
+    id:3, kode:'SUB-WR-HUMAS', nama:'Bagian Humas dan Kerjasama', tipe:'Bagian',
+    upkId:2, id_upk:2, parentId:1, id_parent_upt:1,
+    deskripsi:'Sub UPT yang menangani komunikasi kelembagaan, publikasi, media, dan pengelolaan kerja sama institusi.',
+    kepala:'Kepala Bagian Humas dan Kerjasama', pegawai:5, email:'humas.kerjasama@bth.ac.id', telp:'0265-1002003', status:'Aktif'
   },
   {
-    id:4, kode:'UPT-004', nama:'Fakultas Ilmu Kesehatan', upkId:2, upkKode:'UPK-002', upkNama:'Universitas Bakti Tunas Husada', tipe:'Fakultas',
-    deskripsi:'Unit akademik untuk operasional pembelajaran Fakultas Ilmu Kesehatan.',
-    kepala:'Dekan FIK', nip:'-', telp:'0265-0002001', email:'fik@bth.ac.id', alamat:'Kampus UBTH',
-    pegawai:64, status:'Aktif', tahun:2026, pagu:8200000000, realisasi:3510000000, sumber:'Operasional UBTH'
+    id:4, kode:'SUB-WR-KARIR', nama:'Bagian Pusat Karir', tipe:'Bagian',
+    upkId:2, id_upk:2, parentId:1, id_parent_upt:1,
+    deskripsi:'Sub UPT untuk tracer study, layanan pengembangan karir, dan penguatan jejaring alumni serta mitra kerja.',
+    kepala:'Kepala Bagian Pusat Karir', pegawai:4, email:'pusatkarir@bth.ac.id', telp:'0265-1002004', status:'Aktif'
   },
   {
-    id:5, kode:'UPT-005', nama:'Fakultas Farmasi', upkId:2, upkKode:'UPK-002', upkNama:'Universitas Bakti Tunas Husada', tipe:'Fakultas',
-    deskripsi:'Unit akademik untuk operasional pembelajaran Fakultas Farmasi.',
-    kepala:'Dekan Farmasi', nip:'-', telp:'0265-0002002', email:'farmasi@bth.ac.id', alamat:'Kampus UBTH',
-    pegawai:58, status:'Aktif', tahun:2026, pagu:7650000000, realisasi:2980000000, sumber:'Operasional UBTH'
+    id:5, kode:'UPT-UBTH-FIK', nama:'Fakultas Ilmu Kesehatan', tipe:'Fakultas',
+    upkId:2, id_upk:2, parentId:null, id_parent_upt:null,
+    deskripsi:'UPT utama untuk koordinasi operasional Fakultas Ilmu Kesehatan.',
+    kepala:'Dekan FIK', pegawai:34, email:'fik@bth.ac.id', telp:'0265-1002101', status:'Aktif'
   },
   {
-    id:6, kode:'UPT-006', nama:'Fakultas Teknologi & Bisnis', upkId:2, upkKode:'UPK-002', upkNama:'Universitas Bakti Tunas Husada', tipe:'Fakultas',
-    deskripsi:'Unit akademik untuk operasional pembelajaran Fakultas Teknologi dan Bisnis.',
-    kepala:'Dekan FTB', nip:'-', telp:'0265-0002003', email:'ftb@bth.ac.id', alamat:'Kampus UBTH',
-    pegawai:44, status:'Aktif', tahun:2026, pagu:5900000000, realisasi:1740000000, sumber:'Operasional UBTH'
+    id:6, kode:'SUB-FIK-LAB', nama:'Laboratorium Terpadu', tipe:'Unit',
+    upkId:2, id_upk:2, parentId:5, id_parent_upt:5,
+    deskripsi:'Sub UPT laboratorium untuk mendukung praktikum dan penelitian.',
+    kepala:'Kepala Laboratorium', pegawai:8, email:'labterpadu@bth.ac.id', telp:'0265-1002102', status:'Aktif'
   },
   {
-    id:7, kode:'UPT-007', nama:'LPPM', upkId:2, upkKode:'UPK-002', upkNama:'Universitas Bakti Tunas Husada', tipe:'Pusat',
-    deskripsi:'Lembaga penelitian dan pengabdian kepada masyarakat.',
-    kepala:'Ketua LPPM', nip:'-', telp:'0265-0002004', email:'lppm@bth.ac.id', alamat:'Kampus UBTH',
-    pegawai:12, status:'Aktif', tahun:2026, pagu:2100000000, realisasi:720000000, sumber:'Operasional UBTH'
+    id:7, kode:'UPT-YBTH-SEKRETARIAT', nama:'Sekretariat Yayasan', tipe:'Bagian',
+    upkId:1, id_upk:1, parentId:null, id_parent_upt:null,
+    deskripsi:'UPT utama pengelolaan administrasi dan kesekretariatan yayasan.',
+    kepala:'Kepala Sekretariat', pegawai:10, email:'sekretariat@ybth.ac.id', telp:'0265-1001001', status:'Aktif'
   },
   {
-    id:8, kode:'UPT-008', nama:'Unit Pelayanan Medis', upkId:3, upkKode:'UPK-003', upkNama:'Klinik Bakti Tunas Husada', tipe:'Unit',
-    deskripsi:'Pelayanan medis utama pada Klinik BTH.',
-    kepala:'Koordinator Pelayanan', nip:'-', telp:'0265-0003001', email:'pelayanan.klinik@bth.ac.id', alamat:'Klinik BTH',
-    pegawai:19, status:'Aktif', tahun:2026, pagu:4600000000, realisasi:2130000000, sumber:'Operasional Klinik'
+    id:8, kode:'SUB-SEK-KEU', nama:'Bagian Keuangan dan Akuntansi', tipe:'Bagian',
+    upkId:1, id_upk:1, parentId:7, id_parent_upt:7,
+    deskripsi:'Sub UPT yang menangani kas, akuntansi, dan laporan keuangan yayasan.',
+    kepala:'Manajer Keuangan', pegawai:7, email:'keuangan@ybth.ac.id', telp:'0265-1001002', status:'Aktif'
   },
   {
-    id:9, kode:'UPT-009', nama:'Unit Penunjang Medis', upkId:3, upkKode:'UPK-003', upkNama:'Klinik Bakti Tunas Husada', tipe:'Unit',
-    deskripsi:'Unit laboratorium, alat kesehatan, dan penunjang klinik.',
-    kepala:'Koordinator Penunjang', nip:'-', telp:'0265-0003002', email:'penunjang.klinik@bth.ac.id', alamat:'Klinik BTH',
-    pegawai:11, status:'Aktif', tahun:2026, pagu:1950000000, realisasi:880000000, sumber:'Operasional Klinik'
+    id:9, kode:'UPT-KLINIK-MEDIS', nama:'Unit Pelayanan Medis', tipe:'Unit',
+    upkId:3, id_upk:3, parentId:null, id_parent_upt:null,
+    deskripsi:'UPT utama pelayanan medis untuk operasional klinik.',
+    kepala:'Koordinator Medis', pegawai:18, email:'medis@klinikbth.ac.id', telp:'0265-1003001', status:'Aktif'
   },
   {
-    id:10, kode:'UPT-010', nama:'Operasional Asrama', upkId:4, upkKode:'UPK-004', upkNama:'BTH Student House', tipe:'Unit',
-    deskripsi:'Operasional harian asrama mahasiswa dan kebutuhan rumah tangga asrama.',
-    kepala:'Koordinator Asrama', nip:'-', telp:'0265-0004001', email:'asrama@bth.ac.id', alamat:'BTH Student House',
-    pegawai:9, status:'Aktif', tahun:2026, pagu:1350000000, realisasi:540000000, sumber:'Operasional BSH'
-  },
-  {
-    id:11, kode:'UPT-011', nama:'Program Pembinaan Mahasiswa', upkId:4, upkKode:'UPK-004', upkNama:'BTH Student House', tipe:'Program',
-    deskripsi:'Kegiatan pembinaan, pengasuhan, dan pengembangan karakter mahasiswa asrama.',
-    kepala:'Koordinator Pembinaan', nip:'-', telp:'0265-0004002', email:'pembinaan@bth.ac.id', alamat:'BTH Student House',
-    pegawai:7, status:'Aktif', tahun:2026, pagu:980000000, realisasi:300000000, sumber:'Operasional BSH'
-  },
-  {
-    id:12, kode:'UPT-012', nama:'Pengasuhan & Pembinaan Anak', upkId:5, upkKode:'UPK-005', upkNama:'LKSA Amanah', tipe:'Program',
-    deskripsi:'Program pengasuhan dan pembinaan anak LKSA Amanah.',
-    kepala:'Kepala Pengasuhan', nip:'-', telp:'0265-0005001', email:'pengasuhan@lksa.id', alamat:'LKSA Amanah',
-    pegawai:13, status:'Aktif', tahun:2026, pagu:1280000000, realisasi:610000000, sumber:'Dana Sosial'
-  },
-  {
-    id:13, kode:'UPT-013', nama:'Pendidikan & Kesehatan Anak', upkId:5, upkKode:'UPK-005', upkNama:'LKSA Amanah', tipe:'Program',
-    deskripsi:'Program pendidikan, kesehatan, dan kesejahteraan anak asuh.',
-    kepala:'Koordinator Pendidikan', nip:'-', telp:'0265-0005002', email:'pendidikan@lksa.id', alamat:'LKSA Amanah',
-    pegawai:8, status:'Aktif', tahun:2026, pagu:1650000000, realisasi:720000000, sumber:'Dana Sosial'
-  },
-  {
-    id:14, kode:'UPT-014', nama:'Program Beasiswa', upkId:6, upkKode:'UPK-006', upkNama:'Dana Sosial YBTH', tipe:'Program',
-    deskripsi:'Program beasiswa dan dukungan pendidikan penerima manfaat.',
-    kepala:'Koordinator Beasiswa', nip:'-', telp:'0265-0006001', email:'beasiswa@ybth.ac.id', alamat:'YBTH Pusat',
-    pegawai:4, status:'Nonaktif', tahun:2026, pagu:0, realisasi:0, sumber:'Dana Sosial'
+    id:10, kode:'SUB-MEDIS-PENUNJANG', nama:'Unit Penunjang Medis', tipe:'Unit',
+    upkId:3, id_upk:3, parentId:9, id_parent_upt:9,
+    deskripsi:'Sub UPT yang mendukung laboratorium, farmasi, dan alat kesehatan.',
+    kepala:'Koordinator Penunjang', pegawai:9, email:'penunjang@klinikbth.ac.id', telp:'0265-1003002', status:'Aktif'
   }
 ];
 
-function ensureSeed() {
-  if (!localStorage.getItem(STORAGE_UPK)) localStorage.setItem(STORAGE_UPK, JSON.stringify(seedUPK));
-  if (!localStorage.getItem(STORAGE_UPT)) localStorage.setItem(STORAGE_UPT, JSON.stringify(seedUPT));
-}
-function readUPK() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_UPK)) || seedUPK.slice(); }
-  catch { return seedUPK.slice(); }
-}
-function readUPT() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_UPT)) || seedUPT.slice(); }
-  catch { return seedUPT.slice(); }
-}
-function writeUPK(data) { localStorage.setItem(STORAGE_UPK, JSON.stringify(data)); }
-function writeUPT(data) { localStorage.setItem(STORAGE_UPT, JSON.stringify(data)); }
-
-ensureSeed();
-let UPK_DATA = readUPK();
-let UPT_DATA = readUPT();
-
-const TIPE_ICON = {
-  Bagian: 'fa-solid fa-briefcase',
-  Unit: 'fa-solid fa-cubes',
-  Pusat: 'fa-solid fa-building',
-  Program: 'fa-solid fa-diagram-project',
-  Fakultas: 'fa-solid fa-graduation-cap'
-};
+let UPK_DATA = [];
+let UPT_DATA = [];
 
 const state = {
-  view: 'table',
-  sortCol: 'kode',
-  sortDir: 'asc',
-  search: '',
-  filterUpk: '',
-  filterTipe: '',
-  filterStatus: '',
-  filterRka: '',
-  page: 1,
-  perPage: 10,
-  editingId: null,
+  view:'accordion',
+  sortCol:'kode',
+  sortDir:'asc',
+  search:'',
+  filterUpk:'',
+  filterTipe:'',
+  filterStatus:'',
+  editingId:null
 };
 
-function escapeHTML(str) {
+function escapeHTML(str){
   return String(str ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
 }
 
-function fmtCurrency(n) {
-  const num = Number(n) || 0;
-  if (!num) return 'Rp 0';
-  if (num >= 1_000_000_000) return 'Rp ' + (num / 1_000_000_000).toFixed(num % 1_000_000_000 === 0 ? 0 : 1) + ' M';
-  if (num >= 1_000_000) return 'Rp ' + (num / 1_000_000).toFixed(num % 1_000_000 === 0 ? 0 : 1) + ' jt';
-  return 'Rp ' + num.toLocaleString('id-ID');
+function normalizeText(value){
+  return String(value || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g,'')
+    .trim();
 }
 
-function fmtCurrencyFull(n) {
-  return 'Rp ' + (Number(n) || 0).toLocaleString('id-ID');
+function readJSON(key){
+  try { return JSON.parse(localStorage.getItem(key)); }
+  catch { return null; }
 }
 
-function realizationPct(item) {
-  const pagu = Number(item.pagu) || 0;
-  const realisasi = Number(item.realisasi) || 0;
-  if (!pagu) return 0;
-  return Math.max(0, Math.min(100, Math.round(realisasi / pagu * 100)));
+function readFromPrimaryOrLegacy(primary, legacyKeys, fallback){
+  let data = readJSON(primary);
+  if (Array.isArray(data) && data.length) return data;
+  for (const key of legacyKeys){
+    data = readJSON(key);
+    if (Array.isArray(data) && data.length) return data;
+  }
+  return fallback.slice();
 }
 
-function barColor(pct) {
-  if (pct >= 80) return '#d94040';
-  if (pct >= 60) return '#F68B21';
-  return '#3972B8';
+function writeCompat(key, legacyKeys, value){
+  localStorage.setItem(key, JSON.stringify(value));
+  legacyKeys.forEach(legacy => localStorage.setItem(legacy, JSON.stringify(value)));
 }
 
-function buildUpkOptions() {
+function normalizeUpk(item, idx){
+  return {
+    id:Number(item.id) || (idx + 1),
+    kode:item.kode || `UPK-${String(idx + 1).padStart(3,'0')}`,
+    nama:item.nama || '',
+    area:item.area || '',
+    status:item.status || 'Aktif'
+  };
+}
+
+function normalizeUpt(item, idx){
+  const upkId = item.upkId ?? item.id_upk ?? null;
+  const parentId = item.parentId ?? item.id_parent_upt ?? null;
+  return {
+    id:Number(item.id) || (idx + 1),
+    kode:item.kode || `UPT-${String(idx + 1).padStart(3,'0')}`,
+    nama:item.nama || '',
+    tipe:item.tipe || 'Unit',
+    upkId:upkId ? Number(upkId) : null,
+    id_upk:upkId ? Number(upkId) : null,
+    parentId:parentId ? Number(parentId) : null,
+    id_parent_upt:parentId ? Number(parentId) : null,
+    deskripsi:item.deskripsi || '',
+    kepala:item.kepala || '',
+    pegawai:Number(item.pegawai) || 0,
+    email:item.email || '',
+    telp:item.telp || '',
+    status:item.status || 'Aktif'
+  };
+}
+
+function ensureSeed(){
+  UPK_DATA = readFromPrimaryOrLegacy(STORAGE_UPK, LEGACY_UPK_KEYS, seedUPK).map(normalizeUpk);
+  UPT_DATA = readFromPrimaryOrLegacy(STORAGE_UPT, LEGACY_UPT_KEYS, seedUPT).map(normalizeUpt);
+  writeCompat(STORAGE_UPK, LEGACY_UPK_KEYS, UPK_DATA);
+  writeCompat(STORAGE_UPT, LEGACY_UPT_KEYS, UPT_DATA);
+}
+
+function persistUPK(){ writeCompat(STORAGE_UPK, LEGACY_UPK_KEYS, UPK_DATA); }
+function persistUPT(){ writeCompat(STORAGE_UPT, LEGACY_UPT_KEYS, UPT_DATA); }
+
+function getUpkById(id){ return UPK_DATA.find(item => Number(item.id) === Number(id)); }
+function getUptById(id){ return UPT_DATA.find(item => Number(item.id) === Number(id)); }
+function childrenOf(parentId){ return UPT_DATA.filter(item => Number(item.parentId || 0) === Number(parentId || 0)); }
+function rootItems(){ return UPT_DATA.filter(item => !item.parentId); }
+function isChild(item){ return Boolean(item.parentId); }
+function childCount(id){ return childrenOf(id).length; }
+
+function iconByType(type){
+  return {
+    'Lembaga':'fa-solid fa-building-columns',
+    'Bagian':'fa-solid fa-sitemap',
+    'Pusat':'fa-solid fa-bullseye',
+    'Unit':'fa-solid fa-cubes',
+    'Fakultas':'fa-solid fa-graduation-cap',
+    'Program':'fa-solid fa-diagram-project'
+  }[type] || 'fa-solid fa-building';
+}
+
+function statusBadge(status){
+  if (status === 'Aktif') return '<span class="badge badge-success"><i class="fa-solid fa-circle-check"></i>Aktif</span>';
+  return '<span class="badge badge-neutral"><i class="fa-solid fa-circle-minus"></i>Nonaktif</span>';
+}
+
+function sortItems(items){
+  const col = state.sortCol;
+  const dir = state.sortDir === 'asc' ? 1 : -1;
+  return items.slice().sort((a,b) => {
+    const av = a[col] ?? '';
+    const bv = b[col] ?? '';
+    if (typeof av === 'string' || typeof bv === 'string') return String(av).localeCompare(String(bv)) * dir;
+    return ((Number(av) || 0) - (Number(bv) || 0)) * dir;
+  });
+}
+
+function itemMatches(item){
+  if (state.filterUpk && String(item.upkId) !== String(state.filterUpk)) return false;
+  if (state.filterTipe && item.tipe !== state.filterTipe) return false;
+  if (state.filterStatus && item.status !== state.filterStatus) return false;
+  if (state.search) {
+    const upk = getUpkById(item.upkId);
+    const parent = getUptById(item.parentId);
+    const hay = [
+      item.kode, item.nama, item.tipe, item.deskripsi, item.kepala, item.email,
+      upk?.kode || '', upk?.nama || '', parent?.kode || '', parent?.nama || ''
+    ].join(' ');
+    if (!normalizeText(hay).includes(normalizeText(state.search))) return false;
+  }
+  return true;
+}
+
+function nodeVisible(item){
+  if (itemMatches(item)) return true;
+  return childrenOf(item.id).some(nodeVisible);
+}
+
+function flattenVisibleTree(){
+  const rows = [];
+  function walk(items, depth){
+    sortItems(items).forEach(item => {
+      if (!nodeVisible(item)) return;
+      rows.push({ item, depth });
+      walk(childrenOf(item.id), depth + 1);
+    });
+  }
+  walk(rootItems(), 0);
+  return rows;
+}
+
+function buildUpkOptions(){
   const filter = document.getElementById('filterUpk');
   const form = document.getElementById('fUpk');
-  const currentFilter = state.filterUpk;
-  const currentForm = form.dataset.current || '';
-  const options = UPK_DATA.slice().sort((a,b) => (a.kode + a.nama).localeCompare(b.kode + b.nama));
-
-  filter.innerHTML = '<option value="">Semua UPK</option>' + options.map(item => `<option value="${item.id}">${escapeHTML(item.kode)} · ${escapeHTML(item.nama)}</option>`).join('');
-  filter.value = currentFilter;
-
-  form.innerHTML = '<option value="">— Pilih Divisi Induk —</option>' + options.map(item => `<option value="${item.id}">${escapeHTML(item.kode)} · ${escapeHTML(item.nama)}${item.status === 'Nonaktif' ? ' (Nonaktif)' : ''}</option>`).join('');
-  if (currentForm) form.value = currentForm;
+  const upkOptions = sortItems(UPK_DATA.map(item => ({ ...item, sortKey:`${item.kode} ${item.nama}` }))).sort((a,b)=>`${a.kode} ${a.nama}`.localeCompare(`${b.kode} ${b.nama}`));
+  filter.innerHTML = '<option value="">Semua UPK</option>' + upkOptions.map(item => `<option value="${item.id}">${escapeHTML(item.kode)} · ${escapeHTML(item.nama)}</option>`).join('');
+  if (state.filterUpk) filter.value = state.filterUpk;
+  form.innerHTML = '<option value="">— Pilih UPK —</option>' + upkOptions.map(item => `<option value="${item.id}">${escapeHTML(item.kode)} · ${escapeHTML(item.nama)}</option>`).join('');
 }
 
-function updateStats() {
-  const activeUpt = UPT_DATA.filter(item => item.status === 'Aktif').length;
-  const totalBudget = UPT_DATA.reduce((sum, item) => sum + (Number(item.pagu) || 0), 0);
-  const linkedUpk = new Set(UPT_DATA.map(item => item.upkId).filter(Boolean)).size;
-
-  document.getElementById('statTotalUpt').textContent = UPT_DATA.length;
-  document.getElementById('statTotalUpk').textContent = linkedUpk;
-  document.getElementById('statActiveUpt').textContent = activeUpt;
-  document.getElementById('statBudget').textContent = fmtCurrency(totalBudget);
-
-  document.getElementById('heroTotalUpt').textContent = UPT_DATA.length;
-  document.getElementById('heroTotalUpk').textContent = linkedUpk;
-  document.getElementById('heroActiveUpt').textContent = activeUpt;
-  document.getElementById('heroBudget').textContent = fmtCurrency(totalBudget);
+function buildParentOptions(selectedUpkId, selectedParentId = ''){
+  const parentSelect = document.getElementById('fParent');
+  const editingId = state.editingId ? Number(state.editingId) : null;
+  const candidates = sortItems(UPT_DATA.filter(item => String(item.upkId) === String(selectedUpkId || '') && Number(item.id) !== Number(editingId)));
+  parentSelect.innerHTML = '<option value="">— Tidak ada (UPT utama) —</option>' + candidates.map(item => `<option value="${item.id}">${escapeHTML(item.kode)} · ${escapeHTML(item.nama)}</option>`).join('');
+  if (selectedParentId) parentSelect.value = String(selectedParentId);
 }
 
-function applyFilters() {
-  state.search = document.getElementById('searchInput').value.trim().toLowerCase();
+function updateStats(){
+  const total = UPT_DATA.length;
+  const roots = rootItems().length;
+  const childs = UPT_DATA.filter(item => item.parentId).length;
+  const upkUsed = new Set(UPT_DATA.map(item => item.upkId).filter(Boolean)).size;
+  document.getElementById('statTotalUpt').textContent = total;
+  document.getElementById('statRootUpt').textContent = roots;
+  document.getElementById('statChildUpt').textContent = childs;
+  document.getElementById('statTotalUpk').textContent = upkUsed;
+  document.getElementById('heroTotalUpt').textContent = total;
+  document.getElementById('heroRootUpt').textContent = roots;
+  document.getElementById('heroChildUpt').textContent = childs;
+  document.getElementById('heroTotalUpk').textContent = upkUsed;
+}
+
+function applyFilters(){
+  state.search = document.getElementById('searchInput').value.trim();
   state.filterUpk = document.getElementById('filterUpk').value;
   state.filterTipe = document.getElementById('filterTipe').value;
   state.filterStatus = document.getElementById('filterStatus').value;
-  state.filterRka = document.getElementById('filterRka').value;
-  state.page = 1;
   render();
 }
 
-function getFiltered() {
-  return UPT_DATA.filter(item => {
-    if (state.filterUpk && String(item.upkId) !== String(state.filterUpk)) return false;
-    if (state.filterTipe && item.tipe !== state.filterTipe) return false;
-    if (state.filterStatus && item.status !== state.filterStatus) return false;
-    if (state.filterRka === 'ada' && !(Number(item.pagu) > 0)) return false;
-    if (state.filterRka === 'tidak' && Number(item.pagu) > 0) return false;
-
-    if (state.search) {
-      const haystack = [item.kode, item.nama, item.kepala, item.upkKode, item.upkNama, item.tipe].join(' ').toLowerCase();
-      if (!haystack.includes(state.search)) return false;
-    }
-
-    return true;
-  }).sort((a, b) => {
-    let av = a[state.sortCol];
-    let bv = b[state.sortCol];
-    if (typeof av === 'string') return state.sortDir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
-    return state.sortDir === 'asc' ? av - bv : bv - av;
-  });
-}
-
-function sortBy(col) {
-  state.sortDir = state.sortCol === col && state.sortDir === 'asc' ? 'desc' : 'asc';
-  state.sortCol = col;
-  document.querySelectorAll('thead th').forEach(th => {
-    const icon = th.querySelector('i');
-    if (icon) icon.className = 'fa-solid fa-sort';
-  });
-  const active = document.querySelector(`thead th[data-col="${col}"] i`);
-  if (active) active.className = `fa-solid fa-sort-${state.sortDir === 'asc' ? 'up' : 'down'}`;
-  render();
-}
-
-function setView(view) {
+function setView(view){
   state.view = view;
-  document.getElementById('viewTable').style.display = view === 'table' ? 'block' : 'none';
-  document.getElementById('viewGrid').style.display = view === 'grid' ? 'block' : 'none';
+  document.getElementById('accordionView').style.display = view === 'accordion' ? 'block' : 'none';
+  document.getElementById('tableView').style.display = view === 'table' ? 'block' : 'none';
+  document.getElementById('btnAccordion').classList.toggle('active', view === 'accordion');
   document.getElementById('btnTable').classList.toggle('active', view === 'table');
-  document.getElementById('btnGrid').classList.toggle('active', view === 'grid');
   render();
 }
 
-function statusBadge(status) {
-  if (status === 'Aktif') return '<span class="badge badge-success"><span class="dot dot-success"></span>Aktif</span>';
-  return '<span class="badge badge-neutral"><span class="dot dot-muted"></span>Nonaktif</span>';
+function sortBy(col){
+  if (state.sortCol === col) state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
+  else { state.sortCol = col; state.sortDir = 'asc'; }
+  render();
 }
 
-function rkaBadge(item) {
-  if (Number(item.pagu) > 0) return '<span class="badge badge-primary"><i class="fa-solid fa-file-invoice-dollar"></i>Ada pagu</span>';
-  return '<span class="badge badge-warning"><i class="fa-solid fa-triangle-exclamation"></i>Belum ada pagu</span>';
-}
+function renderAccordion(){
+  const roots = sortItems(rootItems()).filter(nodeVisible);
+  const list = document.getElementById('accordionList');
+  const empty = document.getElementById('emptyAccordion');
+  const visibleCount = flattenVisibleTree().length;
+  document.getElementById('accordionSubtitle').textContent = `Menampilkan ${visibleCount} data UPT/Sub UPT dalam struktur accordion.`;
 
-function render() {
-  buildUpkOptions();
-  updateStats();
-  const data = getFiltered();
-  const start = (state.page - 1) * state.perPage;
-  const page = data.slice(start, start + state.perPage);
-
-  if (state.view === 'table') renderTable(data, page);
-  else renderGrid(data, page);
-}
-
-function renderTable(data, page) {
-  document.getElementById('tableSubtitle').textContent = `Menampilkan ${data.length} dari ${UPT_DATA.length} data UPT`;
-  const tbody = document.getElementById('uptTbody');
-  const empty = document.getElementById('emptyTable');
-
-  if (!page.length) {
-    tbody.innerHTML = '';
+  if (!roots.length){
+    list.innerHTML = '';
     empty.style.display = 'block';
-    document.getElementById('paginationTable').innerHTML = '';
     return;
   }
-
   empty.style.display = 'none';
+  list.innerHTML = roots.map(renderAccordionRoot).join('');
+}
 
-  tbody.innerHTML = page.map(item => {
-    const pct = realizationPct(item);
+function renderAccordionRoot(item){
+  const upk = getUpkById(item.upkId);
+  const children = sortItems(childrenOf(item.id)).filter(nodeVisible);
+  return `
+    <details class="tree-card" open>
+      <summary class="tree-summary">
+        <div class="tree-summary-left">
+          <div class="tree-icon"><i class="${iconByType(item.tipe)}"></i></div>
+          <div style="min-width:0;">
+            <div class="tree-title">${escapeHTML(item.nama)}</div>
+            <div class="tree-code">${escapeHTML(item.kode)} · ${escapeHTML(item.tipe || 'UPT')}</div>
+            <div class="tree-meta">
+              <span class="badge badge-primary"><i class="fa-solid fa-building"></i>${escapeHTML(upk?.nama || 'Tanpa UPK')}</span>
+              ${statusBadge(item.status)}
+              ${children.length ? `<span class="badge badge-accent"><i class="fa-solid fa-chevron-down"></i>${children.length} Sub UPT</span>` : `<span class="badge badge-neutral"><i class="fa-solid fa-minus"></i>Tidak ada turunan</span>`}
+            </div>
+          </div>
+        </div>
+        <div class="tree-summary-right">
+          <span class="count-pill">ID ${item.id}</span>
+          <span class="chev"><i class="fa-solid fa-chevron-down"></i></span>
+        </div>
+      </summary>
+      <div class="tree-body">
+        <div class="tree-info-grid">
+          <div class="info-box">
+            <div class="info-label">UPK Induk</div>
+            <div class="info-value">${escapeHTML(upk?.kode || '-')} · ${escapeHTML(upk?.nama || '-')}</div>
+          </div>
+          <div class="info-box">
+            <div class="info-label">Kepala UPT</div>
+            <div class="info-value">${escapeHTML(item.kepala || '-')}</div>
+          </div>
+          <div class="info-box">
+            <div class="info-label">Jumlah Personel</div>
+            <div class="info-value">${Number(item.pegawai) || 0} orang</div>
+          </div>
+        </div>
+        <div class="info-box" style="margin-bottom:16px;">
+          <div class="info-label">Deskripsi</div>
+          <div class="info-value" style="font-weight:600;color:var(--text-soft);">${escapeHTML(item.deskripsi || 'Belum ada deskripsi UPT.')}</div>
+        </div>
+        <div class="tree-actions">
+          <button class="btn btn-primary btn-sm" onclick="openAddModal(${item.id})"><i class="fa-solid fa-plus"></i> Tambah Sub UPT</button>
+          <button class="btn btn-ghost btn-sm" onclick="openEditModal(${item.id})"><i class="fa-solid fa-pen"></i> Edit</button>
+          <button class="btn btn-danger-ghost btn-sm" onclick="deleteUPT(${item.id})"><i class="fa-solid fa-trash"></i> Hapus</button>
+        </div>
+        <div class="sub-section-title">Turunan Sub UPT</div>
+        <div class="child-list">
+          ${children.length ? children.map(child => renderChildNode(child, 1)).join('') : '<div class="empty-child">Belum ada sub UPT di bawah unit ini.</div>'}
+        </div>
+      </div>
+    </details>
+  `;
+}
+
+function renderChildNode(item, depth){
+  const upk = getUpkById(item.upkId);
+  const parent = getUptById(item.parentId);
+  const children = sortItems(childrenOf(item.id)).filter(nodeVisible);
+  return `
+    <div class="child-card" style="margin-left:${Math.min(depth - 1, 3) * 18}px;">
+      <div class="child-head">
+        <div style="min-width:0;">
+          <div class="child-title">${escapeHTML(item.nama)}</div>
+          <div class="child-code">${escapeHTML(item.kode)} · ${escapeHTML(item.tipe || 'Sub UPT')}</div>
+          <div class="child-sub">UPK: <b>${escapeHTML(upk?.nama || '-')}</b>${parent ? ` · Parent: <b>${escapeHTML(parent.nama)}</b>` : ''}</div>
+          <div class="child-meta">
+            ${statusBadge(item.status)}
+            <span class="badge badge-primary"><i class="fa-solid fa-user"></i>${escapeHTML(item.kepala || '-')}</span>
+            <span class="badge badge-accent"><i class="fa-solid fa-users"></i>${Number(item.pegawai) || 0} personel</span>
+            ${children.length ? `<span class="badge badge-warning"><i class="fa-solid fa-layer-group"></i>${children.length} turunan</span>` : ''}
+          </div>
+        </div>
+        <div class="actions-inline">
+          <button class="act-btn success" onclick="openAddModal(${item.id})" title="Tambah turunan"><i class="fa-solid fa-plus"></i></button>
+          <button class="act-btn primary" onclick="openEditModal(${item.id})" title="Edit"><i class="fa-solid fa-pen"></i></button>
+          <button class="act-btn danger" onclick="deleteUPT(${item.id})" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+        </div>
+      </div>
+      ${item.deskripsi ? `<div class="child-sub" style="margin-top:10px;">${escapeHTML(item.deskripsi)}</div>` : ''}
+      ${children.length ? `<div class="child-list" style="margin-top:12px;">${children.map(child => renderChildNode(child, depth + 1)).join('')}</div>` : ''}
+    </div>
+  `;
+}
+
+function renderTable(){
+  const rows = flattenVisibleTree();
+  const tbody = document.getElementById('uptTableBody');
+  const empty = document.getElementById('emptyTable');
+  document.getElementById('tableSubtitle').textContent = `Menampilkan ${rows.length} data UPT/Sub UPT dalam tabel.`;
+
+  if (!rows.length){
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+  tbody.innerHTML = rows.map(({ item, depth }) => {
+    const upk = getUpkById(item.upkId);
+    const parent = getUptById(item.parentId);
+    const indent = Math.min(depth, 3);
     return `
       <tr>
         <td class="mono">${escapeHTML(item.kode)}</td>
         <td>
-          <div class="title-cell">${escapeHTML(item.nama)}</div>
-          <div class="title-sub">${escapeHTML(item.deskripsi || 'Unit pelaksana teknis untuk operasional dan RKA')}</div>
-        </td>
-        <td>
-          <div class="title-cell">${escapeHTML(item.upkNama || 'Belum dipilih')}</div>
-          <div class="upk-breadcrumb"><strong>${escapeHTML(item.upkKode || '—')}</strong><span>›</span><span>UPT</span></div>
-        </td>
-        <td><span class="badge badge-accent"><i class="${TIPE_ICON[item.tipe] || 'fa-solid fa-building'}"></i>${escapeHTML(item.tipe || '—')}</span></td>
-        <td>
-          <div class="title-cell">${escapeHTML(item.kepala || '—')}</div>
-          <div class="title-sub">${escapeHTML(item.email || 'Tanpa email')}</div>
-        </td>
-        <td>
-          <div class="mono">${fmtCurrency(item.pagu)}</div>
-          <div class="title-sub">${escapeHTML(item.sumber || '—')} · ${escapeHTML(item.tahun || '—')}</div>
-        </td>
-        <td>
-          ${Number(item.pagu) > 0 ? `
-            <div class="budget-wrap">
-              <div class="budget-track"><div class="budget-fill" style="width:${pct}%; background:${barColor(pct)};"></div></div>
-              <div class="budget-label">${pct}%</div>
+          <div class="indent-wrap indent-${indent}">
+            ${depth ? `<span class="indent-mark"><i class="fa-solid fa-turn-down-right"></i></span>` : `<span class="indent-mark"><i class="${iconByType(item.tipe)}"></i></span>`}
+            <div>
+              <div class="title-cell">${escapeHTML(item.nama)}</div>
+              <div class="title-sub">${escapeHTML(item.deskripsi || '-')}</div>
             </div>
-          ` : '<span class="title-sub">Belum ada pagu</span>'}
+          </div>
         </td>
         <td>
-          ${statusBadge(item.status)}
-          <div class="title-sub" style="margin-top:6px;">${rkaBadge(item)}</div>
+          <div class="title-cell">${escapeHTML(upk?.nama || '-')}</div>
+          <div class="title-sub">${escapeHTML(upk?.kode || '-')}</div>
         </td>
+        <td>
+          ${parent ? `<div class="title-cell">${escapeHTML(parent.nama)}</div><div class="title-sub">${escapeHTML(parent.kode)}</div>` : '<span class="badge badge-neutral">UPT utama</span>'}
+        </td>
+        <td><span class="badge badge-accent"><i class="${iconByType(item.tipe)}"></i>${escapeHTML(item.tipe || '-')}</span></td>
+        <td>
+          <div class="title-cell">${escapeHTML(item.kepala || '-')}</div>
+          <div class="title-sub">${Number(item.pegawai) || 0} personel</div>
+        </td>
+        <td>${statusBadge(item.status)}</td>
         <td style="text-align:right;">
           <div class="actions-inline">
-            <button class="act-btn primary" onclick="openDetail(${item.id})" title="Detail"><i class="fa-solid fa-eye"></i></button>
-            <button class="act-btn accent" onclick="openEditModal(${item.id})" title="Edit"><i class="fa-solid fa-pen"></i></button>
+            <button class="act-btn success" onclick="openAddModal(${item.id})" title="Tambah turunan"><i class="fa-solid fa-plus"></i></button>
+            <button class="act-btn primary" onclick="openEditModal(${item.id})" title="Edit"><i class="fa-solid fa-pen"></i></button>
             <button class="act-btn danger" onclick="deleteUPT(${item.id})" title="Hapus"><i class="fa-solid fa-trash"></i></button>
           </div>
         </td>
       </tr>
     `;
   }).join('');
-
-  renderPagination(data.length, 'paginationTable');
 }
 
-function renderGrid(data, page) {
-  const grid = document.getElementById('uptGrid');
-  const empty = document.getElementById('emptyGrid');
-
-  if (!page.length) {
-    grid.innerHTML = '';
-    empty.style.display = 'block';
-    document.getElementById('paginationGrid').innerHTML = '';
-    return;
-  }
-
-  empty.style.display = 'none';
-
-  grid.innerHTML = page.map(item => {
-    const pct = realizationPct(item);
-    return `
-      <div class="branch-card">
-        <div class="card-head">
-          <div style="display:flex; gap:12px; align-items:flex-start; min-width:0;">
-            <div class="card-icon"><i class="${TIPE_ICON[item.tipe] || 'fa-solid fa-building'}"></i></div>
-            <div style="min-width:0;">
-              <div class="card-title">${escapeHTML(item.nama)}</div>
-              <div class="card-code">${escapeHTML(item.kode)} · ${escapeHTML(item.tipe || 'UPT')}</div>
-            </div>
-          </div>
-          ${statusBadge(item.status)}
-        </div>
-
-        <div class="card-meta">
-          <span class="badge badge-primary"><i class="fa-solid fa-sitemap"></i>${escapeHTML(item.upkKode || 'Tanpa UPK')}</span>
-          <span class="badge badge-accent"><i class="fa-solid fa-building"></i>${escapeHTML(item.upkNama || 'Belum dipilih')}</span>
-        </div>
-
-        <div class="upk-breadcrumb"><strong>${escapeHTML(item.upkKode || '—')}</strong><span>›</span><span>${escapeHTML(item.upkNama || 'Belum ada divisi induk')}</span><span>›</span><span>${escapeHTML(item.kode)}</span></div>
-
-        ${Number(item.pagu) > 0 ? `
-          <div>
-            <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-muted); margin-bottom:5px;">
-              <span>Realisasi anggaran</span>
-              <span style="font-weight:800; color:${barColor(pct)};">${pct}%</span>
-            </div>
-            <div class="budget-track" style="height:8px;"><div class="budget-fill" style="width:${pct}%; background:${barColor(pct)};"></div></div>
-          </div>
-        ` : '<div class="badge badge-warning"><i class="fa-solid fa-triangle-exclamation"></i>Belum ada pagu RKA</div>'}
-
-        <div class="card-stats">
-          <div>
-            <div class="stat-mini-label">Pagu</div>
-            <div class="stat-mini-value">${fmtCurrency(item.pagu)}</div>
-          </div>
-          <div>
-            <div class="stat-mini-label">Pegawai</div>
-            <div class="stat-mini-value">${Number(item.pegawai) || 0} org</div>
-          </div>
-          <div>
-            <div class="stat-mini-label">Kepala</div>
-            <div class="stat-mini-value">${escapeHTML(item.kepala || '—')}</div>
-          </div>
-          <div>
-            <div class="stat-mini-label">Sumber Dana</div>
-            <div class="stat-mini-value">${escapeHTML(item.sumber || '—')}</div>
-          </div>
-        </div>
-
-        <div class="page-actions" style="margin-top:auto;">
-          <button class="btn btn-ghost btn-sm" style="flex:1; justify-content:center;" onclick="openDetail(${item.id})"><i class="fa-solid fa-eye"></i> Detail</button>
-          <button class="btn btn-primary btn-sm" style="flex:1; justify-content:center;" onclick="openEditModal(${item.id})"><i class="fa-solid fa-pen"></i> Edit</button>
-        </div>
-      </div>
-    `;
-  }).join('');
-
-  renderPagination(data.length, 'paginationGrid');
-}
-
-function renderPagination(total, elId) {
-  if (!total) {
-    document.getElementById(elId).innerHTML = '';
-    return;
-  }
-  const pages = Math.ceil(total / state.perPage);
-  const start = (state.page - 1) * state.perPage + 1;
-  const end = Math.min(state.page * state.perPage, total);
-  let buttons = '';
-
-  for (let i = 1; i <= pages; i++) {
-    if (pages > 7 && i > 2 && i < pages - 1 && Math.abs(i - state.page) > 1) {
-      if (i === 3 || i === pages - 2) buttons += '<span class="pg-btn" style="pointer-events:none;">…</span>';
-      continue;
-    }
-    buttons += `<button class="pg-btn ${i === state.page ? 'active' : ''}" onclick="goPage(${i})">${i}</button>`;
-  }
-
-  document.getElementById(elId).innerHTML = `
-    <div class="pagination-info">Menampilkan ${start}–${end} dari ${total} unit</div>
-    <div class="pagination-btns">
-      <button class="pg-btn" onclick="goPage(${state.page - 1})" ${state.page <= 1 ? 'disabled' : ''}><i class="fa-solid fa-chevron-left"></i></button>
-      ${buttons}
-      <button class="pg-btn" onclick="goPage(${state.page + 1})" ${state.page >= pages ? 'disabled' : ''}><i class="fa-solid fa-chevron-right"></i></button>
-    </div>
-  `;
-}
-
-function goPage(page) {
-  const total = getFiltered().length;
-  const maxPage = Math.max(1, Math.ceil(total / state.perPage));
-  state.page = Math.max(1, Math.min(page, maxPage));
-  render();
-}
-
-function openAddModal() {
-  state.editingId = null;
-  document.getElementById('modalFormTitle').textContent = 'Tambah UPT';
-  document.getElementById('modalFormSub').textContent = 'Isi data unit dan hubungkan ke divisi induk UPK.';
-  ['fKode','fNama','fDeskripsi','fKepala','fNip','fTelp','fEmail','fAlamat','fPegawai','fPagu','fRealisasi'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('fTipe').value = '';
-  document.getElementById('fTahun').value = '2026';
-  document.getElementById('fSumber').value = 'APBD';
-  document.getElementById('fStatus').value = 'Aktif';
-  document.getElementById('fUpk').dataset.current = '';
+function render(){
   buildUpkOptions();
-  document.getElementById('fUpk').value = '';
-  updatePaguPreview();
+  updateStats();
+  renderAccordion();
+  renderTable();
+}
+
+function openAddModal(parentId = null){
+  state.editingId = null;
+  document.getElementById('modalTitle').textContent = parentId ? 'Tambah Sub UPT' : 'Tambah UPT';
+  document.getElementById('modalSub').textContent = parentId ? 'Data akan dibuat sebagai turunan/sub UPT.' : 'Isi data UPT utama atau pilih parent jika ingin menjadi sub UPT.';
+  document.getElementById('fTipe').value = '';
+  document.getElementById('fKode').value = '';
+  document.getElementById('fNama').value = '';
+  document.getElementById('fDeskripsi').value = '';
+  document.getElementById('fKepala').value = '';
+  document.getElementById('fPegawai').value = '';
+  document.getElementById('fEmail').value = '';
+  document.getElementById('fTelp').value = '';
+  document.getElementById('fStatus').value = 'Aktif';
+  buildUpkOptions();
+  if (parentId){
+    const parent = getUptById(parentId);
+    document.getElementById('fUpk').value = String(parent?.upkId || '');
+    buildParentOptions(parent?.upkId || '', parentId);
+    document.getElementById('parentHintBox').innerHTML = `<b>Mode sub UPT:</b> Data ini akan menjadi turunan dari <b>${escapeHTML(parent?.nama || '-')}</b>. UPK mengikuti parent agar strukturnya tetap konsisten.`;
+  } else {
+    document.getElementById('fUpk').value = '';
+    buildParentOptions('', '');
+    document.getElementById('parentHintBox').innerHTML = '<b>Tips:</b> Kosongkan field <b>Sub UPT dari</b> jika data ini adalah UPT utama. Pilih parent UPT jika data ini ingin menjadi turunan/sub UPT.';
+  }
   openModal('modalForm');
 }
 
-function openEditModal(id) {
-  const item = UPT_DATA.find(entry => entry.id === id);
+function openEditModal(id){
+  const item = getUptById(id);
   if (!item) return;
   state.editingId = id;
-  document.getElementById('modalFormTitle').textContent = 'Edit UPT';
-  document.getElementById('modalFormSub').textContent = `${item.kode} — ${item.nama}`;
-  document.getElementById('fUpk').dataset.current = String(item.upkId || '');
+  document.getElementById('modalTitle').textContent = 'Edit UPT';
+  document.getElementById('modalSub').textContent = `${item.kode} — ${item.nama}`;
   buildUpkOptions();
   document.getElementById('fUpk').value = String(item.upkId || '');
+  buildParentOptions(item.upkId, item.parentId || '');
   document.getElementById('fTipe').value = item.tipe || '';
   document.getElementById('fKode').value = item.kode || '';
   document.getElementById('fNama').value = item.nama || '';
   document.getElementById('fDeskripsi').value = item.deskripsi || '';
   document.getElementById('fKepala').value = item.kepala || '';
-  document.getElementById('fNip').value = item.nip || '';
-  document.getElementById('fTelp').value = item.telp || '';
-  document.getElementById('fEmail').value = item.email || '';
-  document.getElementById('fAlamat').value = item.alamat || '';
   document.getElementById('fPegawai').value = Number(item.pegawai) || '';
-  document.getElementById('fTahun').value = String(item.tahun || '2026');
-  document.getElementById('fSumber').value = item.sumber || 'APBD';
+  document.getElementById('fEmail').value = item.email || '';
+  document.getElementById('fTelp').value = item.telp || '';
   document.getElementById('fStatus').value = item.status || 'Aktif';
-  document.getElementById('fPagu').value = Number(item.pagu) || '';
-  document.getElementById('fRealisasi').value = Number(item.realisasi) || '';
-  updatePaguPreview();
-  closeModal('modalDetail');
+  document.getElementById('parentHintBox').innerHTML = item.parentId
+    ? `<b>Mode edit sub UPT:</b> Unit ini saat ini berada di bawah <b>${escapeHTML(getUptById(item.parentId)?.nama || '-')}</b>.`
+    : '<b>Mode edit:</b> Unit ini merupakan UPT utama. Kamu tetap bisa mengubahnya menjadi sub UPT dengan memilih parent.';
   openModal('modalForm');
 }
 
-function updatePaguPreview() {
-  const value = Number(document.getElementById('fPagu').value) || 0;
-  document.getElementById('paguPreview').textContent = value ? fmtCurrencyFull(value) : '—';
+function handleFormUpkChange(){
+  const upkId = document.getElementById('fUpk').value;
+  buildParentOptions(upkId, '');
 }
 
-function saveUPT() {
-  const upkId = document.getElementById('fUpk').value;
-  const upk = UPK_DATA.find(item => String(item.id) === String(upkId));
+function handleParentChange(){
+  const parentId = document.getElementById('fParent').value;
+  if (!parentId){
+    document.getElementById('parentHintBox').innerHTML = '<b>Tips:</b> Kosongkan field <b>Sub UPT dari</b> jika data ini adalah UPT utama. Pilih parent UPT jika data ini ingin menjadi turunan/sub UPT.';
+    return;
+  }
+  const parent = getUptById(parentId);
+  if (parent){
+    document.getElementById('fUpk').value = String(parent.upkId || '');
+    document.getElementById('parentHintBox').innerHTML = `<b>Sub UPT dipilih:</b> Data akan disimpan di bawah <b>${escapeHTML(parent.nama)}</b> dan tetap berada pada UPK <b>${escapeHTML(getUpkById(parent.upkId)?.nama || '-')}</b>.`;
+  }
+}
+
+function collectDescendants(id){
+  const ids = [];
+  function walk(parentId){
+    childrenOf(parentId).forEach(child => {
+      ids.push(child.id);
+      walk(child.id);
+    });
+  }
+  walk(id);
+  return ids;
+}
+
+function saveUPT(){
+  const upkId = Number(document.getElementById('fUpk').value || 0);
+  const parentId = Number(document.getElementById('fParent').value || 0) || null;
+  const upk = getUpkById(upkId);
+  const parent = parentId ? getUptById(parentId) : null;
+
   const payload = {
-    upkId: upk ? upk.id : null,
-    upkKode: upk ? upk.kode : '',
-    upkNama: upk ? upk.nama : '',
-    tipe: document.getElementById('fTipe').value,
-    kode: document.getElementById('fKode').value.trim(),
-    nama: document.getElementById('fNama').value.trim(),
-    deskripsi: document.getElementById('fDeskripsi').value.trim(),
-    kepala: document.getElementById('fKepala').value.trim(),
-    nip: document.getElementById('fNip').value.trim(),
-    telp: document.getElementById('fTelp').value.trim(),
-    email: document.getElementById('fEmail').value.trim(),
-    alamat: document.getElementById('fAlamat').value.trim(),
-    pegawai: Number(document.getElementById('fPegawai').value) || 0,
-    tahun: Number(document.getElementById('fTahun').value) || 2026,
-    sumber: document.getElementById('fSumber').value,
-    status: document.getElementById('fStatus').value,
-    pagu: Number(document.getElementById('fPagu').value) || 0,
-    realisasi: Number(document.getElementById('fRealisasi').value) || 0,
+    kode:document.getElementById('fKode').value.trim(),
+    nama:document.getElementById('fNama').value.trim(),
+    tipe:document.getElementById('fTipe').value,
+    upkId:upkId || null,
+    id_upk:upkId || null,
+    parentId:parentId || null,
+    id_parent_upt:parentId || null,
+    deskripsi:document.getElementById('fDeskripsi').value.trim(),
+    kepala:document.getElementById('fKepala').value.trim(),
+    pegawai:Number(document.getElementById('fPegawai').value || 0),
+    email:document.getElementById('fEmail').value.trim(),
+    telp:document.getElementById('fTelp').value.trim(),
+    status:document.getElementById('fStatus').value || 'Aktif'
   };
 
-  if (!payload.upkId || !payload.tipe || !payload.kode || !payload.nama || !payload.kepala) {
-    showToast('warning', 'fa-triangle-exclamation', 'UPK induk, jenis UPT, kode, nama, dan penanggung jawab wajib diisi.');
+  if (!payload.upkId || !payload.tipe || !payload.kode || !payload.nama || !payload.kepala){
+    showToast('warning','fa-triangle-exclamation','UPK, jenis UPT, kode, nama, dan kepala/PIC wajib diisi.');
     return;
   }
 
-  if (payload.realisasi > payload.pagu && payload.pagu > 0) {
-    showToast('warning', 'fa-scale-balanced', 'Nilai realisasi tidak boleh melebihi pagu anggaran.');
+  if (parent && Number(parent.upkId) !== Number(payload.upkId)){
+    showToast('warning','fa-code-branch','Parent UPT harus berada pada UPK yang sama.');
     return;
   }
 
-  const duplicate = UPT_DATA.find(item => item.kode.toLowerCase() === payload.kode.toLowerCase() && item.id !== state.editingId);
-  if (duplicate) {
-    showToast('warning', 'fa-copy', 'Kode UPT sudah digunakan oleh unit lain.');
+  if (state.editingId && Number(parentId) === Number(state.editingId)){
+    showToast('warning','fa-ban','UPT tidak bisa menjadi parent dari dirinya sendiri.');
     return;
   }
 
-  if (state.editingId) {
-    const index = UPT_DATA.findIndex(item => item.id === state.editingId);
-    if (index >= 0) {
-      UPT_DATA[index] = { ...UPT_DATA[index], ...payload };
-      writeUPT(UPT_DATA);
-      showToast('success', 'fa-circle-check', 'Data UPT berhasil diperbarui.');
+  const duplicate = UPT_DATA.find(item => normalizeText(item.kode) === normalizeText(payload.kode) && Number(item.id) !== Number(state.editingId));
+  if (duplicate){
+    showToast('warning','fa-copy','Kode UPT sudah digunakan.');
+    return;
+  }
+
+  if (state.editingId){
+    const descendants = collectDescendants(state.editingId);
+    if (parentId && descendants.includes(parentId)){
+      showToast('warning','fa-arrow-rotate-left','Parent tidak boleh mengambil turunan dari unit yang sedang diedit.');
+      return;
     }
+    const idx = UPT_DATA.findIndex(item => Number(item.id) === Number(state.editingId));
+    if (idx >= 0) UPT_DATA[idx] = { ...UPT_DATA[idx], ...payload };
+    showToast('success','fa-circle-check','Data UPT berhasil diperbarui.');
   } else {
-    const newId = Math.max(0, ...UPT_DATA.map(item => item.id)) + 1;
-    UPT_DATA.push({ id: newId, ...payload });
-    writeUPT(UPT_DATA);
-    showToast('success', 'fa-circle-check', 'Data UPT baru berhasil ditambahkan.');
+    const newId = Math.max(0, ...UPT_DATA.map(item => Number(item.id) || 0)) + 1;
+    UPT_DATA.unshift({ id:newId, ...payload });
+    showToast('success','fa-circle-check', parentId ? 'Sub UPT berhasil ditambahkan.' : 'UPT baru berhasil ditambahkan.');
   }
 
+  persistUPT();
   closeModal('modalForm');
   render();
 }
 
-function deleteUPT(id) {
-  const item = UPT_DATA.find(entry => entry.id === id);
+function deleteUPT(id){
+  const item = getUptById(id);
   if (!item) return;
-  if (!confirm(`Hapus unit "${item.nama}"?\n\nTindakan ini tidak dapat dibatalkan.`)) return;
-  UPT_DATA = UPT_DATA.filter(entry => entry.id !== id);
-  writeUPT(UPT_DATA);
+  const descendants = collectDescendants(id);
+  const totalDelete = 1 + descendants.length;
+  const message = descendants.length
+    ? `Hapus "${item.nama}" beserta ${descendants.length} turunan/sub UPT di bawahnya?`
+    : `Hapus "${item.nama}"?`;
+  if (!confirm(message)) return;
+  const idsToDelete = new Set([id, ...descendants]);
+  UPT_DATA = UPT_DATA.filter(entry => !idsToDelete.has(entry.id));
+  persistUPT();
   render();
-  showToast('success', 'fa-trash', 'Data UPT berhasil dihapus.');
+  showToast('success','fa-trash', `${totalDelete} data berhasil dihapus.`);
 }
 
-function openDetail(id) {
-  const item = UPT_DATA.find(entry => entry.id === id);
-  if (!item) return;
-  const pct = realizationPct(item);
-  const parent = UPK_DATA.find(entry => String(entry.id) === String(item.upkId));
-
-  document.getElementById('detailTitle').textContent = item.nama;
-  document.getElementById('detailSub').textContent = `${item.kode} · ${item.tipe} · ${item.upkKode || 'Tanpa induk'}`;
-  document.getElementById('detailEditBtn').onclick = () => openEditModal(id);
-  document.getElementById('detailHierarchyBtn').onclick = () => focusHierarchyPath();
-
-  document.getElementById('detailBody').innerHTML = `
-    <div class="detail-banner">
-      <div class="detail-banner-icon"><i class="${TIPE_ICON[item.tipe] || 'fa-solid fa-building'}"></i></div>
-      <div style="flex:1;">
-        <div class="detail-banner-title">${escapeHTML(item.nama)} sebagai unit dari ${escapeHTML(item.upkNama || 'divisi belum dipilih')}</div>
-        <div class="detail-banner-sub">${escapeHTML(item.kode)} · Kepala unit ${escapeHTML(item.kepala || '—')} · Pagu ${fmtCurrency(item.pagu)} · Realisasi ${pct}%</div>
-      </div>
-      <div>${statusBadge(item.status)}</div>
-    </div>
-
-    <div class="hierarchy-box" id="hierarchyPathBox">
-      <div class="detail-label">Hierarki Organisasi</div>
-      <div class="hierarchy-path">
-        <span class="parent">${escapeHTML(item.upkKode || 'UPK-?')}</span>
-        <span>›</span>
-        <span class="parent">${escapeHTML(item.upkNama || 'Divisi induk belum dipilih')}</span>
-        <span>›</span>
-        <span class="current">${escapeHTML(item.kode)} · ${escapeHTML(item.nama)}</span>
-      </div>
-      <div class="title-sub" style="margin-top:8px;">${parent ? `Area induk: ${escapeHTML(parent.area || '—')}` : 'Divisi induk belum tersedia di Master UPK.'}</div>
-    </div>
-
-    <div class="detail-grid">
-      <div class="detail-box">
-        <div class="detail-label">Divisi Induk</div>
-        <div class="detail-value">${escapeHTML(item.upkKode || '—')} · ${escapeHTML(item.upkNama || '—')}</div>
-      </div>
-      <div class="detail-box">
-        <div class="detail-label">Tipe UPT</div>
-        <div class="detail-value">${escapeHTML(item.tipe || '—')}</div>
-      </div>
-      <div class="detail-box">
-        <div class="detail-label">Kepala UPT</div>
-        <div class="detail-value">${escapeHTML(item.kepala || '—')}<br><span class="title-sub">${escapeHTML(item.nip || 'Tanpa NIP')}</span></div>
-      </div>
-      <div class="detail-box">
-        <div class="detail-label">Kontak</div>
-        <div class="detail-value">${escapeHTML(item.telp || 'Tanpa telepon')}<br><span class="title-sub">${escapeHTML(item.email || 'Tanpa email')}</span></div>
-      </div>
-      <div class="detail-box">
-        <div class="detail-label">Jumlah Pegawai</div>
-        <div class="detail-value">${Number(item.pegawai) || 0} orang</div>
-      </div>
-      <div class="detail-box">
-        <div class="detail-label">Alamat</div>
-        <div class="detail-value">${escapeHTML(item.alamat || '—')}</div>
-      </div>
-      <div class="detail-box">
-        <div class="detail-label">Pagu Anggaran</div>
-        <div class="detail-value">${fmtCurrency(item.pagu)}<br><span class="title-sub">${escapeHTML(item.sumber || '—')} · ${escapeHTML(item.tahun || '—')}</span></div>
-      </div>
-      <div class="detail-box">
-        <div class="detail-label">Realisasi</div>
-        <div class="detail-value">${fmtCurrency(item.realisasi)}<br><span class="title-sub">${pct}% dari pagu</span></div>
-      </div>
-    </div>
-
-    <div class="detail-box" style="margin-bottom:18px;">
-      <div class="detail-label">Deskripsi UPT</div>
-      <div class="detail-value" style="font-size:13px; font-weight:600; color:var(--text-soft);">${escapeHTML(item.deskripsi || 'Belum ada deskripsi unit.')}</div>
-    </div>
-
-    ${Number(item.pagu) > 0 ? `
-      <div class="detail-box">
-        <div class="detail-label">Progress Realisasi</div>
-        <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text-muted); margin-bottom:8px;">
-          <span>${fmtCurrency(item.realisasi)} dari ${fmtCurrency(item.pagu)}</span>
-          <span style="font-weight:800; color:${barColor(pct)};">${pct}%</span>
-        </div>
-        <div class="budget-track" style="height:10px;"><div class="budget-fill" style="width:${pct}%; background:${barColor(pct)};"></div></div>
-      </div>
-    ` : `
-      <div class="detail-box" style="border:1px solid rgba(192,112,16,.2); background:var(--warning-soft);">
-        <div class="detail-label" style="color:var(--warning);">Status Anggaran</div>
-        <div class="detail-value" style="color:var(--warning); font-size:13px;">UPT ini belum memiliki pagu untuk penyusunan RKA.</div>
-      </div>
-    `}
-  `;
-
-  openModal('modalDetail');
+function resetSampleData(){
+  if (!confirm('Reset data sample Master UPT dan Master UPK?')) return;
+  UPK_DATA = seedUPK.map(normalizeUpk);
+  UPT_DATA = seedUPT.map(normalizeUpt);
+  persistUPK();
+  persistUPT();
+  render();
+  showToast('success','fa-database','Sample data berhasil direset.');
 }
 
-function focusHierarchyPath() {
-  const el = document.getElementById('hierarchyPathBox');
-  if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
-}
-
-function focusHierarchyFilter() {
-  document.getElementById('filterUpk').focus();
-}
-
-function exportCSV() {
-  const rows = getFiltered().map(item => [
-    item.kode,
-    item.nama,
-    item.upkKode,
-    item.upkNama,
-    item.tipe,
-    item.kepala,
-    item.pagu,
-    item.realisasi,
-    item.sumber,
-    item.status
-  ]);
-  const header = ['Kode UPT','Nama UPT','Kode UPK','Nama Divisi UPK','Tipe','Kepala UPT','Pagu','Realisasi','Sumber Dana','Status'];
-  const csv = [header, ...rows].map(row => row.map(col => `"${String(col ?? '').replace(/"/g, '""')}"`).join(',')).join('\n');
+function exportCSV(){
+  const rows = flattenVisibleTree().map(({ item }) => {
+    const upk = getUpkById(item.upkId);
+    const parent = getUptById(item.parentId);
+    return [
+      item.id,
+      item.kode,
+      item.nama,
+      item.tipe,
+      upk?.id || '',
+      upk?.kode || '',
+      upk?.nama || '',
+      parent?.id || '',
+      parent?.kode || '',
+      parent?.nama || '',
+      item.kepala || '',
+      item.pegawai || 0,
+      item.status || '',
+      item.email || '',
+      item.telp || '',
+      item.deskripsi || ''
+    ];
+  });
+  const header = ['id','kode_upt','nama_upt','tipe','id_upk','kode_upk','nama_upk','id_parent_upt','kode_parent_upt','nama_parent_upt','kepala_upt','jumlah_personel','status','email','telepon','deskripsi'];
+  const csv = [header, ...rows].map(row => row.map(col => `"${String(col ?? '').replace(/"/g,'""')}"`).join(',')).join('\n');
   const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
-  link.download = 'master_upt_unit.csv';
+  link.download = 'master_upt_hierarki.csv';
   link.click();
-  showToast('success', 'fa-file-csv', `Berhasil mengekspor ${rows.length} data UPT.`);
+  showToast('success','fa-file-csv',`Export berhasil: ${rows.length} baris.`);
 }
 
-function openModal(id) { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-function closeModalIfBg(event, id) { if (event.target === document.getElementById(id)) closeModal(id); }
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+function closeModalIfBg(event,id){ if (event.target === document.getElementById(id)) closeModal(id); }
 
-function showToast(type, icon, message) {
+function showToast(type, icon, message){
   const stack = document.getElementById('toastStack');
-  const toast = document.createElement('div');
-  toast.className = `toast ${type}`;
-  toast.innerHTML = `<i class="fa-solid ${icon}"></i><span>${escapeHTML(message)}</span>`;
-  stack.appendChild(toast);
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<i class="fa-solid ${icon}"></i><span>${escapeHTML(message)}</span>`;
+  stack.appendChild(el);
   setTimeout(() => {
-    toast.style.opacity = '0';
-    toast.style.transform = 'translateX(18px)';
-    toast.style.transition = 'all .24s ease';
-    setTimeout(() => toast.remove(), 240);
+    el.style.opacity = '0';
+    el.style.transform = 'translateX(18px)';
+    el.style.transition = 'all .24s ease';
+    setTimeout(() => el.remove(), 240);
   }, 3200);
 }
 
 window.addEventListener('storage', (event) => {
-  if (event.key === STORAGE_UPK) UPK_DATA = readUPK();
-  if (event.key === STORAGE_UPT) UPT_DATA = readUPT();
-  buildUpkOptions();
+  if ([STORAGE_UPK, ...LEGACY_UPK_KEYS].includes(event.key)) UPK_DATA = readFromPrimaryOrLegacy(STORAGE_UPK, LEGACY_UPK_KEYS, seedUPK).map(normalizeUpk);
+  if ([STORAGE_UPT, ...LEGACY_UPT_KEYS].includes(event.key)) UPT_DATA = readFromPrimaryOrLegacy(STORAGE_UPT, LEGACY_UPT_KEYS, seedUPT).map(normalizeUpt);
   render();
 });
 
@@ -1325,7 +1185,7 @@ document.getElementById('topbarDate').textContent = new Date().toLocaleDateStrin
   weekday:'short', day:'numeric', month:'long', year:'numeric'
 });
 
-buildUpkOptions();
+ensureSeed();
 render();
 </script>
 <script src="sidebar.js"></script>

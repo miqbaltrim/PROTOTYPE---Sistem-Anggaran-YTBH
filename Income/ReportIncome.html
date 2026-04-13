@@ -6,6 +6,7 @@
   <title>Report Income — Sistem Anggaran</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
   <style>
     :root{
       --bg:#f4f7fc;
@@ -30,92 +31,50 @@
       --shadow-sm:0 2px 10px rgba(57,114,184,.07);
       --shadow:0 10px 28px rgba(57,114,184,.12);
     }
-
     *{box-sizing:border-box;margin:0;padding:0}
-    body{
-      font-family:'Plus Jakarta Sans',sans-serif;
-      background:var(--bg);
-      color:var(--text);
-      min-height:100vh;
-    }
+    body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
     .main{margin-left:240px;min-height:100vh;display:flex;flex-direction:column}
-    .topbar{
-      position:sticky;top:0;z-index:50;
-      background:rgba(244,247,252,.92);
-      backdrop-filter:blur(12px);
-      border-bottom:1px solid var(--line);
-      padding:14px 34px;
-      display:flex;justify-content:space-between;align-items:center;gap:16px;
-    }
+    .topbar{position:sticky;top:0;z-index:50;background:rgba(244,247,252,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:14px 34px;display:flex;justify-content:space-between;align-items:center;gap:16px}
     .breadcrumb{display:flex;gap:6px;flex-wrap:wrap;font-size:13px;color:var(--text-muted)}
     .breadcrumb b{color:var(--text);font-weight:700}
     .topbar-right{display:flex;align-items:center;gap:10px}
-    .chip-info,.topbar-date{
-      padding:7px 12px;border-radius:999px;background:var(--bg-soft);
-      border:1px solid var(--line);font-size:12px;color:var(--text-soft);white-space:nowrap;
-    }
-
+    .chip-info,.topbar-date{padding:7px 12px;border-radius:999px;background:var(--bg-soft);border:1px solid var(--line);font-size:12px;color:var(--text-soft);white-space:nowrap}
     .content{padding:30px 34px 42px;display:flex;flex-direction:column;gap:22px}
     .page-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
     .page-title{font-family:'Lora',serif;font-size:28px;line-height:1.25}
     .page-title em{color:var(--primary);font-style:italic}
-    .page-sub{margin-top:8px;max-width:820px;font-size:13.5px;line-height:1.7;color:var(--text-soft)}
+    .page-sub{margin-top:8px;max-width:860px;font-size:13.5px;line-height:1.7;color:var(--text-soft)}
     .page-actions{display:flex;gap:10px;flex-wrap:wrap}
-    .btn{
-      border:none;border-radius:11px;padding:10px 16px;display:inline-flex;align-items:center;gap:8px;
-      font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:.18s;
-      font-family:'Plus Jakarta Sans',sans-serif;
-    }
+    .btn{border:none;border-radius:11px;padding:10px 16px;display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:.18s;font-family:'Plus Jakarta Sans',sans-serif}
     .btn i{font-size:12px}
     .btn-primary{background:var(--primary);color:#fff;box-shadow:0 6px 18px rgba(57,114,184,.24)}
     .btn-primary:hover{transform:translateY(-1px);background:#467ec1}
     .btn-ghost{background:#fff;color:var(--text-soft);border:1.5px solid var(--line)}
     .btn-ghost:hover{background:var(--bg);color:var(--text)}
-
-    .hero{
-      background:linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
-      color:#fff;border-radius:22px;padding:24px 26px;
-      box-shadow:0 16px 36px rgba(57,114,184,.22);
-      display:grid;grid-template-columns:1.2fr .9fr;gap:18px;position:relative;overflow:hidden;
-    }
-    .hero::before,.hero::after{
-      content:'';position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.12);
-    }
+    .btn-accent{background:var(--accent);color:#fff;box-shadow:0 6px 18px rgba(246,139,33,.24)}
+    .btn-accent:hover{transform:translateY(-1px);background:#ff9d3a}
+    .btn-sm{padding:7px 12px;font-size:12px}
+    .hero{background:linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);color:#fff;border-radius:22px;padding:24px 26px;box-shadow:0 16px 36px rgba(57,114,184,.22);display:grid;grid-template-columns:1.2fr .9fr;gap:18px;position:relative;overflow:hidden}
+    .hero::before,.hero::after{content:'';position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.12)}
     .hero::before{width:180px;height:180px;top:-50px;right:-20px}
     .hero::after{width:120px;height:120px;bottom:-45px;right:90px}
     .hero-left,.hero-right{position:relative;z-index:1}
-    .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:1.8px;color:rgba(255,255,255,.65);margin-bottom:8px}
-    .hero-title{font-family:'Lora',serif;font-size:28px;line-height:1.25;max-width:720px}
-    .hero-sub{margin-top:10px;font-size:13px;line-height:1.7;color:rgba(255,255,255,.76);max-width:650px}
-    .hero-actions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
-    .hero-chip{
-      display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-radius:999px;
-      background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.12);font-size:12px;font-weight:700;
-    }
+    .hero-title{font-family:'Lora',serif;font-size:28px;line-height:1.25}
+    .hero-sub{margin-top:10px;font-size:13px;line-height:1.7;color:rgba(255,255,255,.78);max-width:720px}
     .hero-right{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-    .hero-mini{
-      background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.12);
-      border-radius:16px;padding:15px 16px;
-    }
+    .hero-mini{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:15px 16px}
     .hero-mini-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.62);margin-bottom:7px}
     .hero-mini-value{font-family:'DM Mono',monospace;font-size:20px;font-weight:500}
     .hero-mini-sub{margin-top:6px;font-size:12px;color:rgba(255,255,255,.66)}
-
     .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-    .stat-card{
-      background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px 18px 16px;
-      box-shadow:var(--shadow-sm);position:relative;overflow:hidden;transition:.18s;
-    }
+    .stat-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px 18px 16px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden;transition:.18s}
     .stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
     .stat-card::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px}
     .c-primary::after{background:var(--primary)}
     .c-accent::after{background:var(--accent)}
     .c-success::after{background:var(--success)}
     .c-warning::after{background:var(--warning)}
-    .stat-icon{
-      width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;
-      margin-bottom:12px;font-size:16px;
-    }
+    .stat-icon{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-size:16px}
     .c-primary .stat-icon{background:var(--primary-soft);color:var(--primary)}
     .c-accent .stat-icon{background:var(--accent-soft);color:var(--accent)}
     .c-success .stat-icon{background:var(--success-soft);color:var(--success)}
@@ -123,35 +82,81 @@
     .stat-label{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);font-weight:700;margin-bottom:5px}
     .stat-value{font-family:'DM Mono',monospace;font-size:23px;line-height:1}
     .stat-sub{margin-top:6px;font-size:12px;color:var(--text-muted)}
-
-    .toolbar{
-      display:flex;align-items:center;gap:10px;flex-wrap:wrap;
-      background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 16px;box-shadow:var(--shadow-sm);
-    }
+    .toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
     .search-wrap{position:relative;flex:1;min-width:240px}
     .search-icon{position:absolute;top:50%;left:13px;transform:translateY(-50%);color:var(--text-muted);font-size:13px}
-    .search-input,.filter-select{
-      width:100%;border:1.5px solid var(--line);background:#fff;border-radius:11px;
-      padding:10px 12px;font-size:13px;color:var(--text);outline:none;transition:.18s;
-      font-family:'Plus Jakarta Sans',sans-serif;
-    }
+    .search-input,.filter-select,.form-input,.form-select,.form-textarea{width:100%;border:1.5px solid var(--line);background:#fff;border-radius:11px;padding:10px 12px;font-size:13px;color:var(--text);outline:none;transition:.18s;font-family:'Plus Jakarta Sans',sans-serif}
     .search-input{padding-left:36px}
-    .search-input:focus,.filter-select:focus{
-      border-color:var(--primary);box-shadow:0 0 0 3px rgba(57,114,184,.16)
-    }
-
-    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-    .panel{
-      background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-sm);
-    }
-    .panel-head{
-      padding:16px 20px;border-bottom:1px solid var(--line-soft);
-      display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
-    }
-    .panel-title{font-size:14px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px}
+    .search-input:focus,.filter-select:focus,.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(57,114,184,.16)}
+    .toolbar-right{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+    .panel{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-sm)}
+    .panel-head{padding:16px 20px;border-bottom:1px solid var(--line-soft);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+    .panel-title{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
     .panel-sub{font-size:12px;color:var(--text-muted);margin-top:2px}
     .panel-body{padding:18px}
-
+    .table-wrap{overflow-x:auto}
+    table{width:100%;border-collapse:collapse}
+    thead th{text-align:left;padding:11px 16px;background:var(--bg);border-bottom:1px solid var(--line);font-size:10.5px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);white-space:nowrap}
+    thead th.sortable{cursor:pointer}
+    tbody tr{border-bottom:1px solid var(--line-soft)}
+    tbody tr:last-child{border-bottom:none}
+    tbody tr:hover{background:rgba(57,114,184,.025)}
+    tbody td{padding:14px 16px;font-size:13px;color:var(--text-soft);vertical-align:top}
+    .mono{font-family:'DM Mono',monospace;color:var(--text)}
+    .title-cell{color:var(--text);font-weight:700}
+    .title-sub{margin-top:3px;font-size:11.5px;color:var(--text-muted);line-height:1.5}
+    .badge{display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:700;white-space:nowrap}
+    .badge-primary{background:var(--primary-soft);color:var(--primary)}
+    .badge-accent{background:var(--accent-soft);color:#a05a00}
+    .badge-success{background:var(--success-soft);color:var(--success)}
+    .badge-warning{background:var(--warning-soft);color:var(--warning)}
+    .badge-danger{background:var(--danger-soft);color:var(--danger)}
+    .progress-wrap{display:flex;align-items:center;gap:10px}
+    .progress-track{flex:1;min-width:110px;height:8px;border-radius:999px;background:var(--bg-soft);overflow:hidden}
+    .progress-fill{height:100%;border-radius:999px;background:var(--primary)}
+    .progress-label{width:48px;text-align:right;font-size:11px;font-weight:700;color:var(--text-soft)}
+    .actions-inline{display:inline-flex;gap:5px;white-space:nowrap}
+    .act-btn{width:31px;height:31px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--text-soft);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:.16s;font-size:12px}
+    .act-btn:hover{background:var(--bg);color:var(--text)}
+    .act-btn.primary:hover{background:var(--primary-soft);color:var(--primary)}
+    .act-btn.accent:hover{background:var(--accent-soft);color:var(--accent)}
+    .act-btn.danger:hover{background:var(--danger-soft);color:var(--danger)}
+    .act-btn.success:hover{background:var(--success-soft);color:var(--success)}
+    .pagination{padding:14px 20px;border-top:1px solid var(--line-soft);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .pagination-info{font-size:12.5px;color:var(--text-muted)}
+    .pagination-btns{display:flex;gap:4px}
+    .pg-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--text-soft);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;font-weight:700}
+    .pg-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+    .pg-btn:disabled{opacity:.45;cursor:default}
+    .empty-state{padding:60px 16px;text-align:center}
+    .empty-state i{font-size:36px;color:#c9d8ea;margin-bottom:12px}
+    .empty-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:5px}
+    .empty-sub{font-size:13px;color:var(--text-muted)}
+    .overlay-modal{position:fixed;inset:0;background:rgba(26,35,51,.42);backdrop-filter:blur(4px);z-index:300;display:none;align-items:center;justify-content:center;padding:16px}
+    .overlay-modal.open{display:flex}
+    .modal{width:760px;max-width:100%;max-height:calc(100vh - 32px);overflow:auto;background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 24px 48px rgba(16,24,40,.18)}
+    .modal-head{padding:20px 22px 16px;border-bottom:1px solid var(--line-soft);display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+    .modal-title{font-family:'Lora',serif;font-size:20px;line-height:1.3}
+    .modal-sub{margin-top:3px;font-size:12.5px;color:var(--text-muted)}
+    .modal-close{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--text-muted);cursor:pointer}
+    .modal-body{padding:20px 22px}
+    .modal-footer{padding:16px 22px;border-top:1px solid var(--line-soft);display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+    .section-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.4px;color:var(--text-muted);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+    .section-title::after{content:'';flex:1;height:1px;background:var(--line-soft)}
+    .form-row{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:14px}
+    .form-group{display:flex;flex-direction:column;gap:6px}
+    .form-label{font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--text)}
+    .req{color:var(--danger)}
+    .form-textarea{resize:vertical;min-height:90px}
+    .helper-box{background:var(--bg);border:1px solid var(--line-soft);border-radius:14px;padding:12px 14px;font-size:12px;color:var(--text-soft);line-height:1.7;margin-bottom:14px}
+    .budget-box{background:var(--bg);border:1px solid var(--line-soft);border-radius:14px;padding:12px 14px;margin-bottom:14px}
+    .budget-box-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);font-weight:800;margin-bottom:6px}
+    .budget-box-value{font-family:'DM Mono',monospace;font-size:14px;color:var(--text);line-height:1.7}
+    .notice-banner{background:linear-gradient(135deg, #eef9f1 0%, #e8f7ee 100%);border:1px solid rgba(33,122,74,.20);border-radius:18px;padding:16px 18px;display:flex;align-items:flex-start;gap:12px}
+    .notice-banner i{color:var(--success);font-size:18px;margin-top:2px}
+    .notice-banner-title{font-weight:800;color:var(--text)}
+    .notice-banner-sub{font-size:13px;line-height:1.7;color:var(--text-soft);margin-top:3px}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
     .bar-list{display:grid;gap:12px}
     .bar-item{display:grid;gap:6px}
     .bar-row{display:flex;justify-content:space-between;gap:10px;align-items:center}
@@ -159,67 +164,32 @@
     .bar-value{font-size:12px;color:var(--text-soft);font-family:'DM Mono',monospace}
     .bar-track{width:100%;height:10px;background:var(--bg-soft);border-radius:999px;overflow:hidden}
     .bar-fill{height:100%;border-radius:999px;background:var(--success)}
-
-    .table-wrap{overflow-x:auto}
-    table{width:100%;border-collapse:collapse}
-    thead th{
-      text-align:left;padding:11px 16px;background:var(--bg);border-bottom:1px solid var(--line);
-      font-size:10.5px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);white-space:nowrap;
-    }
-    tbody tr{border-bottom:1px solid var(--line-soft)}
-    tbody tr:last-child{border-bottom:none}
-    tbody tr:hover{background:rgba(57,114,184,.025)}
-    tbody td{padding:14px 16px;font-size:13px;color:var(--text-soft);vertical-align:top}
-    .title-cell{color:var(--text);font-weight:700}
-    .title-sub{margin-top:3px;font-size:11.5px;color:var(--text-muted)}
-    .mono{font-family:'DM Mono',monospace;color:var(--text)}
-    .badge{
-      display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:999px;
-      font-size:11px;font-weight:700;white-space:nowrap;
-    }
-    .badge-primary{background:var(--primary-soft);color:var(--primary)}
-    .badge-accent{background:var(--accent-soft);color:#a05a00}
-    .badge-success{background:var(--success-soft);color:var(--success)}
-    .badge-warning{background:var(--warning-soft);color:var(--warning)}
-    .badge-danger{background:var(--danger-soft);color:var(--danger)}
-
-    .empty-state{padding:62px 16px;text-align:center}
-    .empty-state i{font-size:36px;color:#c9d8ea;margin-bottom:12px}
-    .empty-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:5px}
-    .empty-sub{font-size:13px;color:var(--text-muted)}
-
-    @media (max-width:1200px){
-      .hero{grid-template-columns:1fr}
-      .stats-row{grid-template-columns:repeat(2,1fr)}
-      .grid-2{grid-template-columns:1fr}
-    }
+    .toast-stack{position:fixed;right:22px;bottom:22px;z-index:500;display:flex;flex-direction:column;gap:8px}
+    .toast{background:var(--text);color:#fff;padding:12px 16px;border-radius:12px;display:flex;align-items:center;gap:9px;box-shadow:0 10px 22px rgba(0,0,0,.2);font-size:13px;max-width:340px}
+    .toast.success{background:#1b6b41}
+    .toast.warning{background:#8d5807}
+    .toast.danger{background:#8a2d2d}
+    @media (max-width:1200px){.hero{grid-template-columns:1fr}.stats-row{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}}
     @media (max-width:900px){.main{margin-left:0}}
-    @media (max-width:720px){
-      .content{padding:20px 16px 34px}
-      .topbar{padding:12px 16px}
-      .stats-row,.hero-right{grid-template-columns:1fr}
-      .page-header{flex-direction:column}
-    }
+    @media (max-width:720px){.content{padding:20px 16px 34px}.topbar{padding:12px 16px}.stats-row,.form-row,.hero-right{grid-template-columns:1fr}.page-header{flex-direction:column}.toolbar-right{width:100%;margin-left:0;justify-content:space-between}}
   </style>
+
 </head>
 <body data-page="reportincome">
   <div id="sb-root"></div>
-
   <div class="main">
     <div class="topbar">
-      <div class="breadcrumb">
-        Sistem Anggaran <span>›</span> Perencanaan <span>›</span> Income <span>›</span> <b>Report Income</b>
-      </div>
+      <div class="breadcrumb">Sistem Anggaran <span>›</span> Perencanaan <span>›</span> Income <span>›</span> <b>Report Income</b></div>
       <div class="topbar-right">
-        <div class="chip-info"><i class="fa-solid fa-chart-line"></i> Ringkasan target & realisasi income</div>
+        <div class="chip-info"><i class="fa-solid fa-chart-line"></i> Ringkasan target &amp; realisasi income per UPK dan UPT</div>
         <div class="topbar-date" id="topbarDate">—</div>
       </div>
     </div>
-
     <div class="content">
       <div class="page-header">
         <div>
           <div class="page-title">Report <em>Income</em></div>
+          <div class="page-sub">Report income sekarang menampilkan struktur <b>UPK</b> dan <b>UPT</b> agar evaluasi target uang masuk bisa dibaca sampai level unit yang paling relevan.</div>
         </div>
         <div class="page-actions">
           <button class="btn btn-ghost" onclick="window.location.reload()"><i class="fa-solid fa-rotate"></i> Refresh</button>
@@ -229,75 +199,31 @@
 
       <section class="hero">
         <div class="hero-left">
-          <div class="hero-title">Sample Data Income</div>
-          <div class="hero-sub">
-            Banner Dummy For Sample Data
-          </div>
+          <div class="hero-title">Summary target income kini terbaca sampai level <em>UPK</em> dan <em>UPT</em>.</div>
+          <div class="hero-sub">Kamu bisa melihat unit mana yang sudah mengejar target, mana yang masih tertinggal, dan unit mana yang justru sudah melebihi target pemasukan.</div>
         </div>
         <div class="hero-right">
-          <div class="hero-mini">
-            <div class="hero-mini-label">Total Target</div>
-            <div class="hero-mini-value" id="heroTarget">Rp 0</div>
-            <div class="hero-mini-sub">Akumulasi semua income</div>
-          </div>
-          <div class="hero-mini">
-            <div class="hero-mini-label">Total Realisasi</div>
-            <div class="hero-mini-value" id="heroActual">Rp 0</div>
-            <div class="hero-mini-sub">Pemasukan yang sudah diterima</div>
-          </div>
-          <div class="hero-mini">
-            <div class="hero-mini-label">Gap Target</div>
-            <div class="hero-mini-value" id="heroGap">Rp 0</div>
-            <div class="hero-mini-sub">Selisih target vs realisasi</div>
-          </div>
-          <div class="hero-mini">
-            <div class="hero-mini-label">Belum Tercapai</div>
-            <div class="hero-mini-value" id="heroUnder">0</div>
-            <div class="hero-mini-sub">Head perlu dorongan</div>
-          </div>
+          <div class="hero-mini"><div class="hero-mini-label">Total Target</div><div class="hero-mini-value" id="heroTarget">Rp 0</div><div class="hero-mini-sub">Akumulasi semua income</div></div>
+          <div class="hero-mini"><div class="hero-mini-label">Total Realisasi</div><div class="hero-mini-value" id="heroActual">Rp 0</div><div class="hero-mini-sub">Pemasukan yang sudah diterima</div></div>
+          <div class="hero-mini"><div class="hero-mini-label">Gap Target</div><div class="hero-mini-value" id="heroGap">Rp 0</div><div class="hero-mini-sub">Selisih target vs realisasi</div></div>
+          <div class="hero-mini"><div class="hero-mini-label">Belum Tercapai</div><div class="hero-mini-value" id="heroUnder">0</div><div class="hero-mini-sub">Head perlu dorongan</div></div>
         </div>
       </section>
 
       <div class="stats-row">
-        <div class="stat-card c-primary">
-          <div class="stat-icon"><i class="fa-solid fa-folder-tree"></i></div>
-          <div class="stat-label">Head Income</div>
-          <div class="stat-value" id="statBudgets">0</div>
-          <div class="stat-sub">Semua head income</div>
-        </div>
-        <div class="stat-card c-accent">
-          <div class="stat-icon"><i class="fa-solid fa-file-lines"></i></div>
-          <div class="stat-label">Baris Realisasi</div>
-          <div class="stat-value" id="statRealizations">0</div>
-          <div class="stat-sub">Detail income</div>
-        </div>
-        <div class="stat-card c-success">
-          <div class="stat-icon"><i class="fa-solid fa-percent"></i></div>
-          <div class="stat-label">Pencapaian</div>
-          <div class="stat-value" id="statAchievement">0%</div>
-          <div class="stat-sub">Realisasi terhadap target</div>
-        </div>
-        <div class="stat-card c-warning">
-          <div class="stat-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
-          <div class="stat-label">Pending Accurate</div>
-          <div class="stat-value" id="statPending">0</div>
-          <div class="stat-sub">Belum push</div>
-        </div>
+        <div class="stat-card c-primary"><div class="stat-icon"><i class="fa-solid fa-folder-tree"></i></div><div class="stat-label">Head Income</div><div class="stat-value" id="statBudgets">0</div><div class="stat-sub">Semua head income</div></div>
+        <div class="stat-card c-accent"><div class="stat-icon"><i class="fa-solid fa-file-lines"></i></div><div class="stat-label">Baris Realisasi</div><div class="stat-value" id="statRealizations">0</div><div class="stat-sub">Detail income</div></div>
+        <div class="stat-card c-success"><div class="stat-icon"><i class="fa-solid fa-percent"></i></div><div class="stat-label">Pencapaian</div><div class="stat-value" id="statAchievement">0%</div><div class="stat-sub">Realisasi terhadap target</div></div>
+        <div class="stat-card c-warning"><div class="stat-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div><div class="stat-label">Pending Accurate</div><div class="stat-value" id="statPending">0</div><div class="stat-sub">Belum push</div></div>
       </div>
 
       <div class="toolbar">
         <div class="search-wrap">
           <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-          <input class="search-input" id="searchInput" type="text" placeholder="Cari entitas, head income, atau kategori..." oninput="renderAll()">
+          <input class="search-input" id="searchInput" type="text" placeholder="Cari UPK, UPT, head income, kategori, atau risiko..." oninput="renderAll()">
         </div>
-
-        <select class="filter-select" id="filterEntitas" onchange="renderAll()">
-          <option value="">Semua Entitas</option>
-          <option value="Klinik">Klinik</option>
-          <option value="Yayasan">Yayasan</option>
-          <option value="Universitas">Universitas</option>
-        </select>
-
+        <select class="filter-select" id="filterUpk" onchange="onFilterUpkChange()"></select>
+        <select class="filter-select" id="filterUpt" onchange="renderAll()"></select>
         <select class="filter-select" id="filterStatus" onchange="renderAll()">
           <option value="">Semua Kondisi</option>
           <option value="normal">Normal</option>
@@ -308,44 +234,25 @@
 
       <div class="grid-2">
         <div class="panel">
-          <div class="panel-head">
-            <div>
-              <div class="panel-title"><i class="fa-solid fa-building" style="color:var(--primary)"></i> Ringkasan per Entitas</div>
-              <div class="panel-sub">Target, realisasi, dan gap menurut entitas.</div>
-            </div>
-          </div>
-          <div class="panel-body">
-            <div id="entitySummary" class="bar-list"></div>
-          </div>
+          <div class="panel-head"><div><div class="panel-title"><i class="fa-solid fa-building" style="color:var(--primary)"></i> Ringkasan per UPK</div><div class="panel-sub">Target, realisasi, dan gap menurut UPK.</div></div></div>
+          <div class="panel-body"><div id="upkSummary" class="bar-list"></div></div>
         </div>
-
         <div class="panel">
-          <div class="panel-head">
-            <div>
-              <div class="panel-title"><i class="fa-solid fa-tags" style="color:var(--accent)"></i> Top Kategori Income</div>
-              <div class="panel-sub">Kategori pemasukan dengan nominal terbesar.</div>
-            </div>
-          </div>
-          <div class="panel-body">
-            <div id="categorySummary" class="bar-list"></div>
-          </div>
+          <div class="panel-head"><div><div class="panel-title"><i class="fa-solid fa-sitemap" style="color:var(--accent)"></i> Ringkasan per UPT</div><div class="panel-sub">Unit dengan pemasukan terbesar.</div></div></div>
+          <div class="panel-body"><div id="uptSummary" class="bar-list"></div></div>
         </div>
       </div>
 
       <div class="panel">
-        <div class="panel-head">
-          <div>
-            <div class="panel-title"><i class="fa-solid fa-table-list" style="color:var(--primary)"></i> Ringkasan Head Anggaran Income</div>
-            <div class="panel-sub">Daftar target, realisasi, gap, dan pencapaian tiap head income.</div>
-          </div>
-        </div>
-
+        <div class="panel-head"><div><div class="panel-title"><i class="fa-solid fa-table-list" style="color:var(--primary)"></i> Ringkasan Head Anggaran Income</div><div class="panel-sub">Daftar target, realisasi, gap, dan pencapaian tiap head income.</div></div></div>
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>Entitas</th>
+                <th>UPK</th>
+                <th>UPT</th>
                 <th>Head Income</th>
+                <th>Risiko</th>
                 <th>Tahun</th>
                 <th>Target</th>
                 <th>Realisasi</th>
@@ -360,19 +267,15 @@
       </div>
 
       <div class="panel">
-        <div class="panel-head">
-          <div>
-            <div class="panel-title"><i class="fa-solid fa-circle-exclamation" style="color:var(--warning)"></i> Daftar Belum Tercapai</div>
-            <div class="panel-sub">Head income yang realisasinya masih di bawah target.</div>
-          </div>
-        </div>
-
+        <div class="panel-head"><div><div class="panel-title"><i class="fa-solid fa-circle-exclamation" style="color:var(--warning)"></i> Daftar Belum Tercapai</div><div class="panel-sub">Head income yang realisasinya masih di bawah target.</div></div></div>
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>Entitas</th>
+                <th>UPK</th>
+                <th>UPT</th>
                 <th>Head Income</th>
+                <th>Risiko</th>
                 <th>Target</th>
                 <th>Realisasi</th>
                 <th>Kekurangan</th>
@@ -387,18 +290,147 @@
   </div>
 
   <script>
+
     const STORAGE_BUDGETS = 'APP_INCOME_BUDGETS_V1';
     const STORAGE_REALIZATIONS = 'APP_INCOME_REALIZATIONS_V1';
+    const STORAGE_RISKS = 'APP_MASTER_RISIKO_V1';
+    const STORAGE_UPK = 'APP_MASTER_UPK_V1';
+    const STORAGE_UPT = 'APP_MASTER_UPT_V1';
 
-    function readJson(key){
-      try { return JSON.parse(localStorage.getItem(key)) || []; }
-      catch { return []; }
+    const fallbackUPK = [
+      { id:1, kode:'UPK-001', nama:'Yayasan Bakti Tunas Husada', status:'Aktif' },
+      { id:2, kode:'UPK-002', nama:'Universitas Bakti Tunas Husada', status:'Aktif' },
+      { id:3, kode:'UPK-003', nama:'Klinik Bakti Tunas Husada', status:'Aktif' },
+      { id:4, kode:'UPK-004', nama:'BTH Student House', status:'Aktif' }
+    ];
+
+    const fallbackUPT = [
+      { id:1, kode:'UPT-UBTH-WR-SDM', nama:'Wakil Rektor Bidang SDM, Humas dan Kerjasama', upkId:2, parentId:null, status:'Aktif' },
+      { id:2, kode:'SUB-WR-SDM', nama:'Bagian SDM', upkId:2, parentId:1, status:'Aktif' },
+      { id:3, kode:'SUB-WR-HUMAS', nama:'Bagian Humas dan Kerjasama', upkId:2, parentId:1, status:'Aktif' },
+      { id:4, kode:'SUB-WR-KARIR', nama:'Bagian Pusat Karir', upkId:2, parentId:1, status:'Aktif' },
+      { id:5, kode:'UPT-UBTH-FIK', nama:'Fakultas Ilmu Kesehatan', upkId:2, parentId:null, status:'Aktif' },
+      { id:6, kode:'SUB-FIK-LAB', nama:'Laboratorium Terpadu', upkId:2, parentId:5, status:'Aktif' },
+      { id:7, kode:'UPT-YBTH-SEKRETARIAT', nama:'Sekretariat Yayasan', upkId:1, parentId:null, status:'Aktif' },
+      { id:8, kode:'SUB-SEK-KEU', nama:'Bagian Keuangan dan Akuntansi', upkId:1, parentId:7, status:'Aktif' },
+      { id:9, kode:'UPT-KLINIK-MEDIS', nama:'Unit Pelayanan Medis', upkId:3, parentId:null, status:'Aktif' },
+      { id:10, kode:'SUB-MEDIS-PENUNJANG', nama:'Unit Penunjang Medis', upkId:3, parentId:9, status:'Aktif' },
+      { id:11, kode:'UPT-BSH-OPERASIONAL', nama:'Operasional Student House', upkId:4, parentId:null, status:'Aktif' }
+    ];
+
+    const fallbackRisks = [
+      { id:'R-IN-001', nama:'Risiko penurunan kunjungan pasien', skala:'Sedang' },
+      { id:'R-IN-002', nama:'Risiko fluktuasi donasi', skala:'Tinggi' },
+      { id:'R-IN-003', nama:'Risiko keterlambatan pembayaran UKT', skala:'Tinggi' },
+      { id:'R-IN-004', nama:'Risiko mismatch data penerimaan', skala:'Sedang' }
+    ];
+
+    const seedBudgets = [
+      {
+        id:1,
+        kode:'AI-UBTH-001',
+        entitas:'Universitas Bakti Tunas Husada',
+        upkId:2, upkKode:'UPK-002', upkNama:'Universitas Bakti Tunas Husada',
+        uptId:3, uptKode:'SUB-WR-HUMAS', uptNama:'Bagian Humas dan Kerjasama',
+        nama:'Target Kerjasama & Promosi Institusi 2026',
+        risikoId:'R-IN-003', risikoNama:'Risiko keterlambatan pembayaran UKT', risikoSkala:'Tinggi',
+        tahun:2026, nominal:650000000, status:'Aktif', catatan:'Target uang masuk dari kerja sama institusi, sponsorship, dan promosi penerimaan mahasiswa.'
+      },
+      {
+        id:2,
+        kode:'AI-KLN-001',
+        entitas:'Klinik Bakti Tunas Husada',
+        upkId:3, upkKode:'UPK-003', upkNama:'Klinik Bakti Tunas Husada',
+        uptId:9, uptKode:'UPT-KLINIK-MEDIS', uptNama:'Unit Pelayanan Medis',
+        nama:'Target Pendapatan Layanan Medis 2026',
+        risikoId:'R-IN-001', risikoNama:'Risiko penurunan kunjungan pasien', risikoSkala:'Sedang',
+        tahun:2026, nominal:950000000, status:'Aktif', catatan:'Target uang masuk dari layanan pasien, pemeriksaan, dan tindakan medis.'
+      },
+      {
+        id:3,
+        kode:'AI-YYS-001',
+        entitas:'Yayasan Bakti Tunas Husada',
+        upkId:1, upkKode:'UPK-001', upkNama:'Yayasan Bakti Tunas Husada',
+        uptId:8, uptKode:'SUB-SEK-KEU', uptNama:'Bagian Keuangan dan Akuntansi',
+        nama:'Target Donasi & Kontribusi Yayasan 2026',
+        risikoId:'R-IN-002', risikoNama:'Risiko fluktuasi donasi', risikoSkala:'Tinggi',
+        tahun:2026, nominal:420000000, status:'Aktif', catatan:'Target uang masuk dari donasi, kontribusi, dan penerimaan sosial yayasan.'
+      },
+      {
+        id:4,
+        kode:'AI-UBTH-002',
+        entitas:'Universitas Bakti Tunas Husada',
+        upkId:2, upkKode:'UPK-002', upkNama:'Universitas Bakti Tunas Husada',
+        uptId:4, uptKode:'SUB-WR-KARIR', uptNama:'Bagian Pusat Karir',
+        nama:'Target Event Career Center 2026',
+        risikoId:'R-IN-004', risikoNama:'Risiko mismatch data penerimaan', risikoSkala:'Sedang',
+        tahun:2026, nominal:180000000, status:'Draft', catatan:'Target uang masuk dari job fair, tracer study premium, dan event pusat karir.'
+      }
+    ];
+
+    const seedRealizations = [
+      { id:1, budgetId:1, tanggal:'2026-01-18', kategori:'Kerjasama', detail:'Penerimaan sponsorship seminar kampus', qty:1, unitPrice:125000000, total:125000000, accurateStatus:'Pending', overTarget:false, catatan:'' },
+      { id:2, budgetId:2, tanggal:'2026-01-10', kategori:'Layanan Pasien', detail:'Penerimaan pasien rawat jalan', qty:1, unitPrice:165000000, total:165000000, accurateStatus:'Pending', overTarget:false, catatan:'' },
+      { id:3, budgetId:3, tanggal:'2026-01-12', kategori:'Donasi', detail:'Donasi rutin bulanan yayasan', qty:1, unitPrice:55000000, total:55000000, accurateStatus:'Sudah Push', overTarget:false, catatan:'' },
+      { id:4, budgetId:4, tanggal:'2026-02-03', kategori:'Event Karir', detail:'Penerimaan booth job fair', qty:1, unitPrice:42000000, total:42000000, accurateStatus:'Pending', overTarget:false, catatan:'' }
+    ];
+
+    function readJSON(key, fallback = []){
+      try {
+        const parsed = JSON.parse(localStorage.getItem(key));
+        return Array.isArray(parsed) ? parsed : fallback.slice();
+      } catch {
+        return fallback.slice();
+      }
     }
 
-    function fmtCurrency(n){
-      return 'Rp ' + (Number(n || 0)).toLocaleString('id-ID');
+    function ensureSeed(){
+      if(!localStorage.getItem(STORAGE_BUDGETS)) localStorage.setItem(STORAGE_BUDGETS, JSON.stringify(seedBudgets));
+      if(!localStorage.getItem(STORAGE_REALIZATIONS)) localStorage.setItem(STORAGE_REALIZATIONS, JSON.stringify(seedRealizations));
+      if(!localStorage.getItem(STORAGE_RISKS)) localStorage.setItem(STORAGE_RISKS, JSON.stringify(fallbackRisks));
     }
 
+    function writeBudgets(data){ localStorage.setItem(STORAGE_BUDGETS, JSON.stringify(data)); }
+    function writeRealizations(data){ localStorage.setItem(STORAGE_REALIZATIONS, JSON.stringify(data)); }
+
+    function readBudgets(){ return readJSON(STORAGE_BUDGETS, seedBudgets); }
+    function readRealizations(){ return readJSON(STORAGE_REALIZATIONS, seedRealizations); }
+    function readUpks(){
+      return readJSON(STORAGE_UPK, fallbackUPK).map((item, idx) => ({
+        id:Number(item.id) || (idx + 1), kode:item.kode || `UPK-${String(idx+1).padStart(3,'0')}`, nama:item.nama || '', status:item.status || 'Aktif'
+      }));
+    }
+    function readUpts(){
+      return readJSON(STORAGE_UPT, fallbackUPT).map((item, idx) => ({
+        id:Number(item.id) || (idx + 1),
+        kode:item.kode || `UPT-${String(idx+1).padStart(3,'0')}`,
+        nama:item.nama || '',
+        upkId:Number(item.upkId ?? item.id_upk ?? 0) || null,
+        parentId:Number(item.parentId ?? item.id_parent_upt ?? 0) || null,
+        status:item.status || 'Aktif'
+      }));
+    }
+    function readRisks(){
+      return readJSON(STORAGE_RISKS, fallbackRisks).map((item, idx) => {
+        if(typeof item === 'string') return { id:`RISK-${idx+1}`, nama:item, skala:'' };
+        return { id:item.id || `RISK-${idx+1}`, nama:item.nama || item.name || item.risikoNama || '', skala:item.skala || item.level || item.risikoSkala || '' };
+      }).filter(item => item.nama);
+    }
+
+    ensureSeed();
+    let BUDGETS = readBudgets();
+    let REALIZATIONS = readRealizations();
+    let UPKS = readUpks();
+    let UPTS = readUpts();
+    let RISKS = readRisks();
+
+    function escapeHtml(str){
+      return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    }
+    function normalizeText(value){
+      return String(value || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
+    }
+    function fmtCurrency(n){ return 'Rp ' + (Number(n || 0)).toLocaleString('id-ID'); }
     function fmtShortCurrency(n){
       const num = Number(n || 0);
       if(num >= 1000000000) return 'Rp ' + (num / 1000000000).toFixed(num % 1000000000 === 0 ? 0 : 1) + ' M';
@@ -406,257 +438,235 @@
       return fmtCurrency(num);
     }
 
-    function escapeHtml(str){
-      return String(str ?? '')
-        .replace(/&/g,'&amp;')
-        .replace(/</g,'&lt;')
-        .replace(/>/g,'&gt;')
-        .replace(/"/g,'&quot;')
-        .replace(/'/g,'&#39;');
+    function getUpkById(id){ return UPKS.find(item => Number(item.id) === Number(id)); }
+    function getUptById(id){ return UPTS.find(item => Number(item.id) === Number(id)); }
+    function getRiskById(id){ return RISKS.find(item => String(item.id) === String(id)); }
+    function childrenOf(parentId){ return UPTS.filter(item => Number(item.parentId || 0) === Number(parentId || 0)); }
+    function inferLegacyUpk(entitas){
+      const needle = normalizeText(entitas);
+      if(!needle) return null;
+      return UPKS.find(item => normalizeText(item.nama).includes(needle)) || null;
     }
+    function buildUptDisplayName(upt){
+      if(!upt) return '';
+      const parent = getUptById(upt.parentId);
+      return parent ? `${parent.nama} / ${upt.nama}` : upt.nama;
+    }
+    function hydrateBudget(item){
+      const upk = getUpkById(item.upkId) || UPKS.find(x => normalizeText(x.nama) === normalizeText(item.upkNama)) || inferLegacyUpk(item.entitas);
+      const upt = getUptById(item.uptId) || UPTS.find(x => normalizeText(x.nama) === normalizeText(item.uptNama) && (!upk || Number(x.upkId) === Number(upk.id)));
+      return {
+        ...item,
+        upkId: upk?.id || item.upkId || '',
+        upkKode: upk?.kode || item.upkKode || '',
+        upkNama: upk?.nama || item.upkNama || item.entitas || '',
+        uptId: upt?.id || item.uptId || '',
+        uptKode: upt?.kode || item.uptKode || '',
+        uptNama: upt?.nama || item.uptNama || '',
+        uptDisplay: upt ? buildUptDisplayName(upt) : (item.uptNama || '-'),
+        entitas: upk?.nama || item.entitas || ''
+      };
+    }
+    function getActualByBudget(budgetId, excludeId = null){
+      return REALIZATIONS.filter(r => Number(r.budgetId) === Number(budgetId) && Number(r.id) !== Number(excludeId)).reduce((sum, r) => sum + Number(r.total || 0), 0);
+    }
+    function getBudgetGapInfo(budgetId, excludeId = null){
+      const budget = hydrateBudget(readBudgets().find(item => Number(item.id) === Number(budgetId)) || BUDGETS.find(item => Number(item.id) === Number(budgetId)) || {});
+      const actual = getActualByBudget(budgetId, excludeId);
+      const target = Number(budget.nominal || 0);
+      const gap = actual - target;
+      const pct = target > 0 ? Math.round((actual / target) * 100) : 0;
+      return { budget, actual, target, gap, pct };
+    }
+    function refreshRefs(){
+      BUDGETS = readBudgets();
+      REALIZATIONS = readRealizations();
+      UPKS = readUpks();
+      UPTS = readUpts();
+      RISKS = readRisks();
+    }
+    function populateUpkSelect(selectId, selected = '', includeAllLabel = 'Semua UPK'){
+      const select = document.getElementById(selectId);
+      if(!select) return;
+      const options = UPKS.slice().sort((a,b) => (a.nama || '').localeCompare(b.nama || '')).map(item => `<option value="${item.id}">${escapeHtml(item.kode)} · ${escapeHtml(item.nama)}</option>`).join('');
+      const first = includeAllLabel ? `<option value="">${includeAllLabel}</option>` : '<option value="">— Pilih UPK —</option>';
+      select.innerHTML = first + options;
+      if(selected !== undefined) select.value = String(selected || '');
+    }
+    function populateUptSelect(selectId, upkId, selected = '', includeAll = false){
+      const select = document.getElementById(selectId);
+      if(!select) return;
+      const rows = UPTS.filter(item => !upkId || Number(item.upkId) === Number(upkId)).sort((a,b) => buildUptDisplayName(a).localeCompare(buildUptDisplayName(b)));
+      const first = includeAll ? '<option value="">Semua UPT</option>' : '<option value="">— Pilih UPT —</option>';
+      select.innerHTML = first + rows.map(item => `<option value="${item.id}">${escapeHtml(item.kode)} · ${escapeHtml(buildUptDisplayName(item))}</option>`).join('');
+      if(selected !== undefined) select.value = String(selected || '');
+    }
+    function populateRiskSelect(selectId, selected = ''){
+      const select = document.getElementById(selectId);
+      if(!select) return;
+      select.innerHTML = '<option value="">— Pilih Risiko —</option>' + RISKS.map(item => `<option value="${escapeHtml(String(item.id))}">${escapeHtml(item.nama)}${item.skala ? ` (${escapeHtml(item.skala)})` : ''}</option>`).join('');
+      if(selected) select.value = String(selected);
+    }
+    function getSelectedRisk(){
+      const riskId = document.getElementById('fRisk') ? document.getElementById('fRisk').value : '';
+      const risk = getRiskById(riskId);
+      return { risikoId:risk?.id || '', risikoNama:risk?.nama || '', risikoSkala:risk?.skala || '' };
+    }
+    function showToast(type, icon, message){
+      const stack = document.getElementById('toastStack');
+      if(!stack) return;
+      const el = document.createElement('div');
+      el.className = `toast ${type}`;
+      el.innerHTML = `<i class="fa-solid ${icon}"></i><span>${escapeHtml(message)}</span>`;
+      stack.appendChild(el);
+      setTimeout(() => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateX(18px)';
+        el.style.transition = 'all .24s ease';
+        setTimeout(() => el.remove(), 240);
+      }, 3200);
+    }
+    function openModal(id){ document.getElementById(id).classList.add('open'); }
+    function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+    function closeModalIfBg(event,id){ if(event.target === document.getElementById(id)) closeModal(id); }
+    window.addEventListener('storage', (event) => {
+      if([STORAGE_BUDGETS, STORAGE_REALIZATIONS, STORAGE_RISKS, STORAGE_UPK, STORAGE_UPT].includes(event.key)){
+        refreshRefs();
+        if(typeof syncFilters === 'function') syncFilters();
+        if(typeof render === 'function') render();
+        if(typeof renderAll === 'function') renderAll();
+      }
+    });
 
+    function syncFilters(){
+      populateUpkSelect('filterUpk', document.getElementById('filterUpk')?.value || '', 'Semua UPK');
+      populateUptSelect('filterUpt', document.getElementById('filterUpk')?.value || '', document.getElementById('filterUpt')?.value || '', true);
+    }
+    function onFilterUpkChange(){ populateUptSelect('filterUpt', document.getElementById('filterUpk').value, '', true); renderAll(); }
     function getFilteredData(){
-      const budgets = readJson(STORAGE_BUDGETS);
-      const realizations = readJson(STORAGE_REALIZATIONS);
-
+      refreshRefs();
       const q = document.getElementById('searchInput').value.trim().toLowerCase();
-      const entitas = document.getElementById('filterEntitas').value;
+      const upkId = document.getElementById('filterUpk').value;
+      const uptId = document.getElementById('filterUpt').value;
       const status = document.getElementById('filterStatus').value;
-
-      const budgetSummaries = budgets.map(b => {
-        const details = realizations.filter(r => Number(r.budgetId) === Number(b.id));
-        const actual = details.reduce((sum, r) => sum + Number(r.total || 0), 0);
-        const gap = actual - Number(b.nominal || 0);
-        const achievement = Number(b.nominal || 0) > 0 ? Math.round((actual / Number(b.nominal)) * 100) : 0;
-        const under = actual < Number(b.nominal || 0);
-        const over = actual > Number(b.nominal || 0);
-
-        return {
-          ...b,
-          details,
-          actual,
-          gap,
-          achievement,
-          under,
-          over
-        };
-      });
-
-      return budgetSummaries.filter(item => {
-        if (entitas && item.entitas !== entitas) return false;
-        if (status === 'normal' && (item.under || item.over)) return false;
-        if (status === 'under' && !item.under) return false;
-        if (status === 'over' && !item.over) return false;
-
-        if (q) {
-          const hay = [
-            item.entitas,
-            item.kode,
-            item.nama,
-            item.catatan || '',
-            ...item.details.map(d => `${d.kategori} ${d.detail} ${d.catatan || ''}`)
-          ].join(' ').toLowerCase();
-
-          if (!hay.includes(q)) return false;
+      return BUDGETS.map(hydrateBudget).map(item => {
+        const details = REALIZATIONS.filter(row => Number(row.budgetId) === Number(item.id));
+        const actual = details.reduce((sum, row) => sum + Number(row.total || 0), 0);
+        const gap = actual - Number(item.nominal || 0);
+        const achievement = Number(item.nominal || 0) > 0 ? Math.round((actual / Number(item.nominal)) * 100) : 0;
+        return { ...item, details, actual, gap, achievement, under: actual < Number(item.nominal || 0), over: actual > Number(item.nominal || 0) };
+      }).filter(item => {
+        if(upkId && String(item.upkId) !== String(upkId)) return false;
+        if(uptId && String(item.uptId) !== String(uptId)) return false;
+        if(status === 'normal' && (item.under || item.over)) return false;
+        if(status === 'under' && !item.under) return false;
+        if(status === 'over' && !item.over) return false;
+        if(q){
+          const hay = [item.upkKode, item.upkNama, item.uptKode, item.uptDisplay, item.kode, item.nama, item.risikoNama || '', item.risikoSkala || '', item.catatan || '', ...item.details.map(d => `${d.kategori || ''} ${d.detail || ''} ${d.catatan || ''}`)].join(' ').toLowerCase();
+          if(!hay.includes(q)) return false;
         }
-
         return true;
       });
     }
-
     function renderStats(data){
-      const totalTarget = data.reduce((sum, x) => sum + Number(x.nominal || 0), 0);
-      const totalActual = data.reduce((sum, x) => sum + Number(x.actual || 0), 0);
+      const totalTarget = data.reduce((sum, item) => sum + Number(item.nominal || 0), 0);
+      const totalActual = data.reduce((sum, item) => sum + Number(item.actual || 0), 0);
       const totalGap = totalActual - totalTarget;
-      const totalUnder = data.filter(x => x.under).length;
-      const totalPending = data.reduce((sum, x) => sum + x.details.filter(d => d.accurateStatus !== 'Sudah Push').length, 0);
-      const totalRealizations = data.reduce((sum, x) => sum + x.details.length, 0);
+      const totalUnder = data.filter(item => item.under).length;
+      const totalPending = data.reduce((sum, item) => sum + item.details.filter(d => d.accurateStatus !== 'Sudah Push').length, 0);
+      const totalRealizations = data.reduce((sum, item) => sum + item.details.length, 0);
       const achievement = totalTarget > 0 ? Math.round((totalActual / totalTarget) * 100) : 0;
-
       document.getElementById('heroTarget').textContent = fmtShortCurrency(totalTarget);
       document.getElementById('heroActual').textContent = fmtShortCurrency(totalActual);
       document.getElementById('heroGap').textContent = fmtShortCurrency(totalGap);
       document.getElementById('heroUnder').textContent = totalUnder;
-
       document.getElementById('statBudgets').textContent = data.length;
       document.getElementById('statRealizations').textContent = totalRealizations;
       document.getElementById('statAchievement').textContent = `${achievement}%`;
       document.getElementById('statPending').textContent = totalPending;
     }
-
-    function renderEntitySummary(data){
-      const grouped = {};
-      data.forEach(item => {
-        if (!grouped[item.entitas]) grouped[item.entitas] = { target:0, actual:0 };
-        grouped[item.entitas].target += Number(item.nominal || 0);
-        grouped[item.entitas].actual += Number(item.actual || 0);
-      });
-
-      const values = Object.entries(grouped).map(([name, v]) => ({
-        name,
-        target: v.target,
-        actual: v.actual,
-        pct: v.target > 0 ? Math.round((v.actual / v.target) * 100) : 0
-      })).sort((a,b) => b.actual - a.actual);
-
-      const max = Math.max(1, ...values.map(v => v.actual));
-      const el = document.getElementById('entitySummary');
-
-      if (!values.length) {
-        el.innerHTML = `<div class="empty-state"><i class="fa-solid fa-building"></i><div class="empty-title">Belum ada data entitas</div><div class="empty-sub">Tidak ada ringkasan yang bisa ditampilkan.</div></div>`;
+    function renderBars(elId, values, color = 'var(--success)'){
+      const el = document.getElementById(elId);
+      if(!values.length){
+        el.innerHTML = `<div class="empty-state"><i class="fa-solid fa-folder-open"></i><div class="empty-title">Belum ada data</div><div class="empty-sub">Tidak ada ringkasan yang bisa ditampilkan.</div></div>`;
         return;
       }
-
+      const max = Math.max(1, ...values.map(v => v.actual || v.total || 0));
       el.innerHTML = values.map(v => `
         <div class="bar-item">
-          <div class="bar-row">
-            <div class="bar-label">${escapeHtml(v.name)}</div>
-            <div class="bar-value">${fmtShortCurrency(v.actual)} / ${fmtShortCurrency(v.target)}</div>
-          </div>
-          <div class="bar-track"><div class="bar-fill" style="width:${(v.actual/max)*100}%;"></div></div>
-        </div>
-      `).join('');
+          <div class="bar-row"><div class="bar-label">${escapeHtml(v.name)}</div><div class="bar-value">${fmtShortCurrency(v.actual || v.total || 0)} / ${fmtShortCurrency(v.target || 0)}</div></div>
+          <div class="bar-track"><div class="bar-fill" style="width:${((v.actual || v.total || 0)/max)*100}%;background:${color};"></div></div>
+        </div>`).join('');
     }
-
-    function renderCategorySummary(data){
-      const grouped = {};
+    function renderUpkSummary(data){
+      const map = {};
       data.forEach(item => {
-        item.details.forEach(d => {
-          const key = d.kategori || 'Tanpa Kategori';
-          grouped[key] = (grouped[key] || 0) + Number(d.total || 0);
-        });
+        const key = item.upkNama || 'Tanpa UPK';
+        if(!map[key]) map[key] = { name:key, target:0, actual:0 };
+        map[key].target += Number(item.nominal || 0);
+        map[key].actual += Number(item.actual || 0);
       });
-
-      const values = Object.entries(grouped)
-        .map(([name, total]) => ({ name, total }))
-        .sort((a,b) => b.total - a.total)
-        .slice(0, 8);
-
-      const max = Math.max(1, ...values.map(v => v.total));
-      const el = document.getElementById('categorySummary');
-
-      if (!values.length) {
-        el.innerHTML = `<div class="empty-state"><i class="fa-solid fa-tags"></i><div class="empty-title">Belum ada kategori</div><div class="empty-sub">Kategori income akan muncul setelah ada realisasi.</div></div>`;
-        return;
-      }
-
-      el.innerHTML = values.map(v => `
-        <div class="bar-item">
-          <div class="bar-row">
-            <div class="bar-label">${escapeHtml(v.name)}</div>
-            <div class="bar-value">${fmtShortCurrency(v.total)}</div>
-          </div>
-          <div class="bar-track"><div class="bar-fill" style="width:${(v.total/max)*100}%;background:var(--accent);"></div></div>
-        </div>
-      `).join('');
+      renderBars('upkSummary', Object.values(map).sort((a,b) => b.actual - a.actual), 'var(--primary)');
     }
-
+    function renderUptSummary(data){
+      const map = {};
+      data.forEach(item => {
+        const key = item.uptDisplay || 'Tanpa UPT';
+        if(!map[key]) map[key] = { name:key, target:0, actual:0 };
+        map[key].target += Number(item.nominal || 0);
+        map[key].actual += Number(item.actual || 0);
+      });
+      renderBars('uptSummary', Object.values(map).sort((a,b) => b.actual - a.actual).slice(0,8), 'var(--accent)');
+    }
     function renderBudgetSummary(data){
       const tbody = document.getElementById('budgetSummaryBody');
-
-      if (!data.length) {
-        tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><i class="fa-solid fa-folder-open"></i><div class="empty-title">Belum ada head income</div><div class="empty-sub">Tambahkan Anggaran Income terlebih dahulu.</div></div></td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = data
-        .sort((a,b) => b.actual - a.actual)
-        .map(item => `
-          <tr>
-            <td><span class="badge badge-primary">${escapeHtml(item.entitas)}</span></td>
-            <td>
-              <div class="title-cell">${escapeHtml(item.nama)}</div>
-              <div class="title-sub">${escapeHtml(item.kode || '-')}</div>
-            </td>
-            <td class="mono">${escapeHtml(item.tahun || '-')}</td>
-            <td class="mono">${fmtCurrency(item.nominal)}</td>
-            <td class="mono">${fmtCurrency(item.actual)}</td>
-            <td class="mono" style="color:${item.gap >= 0 ? 'var(--success)' : 'var(--danger)'}">${fmtCurrency(item.gap)}</td>
-            <td><span class="badge ${item.over ? 'badge-success' : (item.under ? 'badge-warning' : 'badge-primary')}">${item.achievement}%</span></td>
-            <td>
-              ${item.over
-                ? '<span class="badge badge-success"><i class="fa-solid fa-arrow-trend-up"></i>Melebihi Target</span>'
-                : item.under
-                  ? '<span class="badge badge-warning"><i class="fa-solid fa-hourglass-half"></i>Belum Tercapai</span>'
-                  : '<span class="badge badge-primary"><i class="fa-solid fa-circle-check"></i>Tepat Target</span>'}
-            </td>
-          </tr>
-        `).join('');
+      if(!data.length){ tbody.innerHTML = `<tr><td colspan="10"><div class="empty-state"><i class="fa-solid fa-folder-open"></i><div class="empty-title">Belum ada head income</div><div class="empty-sub">Tambahkan Anggaran Income terlebih dahulu.</div></div></td></tr>`; return; }
+      tbody.innerHTML = data.sort((a,b) => b.actual - a.actual).map(item => `
+        <tr>
+          <td><div class="title-cell">${escapeHtml(item.upkNama || '-')}</div><div class="title-sub">${escapeHtml(item.upkKode || '-')}</div></td>
+          <td><div class="title-cell">${escapeHtml(item.uptDisplay || '-')}</div><div class="title-sub">${escapeHtml(item.uptKode || '-')}</div></td>
+          <td><div class="title-cell">${escapeHtml(item.nama)}</div><div class="title-sub">${escapeHtml(item.kode || '-')}</div></td>
+          <td>${item.risikoNama ? `<div class="title-cell">${escapeHtml(item.risikoNama)}</div><div class="title-sub">${escapeHtml(item.risikoSkala || '-')}</div>` : '<span class="badge badge-accent">-</span>'}</td>
+          <td class="mono">${escapeHtml(item.tahun || '-')}</td>
+          <td class="mono">${fmtCurrency(item.nominal)}</td>
+          <td class="mono">${fmtCurrency(item.actual)}</td>
+          <td class="mono" style="color:${item.gap >= 0 ? 'var(--success)' : 'var(--danger)'}">${fmtCurrency(item.gap)}</td>
+          <td><span class="badge ${item.over ? 'badge-success' : (item.under ? 'badge-warning' : 'badge-primary')}">${item.achievement}%</span></td>
+          <td>${item.over ? '<span class="badge badge-success"><i class="fa-solid fa-arrow-trend-up"></i>Melebihi Target</span>' : item.under ? '<span class="badge badge-warning"><i class="fa-solid fa-hourglass-half"></i>Belum Tercapai</span>' : '<span class="badge badge-primary"><i class="fa-solid fa-circle-check"></i>Tepat Target</span>'}</td>
+        </tr>`).join('');
     }
-
     function renderUnderTarget(data){
       const tbody = document.getElementById('underTargetBody');
-      const items = data.filter(x => x.under);
-
-      if (!items.length) {
-        tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><i class="fa-solid fa-trophy"></i><div class="empty-title">Semua target tercapai</div><div class="empty-sub">Tidak ada head income yang tertinggal dari target.</div></div></td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = items
-        .sort((a,b) => (a.actual - a.nominal) - (b.actual - b.nominal))
-        .map(item => `
-          <tr>
-            <td><span class="badge badge-primary">${escapeHtml(item.entitas)}</span></td>
-            <td>
-              <div class="title-cell">${escapeHtml(item.nama)}</div>
-              <div class="title-sub">${escapeHtml(item.kode || '-')}</div>
-            </td>
-            <td class="mono">${fmtCurrency(item.nominal)}</td>
-            <td class="mono">${fmtCurrency(item.actual)}</td>
-            <td class="mono" style="color:var(--danger)">${fmtCurrency(item.nominal - item.actual)}</td>
-            <td>
-              <div class="title-cell">${item.details.length} realisasi</div>
-              <div class="title-sub">${escapeHtml(item.details.map(x => x.kategori).filter(Boolean).slice(0,3).join(', ') || '-')}</div>
-            </td>
-          </tr>
-        `).join('');
+      const items = data.filter(item => item.under);
+      if(!items.length){ tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><i class="fa-solid fa-trophy"></i><div class="empty-title">Semua target tercapai</div><div class="empty-sub">Tidak ada head income yang tertinggal dari target.</div></div></td></tr>`; return; }
+      tbody.innerHTML = items.sort((a,b) => (a.actual - a.nominal) - (b.actual - b.nominal)).map(item => `
+        <tr>
+          <td><div class="title-cell">${escapeHtml(item.upkNama || '-')}</div><div class="title-sub">${escapeHtml(item.upkKode || '-')}</div></td>
+          <td><div class="title-cell">${escapeHtml(item.uptDisplay || '-')}</div><div class="title-sub">${escapeHtml(item.uptKode || '-')}</div></td>
+          <td><div class="title-cell">${escapeHtml(item.nama)}</div><div class="title-sub">${escapeHtml(item.kode || '-')}</div></td>
+          <td>${item.risikoNama ? `<div class="title-cell">${escapeHtml(item.risikoNama)}</div><div class="title-sub">${escapeHtml(item.risikoSkala || '-')}</div>` : '<span class="badge badge-accent">-</span>'}</td>
+          <td class="mono">${fmtCurrency(item.nominal)}</td>
+          <td class="mono">${fmtCurrency(item.actual)}</td>
+          <td class="mono" style="color:var(--danger)">${fmtCurrency(item.nominal - item.actual)}</td>
+          <td><div class="title-cell">${item.details.length} realisasi</div><div class="title-sub">${escapeHtml(item.details.map(x => x.kategori).filter(Boolean).slice(0,3).join(', ') || '-')}</div></td>
+        </tr>`).join('');
     }
-
     function exportSummaryCSV(){
       const data = getFilteredData();
-      const rows = data.map(item => [
-        item.entitas,
-        item.kode,
-        item.nama,
-        item.tahun,
-        item.nominal,
-        item.actual,
-        item.gap,
-        item.achievement,
-        item.over ? 'Melebihi Target' : (item.under ? 'Belum Tercapai' : 'Tepat Target')
-      ]);
-
-      const header = ['Entitas','Kode Income','Nama Income','Tahun','Target','Realisasi','Gap','Pencapaian %','Status'];
-      const csv = [header, ...rows]
-        .map(row => row.map(col => `"${String(col ?? '').replace(/"/g,'""')}"`).join(','))
-        .join('\n');
-
-      const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'report_income_summary.csv';
-      link.click();
+      const rows = data.map(item => [item.upkKode || '', item.upkNama || '', item.uptKode || '', item.uptDisplay || '', item.kode || '', item.nama || '', item.risikoId || '', item.risikoNama || '', item.risikoSkala || '', item.tahun || '', item.nominal || 0, item.actual || 0, item.gap || 0, item.achievement || 0, item.over ? 'Melebihi Target' : (item.under ? 'Belum Tercapai' : 'Tepat Target')]);
+      const header = ['Kode UPK','Nama UPK','Kode UPT','Nama UPT','Kode Income','Nama Income','ID Risiko','Nama Risiko','Skala Risiko','Tahun','Target','Realisasi','Gap','Pencapaian %','Status'];
+      const csv = [header, ...rows].map(row => row.map(col => `"${String(col ?? '').replace(/"/g,'""')}"`).join(',')).join('\n');
+      const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' }); const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'report_income_summary.csv'; link.click();
     }
-
     function renderAll(){
+      syncFilters();
       const data = getFilteredData();
-      renderStats(data);
-      renderEntitySummary(data);
-      renderCategorySummary(data);
-      renderBudgetSummary(data);
-      renderUnderTarget(data);
+      renderStats(data); renderUpkSummary(data); renderUptSummary(data); renderBudgetSummary(data); renderUnderTarget(data);
     }
-
-    document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('id-ID', {
-      weekday:'short', day:'numeric', month:'long', year:'numeric'
-    });
-
+    document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('id-ID', { weekday:'short', day:'numeric', month:'long', year:'numeric' });
+    syncFilters();
     renderAll();
-
-    window.addEventListener('storage', renderAll);
   </script>
-
   <script src="/sidebar.js" defer></script>
 </body>
 </html>
