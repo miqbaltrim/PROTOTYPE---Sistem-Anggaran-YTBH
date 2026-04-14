@@ -277,24 +277,24 @@
         </div>
         <div class="hero-right">
           <div class="hero-mini">
-            <div class="hero-mini-label">Pending</div>
-            <div class="hero-mini-value" id="heroPending">0</div>
-            <div class="hero-mini-sub">Menunggu keputusan</div>
+            <div class="hero-mini-label">Draft</div>
+            <div class="hero-mini-value" id="heroDraft">0</div>
+            <div class="hero-mini-sub">Baru dibuat, belum diajukan</div>
           </div>
           <div class="hero-mini">
-            <div class="hero-mini-label">Approved</div>
-            <div class="hero-mini-value" id="heroApproved">0</div>
-            <div class="hero-mini-sub">Sudah disetujui</div>
+            <div class="hero-mini-label">Diajukan</div>
+            <div class="hero-mini-value" id="heroSubmitted">0</div>
+            <div class="hero-mini-sub">Menunggu keputusan approver</div>
           </div>
           <div class="hero-mini">
-            <div class="hero-mini-label">Rejected</div>
-            <div class="hero-mini-value" id="heroRejected">0</div>
-            <div class="hero-mini-sub">Sudah ditolak</div>
+            <div class="hero-mini-label">Perlu Revisi</div>
+            <div class="hero-mini-value" id="heroRevision">0</div>
+            <div class="hero-mini-sub">Harus diperbaiki lalu diajukan ulang</div>
           </div>
           <div class="hero-mini">
-            <div class="hero-mini-label">Bisa Di-approve</div>
-            <div class="hero-mini-value" id="heroAllowed">0</div>
-            <div class="hero-mini-sub">Oleh akun terpilih</div>
+            <div class="hero-mini-label">Anggaran Aktif</div>
+            <div class="hero-mini-value" id="heroActive">0</div>
+            <div class="hero-mini-sub">Sudah final dan aktif</div>
           </div>
         </div>
       </section>
@@ -320,9 +320,9 @@
         </div>
         <div class="stat-card c-warning">
           <div class="stat-icon"><i class="fa-solid fa-ban"></i></div>
-          <div class="stat-label">Tidak Bisa</div>
+          <div class="stat-label">Ditolak</div>
           <div class="stat-value" id="statDenied">0</div>
-          <div class="stat-sub">Di luar hak approval</div>
+          <div class="stat-sub">Request yang ditolak</div>
         </div>
       </div>
 
@@ -351,9 +351,12 @@
 
         <select class="filter-select" id="filterStatus" onchange="renderAll()">
           <option value="">Semua Status</option>
-          <option value="Pending">Pending</option>
-          <option value="Approved">Approved</option>
-          <option value="Rejected">Rejected</option>
+          <option value="Draft">Draft</option>
+          <option value="Diajukan">Diajukan</option>
+          <option value="Perlu Revisi">Perlu Revisi</option>
+          <option value="Ditolak">Ditolak</option>
+          <option value="Disetujui">Disetujui</option>
+          <option value="Anggaran Aktif">Anggaran Aktif</option>
         </select>
       </div>
 
@@ -441,6 +444,7 @@
       }
     ];
 
+
     const seedApprovalRequests = [
       {
         id: 1,
@@ -455,9 +459,16 @@
         newAmount: 80000000,
         lineFrom: '-',
         lineTo: 'Belanja Stok Obat',
-        note: 'Usulan line anggaran baru untuk stok obat triwulan 2.',
-        status: 'Pending',
-        history: []
+        note: 'Anggaran baru dibuat dan masih menunggu diajukan.',
+        status: 'Draft',
+        history: [
+          {
+            action: 'Draft dibuat',
+            by: 'Staff Klinik',
+            time: '12/04/2026, 09.15.00',
+            note: 'Request awal tersimpan sebagai draft.'
+          }
+        ]
       },
       {
         id: 2,
@@ -472,9 +483,22 @@
         newAmount: 50000000,
         lineFrom: 'Belanja Publikasi',
         lineTo: 'Belanja Publikasi',
-        note: 'Penyesuaian nominal pada line yang sama.',
-        status: 'Pending',
-        history: []
+        note: 'Request sudah diajukan dan menunggu keputusan approver.',
+        status: 'Diajukan',
+        history: [
+          {
+            action: 'Draft dibuat',
+            by: 'Admin Yayasan',
+            time: '13/04/2026, 08.10.00',
+            note: 'Draft perubahan anggaran dibuat.'
+          },
+          {
+            action: 'Diajukan',
+            by: 'Admin Yayasan',
+            time: '13/04/2026, 09.30.00',
+            note: 'Request diajukan ke approver.'
+          }
+        ]
       },
       {
         id: 3,
@@ -489,9 +513,28 @@
         newAmount: 25000000,
         lineFrom: 'Belanja Seminar',
         lineTo: 'Belanja Praktikum',
-        note: 'Perpindahan anggaran antar line untuk kebutuhan praktikum.',
-        status: 'Pending',
-        history: []
+        note: 'Request perlu revisi dan harus diajukan ulang setelah diperbaiki.',
+        status: 'Perlu Revisi',
+        history: [
+          {
+            action: 'Draft dibuat',
+            by: 'Staff Fakultas',
+            time: '14/04/2026, 08.00.00',
+            note: 'Draft pindah anggaran dibuat.'
+          },
+          {
+            action: 'Diajukan',
+            by: 'Staff Fakultas',
+            time: '14/04/2026, 08.45.00',
+            note: 'Request diajukan ke approver.'
+          },
+          {
+            action: 'Perlu Revisi',
+            by: 'Rektor UBTH',
+            time: '14/04/2026, 10.15.00',
+            note: 'Lengkapi justifikasi perpindahan anggaran.'
+          }
+        ]
       },
       {
         id: 4,
@@ -506,15 +549,121 @@
         newAmount: 0,
         lineFrom: 'Belanja Event Internal',
         lineTo: '-',
-        note: 'Penghapusan line karena program dibatalkan.',
-        status: 'Pending',
-        history: []
+        note: 'Request sudah disetujui dan tinggal diaktifkan.',
+        status: 'Disetujui',
+        history: [
+          {
+            action: 'Draft dibuat',
+            by: 'Admin Yayasan',
+            time: '15/04/2026, 08.00.00',
+            note: 'Draft penghapusan anggaran dibuat.'
+          },
+          {
+            action: 'Diajukan',
+            by: 'Admin Yayasan',
+            time: '15/04/2026, 08.20.00',
+            note: 'Request diajukan ke approver.'
+          },
+          {
+            action: 'Disetujui',
+            by: 'Direktur Yayasan',
+            time: '15/04/2026, 09.00.00',
+            note: 'Menunggu aktivasi anggaran.'
+          }
+        ]
+      },
+      {
+        id: 5,
+        number: 'REQ-APR-0005',
+        date: '2026-04-16',
+        entity: 'Universitas',
+        unit: 'UBTH',
+        type: 'Buat Anggaran',
+        requester: 'Staff Akademik',
+        amount: 45000000,
+        oldAmount: 0,
+        newAmount: 45000000,
+        lineFrom: '-',
+        lineTo: 'Belanja Workshop Kurikulum',
+        note: 'Request sudah final dan anggaran aktif.',
+        status: 'Anggaran Aktif',
+        history: [
+          {
+            action: 'Draft dibuat',
+            by: 'Staff Akademik',
+            time: '16/04/2026, 08.00.00',
+            note: 'Draft anggaran dibuat.'
+          },
+          {
+            action: 'Diajukan',
+            by: 'Staff Akademik',
+            time: '16/04/2026, 08.40.00',
+            note: 'Request diajukan ke approver.'
+          },
+          {
+            action: 'Disetujui',
+            by: 'Rektor UBTH',
+            time: '16/04/2026, 09.15.00',
+            note: 'Request disetujui.'
+          },
+          {
+            action: 'Anggaran Aktif',
+            by: 'Administrator Keuangan',
+            time: '16/04/2026, 09.30.00',
+            note: 'Anggaran sudah aktif.'
+          }
+        ]
+      },
+      {
+        id: 6,
+        number: 'REQ-APR-0006',
+        date: '2026-04-16',
+        entity: 'Klinik',
+        unit: 'Klinik BTH',
+        type: 'Perubahan Anggaran',
+        requester: 'Admin Klinik',
+        amount: 18000000,
+        oldAmount: 22000000,
+        newAmount: 40000000,
+        lineFrom: 'Belanja Promosi',
+        lineTo: 'Belanja Promosi',
+        note: 'Request ditolak karena dokumen pendukung belum lengkap.',
+        status: 'Ditolak',
+        history: [
+          {
+            action: 'Draft dibuat',
+            by: 'Admin Klinik',
+            time: '16/04/2026, 10.00.00',
+            note: 'Draft perubahan anggaran dibuat.'
+          },
+          {
+            action: 'Diajukan',
+            by: 'Admin Klinik',
+            time: '16/04/2026, 10.20.00',
+            note: 'Request diajukan ke approver.'
+          },
+          {
+            action: 'Ditolak',
+            by: 'Kepala Klinik',
+            time: '16/04/2026, 11.00.00',
+            note: 'Dokumen pendukung tidak lengkap.'
+          }
+        ]
       }
     ];
 
     let master = [];
     let requests = [];
     let selectedRequestId = null;
+
+    const workflowLabels = {
+      'Draft': { badge: 'badge-primary', text: 'Draft' },
+      'Diajukan': { badge: 'badge-warning', text: 'Diajukan' },
+      'Perlu Revisi': { badge: 'badge-accent', text: 'Perlu Revisi' },
+      'Ditolak': { badge: 'badge-danger', text: 'Ditolak' },
+      'Disetujui': { badge: 'badge-success', text: 'Disetujui' },
+      'Anggaran Aktif': { badge: 'badge-success', text: 'Anggaran Aktif' }
+    };
 
     function readJson(key){
       try { return JSON.parse(localStorage.getItem(key)) || []; }
@@ -598,7 +747,7 @@
     function canCurrentApproverApprove(request, approver){
       if(!approver) return false;
       if(approver.status !== 'Aktif') return false;
-      if(request.status !== 'Pending') return false;
+      if(request.status !== 'Diajukan') return false;
 
       const permissionKey = typeToPermissionKey(request.type);
       if(!permissionKey) return false;
@@ -622,7 +771,7 @@
         if(status && item.status !== status) return false;
 
         if(q){
-          const hay = [item.number, item.entity, item.unit, item.type, item.requester, item.note].join(' ').toLowerCase();
+          const hay = [item.number, item.entity, item.unit, item.type, item.requester, item.note, item.status].join(' ').toLowerCase();
           if(!hay.includes(q)) return false;
         }
         return true;
@@ -631,21 +780,47 @@
 
     function updateStats(data){
       const current = getCurrentApprover();
-      const pending = data.filter(x => x.status === 'Pending').length;
-      const approved = data.filter(x => x.status === 'Approved').length;
-      const rejected = data.filter(x => x.status === 'Rejected').length;
+      const draft = data.filter(x => x.status === 'Draft').length;
+      const submitted = data.filter(x => x.status === 'Diajukan').length;
+      const revision = data.filter(x => x.status === 'Perlu Revisi').length;
+      const active = data.filter(x => x.status === 'Anggaran Aktif').length;
       const allowed = data.filter(x => canCurrentApproverApprove(x, current)).length;
-      const denied = data.filter(x => x.status === 'Pending' && !canCurrentApproverApprove(x, current)).length;
+      const rejected = data.filter(x => x.status === 'Ditolak').length;
 
-      document.getElementById('heroPending').textContent = pending;
-      document.getElementById('heroApproved').textContent = approved;
-      document.getElementById('heroRejected').textContent = rejected;
-      document.getElementById('heroAllowed').textContent = allowed;
+      document.getElementById('heroDraft').textContent = draft;
+      document.getElementById('heroSubmitted').textContent = submitted;
+      document.getElementById('heroRevision').textContent = revision;
+      document.getElementById('heroActive').textContent = active;
 
       document.getElementById('statTotal').textContent = data.length;
       document.getElementById('statUser').textContent = current ? current.name.split(' ')[0] : '—';
       document.getElementById('statAllowed').textContent = allowed;
-      document.getElementById('statDenied').textContent = denied;
+      document.getElementById('statDenied').textContent = rejected;
+    }
+
+    function renderStatusBadge(status){
+      const cfg = workflowLabels[status] || workflowLabels['Draft'];
+      return `<span class="badge ${cfg.badge}">${escapeHtml(cfg.text)}</span>`;
+    }
+
+    function renderAccessBadge(item, approver){
+      if(item.status === 'Draft') return '<span class="badge badge-primary">Siap Diajukan</span>';
+      if(item.status === 'Perlu Revisi') return '<span class="badge badge-accent">Ajukan Ulang</span>';
+      if(item.status === 'Disetujui') return '<span class="badge badge-success">Siap Aktivasi</span>';
+      if(item.status === 'Anggaran Aktif' || item.status === 'Ditolak') return '<span class="badge badge-primary">Read Only</span>';
+      return canCurrentApproverApprove(item, approver)
+        ? '<span class="badge badge-success">Bisa Proses</span>'
+        : '<span class="badge badge-danger">Tidak Bisa</span>';
+    }
+
+    function nextStepLabel(status){
+      if(status === 'Draft') return 'Ajukan';
+      if(status === 'Diajukan') return 'Tolak / Revisi / Setujui';
+      if(status === 'Perlu Revisi') return 'Ajukan Ulang';
+      if(status === 'Disetujui') return 'Aktifkan Anggaran';
+      if(status === 'Anggaran Aktif') return 'Selesai';
+      if(status === 'Ditolak') return 'Selesai';
+      return '-';
     }
 
     function renderTable(data){
@@ -669,50 +844,36 @@
         return;
       }
 
-      tbody.innerHTML = data.map(item => {
-        const can = canCurrentApproverApprove(item, current);
-        const statusBadge =
-          item.status === 'Approved'
-            ? '<span class="badge badge-success">Approved</span>'
-            : item.status === 'Rejected'
-              ? '<span class="badge badge-danger">Rejected</span>'
-              : '<span class="badge badge-warning">Pending</span>';
-
-        const accessBadge =
-          item.status !== 'Pending'
-            ? '<span class="badge badge-primary">Read Only</span>'
-            : can
-              ? '<span class="badge badge-success">Bisa Approve</span>'
-              : '<span class="badge badge-danger">Tidak Bisa</span>';
-
-        return `
-          <tr>
-            <td>
-              <div class="title-cell">${escapeHtml(item.number)}</div>
-              <div class="title-sub">${escapeHtml(item.date)}</div>
-            </td>
-            <td>
-              <div class="title-cell">${escapeHtml(item.entity)}</div>
-              <div class="title-sub">${escapeHtml(item.unit)}</div>
-            </td>
-            <td><span class="badge badge-accent">${escapeHtml(item.type)}</span></td>
-            <td>
-              <div class="title-cell">${escapeHtml(item.requester)}</div>
-              <div class="title-sub">${escapeHtml(item.note || '-')}</div>
-            </td>
-            <td class="mono">${fmtCurrency(item.amount)}</td>
-            <td>${statusBadge}</td>
-            <td>${accessBadge}</td>
-            <td style="text-align:right;">
-              <div class="actions-inline">
-                <button class="act-btn primary" onclick="openDetail(${item.id})" title="Detail">
-                  <i class="fa-solid fa-eye"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-        `;
-      }).join('');
+      tbody.innerHTML = data.map(item => `
+        <tr>
+          <td>
+            <div class="title-cell">${escapeHtml(item.number)}</div>
+            <div class="title-sub">${escapeHtml(item.date)}</div>
+          </td>
+          <td>
+            <div class="title-cell">${escapeHtml(item.entity)}</div>
+            <div class="title-sub">${escapeHtml(item.unit)}</div>
+          </td>
+          <td>
+            <span class="badge badge-accent">${escapeHtml(item.type)}</span>
+            <div class="title-sub" style="margin-top:6px;">Next: ${escapeHtml(nextStepLabel(item.status))}</div>
+          </td>
+          <td>
+            <div class="title-cell">${escapeHtml(item.requester)}</div>
+            <div class="title-sub">${escapeHtml(item.note || '-')}</div>
+          </td>
+          <td class="mono">${fmtCurrency(item.amount)}</td>
+          <td>${renderStatusBadge(item.status)}</td>
+          <td>${renderAccessBadge(item, current)}</td>
+          <td style="text-align:right;">
+            <div class="actions-inline">
+              <button class="act-btn primary" onclick="openDetail(${item.id})" title="Detail">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
     }
 
     function openDetail(id){
@@ -754,8 +915,8 @@
           <div class="detail-value">${fmtCurrency(item.amount || 0)}</div>
         </div>
         <div class="detail-box">
-          <div class="detail-label">Status</div>
-          <div class="detail-value">${escapeHtml(item.status)}</div>
+          <div class="detail-label">Status Workflow</div>
+          <div class="detail-value">${escapeHtml(item.status)}<br><span style="font-size:12px;color:var(--text-muted);font-weight:600;">Tahap berikutnya: ${escapeHtml(nextStepLabel(item.status))}</span></div>
         </div>
       `;
 
@@ -775,50 +936,96 @@
           `;
 
       const can = canCurrentApproverApprove(item, current);
+      let footer = `<button class="btn btn-ghost" onclick="closeModal('modalDetail')">Tutup</button>`;
 
-      document.getElementById('modalFooter').innerHTML = item.status !== 'Pending'
-        ? `<button class="btn btn-ghost" onclick="closeModal('modalDetail')">Tutup</button>`
-        : can
-          ? `
-              <button class="btn btn-ghost" onclick="closeModal('modalDetail')">Batal</button>
-              <button class="btn btn-danger" onclick="processRequest('Rejected')"><i class="fa-solid fa-xmark"></i> Reject</button>
-              <button class="btn btn-success" onclick="processRequest('Approved')"><i class="fa-solid fa-check"></i> Approve</button>
-            `
-          : `
-              <button class="btn btn-ghost" onclick="closeModal('modalDetail')">Tutup</button>
-              <button class="btn btn-ghost" disabled style="opacity:.6;cursor:not-allowed;">
-                <i class="fa-solid fa-lock"></i> Akun ini tidak memiliki hak approval
-              </button>
-            `;
+      if(item.status === 'Draft'){
+        footer += `<button class="btn btn-primary" onclick="processRequest('Diajukan')"><i class="fa-solid fa-paper-plane"></i> Ajukan</button>`;
+      } else if(item.status === 'Perlu Revisi'){
+        footer += `<button class="btn btn-primary" onclick="processRequest('Diajukan')"><i class="fa-solid fa-paper-plane"></i> Ajukan Ulang</button>`;
+      } else if(item.status === 'Diajukan'){
+        if(can){
+          footer += `
+            <button class="btn btn-danger" onclick="processRequest('Ditolak')"><i class="fa-solid fa-xmark"></i> Tolak</button>
+            <button class="btn btn-ghost" onclick="processRequest('Perlu Revisi')"><i class="fa-solid fa-rotate-left"></i> Revisi</button>
+            <button class="btn btn-success" onclick="processRequest('Disetujui')"><i class="fa-solid fa-check"></i> Setujui</button>
+          `;
+        } else {
+          footer += `
+            <button class="btn btn-ghost" disabled style="opacity:.6;cursor:not-allowed;">
+              <i class="fa-solid fa-lock"></i> Akun ini tidak memiliki hak approval
+            </button>
+          `;
+        }
+      } else if(item.status === 'Disetujui'){
+        footer += `<button class="btn btn-success" onclick="processRequest('Anggaran Aktif')"><i class="fa-solid fa-bolt"></i> Aktifkan Anggaran</button>`;
+      }
 
+      document.getElementById('modalFooter').innerHTML = footer;
       openModal('modalDetail');
     }
 
     function processRequest(decision){
       const current = getCurrentApprover();
       const item = requests.find(x => x.id === selectedRequestId);
-      if(!item || !current) return;
+      if(!item) return;
 
-      if(!canCurrentApproverApprove(item, current)){
-        showToast('danger', 'fa-ban', 'Akun ini tidak berhak melakukan approval pada request ini.');
-        return;
+      const submitFlow = ['Draft', 'Perlu Revisi'].includes(item.status) && decision === 'Diajukan';
+      const activateFlow = item.status === 'Disetujui' && decision === 'Anggaran Aktif';
+
+      if(!submitFlow && !activateFlow){
+        if(!current){
+          showToast('danger', 'fa-ban', 'Akun approver tidak ditemukan.');
+          return;
+        }
+        if(!canCurrentApproverApprove(item, current)){
+          showToast('danger', 'fa-ban', 'Akun ini tidak berhak melakukan approval pada request ini.');
+          return;
+        }
       }
 
       item.status = decision;
       item.history = item.history || [];
+
+      const actor = submitFlow
+        ? item.requester
+        : activateFlow
+          ? 'Administrator Keuangan'
+          : current.name;
+
+      const actorNote = submitFlow
+        ? 'Requester mengajukan request.'
+        : activateFlow
+          ? 'Anggaran diaktifkan setelah disetujui.'
+          : `${current.role} · ${current.entity}`;
+
       item.history.push({
         action: decision,
-        by: current.name,
+        by: actor,
         time: new Date().toLocaleString('id-ID'),
-        note: `${current.role} · ${current.entity}`
+        note: actorNote
       });
 
       writeJson(REQUEST_KEY, requests);
       closeModal('modalDetail');
       renderAll();
-      showToast(decision === 'Approved' ? 'success' : 'warning',
-        decision === 'Approved' ? 'fa-circle-check' : 'fa-circle-xmark',
-        `Request ${item.number} berhasil di-${decision.toLowerCase()}.`);
+
+      const iconMap = {
+        'Diajukan': 'fa-paper-plane',
+        'Perlu Revisi': 'fa-rotate-left',
+        'Ditolak': 'fa-circle-xmark',
+        'Disetujui': 'fa-circle-check',
+        'Anggaran Aktif': 'fa-bolt'
+      };
+      const toneMap = {
+        'Diajukan': 'success',
+        'Perlu Revisi': 'warning',
+        'Ditolak': 'danger',
+        'Disetujui': 'success',
+        'Anggaran Aktif': 'success'
+      };
+
+      showToast(toneMap[decision] || 'success', iconMap[decision] || 'fa-circle-check',
+        `Request ${item.number} berhasil diubah menjadi ${decision}.`);
     }
 
     function openModal(id){ document.getElementById(id).classList.add('open'); }

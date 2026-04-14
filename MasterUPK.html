@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Master UPK — Sinkronisasi Branch Accurate</title>
+<title>Master UPK — Sinkronisasi dengan Master UPT</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="sidebar.css">
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -1017,7 +1017,7 @@
     </div>
     <div class="topbar-right">
       <div class="topbar-date" id="topbarDate">—</div>
-      <div class="mini-chip"><i class="fa-solid fa-sitemap"></i> Struktur induk UPT</div>
+      <div class="mini-chip"><i class="fa-solid fa-sitemap"></i> Sinkron dengan Master UPT</div>
       <button class="icon-btn" type="button" aria-label="Notifikasi">
         <i class="fa-solid fa-bell"></i>
         <span class="notif-dot"></span>
@@ -1028,14 +1028,44 @@
   <div class="content">
     <div class="page-header">
       <div>
-        <div class="page-title">Master <em>UPK</em> &amp; Branch Accurate</div>
+        <div class="page-title">Master <em>UPK</em> &amp; Sinkronisasi UPT</div>
       </div>
       <div class="page-actions">
         <button class="btn btn-ghost" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Export Master UPK</button>
-        <button class="btn btn-accent" onclick="expandAllDetails()"><i class="fa-solid fa-arrows-rotate"></i> Cek Sinkronisasi</button>
+        <button class="btn btn-ghost" onclick="resetSampleData()"><i class="fa-solid fa-database"></i> Reset Sample</button>
+        <button class="btn btn-accent" onclick="expandAllDetails()"><i class="fa-solid fa-arrows-rotate"></i> Cek Relasi</button>
         <button class="btn btn-primary" onclick="openAddModal()"><i class="fa-solid fa-plus"></i> Tambah UPK</button>
       </div>
     </div>
+
+    <section class="hero">
+      <div class="hero-left">
+        <div class="eyebrow">Sinkronisasi Master</div>
+        <div class="hero-title">Dummy Data</div>
+      </div>
+      <div class="hero-right">
+        <div class="hero-mini">
+          <div class="hero-mini-label">UPK Aktif</div>
+          <div class="hero-mini-value" id="heroTotalDivisi">—</div>
+          <div class="hero-mini-sub">Master induk organisasi</div>
+        </div>
+        <div class="hero-mini">
+          <div class="hero-mini-label">UPK Tersinkron</div>
+          <div class="hero-mini-value" id="heroTotalCabang">—</div>
+          <div class="hero-mini-sub">Sudah punya relasi UPT</div>
+        </div>
+        <div class="hero-mini">
+          <div class="hero-mini-label">UPT Aktif</div>
+          <div class="hero-mini-value" id="heroCabangAktif">—</div>
+          <div class="hero-mini-sub">Unit teknis aktif</div>
+        </div>
+        <div class="hero-mini">
+          <div class="hero-mini-label">Akumulasi Pagu</div>
+          <div class="hero-mini-value" id="heroTotalPagu">—</div>
+          <div class="hero-mini-sub">Dari seluruh UPT</div>
+        </div>
+      </div>
+    </section>
 
     <div class="stats-row">
       <div class="stat-card c-primary">
@@ -1048,7 +1078,7 @@
         <div class="stat-icon"><i class="fa-solid fa-code-branch"></i></div>
         <div class="stat-label">UPK Tersambung Branch</div>
         <div class="stat-value" id="statTotalCabang">—</div>
-        <div class="stat-sub">UPK yang punya branch Accurate</div>
+        <div class="stat-sub">UPK yang sudah punya UPT terkait</div>
       </div>
       <div class="stat-card c-success">
         <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
@@ -1077,9 +1107,9 @@
       </select>
 
       <select class="filter-select" id="filterCabang" onchange="applyFilters()">
-        <option value="">Semua Kondisi Branch</option>
-        <option value="punya">Sudah punya branch</option>
-        <option value="kosong">Belum punya branch</option>
+        <option value="">Semua Kondisi Sinkronisasi</option>
+        <option value="punya">Sudah punya UPT</option>
+        <option value="kosong">Belum punya UPT</option>
       </select>
 
       <select class="filter-select" id="filterArea" onchange="applyFilters()">
@@ -1122,7 +1152,7 @@
         </div>
         <div class="empty-state" id="emptyTable" style="display:none;">
           <i class="fa-solid fa-layer-group"></i>
-          <div class="empty-title">UPK UPK tidak ditemukan</div>
+          <div class="empty-title">Data UPK tidak ditemukan</div>
           <div class="empty-sub">Coba ganti kata kunci atau filter yang digunakan.</div>
         </div>
         <div class="pagination" id="paginationTable"></div>
@@ -1133,7 +1163,7 @@
       <div class="card-grid" id="upkGrid"></div>
       <div class="empty-state" id="emptyGrid" style="display:none; background:#fff; border:1px solid var(--line); border-radius:18px;">
         <i class="fa-solid fa-layer-group"></i>
-        <div class="empty-title">UPK UPK tidak ditemukan</div>
+        <div class="empty-title">Data UPK tidak ditemukan</div>
         <div class="empty-sub">Coba ganti kata kunci atau filter yang digunakan.</div>
       </div>
       <div class="pagination" id="paginationGrid" style="background:#fff; border:1px solid var(--line); border-radius:18px;"></div>
@@ -1146,7 +1176,7 @@
     <div class="modal-head">
       <div>
         <div class="modal-title" id="modalFormTitle">Tambah UPK</div>
-        <div class="modal-sub" id="modalFormSub">Isi informasi UPK dan hubungkan ke master branch Accurate.</div>
+        <div class="modal-sub" id="modalFormSub">Isi informasi UPK dan sinkronkan dengan data Master UPT.</div>
       </div>
       <button class="modal-close" onclick="closeModal('modalForm')"><i class="fa-solid fa-xmark"></i></button>
     </div>
@@ -1174,11 +1204,11 @@
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">Kode Branch Accurate</label>
-          <input class="form-input" id="fEmail" type="email" placeholder="mis. BR-UBTH">
+          <label class="form-label">Kode Branch / Referensi</label>
+          <input class="form-input" id="fKode Referensi" type="email" placeholder="mis. BR-UBTH">
         </div>
         <div class="form-group">
-          <label class="form-label">Nama Branch Accurate</label>
+          <label class="form-label">Nama Referensi</label>
           <input class="form-input" id="fPhone" type="text" placeholder="mis. Accurate UBTH">
         </div>
       </div>
@@ -1191,13 +1221,13 @@
           </select>
         </div>
         <div class="form-group" style="grid-column:span 2;">
-          <label class="form-label">Catatan Sinkronisasi</label>
-          <input class="form-input" id="fTagline" type="text" placeholder="mis. Branch aktif dan digunakan untuk konsolidasi anggaran">
+          <label class="form-label">Catatan Sinkronisasi UPK</label>
+          <input class="form-input" id="fTagline" type="text" placeholder="mis. Sinkron dengan Master UPT untuk penganggaran">
         </div>
       </div>
       <div class="form-group">
         <label class="form-label">Deskripsi UPK</label>
-        <textarea class="form-textarea" id="fDescription" placeholder="Ringkasan fungsi UPK, penggunaan master branch Accurate, dan keterkaitannya dengan UPT..."></textarea>
+        <textarea class="form-textarea" id="fDescription" placeholder="Ringkasan fungsi UPK dan keterkaitannya dengan struktur UPT..."></textarea>
         <span class="form-hint">UPT yang terkait akan dikelola dari halaman Master UPT.</span>
       </div>
     </div>
@@ -1229,8 +1259,10 @@
 <div class="toast-stack" id="toastStack"></div>
 
 <script>
-const STORAGE_UPK = 'APP_ORG_UPK_DIVISIONS_V2';
-const STORAGE_UPT = 'APP_ORG_UPT_BRANCHES_V2';
+const STORAGE_UPK = 'APP_MASTER_UPK_V1';
+const STORAGE_UPT = 'APP_MASTER_UPT_V1';
+const LEGACY_UPK_KEYS = ['APP_ORG_UPK_DIVISIONS_V2'];
+const LEGACY_UPT_KEYS = ['APP_ORG_UPT_BRANCHES_V2'];
 
 const seedUPK = [
   {
@@ -1240,9 +1272,9 @@ const seedUPK = [
     area: 'Yayasan Pusat',
     head: 'Sekretaris Yayasan',
     email: 'BR-YBTH',
-    phone: 'Accurate YBTH Pusat',
+    phone: 'YBTH Pusat',
     status: 'Aktif',
-    tagline: 'Master branch utama untuk konsolidasi yayasan',
+    tagline: 'Sinkron dengan unit-unit yayasan pusat',
     description: 'UPK induk untuk aktivitas yayasan, sekretariat, keuangan, SDM, dan fungsi koordinasi pusat.'
   },
   {
@@ -1252,10 +1284,10 @@ const seedUPK = [
     area: 'Perguruan Tinggi',
     head: 'Wakil Rektor II',
     email: 'BR-UBTH',
-    phone: 'Accurate UBTH',
+    phone: 'Universitas BTH',
     status: 'Aktif',
-    tagline: 'Sinkronisasi branch kampus untuk operasional akademik',
-    description: 'UPK untuk operasional universitas, fakultas, LPPM, sarpras, dan pendukung proses belajar mengajar.'
+    tagline: 'Sinkron dengan struktur universitas dan unit akademik',
+    description: 'UPK untuk operasional universitas, fakultas, LPPM, sarpras, humas, SDM, dan pendukung proses belajar mengajar.'
   },
   {
     id: 3,
@@ -1264,9 +1296,9 @@ const seedUPK = [
     area: 'Layanan Kesehatan',
     head: 'Kepala Klinik',
     email: 'BR-KLINIK',
-    phone: 'Accurate Klinik',
+    phone: 'Klinik BTH',
     status: 'Aktif',
-    tagline: 'Branch Accurate klinik untuk layanan dan penunjang medis',
+    tagline: 'Sinkron dengan unit layanan dan penunjang klinik',
     description: 'UPK untuk pelayanan medis, farmasi, administrasi klinik, dan unit penunjang kesehatan.'
   },
   {
@@ -1276,9 +1308,9 @@ const seedUPK = [
     area: 'Asrama & Pembinaan',
     head: 'Manajer Student House',
     email: 'BR-BSH',
-    phone: 'Accurate BSH',
+    phone: 'BTH Student House',
     status: 'Aktif',
-    tagline: 'Branch Accurate asrama dan pembinaan mahasiswa',
+    tagline: 'Sinkron dengan unit asrama dan pembinaan mahasiswa',
     description: 'UPK yang menaungi operasional asrama, pembinaan, konsumsi, dan kegiatan pendukung mahasiswa.'
   },
   {
@@ -1288,9 +1320,9 @@ const seedUPK = [
     area: 'Sosial & Pengasuhan',
     head: 'Kepala LKSA',
     email: 'BR-LKSA',
-    phone: 'Accurate LKSA',
+    phone: 'LKSA Amanah',
     status: 'Aktif',
-    tagline: 'Branch Accurate untuk kegiatan sosial dan pengasuhan',
+    tagline: 'Sinkron dengan unit sosial dan pengasuhan',
     description: 'UPK untuk pengasuhan, pendidikan, kesehatan anak, dan operasional sosial LKSA Amanah.'
   },
   {
@@ -1299,58 +1331,135 @@ const seedUPK = [
     nama: 'Dana Sosial YBTH',
     area: 'Program Sosial',
     head: 'Koordinator Program Sosial',
-    email: '',
-    phone: '',
-    status: 'Nonaktif',
-    tagline: 'Menunggu finalisasi branch Accurate dana sosial',
+    email: 'BR-DS',
+    phone: 'Dana Sosial YBTH',
+    status: 'Aktif',
+    tagline: 'Sinkron dengan unit dana sosial dan beasiswa',
     description: 'UPK untuk program beasiswa, rumah quran, penghargaan assatidz, dan kegiatan sosial lainnya.'
   }
 ];
 
 const seedUPT = [
-  { id:1, kode:'UPT-001', nama:'Sekretariat Yayasan', upkId:1, upkKode:'UPK-001', upkNama:'Yayasan Bakti Tunas Husada', tipe:'Bagian', kepala:'Kepala Sekretariat', status:'Aktif', pagu:2250000000 },
-  { id:2, kode:'UPT-002', nama:'Bagian Keuangan & Akuntansi', upkId:1, upkKode:'UPK-001', upkNama:'Yayasan Bakti Tunas Husada', tipe:'Bagian', kepala:'Manajer Keuangan', status:'Aktif', pagu:3100000000 },
-  { id:3, kode:'UPT-003', nama:'Bagian SDM & Umum', upkId:1, upkKode:'UPK-001', upkNama:'Yayasan Bakti Tunas Husada', tipe:'Bagian', kepala:'Koordinator SDM', status:'Aktif', pagu:1850000000 },
-  { id:4, kode:'UPT-004', nama:'Fakultas Ilmu Kesehatan', upkId:2, upkKode:'UPK-002', upkNama:'Universitas Bakti Tunas Husada', tipe:'Fakultas', kepala:'Dekan FIK', status:'Aktif', pagu:8200000000 },
-  { id:5, kode:'UPT-005', nama:'Fakultas Farmasi', upkId:2, upkKode:'UPK-002', upkNama:'Universitas Bakti Tunas Husada', tipe:'Fakultas', kepala:'Dekan Farmasi', status:'Aktif', pagu:7650000000 },
-  { id:6, kode:'UPT-006', nama:'Fakultas Teknologi & Bisnis', upkId:2, upkKode:'UPK-002', upkNama:'Universitas Bakti Tunas Husada', tipe:'Fakultas', kepala:'Dekan FTB', status:'Aktif', pagu:5900000000 },
-  { id:7, kode:'UPT-007', nama:'LPPM', upkId:2, upkKode:'UPK-002', upkNama:'Universitas Bakti Tunas Husada', tipe:'Pusat', kepala:'Ketua LPPM', status:'Aktif', pagu:2100000000 },
-  { id:8, kode:'UPT-008', nama:'Unit Pelayanan Medis', upkId:3, upkKode:'UPK-003', upkNama:'Klinik Bakti Tunas Husada', tipe:'Unit', kepala:'Koordinator Pelayanan', status:'Aktif', pagu:4600000000 },
-  { id:9, kode:'UPT-009', nama:'Unit Penunjang Medis', upkId:3, upkKode:'UPK-003', upkNama:'Klinik Bakti Tunas Husada', tipe:'Unit', kepala:'Koordinator Penunjang', status:'Aktif', pagu:1950000000 },
-  { id:10, kode:'UPT-010', nama:'Unit Farmasi & Apotek', upkId:3, upkKode:'UPK-003', upkNama:'Klinik Bakti Tunas Husada', tipe:'Unit', kepala:'Apoteker Penanggung Jawab', status:'Aktif', pagu:1750000000 },
-  { id:11, kode:'UPT-011', nama:'Operasional Asrama', upkId:4, upkKode:'UPK-004', upkNama:'BTH Student House', tipe:'Unit', kepala:'Koordinator Asrama', status:'Aktif', pagu:1350000000 },
-  { id:12, kode:'UPT-012', nama:'Program Pembinaan Mahasiswa', upkId:4, upkKode:'UPK-004', upkNama:'BTH Student House', tipe:'Program', kepala:'Koordinator Pembinaan', status:'Aktif', pagu:980000000 },
-  { id:13, kode:'UPT-013', nama:'Pengasuhan & Pembinaan Anak', upkId:5, upkKode:'UPK-005', upkNama:'LKSA Amanah', tipe:'Program', kepala:'Kepala Pengasuhan', status:'Aktif', pagu:1280000000 },
-  { id:14, kode:'UPT-014', nama:'Pendidikan & Kesehatan Anak', upkId:5, upkKode:'UPK-005', upkNama:'LKSA Amanah', tipe:'Program', kepala:'Koordinator Pendidikan', status:'Aktif', pagu:1650000000 },
-  { id:15, kode:'UPT-015', nama:'Program Beasiswa', upkId:6, upkKode:'UPK-006', upkNama:'Dana Sosial YBTH', tipe:'Program', kepala:'Koordinator Beasiswa', status:'Nonaktif', pagu:0 }
+  { id:1, kode:'UPT-YYS-SET', nama:'Sekretariat Yayasan', upkId:1, id_upk:1, upkKode:'UPK-001', upkNama:'Yayasan Bakti Tunas Husada', tipe:'Bagian', kepala:'Kepala Sekretariat', status:'Aktif', pagu:2250000000 },
+  { id:2, kode:'UPT-YYS-KEU', nama:'Bagian Keuangan & Akuntansi', upkId:1, id_upk:1, upkKode:'UPK-001', upkNama:'Yayasan Bakti Tunas Husada', tipe:'Bagian', kepala:'Manajer Keuangan', status:'Aktif', pagu:3100000000 },
+  { id:3, kode:'UPT-YYS-SDM', nama:'Bagian SDM & Umum', upkId:1, id_upk:1, upkKode:'UPK-001', upkNama:'Yayasan Bakti Tunas Husada', tipe:'Bagian', kepala:'Koordinator SDM', status:'Aktif', pagu:1850000000 },
+
+  { id:4, kode:'UPT-UBTH-WR-SDM', nama:'Wakil Rektor Bidang SDM, Humas dan Kerjasama', upkId:2, id_upk:2, upkKode:'UPK-002', upkNama:'Universitas Bakti Tunas Husada', tipe:'Bidang', kepala:'Wakil Rektor Bidang SDM, Humas dan Kerjasama', status:'Aktif', pagu:950000000 },
+  { id:5, kode:'SUB-WR-SDM', nama:'Bagian SDM', upkId:2, id_upk:2, upkKode:'UPK-002', upkNama:'Universitas Bakti Tunas Husada', tipe:'Bagian', kepala:'Kepala Bagian SDM', status:'Aktif', pagu:375000000 },
+  { id:6, kode:'SUB-WR-HUMAS', nama:'Bagian Humas dan Kerjasama', upkId:2, id_upk:2, upkKode:'UPK-002', upkNama:'Universitas Bakti Tunas Husada', tipe:'Bagian', kepala:'Kepala Bagian Humas dan Kerjasama', status:'Aktif', pagu:425000000 },
+  { id:7, kode:'SUB-WR-KARIR', nama:'Bagian Pusat Karir', upkId:2, id_upk:2, upkKode:'UPK-002', upkNama:'Universitas Bakti Tunas Husada', tipe:'Bagian', kepala:'Kepala Bagian Pusat Karir', status:'Aktif', pagu:285000000 },
+  { id:8, kode:'UPT-UBTH-FIK', nama:'Fakultas Ilmu Kesehatan', upkId:2, id_upk:2, upkKode:'UPK-002', upkNama:'Universitas Bakti Tunas Husada', tipe:'Fakultas', kepala:'Dekan FIK', status:'Aktif', pagu:8200000000 },
+  { id:9, kode:'UPT-UBTH-LAB', nama:'Laboratorium Terpadu', upkId:2, id_upk:2, upkKode:'UPK-002', upkNama:'Universitas Bakti Tunas Husada', tipe:'Unit', kepala:'Kepala Laboratorium', status:'Aktif', pagu:1200000000 },
+  { id:10, kode:'UPT-UBTH-LPPM', nama:'LPPM', upkId:2, id_upk:2, upkKode:'UPK-002', upkNama:'Universitas Bakti Tunas Husada', tipe:'Pusat', kepala:'Ketua LPPM', status:'Aktif', pagu:2100000000 },
+
+  { id:11, kode:'UPT-KLN-RJ', nama:'Pelayanan Rawat Jalan', upkId:3, id_upk:3, upkKode:'UPK-003', upkNama:'Klinik Bakti Tunas Husada', tipe:'Unit', kepala:'Koordinator Rawat Jalan', status:'Aktif', pagu:2800000000 },
+  { id:12, kode:'UPT-KLN-APK', nama:'Bagian Farmasi dan Apotek', upkId:3, id_upk:3, upkKode:'UPK-003', upkNama:'Klinik Bakti Tunas Husada', tipe:'Unit', kepala:'Apoteker Penanggung Jawab', status:'Aktif', pagu:1750000000 },
+  { id:13, kode:'UPT-KLN-ADM', nama:'Administrasi Klinik', upkId:3, id_upk:3, upkKode:'UPK-003', upkNama:'Klinik Bakti Tunas Husada', tipe:'Bagian', kepala:'Kepala Administrasi Klinik', status:'Aktif', pagu:950000000 },
+
+  { id:14, kode:'UPT-BSH-OPS', nama:'Operasional Asrama', upkId:4, id_upk:4, upkKode:'UPK-004', upkNama:'BTH Student House', tipe:'Unit', kepala:'Koordinator Asrama', status:'Aktif', pagu:1350000000 },
+  { id:15, kode:'UPT-BSH-BINA', nama:'Program Pembinaan Mahasiswa', upkId:4, id_upk:4, upkKode:'UPK-004', upkNama:'BTH Student House', tipe:'Program', kepala:'Koordinator Pembinaan', status:'Aktif', pagu:980000000 },
+
+  { id:16, kode:'UPT-LKSA-ASUH', nama:'Pengasuhan & Pembinaan Anak', upkId:5, id_upk:5, upkKode:'UPK-005', upkNama:'LKSA Amanah', tipe:'Program', kepala:'Kepala Pengasuhan', status:'Aktif', pagu:1280000000 },
+  { id:17, kode:'UPT-LKSA-DIK', nama:'Pendidikan & Kesehatan Anak', upkId:5, id_upk:5, upkKode:'UPK-005', upkNama:'LKSA Amanah', tipe:'Program', kepala:'Koordinator Pendidikan', status:'Aktif', pagu:1650000000 },
+
+  { id:18, kode:'UPT-DS-BSW', nama:'Program Beasiswa', upkId:6, id_upk:6, upkKode:'UPK-006', upkNama:'Dana Sosial YBTH', tipe:'Program', kepala:'Koordinator Beasiswa', status:'Aktif', pagu:750000000 }
 ];
 
+function readJSON(key){
+  try { return JSON.parse(localStorage.getItem(key)); }
+  catch { return null; }
+}
+
+function readFromPrimaryOrLegacy(primary, legacyKeys, fallback){
+  let data = readJSON(primary);
+  if (Array.isArray(data) && data.length) return data;
+  for (const key of legacyKeys){
+    data = readJSON(key);
+    if (Array.isArray(data) && data.length) return data;
+  }
+  return fallback.slice();
+}
+
+function writeCompat(key, legacyKeys, value){
+  localStorage.setItem(key, JSON.stringify(value));
+  legacyKeys.forEach(legacy => localStorage.setItem(legacy, JSON.stringify(value)));
+}
+
+function normalizeUpk(item, idx){
+  return {
+    id:Number(item.id) || (idx + 1),
+    kode:item.kode || `UPK-${String(idx + 1).padStart(3,'0')}`,
+    nama:item.nama || '',
+    area:item.area || '',
+    head:item.head || item.kepala || '',
+    email:item.email || '',
+    phone:item.phone || item.telp || '',
+    status:item.status || 'Aktif',
+    tagline:item.tagline || '',
+    description:item.description || item.deskripsi || ''
+  };
+}
+
+function normalizeUpt(item, idx){
+  const upkId = item.upkId ?? item.id_upk ?? null;
+  return {
+    id:Number(item.id) || (idx + 1),
+    kode:item.kode || `UPT-${String(idx + 1).padStart(3,'0')}`,
+    nama:item.nama || '',
+    upkId:upkId ? Number(upkId) : null,
+    id_upk:upkId ? Number(upkId) : null,
+    upkKode:item.upkKode || '',
+    upkNama:item.upkNama || '',
+    tipe:item.tipe || 'Unit',
+    kepala:item.kepala || '',
+    status:item.status || 'Aktif',
+    pagu:Number(item.pagu) || 0,
+    parentId:item.parentId ?? item.id_parent_upt ?? null,
+    id_parent_upt:item.id_parent_upt ?? item.parentId ?? null,
+    deskripsi:item.deskripsi || '',
+    pegawai:Number(item.pegawai) || 0,
+    email:item.email || '',
+    telp:item.telp || ''
+  };
+}
+
+function persistUPK(){ writeCompat(STORAGE_UPK, LEGACY_UPK_KEYS, UPK_DATA); }
+function persistUPT(){ writeCompat(STORAGE_UPT, LEGACY_UPT_KEYS, UPT_BRANCHES); }
+
 function ensureSeed() {
-  if (!localStorage.getItem(STORAGE_UPK)) localStorage.setItem(STORAGE_UPK, JSON.stringify(seedUPK));
-  if (!localStorage.getItem(STORAGE_UPT)) localStorage.setItem(STORAGE_UPT, JSON.stringify(seedUPT));
+  UPK_DATA = readFromPrimaryOrLegacy(STORAGE_UPK, LEGACY_UPK_KEYS, seedUPK).map(normalizeUpk);
+  UPT_BRANCHES = readFromPrimaryOrLegacy(STORAGE_UPT, LEGACY_UPT_KEYS, seedUPT).map(normalizeUpt);
+
+  if (!UPK_DATA.length) UPK_DATA = seedUPK.map(normalizeUpk);
+  if (!UPT_BRANCHES.length) UPT_BRANCHES = seedUPT.map(normalizeUpt);
+
+  persistUPK();
+  persistUPT();
 }
 
 function readUPK() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_UPK)) || seedUPK.slice(); }
-  catch { return seedUPK.slice(); }
+  return readFromPrimaryOrLegacy(STORAGE_UPK, LEGACY_UPK_KEYS, seedUPK).map(normalizeUpk);
 }
 
 function readUPT() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_UPT)) || seedUPT.slice(); }
-  catch { return seedUPT.slice(); }
+  return readFromPrimaryOrLegacy(STORAGE_UPT, LEGACY_UPT_KEYS, seedUPT).map(normalizeUpt);
 }
 
 function writeUPK(data) {
-  localStorage.setItem(STORAGE_UPK, JSON.stringify(data));
+  UPK_DATA = data.map(normalizeUpk);
+  persistUPK();
 }
 
 function writeUPT(data) {
-  localStorage.setItem(STORAGE_UPT, JSON.stringify(data));
+  UPT_BRANCHES = data.map(normalizeUpt);
+  persistUPT();
 }
 
+let UPK_DATA = [];
+let UPT_BRANCHES = [];
 ensureSeed();
-let UPK_DATA = readUPK();
-let UPT_BRANCHES = readUPT();
+UPK_DATA = readUPK();
+UPT_BRANCHES = readUPT();
 
 const state = {
   view: 'table',
@@ -1364,6 +1473,17 @@ const state = {
   perPage: 8,
   editingId: null,
 };
+
+function resetSampleData(){
+  if (!confirm('Reset sample data Master UPK dan sinkronkan ulang dengan sample Master UPT?')) return;
+  UPK_DATA = seedUPK.map(normalizeUpk);
+  UPT_BRANCHES = seedUPT.map(normalizeUpt);
+  persistUPK();
+  persistUPT();
+  buildAreaOptions();
+  render();
+  showToast('success', 'fa-database', 'Sample Master UPK dan Master UPT berhasil direset.');
+}
 
 function escapeHTML(str) {
   return String(str ?? '')
@@ -1414,7 +1534,7 @@ function buildAreaOptions() {
 
 function updateStats() {
   const UPKAktif = UPK_DATA.filter(item => item.status === 'Aktif').length;
-  const branchAccurate = UPK_DATA.filter(item => item.email && item.phone).length;
+  const branchAccurate = UPK_DATA.map(decorateUPK).filter(item => item.branchCount > 0).length;
   const cabangAktif = UPT_BRANCHES.filter(item => item.status === 'Aktif').length;
   const totalPagu = UPT_BRANCHES.reduce((sum, item) => sum + (Number(item.pagu) || 0), 0);
 
@@ -1423,10 +1543,10 @@ function updateStats() {
   document.getElementById('statCabangAktif').textContent = cabangAktif;
   document.getElementById('statTotalPagu').textContent = fmtCurrency(totalPagu);
 
-  document.getElementById('heroTotalDivisi').textContent = UPKAktif;
-  document.getElementById('heroTotalCabang').textContent = branchAccurate;
-  document.getElementById('heroCabangAktif').textContent = cabangAktif;
-  document.getElementById('heroTotalPagu').textContent = fmtCurrency(totalPagu);
+  const hero1=document.getElementById('heroTotalDivisi'); if(hero1) hero1.textContent = UPKAktif;
+  const hero2=document.getElementById('heroTotalCabang'); if(hero2) hero2.textContent = branchAccurate;
+  const hero3=document.getElementById('heroCabangAktif'); if(hero3) hero3.textContent = cabangAktif;
+  const hero4=document.getElementById('heroTotalPagu'); if(hero4) hero4.textContent = fmtCurrency(totalPagu);
 }
 
 function applyFilters() {
@@ -1514,15 +1634,15 @@ function renderTable(data, page) {
         <td class="mono">${escapeHTML(item.kode)}</td>
         <td>
           <div class="title-cell">${escapeHTML(item.nama)}</div>
-          <div class="title-sub">${escapeHTML(item.tagline || 'UPK induk untuk cabang UPT')}</div>
+          <div class="title-sub">${escapeHTML(item.tagline || 'UPK induk untuk unit-unit UPT')}</div>
         </td>
         <td>
           <div class="title-cell">${escapeHTML(item.area || '—')}</div>
-          <div class="title-sub">${branchPreview || 'Belum ada UPT terhubung'}</div>
+          <div class="title-sub">${branchPreview || 'Belum ada UPT terkait'}</div>
         </td>
         <td>
           <div class="title-cell">${escapeHTML(item.head || '—')}</div>
-          <div class="title-sub">${item.email ? `Kode Branch: ${escapeHTML(item.email)}` : 'Branch Accurate belum diisi'}</div>
+          <div class="title-sub">${item.email ? `Kode Branch: ${escapeHTML(item.email)}` : 'Referensi belum diisi'}</div>
         </td>
         <td><span class="badge badge-primary"><i class="fa-solid fa-link"></i>${item.branchCount} UPT</span></td>
         <td><span class="badge badge-success"><i class="fa-solid fa-circle-check"></i>${item.activeBranchCount} aktif</span></td>
@@ -1592,11 +1712,11 @@ function renderGrid(data, page) {
           <div class="stat-mini-value">${fmtCurrency(item.totalBudget)}</div>
         </div>
         <div>
-          <div class="stat-mini-label">Email</div>
+          <div class="stat-mini-label">Kode Referensi</div>
           <div class="stat-mini-value">${escapeHTML(item.email || '—')}</div>
         </div>
         <div>
-          <div class="stat-mini-label">Telepon</div>
+          <div class="stat-mini-label">Nama Referensi</div>
           <div class="stat-mini-value">${escapeHTML(item.phone || '—')}</div>
         </div>
       </div>
@@ -1649,9 +1769,9 @@ function goPage(page) {
 
 function openAddModal() {
   state.editingId = null;
-  document.getElementById('modalFormTitle').textContent = 'Tambah UPK UPK';
-  document.getElementById('modalFormSub').textContent = 'Isi informasi UPK untuk cabang UPT.';
-  ['fKode','fNama','fArea','fHead','fEmail','fPhone','fTagline','fDescription'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('modalFormTitle').textContent = 'Tambah UPK';
+  document.getElementById('modalFormSub').textContent = 'Isi informasi UPK induk yang akan terhubung dengan Master UPT.';
+  ['fKode','fNama','fArea','fHead','fKode Referensi','fPhone','fTagline','fDescription'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('fStatus').value = 'Aktif';
   openModal('modalForm');
 }
@@ -1660,13 +1780,13 @@ function openEditModal(id) {
   const item = UPK_DATA.find(entry => entry.id === id);
   if (!item) return;
   state.editingId = id;
-  document.getElementById('modalFormTitle').textContent = 'Edit UPK UPK';
+  document.getElementById('modalFormTitle').textContent = 'Edit UPK';
   document.getElementById('modalFormSub').textContent = `${item.kode} — ${item.nama}`;
   document.getElementById('fKode').value = item.kode || '';
   document.getElementById('fNama').value = item.nama || '';
   document.getElementById('fArea').value = item.area || '';
   document.getElementById('fHead').value = item.head || '';
-  document.getElementById('fEmail').value = item.email || '';
+  document.getElementById('fKode Referensi').value = item.email || '';
   document.getElementById('fPhone').value = item.phone || '';
   document.getElementById('fStatus').value = item.status || 'Aktif';
   document.getElementById('fTagline').value = item.tagline || '';
@@ -1681,7 +1801,7 @@ function saveUPK() {
     nama: document.getElementById('fNama').value.trim(),
     area: document.getElementById('fArea').value.trim(),
     head: document.getElementById('fHead').value.trim(),
-    email: document.getElementById('fEmail').value.trim(),
+    email: document.getElementById('fKode Referensi').value.trim(),
     phone: document.getElementById('fPhone').value.trim(),
     status: document.getElementById('fStatus').value,
     tagline: document.getElementById('fTagline').value.trim(),
@@ -1715,7 +1835,7 @@ function saveUPK() {
     const newId = Math.max(0, ...UPK_DATA.map(item => item.id)) + 1;
     UPK_DATA.unshift({ id: newId, ...payload });
     writeUPK(UPK_DATA);
-    showToast('success', 'fa-circle-check', 'Master UPK baru berhasil ditambahkan.');
+    showToast('success', 'fa-circle-check', 'Master UPK berhasil ditambahkan.');
   }
 
   buildAreaOptions();
@@ -1738,7 +1858,7 @@ function deleteUPK(id) {
   UPK_DATA = UPK_DATA.filter(entry => entry.id !== id);
   writeUPK(UPK_DATA);
   render();
-  showToast('success', 'fa-trash', 'Master UPK berhasil dihapus.');
+  showToast('success', 'fa-trash', 'Data Master UPK berhasil dihapus.');
 }
 
 function openDetail(id) {
@@ -1824,7 +1944,7 @@ function openDetail(id) {
     <div class="branch-table" id="detailBranchList">
       <div class="branch-table-header">
         <div>
-          <div class="panel-title"><i class="fa-solid fa-code-branch" style="color:var(--accent)"></i> Daftar UPT di bawah UPK ini</div>
+          <div class="panel-title"><i class="fa-solid fa-code-branch" style="color:var(--accent)"></i> Daftar UPT yang terhubung ke UPK ini</div>
           <div class="panel-sub">UPT berikut berasal dari Master UPT dan terhubung ke UPK ini.</div>
         </div>
         <span class="badge badge-accent"><i class="fa-solid fa-layer-group"></i>${item.branchCount} cabang</span>
@@ -1870,7 +1990,7 @@ function exportCSV() {
   const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
-  link.download = 'master_upk_UPK.csv';
+  link.download = 'master_upk_sinkron.csv';
   link.click();
   showToast('success', 'fa-file-csv', `Berhasil mengekspor ${rows.length} master UPK.`);
 }
