@@ -104,6 +104,8 @@ const SB_CONFIG = {
             { nav:'masterupk',      href:'MasterUPK.html',      icon:'fa-solid fa-arrows-rotate',    label:'Master UPK' },
             { nav:'masterupt',      href:'MasterUPT.html',      icon:'fa-solid fa-building-columns', label:'Master UPT' },
             { nav:'mastermataanggaran', href:'MasterMataAnggaran.html', icon:'fa-solid fa-building-columns', label:'Master Mata Anggaran' },
+            { nav:'masterprogram', href:'MasterProgram.html', icon:'fa-solid fa-building-columns', label:'Master Program' },
+            { nav:'masterkegiatan', href:'MasterKegiatan.html', icon:'fa-solid fa-building-columns', label:'Master Kegiatan' },
             { nav:'masterapproval', href:'MasterApproval.html', icon:'fa-solid fa-code-branch',      label:'Master Approval' },
             { nav:'masterrisk',     href:'MasterRisk.html',     icon:'fa-solid fa-shield-halved',    label:'Master Risk' },
             { nav:'masteruser',     href:'MasterUser.html',     icon:'fa-solid fa-users-gear',       label:'Master User' },
