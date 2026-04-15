@@ -1,26 +1,5 @@
-/**
- * sidebar.js — Sistem Anggaran
- *
- * TUJUAN:
- * - Tidak perlu ganti path sidebar satu-satu saat halaman dipindah ke folder
- * - sidebar.css otomatis dimuat oleh sidebar.js
- * - href menu otomatis dibentuk dari 1 base/root aplikasi
- * - active menu bisa baca dari URL pathname, bukan hanya data-page
- *
- * CARA PAKAI DI SEMUA HALAMAN:
- * 1) Tambahkan <div id="sb-root"></div> sebelum .main
- * 2) Tambahkan:
- *    <script src="/sidebar.js" defer></script>
- *
- * CATATAN:
- * - Jika project Anda tidak di web root, ubah appBase di bawah.
- *   Contoh kalau project ada di /sistem-anggaran/, maka:
- *   appBase: '/sistem-anggaran/'
- */
-
 const SB_CONFIG = {
-  // UBAH SEKALI SAJA DI SINI
-  appBase: '/',
+  appBase: 'auto',
 
   assets: {
     css: 'sidebar.css',
@@ -62,8 +41,8 @@ const SB_CONFIG = {
               label: 'Cost',
               children: [
                 { nav:'anggarancost',  href:'Cost/AnggaranCost.html',  icon:'fa-solid fa-file-invoice-dollar', label:'Anggaran Cost' },
-                { nav:'realisasicost', href:'Cost/RealisasiCost.html', icon:'fa-solid fa-wallet',               label:'Realisasi Cost' },
-                { nav:'reportcost',    href:'Cost/ReportCost.html',    icon:'fa-solid fa-chart-column',         label:'Report Cost' },
+                { nav:'realisasicost', href:'Cost/RealisasiCost.html', icon:'fa-solid fa-wallet', label:'Realisasi Cost' },
+                { nav:'reportcost',    href:'Cost/ReportCost.html',    icon:'fa-solid fa-chart-column', label:'Report Cost' },
               ],
             },
             {
@@ -72,8 +51,8 @@ const SB_CONFIG = {
               label: 'Income',
               children: [
                 { nav:'anggaranincome',  href:'Income/AnggaranIncome.html',  icon:'fa-solid fa-file-circle-plus', label:'Anggaran Income' },
-                { nav:'realisasiincome', href:'Income/RealisasiIncome.html', icon:'fa-solid fa-cash-register',    label:'Realisasi Income' },
-                { nav:'reportincome',    href:'Income/ReportIncome.html',    icon:'fa-solid fa-chart-line',       label:'Report Income' },
+                { nav:'realisasiincome', href:'Income/RealisasiIncome.html', icon:'fa-solid fa-cash-register', label:'Realisasi Income' },
+                { nav:'reportincome',    href:'Income/ReportIncome.html',    icon:'fa-solid fa-chart-line', label:'Report Income' },
               ],
             },
           ],
@@ -100,15 +79,15 @@ const SB_CONFIG = {
           icon: 'fa-solid fa-folder-tree',
           label: 'Menu Master',
           children: [
-            { nav:'mastercoa',      href:'MasterCOA.html',      icon:'fa-solid fa-sitemap',          label:'Master COA' },
-            { nav:'masterupk',      href:'MasterUPK.html',      icon:'fa-solid fa-arrows-rotate',    label:'Master UPK' },
-            { nav:'masterupt',      href:'MasterUPT.html',      icon:'fa-solid fa-building-columns', label:'Master UPT' },
+            { nav:'mastercoa', href:'MasterCOA.html', icon:'fa-solid fa-sitemap', label:'Master COA' },
+            { nav:'masterupk', href:'MasterUPK.html', icon:'fa-solid fa-arrows-rotate', label:'Master UPK' },
+            { nav:'masterupt', href:'MasterUPT.html', icon:'fa-solid fa-building-columns', label:'Master UPT' },
             { nav:'mastermataanggaran', href:'MasterMataAnggaran.html', icon:'fa-solid fa-building-columns', label:'Master Mata Anggaran' },
-            { nav:'masterprogram', href:'MasterProgram.html', icon:'fa-solid fa-building-columns', label:'Master Program' },
-            { nav:'masterkegiatan', href:'MasterKegiatan.html', icon:'fa-solid fa-building-columns', label:'Master Kegiatan' },
-            { nav:'masterapproval', href:'MasterApproval.html', icon:'fa-solid fa-code-branch',      label:'Master Approval' },
-            { nav:'masterrisk',     href:'MasterRisk.html',     icon:'fa-solid fa-shield-halved',    label:'Master Risk' },
-            { nav:'masteruser',     href:'MasterUser.html',     icon:'fa-solid fa-users-gear',       label:'Master User' },
+            { nav:'masterprogram', href:'MasterProgram.html', icon:'fa-solid fa-diagram-project', label:'Master Program' },
+            { nav:'masterkegiatan', href:'MasterKegiatan.html', icon:'fa-solid fa-list-check', label:'Master Kegiatan' },
+            { nav:'masterapproval', href:'MasterApproval.html', icon:'fa-solid fa-code-branch', label:'Master Approval' },
+            { nav:'masterrisk', href:'MasterRisk.html', icon:'fa-solid fa-shield-halved', label:'Master Risk' },
+            { nav:'masteruser', href:'MasterUser.html', icon:'fa-solid fa-users-gear', label:'Master User' },
           ],
         },
       ],
@@ -122,7 +101,7 @@ const SB_CONFIG = {
           icon: 'fa-solid fa-gear',
           label: 'Pengaturan',
           children: [
-            { nav:'penomoran',  href:'Pengaturan/Penomoran.html',  icon:'fa-solid fa-hashtag', label:'Penomoran' },
+            { nav:'penomoran', href:'Pengaturan/Penomoran.html', icon:'fa-solid fa-hashtag', label:'Penomoran' },
           ],
         },
       ],
@@ -140,7 +119,7 @@ const SB_CONFIG = {
   }
 
   const currentScriptEl = getCurrentScriptEl();
-  const appBaseUrl = buildAppBaseUrl(cfg.appBase);
+  const appBaseUrl = buildAppBaseUrl(cfg.appBase, currentScriptEl);
   const currentPath = normalizePath(window.location.pathname);
   const activePageFromBody = document.body?.dataset?.page || '';
 
@@ -149,12 +128,17 @@ const SB_CONFIG = {
 
   function getCurrentScriptEl() {
     if (document.currentScript) return document.currentScript;
-
     const scripts = Array.from(document.getElementsByTagName('script'));
     return scripts.find(s => (s.getAttribute('src') || '').includes('sidebar.js')) || null;
   }
 
-  function buildAppBaseUrl(appBase) {
+  function buildAppBaseUrl(appBase, scriptEl) {
+    if (appBase === 'auto' && scriptEl?.src) {
+      const scriptUrl = new URL(scriptEl.src, window.location.href);
+      const basePath = scriptUrl.pathname.replace(/\/[^/]*$/, '/');
+      return new URL(basePath, window.location.origin);
+    }
+
     const safeBase = typeof appBase === 'string' && appBase.trim() ? appBase.trim() : '/';
 
     if (/^https?:\/\//i.test(safeBase)) {
@@ -229,11 +213,7 @@ const SB_CONFIG = {
 
   function isLeafActive(item) {
     if (!item) return false;
-
-    if (activePageFromBody && item.nav === activePageFromBody) {
-      return true;
-    }
-
+    if (activePageFromBody && item.nav === activePageFromBody) return true;
     const itemPath = getItemPath(item);
     return itemPath && itemPath === currentPath;
   }
@@ -241,22 +221,15 @@ const SB_CONFIG = {
   function isItemActive(item) {
     if (!item) return false;
     if (isLeafActive(item)) return true;
-
     if (Array.isArray(item.children) && item.children.length) {
       return item.children.some(child => isItemActive(child));
     }
-
     return false;
   }
 
   function renderIcon(iconClass, depth, isLeaf) {
     const iconWrapperClass = depth === 0 && isLeaf ? 'sb-item-icon' : 'sb-subitem-icon';
-
-    return `
-      <span class="${iconWrapperClass}">
-        <i class="${iconClass}"></i>
-      </span>
-    `;
+    return `<span class="${iconWrapperClass}"><i class="${iconClass}"></i></span>`;
   }
 
   function renderLeafItem(item, depth = 0) {
@@ -276,10 +249,7 @@ const SB_CONFIG = {
 
   function renderParentItem(item, depth = 0) {
     const open = isItemActive(item);
-    const buttonClass = depth === 0
-      ? 'sb-item sb-parent-toggle'
-      : `sb-subitem sb-parent-toggle sb-depth-${depth}`;
-
+    const buttonClass = depth === 0 ? 'sb-item sb-parent-toggle' : `sb-subitem sb-parent-toggle sb-depth-${depth}`;
     const childrenHTML = item.children.map(child => renderItem(child, depth + 1)).join('');
 
     return `
@@ -313,7 +283,6 @@ const SB_CONFIG = {
     const groupsHTML = cfg.groups.map((group, index) => {
       const itemsHTML = group.items.map(item => renderItem(item, 0)).join('');
       const dividerHTML = index < cfg.groups.length - 1 ? `<div class="sb-divider"></div>` : '';
-
       return `
         <div class="sb-section">
           <span class="sb-section-label">${group.label}</span>
@@ -506,10 +475,8 @@ const SB_CONFIG = {
 
   function setParentOpenState(parentEl, isOpen) {
     if (!parentEl) return;
-
     const toggleBtn = parentEl.children[0];
     const submenu = parentEl.children[1];
-
     parentEl.classList.toggle('open', isOpen);
     toggleBtn?.setAttribute('aria-expanded', String(isOpen));
     submenu?.classList.toggle('open', isOpen);
