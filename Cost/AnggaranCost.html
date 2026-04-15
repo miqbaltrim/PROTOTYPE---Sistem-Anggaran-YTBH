@@ -1,1514 +1,713 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Anggaran Cost — Sistem Anggaran</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="../sidebar.css">
-  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg:#f4f7fc;
-      --bg-soft:#e9eff9;
-      --line:#d7e2f1;
-      --line-soft:#e7eef7;
-      --primary:#3972B8;
-      --primary-soft:rgba(57,114,184,.10);
-      --accent:#F68B21;
-      --accent-soft:rgba(246,139,33,.12);
-      --success:#217a4a;
-      --success-soft:rgba(33,122,74,.10);
-      --warning:#c07010;
-      --warning-soft:rgba(192,112,16,.12);
-      --danger:#d94040;
-      --danger-soft:rgba(217,64,64,.10);
-      --text:#1a2333;
-      --text-soft:#60718f;
-      --text-muted:#8ea0ba;
-      --white:#fff;
-      --radius:18px;
-      --radius-sm:11px;
-      --shadow-sm:0 2px 10px rgba(57,114,184,.07);
-      --shadow:0 10px 28px rgba(57,114,184,.12);
-    }
-
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{
-      font-family:'Plus Jakarta Sans',sans-serif;
-      background:var(--bg);
-      color:var(--text);
-      min-height:100vh;
-    }
-    .main{margin-left:240px;min-height:100vh;display:flex;flex-direction:column}
-    .topbar{
-      position:sticky;top:0;z-index:50;
-      background:rgba(244,247,252,.92);
-      backdrop-filter:blur(12px);
-      border-bottom:1px solid var(--line);
-      padding:14px 34px;
-      display:flex;justify-content:space-between;align-items:center;gap:16px;
-    }
-    .breadcrumb{display:flex;gap:6px;flex-wrap:wrap;font-size:13px;color:var(--text-muted)}
-    .breadcrumb b{color:var(--text);font-weight:700}
-    .topbar-right{display:flex;align-items:center;gap:10px}
-    .chip-info,.topbar-date{
-      padding:7px 12px;border-radius:999px;background:var(--bg-soft);
-      border:1px solid var(--line);font-size:12px;color:var(--text-soft)
-    }
-    .content{padding:30px 34px 42px;display:flex;flex-direction:column;gap:22px}
-    .page-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
-    .page-title{font-family:'Lora',serif;font-size:28px;line-height:1.25}
-    .page-title em{color:var(--primary);font-style:italic}
-    .page-sub{margin-top:8px;max-width:780px;font-size:13.5px;line-height:1.7;color:var(--text-soft)}
-    .page-actions{display:flex;gap:10px;flex-wrap:wrap}
-    .btn{
-      border:none;border-radius:11px;padding:10px 16px;display:inline-flex;align-items:center;gap:8px;
-      font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:.18s;
-      font-family:'Plus Jakarta Sans',sans-serif;
-    }
-    .btn i{font-size:12px}
-    .btn-primary{background:var(--primary);color:#fff;box-shadow:0 6px 18px rgba(57,114,184,.24)}
-    .btn-primary:hover{transform:translateY(-1px);background:#467ec1}
-    .btn-ghost{background:#fff;color:var(--text-soft);border:1.5px solid var(--line)}
-    .btn-ghost:hover{background:var(--bg);color:var(--text)}
-    .btn-accent{background:var(--accent);color:#fff;box-shadow:0 6px 18px rgba(246,139,33,.24)}
-    .btn-accent:hover{transform:translateY(-1px);background:#ff9d3a}
-    .btn-sm{padding:7px 12px;font-size:12px}
-
-    .hero{
-      background:linear-gradient(135deg, var(--primary) 0%, #2a5d9a 100%);
-      color:#fff;border-radius:22px;padding:24px 26px;
-      box-shadow:0 16px 36px rgba(57,114,184,.22);
-      display:grid;grid-template-columns:1.2fr .9fr;gap:18px;overflow:hidden;position:relative;
-    }
-    .hero::before,.hero::after{
-      content:'';position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.12)
-    }
-    .hero::before{width:180px;height:180px;top:-50px;right:-20px}
-    .hero::after{width:120px;height:120px;bottom:-45px;right:90px}
-    .hero-left,.hero-right{position:relative;z-index:1}
-    .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:1.8px;color:rgba(255,255,255,.65);margin-bottom:8px}
-    .hero-title{font-family:'Lora',serif;font-size:28px;line-height:1.25}
-    .hero-sub{margin-top:10px;font-size:13px;line-height:1.7;color:rgba(255,255,255,.78);max-width:700px}
-    .hero-actions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
-    .hero-chip{
-      display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-radius:999px;
-      background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.12);font-size:12px;font-weight:700;
-    }
-    .hero-right{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-    .hero-mini{
-      background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.12);
-      border-radius:16px;padding:15px 16px
-    }
-    .hero-mini-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.62);margin-bottom:7px}
-    .hero-mini-value{font-family:'DM Mono',monospace;font-size:20px;font-weight:500}
-    .hero-mini-sub{margin-top:6px;font-size:12px;color:rgba(255,255,255,.66)}
-
-    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-    .stat-card{
-      background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px 18px 16px;
-      box-shadow:var(--shadow-sm);position:relative;overflow:hidden;transition:.18s;
-    }
-    .stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
-    .stat-card::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px}
-    .c-primary::after{background:var(--primary)}
-    .c-accent::after{background:var(--accent)}
-    .c-success::after{background:var(--success)}
-    .c-warning::after{background:var(--warning)}
-    .stat-icon{
-      width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;
-      margin-bottom:12px;font-size:16px
-    }
-    .c-primary .stat-icon{background:var(--primary-soft);color:var(--primary)}
-    .c-accent .stat-icon{background:var(--accent-soft);color:var(--accent)}
-    .c-success .stat-icon{background:var(--success-soft);color:var(--success)}
-    .c-warning .stat-icon{background:var(--warning-soft);color:var(--warning)}
-    .stat-label{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);font-weight:700;margin-bottom:5px}
-    .stat-value{font-family:'DM Mono',monospace;font-size:23px;line-height:1}
-    .stat-sub{margin-top:6px;font-size:12px;color:var(--text-muted)}
-
-    .toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-    .search-wrap{position:relative;flex:1;min-width:240px}
-    .search-icon{position:absolute;top:50%;left:13px;transform:translateY(-50%);color:var(--text-muted);font-size:13px}
-    .search-input,.filter-select,.form-input,.form-select,.form-textarea{
-      width:100%;border:1.5px solid var(--line);background:#fff;border-radius:11px;
-      padding:10px 12px;font-size:13px;color:var(--text);outline:none;transition:.18s;
-      font-family:'Plus Jakarta Sans',sans-serif;
-    }
-    .search-input{padding-left:36px}
-    .search-input:focus,.filter-select:focus,.form-input:focus,.form-select:focus,.form-textarea:focus{
-      border-color:var(--primary);box-shadow:0 0 0 3px rgba(57,114,184,.16)
-    }
-    .toolbar-right{margin-left:auto;display:flex;gap:8px}
-
-    .panel{
-      background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-sm)
-    }
-    .panel-head{
-      padding:16px 20px;border-bottom:1px solid var(--line-soft);
-      display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap
-    }
-    .panel-title{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
-    .panel-sub{font-size:12px;color:var(--text-muted);margin-top:2px}
-    .table-wrap{overflow-x:auto}
-    table{width:100%;border-collapse:collapse}
-    thead th{
-      text-align:left;padding:11px 16px;background:var(--bg);border-bottom:1px solid var(--line);
-      font-size:10.5px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);white-space:nowrap
-    }
-    thead th.sortable{cursor:pointer}
-    tbody tr{border-bottom:1px solid var(--line-soft)}
-    tbody tr:last-child{border-bottom:none}
-    tbody tr:hover{background:rgba(57,114,184,.025)}
-    tbody td{padding:14px 16px;font-size:13px;color:var(--text-soft);vertical-align:top}
-    .mono{font-family:'DM Mono',monospace;color:var(--text)}
-    .title-cell{color:var(--text);font-weight:700}
-    .title-sub{margin-top:3px;font-size:11.5px;color:var(--text-muted)}
-    .badge{
-      display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:999px;
-      font-size:11px;font-weight:700;white-space:nowrap
-    }
-    .badge-primary{background:var(--primary-soft);color:var(--primary)}
-    .badge-accent{background:var(--accent-soft);color:#a05a00}
-    .badge-success{background:var(--success-soft);color:var(--success)}
-    .badge-warning{background:var(--warning-soft);color:var(--warning)}
-    .badge-danger{background:var(--danger-soft);color:var(--danger)}
-    .progress-wrap{display:flex;align-items:center;gap:10px}
-    .progress-track{flex:1;min-width:110px;height:8px;border-radius:999px;background:var(--bg-soft);overflow:hidden}
-    .progress-fill{height:100%;border-radius:999px;background:var(--primary)}
-    .progress-label{width:42px;text-align:right;font-size:11px;font-weight:700;color:var(--text-soft)}
-    .actions-inline{display:inline-flex;gap:5px;white-space:nowrap}
-    .act-btn{
-      width:31px;height:31px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--text-soft);
-      cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:.16s;font-size:12px
-    }
-    .act-btn:hover{background:var(--bg);color:var(--text)}
-    .act-btn.primary:hover{background:var(--primary-soft);color:var(--primary)}
-    .act-btn.accent:hover{background:var(--accent-soft);color:var(--accent)}
-    .act-btn.danger:hover{background:var(--danger-soft);color:var(--danger)}
-
-    .pagination{
-      padding:14px 20px;border-top:1px solid var(--line-soft);
-      display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap
-    }
-    .pagination-info{font-size:12.5px;color:var(--text-muted)}
-    .pagination-btns{display:flex;gap:4px}
-    .pg-btn{
-      width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--text-soft);
-      display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;font-weight:700
-    }
-    .pg-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
-    .pg-btn:disabled{opacity:.45;cursor:default}
-
-    .empty-state{padding:60px 16px;text-align:center}
-    .empty-state i{font-size:36px;color:#c9d8ea;margin-bottom:12px}
-    .empty-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:5px}
-    .empty-sub{font-size:13px;color:var(--text-muted)}
-
-    .overlay-modal{
-      position:fixed;inset:0;background:rgba(26,35,51,.42);backdrop-filter:blur(4px);z-index:300;display:none;
-      align-items:center;justify-content:center;padding:16px
-    }
-    .overlay-modal.open{display:flex}
-    .modal{
-      width:720px;max-width:100%;max-height:calc(100vh - 32px);overflow:auto;background:#fff;border:1px solid var(--line);
-      border-radius:20px;box-shadow:0 24px 48px rgba(16,24,40,.18)
-    }
-    .modal-head{
-      padding:20px 22px 16px;border-bottom:1px solid var(--line-soft);
-      display:flex;justify-content:space-between;gap:12px;align-items:flex-start
-    }
-    .modal-title{font-family:'Lora',serif;font-size:20px;line-height:1.3}
-    .modal-sub{margin-top:3px;font-size:12.5px;color:var(--text-muted)}
-    .modal-close{
-      width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--text-muted);cursor:pointer
-    }
-    .modal-body{padding:20px 22px}
-    .modal-footer{padding:16px 22px;border-top:1px solid var(--line-soft);display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
-    .section-title{
-      font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.4px;color:var(--text-muted);
-      margin-bottom:12px;display:flex;align-items:center;gap:8px
-    }
-    .section-title::after{content:'';flex:1;height:1px;background:var(--line-soft)}
-    .form-row{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:14px}
-    .form-group{display:flex;flex-direction:column;gap:6px}
-    .form-label{font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--text)}
-    .req{color:var(--danger)}
-    .form-textarea{resize:vertical;min-height:90px}
-
-    .lookup-wrap{position:relative}
-    .lookup-help{margin-top:8px;font-size:12px;line-height:1.6;color:var(--text-muted)}
-    .lookup-results{
-      position:absolute;left:0;right:0;top:calc(100% + 8px);z-index:20;display:none;
-      background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);
-      max-height:260px;overflow:auto;padding:8px;
-    }
-    .lookup-results.open{display:block}
-    .lookup-item{
-      width:100%;border:none;background:#fff;border-radius:12px;padding:10px 12px;text-align:left;
-      display:flex;flex-direction:column;gap:4px;cursor:pointer;transition:.16s;
-      font-family:'Plus Jakarta Sans',sans-serif;
-    }
-    .lookup-item:hover{background:var(--bg)}
-    .lookup-item-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .lookup-code{font-family:'DM Mono',monospace;font-size:12px;color:var(--primary);font-weight:700}
-    .lookup-group{font-size:10.5px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--text-muted)}
-    .lookup-name{font-size:13px;font-weight:700;color:var(--text)}
-    .lookup-accurate{font-size:11.5px;color:var(--text-soft)}
-    .lookup-empty{padding:12px 10px;font-size:12px;color:var(--text-muted)}
-    .lookup-selected{
-      margin-top:10px;padding:12px 14px;border-radius:14px;border:1px solid var(--line);
-      background:var(--bg);display:none;gap:4px;flex-direction:column;
-    }
-    .lookup-selected strong{font-size:13px;color:var(--text)}
-    .lookup-selected span{font-size:11.5px;color:var(--text-soft);line-height:1.6}
-
-
-    .toast-stack{position:fixed;right:22px;bottom:22px;z-index:500;display:flex;flex-direction:column;gap:8px}
-    .toast{
-      background:var(--text);color:#fff;padding:12px 16px;border-radius:12px;display:flex;align-items:center;gap:9px;
-      box-shadow:0 10px 22px rgba(0,0,0,.2);font-size:13px;max-width:320px
-    }
-    .toast.success{background:#1b6b41}
-    .toast.warning{background:#8d5807}
-    .toast.danger{background:#8a2d2d}
-
-    @media (max-width:1200px){
-      .hero{grid-template-columns:1fr}
-      .stats-row{grid-template-columns:repeat(2,1fr)}
-    }
-    @media (max-width:900px){.main{margin-left:0}}
-    @media (max-width:720px){
-      .content{padding:20px 16px 34px}
-      .topbar{padding:12px 16px}
-      .stats-row,.form-row,.hero-right{grid-template-columns:1fr}
-      .page-header{flex-direction:column}
-      .toolbar-right{width:100%;margin-left:0;justify-content:space-between}
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Anggaran Cost — Sinkron Master Terbaru</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="../sidebar.css">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f4f7fc;--bg-soft:#e9eff9;--line:#d7e2f1;--line-soft:#e7eef7;
+    --primary:#3972B8;--primary-2:#2a5d9a;--primary-soft:rgba(57,114,184,.10);
+    --accent:#F68B21;--accent-soft:rgba(246,139,33,.12);--success:#217a4a;
+    --success-soft:rgba(33,122,74,.10);--warning:#c07010;--warning-soft:rgba(192,112,16,.12);
+    --danger:#d94040;--danger-soft:rgba(217,64,64,.10);--text:#1a2333;--text-soft:#60718f;
+    --text-muted:#8ea0ba;--white:#fff;--shadow-sm:0 2px 10px rgba(57,114,184,.07);--shadow:0 10px 28px rgba(57,114,184,.12)
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+  .main{margin-left:240px;min-height:100vh;display:flex;flex-direction:column}
+  .topbar{position:sticky;top:0;z-index:50;background:rgba(244,247,252,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:14px 34px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+  .breadcrumb{display:flex;gap:6px;flex-wrap:wrap;font-size:13px;color:var(--text-muted)} .breadcrumb b{color:var(--text);font-weight:700}
+  .topbar-right{display:flex;align-items:center;gap:10px}.chip-info,.topbar-date{padding:7px 12px;border-radius:999px;background:var(--bg-soft);border:1px solid var(--line);font-size:12px;color:var(--text-soft)}
+  .content{padding:30px 34px 42px;display:flex;flex-direction:column;gap:22px}
+  .page-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+  .page-title{font-family:'Lora',serif;font-size:28px;line-height:1.25}.page-title em{color:var(--primary);font-style:italic}
+  .page-sub{margin-top:8px;max-width:920px;font-size:13.5px;line-height:1.7;color:var(--text-soft)}
+  .page-actions{display:flex;gap:10px;flex-wrap:wrap}
+  .btn{border:none;border-radius:11px;padding:10px 16px;display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:.18s;font-family:'Plus Jakarta Sans',sans-serif}
+  .btn i{font-size:12px}.btn-primary{background:var(--primary);color:#fff;box-shadow:0 6px 18px rgba(57,114,184,.24)}.btn-primary:hover{transform:translateY(-1px);background:#467ec1}.btn-ghost{background:#fff;color:var(--text-soft);border:1.5px solid var(--line)}.btn-ghost:hover{background:var(--bg);color:var(--text)}.btn-accent{background:var(--accent);color:#fff;box-shadow:0 6px 18px rgba(246,139,33,.24)}.btn-accent:hover{transform:translateY(-1px);background:#ff9d3a}.btn-sm{padding:7px 12px;font-size:12px}
+  .hero{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-2) 100%);color:#fff;border-radius:22px;padding:24px 26px;box-shadow:0 16px 36px rgba(57,114,184,.22);display:grid;grid-template-columns:1.15fr .95fr;gap:18px;overflow:hidden;position:relative}
+  .hero::before,.hero::after{content:'';position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.12)}.hero::before{width:180px;height:180px;top:-50px;right:-20px}.hero::after{width:120px;height:120px;bottom:-45px;right:90px}.hero-left,.hero-right{position:relative;z-index:1}
+  .hero-title{font-family:'Lora',serif;font-size:28px;line-height:1.25}.hero-sub{margin-top:10px;font-size:13px;line-height:1.7;color:rgba(255,255,255,.78);max-width:760px}
+  .hero-right{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.hero-mini{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:15px 16px}.hero-mini-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.62);margin-bottom:7px}.hero-mini-value{font-family:'DM Mono',monospace;font-size:20px;font-weight:500}.hero-mini-sub{margin-top:6px;font-size:12px;color:rgba(255,255,255,.66)}
+  .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.stat-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px 18px 16px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden;transition:.18s}.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}.stat-card::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px}.c-primary::after{background:var(--primary)}.c-accent::after{background:var(--accent)}.c-success::after{background:var(--success)}.c-warning::after{background:var(--warning)}
+  .stat-icon{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-size:16px}.c-primary .stat-icon{background:var(--primary-soft);color:var(--primary)}.c-accent .stat-icon{background:var(--accent-soft);color:var(--accent)}.c-success .stat-icon{background:var(--success-soft);color:var(--success)}.c-warning .stat-icon{background:var(--warning-soft);color:var(--warning)}.stat-label{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);font-weight:700;margin-bottom:5px}.stat-value{font-family:'DM Mono',monospace;font-size:23px;line-height:1}.stat-sub{margin-top:6px;font-size:12px;color:var(--text-muted)}
+  .toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .search-wrap{position:relative;flex:1;min-width:240px}.search-icon{position:absolute;top:50%;left:13px;transform:translateY(-50%);color:var(--text-muted);font-size:13px}
+  .search-input,.filter-select,.form-input,.form-select,.form-textarea{width:100%;border:1.5px solid var(--line);background:#fff;border-radius:11px;padding:10px 12px;font-size:13px;color:var(--text);outline:none;transition:.18s;font-family:'Plus Jakarta Sans',sans-serif}.search-input{padding-left:36px}.search-input:focus,.filter-select:focus,.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(57,114,184,.16)}
+  .toolbar-right{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+  .panel{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-sm)}.panel-head{padding:16px 20px;border-bottom:1px solid var(--line-soft);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}.panel-title{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}.panel-sub{font-size:12px;color:var(--text-muted);margin-top:2px}.panel-body{padding:18px}.table-wrap{overflow-x:auto}
+  table{width:100%;border-collapse:collapse} thead th{text-align:left;padding:11px 16px;background:var(--bg);border-bottom:1px solid var(--line);font-size:10.5px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);white-space:nowrap} tbody tr{border-bottom:1px solid var(--line-soft)} tbody tr:last-child{border-bottom:none} tbody tr:hover{background:rgba(57,114,184,.025)} tbody td{padding:14px 16px;font-size:13px;color:var(--text-soft);vertical-align:top}
+  .title-cell{color:var(--text);font-weight:700}.title-sub{margin-top:3px;font-size:11.5px;color:var(--text-muted)}.mono{font-family:'DM Mono',monospace;color:var(--text)}
+  .badge{display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:700;white-space:nowrap}.badge-primary{background:var(--primary-soft);color:var(--primary)}.badge-accent{background:var(--accent-soft);color:#a05a00}.badge-success{background:var(--success-soft);color:var(--success)}.badge-warning{background:var(--warning-soft);color:var(--warning)}.badge-danger{background:var(--danger-soft);color:var(--danger)}.badge-neutral{background:var(--bg-soft);color:var(--text-soft)}
+  .actions-inline{display:inline-flex;gap:5px;white-space:nowrap}.act-btn{width:31px;height:31px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--text-soft);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:.16s;font-size:12px}.act-btn:hover{background:var(--bg);color:var(--text)}.act-btn.primary:hover{background:var(--primary-soft);color:var(--primary)}.act-btn.danger:hover{background:var(--danger-soft);color:var(--danger)}.act-btn.success:hover{background:var(--success-soft);color:var(--success)}
+  .pagination{padding:14px 20px;border-top:1px solid var(--line-soft);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.pagination-info{font-size:12.5px;color:var(--text-muted)}.pagination-btns{display:flex;gap:4px;flex-wrap:wrap}.pg-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--text-soft);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;font-weight:700}.pg-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}.pg-btn:disabled{opacity:.45;cursor:default}
+  .empty-state{padding:60px 16px;text-align:center}.empty-state i{font-size:36px;color:#c9d8ea;margin-bottom:12px}.empty-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:5px}.empty-sub{font-size:13px;color:var(--text-muted)}
+  .overlay-modal{position:fixed;inset:0;background:rgba(26,35,51,.42);backdrop-filter:blur(4px);z-index:300;display:none;align-items:center;justify-content:center;padding:16px}.overlay-modal.open{display:flex}.modal{width:820px;max-width:100%;max-height:calc(100vh - 32px);overflow:auto;background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 24px 48px rgba(16,24,40,.18)}.modal-head{padding:20px 22px 16px;border-bottom:1px solid var(--line-soft);display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.modal-title{font-family:'Lora',serif;font-size:20px;line-height:1.3}.modal-sub{margin-top:3px;font-size:12.5px;color:var(--text-muted)}.modal-close{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--text-muted);cursor:pointer}.modal-body{padding:20px 22px}.modal-footer{padding:16px 22px;border-top:1px solid var(--line-soft);display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}.section-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.4px;color:var(--text-muted);margin-bottom:12px;display:flex;align-items:center;gap:8px}.section-title::after{content:'';flex:1;height:1px;background:var(--line-soft)}.form-row{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:14px}.form-group{display:flex;flex-direction:column;gap:6px}.form-label{font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--text)}.req{color:var(--danger)}.form-textarea{resize:vertical;min-height:90px}
+  .helper{font-size:11.5px;color:var(--text-muted);line-height:1.6}.preview-box,.budget-box{background:var(--bg);border:1px solid var(--line-soft);border-radius:14px;padding:12px 14px;margin-bottom:14px}.preview-title,.budget-box-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);font-weight:800;margin-bottom:6px}.preview-value,.budget-box-value{font-family:'DM Mono',monospace;font-size:15px;color:var(--text);font-weight:500;line-height:1.6}
+  .lookup-wrap{position:relative}.lookup-results{position:absolute;left:0;right:0;top:calc(100% + 8px);z-index:20;display:none;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);max-height:260px;overflow:auto;padding:8px}.lookup-results.open{display:block}.lookup-item{width:100%;border:none;background:#fff;border-radius:12px;padding:10px 12px;text-align:left;display:flex;flex-direction:column;gap:4px;cursor:pointer;transition:.16s;font-family:'Plus Jakarta Sans',sans-serif}.lookup-item:hover{background:var(--bg)}.lookup-item-top{display:flex;align-items:center;justify-content:space-between;gap:12px}.lookup-code{font-family:'DM Mono',monospace;font-size:12px;color:var(--primary);font-weight:700}.lookup-name{font-size:13px;font-weight:700;color:var(--text)}.lookup-meta{font-size:11.5px;color:var(--text-soft)}.lookup-empty{padding:12px 10px;font-size:12px;color:var(--text-muted)}.lookup-selected{margin-top:10px;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--bg);display:none;gap:4px;flex-direction:column}.lookup-selected strong{font-size:13px;color:var(--text)}.lookup-selected span{font-size:11.5px;color:var(--text-soft);line-height:1.6}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}.bar-list{display:grid;gap:12px}.bar-item{display:grid;gap:6px}.bar-row{display:flex;justify-content:space-between;gap:10px;align-items:center}.bar-label{font-size:13px;font-weight:700;color:var(--text)}.bar-value{font-size:12px;color:var(--text-soft);font-family:'DM Mono',monospace}.bar-track{width:100%;height:10px;background:var(--bg-soft);border-radius:999px;overflow:hidden}.bar-fill{height:100%;border-radius:999px;background:var(--primary)}
+  .warning-banner{background:linear-gradient(135deg,#fff7e9 0%,#fff3dd 100%);border:1px solid rgba(192,112,16,.22);border-radius:18px;padding:16px 18px;display:flex;align-items:flex-start;gap:12px}.warning-banner i{color:var(--warning);font-size:18px;margin-top:2px}.warning-banner-title{font-weight:800;color:var(--text)}.warning-banner-sub{font-size:13px;line-height:1.7;color:var(--text-soft);margin-top:3px}
+  @media (max-width:1200px){.hero{grid-template-columns:1fr}.stats-row{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}}
+  @media (max-width:900px){.main{margin-left:0}}
+  @media (max-width:720px){.content{padding:20px 16px 34px}.topbar{padding:12px 16px}.stats-row,.form-row,.hero-right,.grid-2{grid-template-columns:1fr}.page-header{flex-direction:column}.toolbar-right{width:100%;margin-left:0;justify-content:space-between}}
+</style>
 </head>
 <body data-page="anggarancost">
-  <div id="sb-root"></div>
-
-  <div class="main">
-    <div class="topbar">
-      <div class="breadcrumb">
-        Sistem Anggaran <span>›</span> Perencanaan <span>›</span> Cost <span>›</span> <b>Anggaran Cost</b>
-      </div>
-      <div class="topbar-right">
-        <div class="chip-info"><i class="fa-solid fa-layer-group"></i> Head / Pagu Anggaran</div>
-        <div class="topbar-date" id="topbarDate">—</div>
-      </div>
-    </div>
-
-    <div class="content">
-      <div class="page-header">
-        <div>
-          <div class="page-title">Anggaran <em>Cost</em></div>
-        </div>
-        <div class="page-actions">
-          <button class="btn btn-ghost" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Export</button>
-          <button class="btn btn-primary" onclick="openAddModal()"><i class="fa-solid fa-plus"></i> Tambah Anggaran</button>
-        </div>
-      </div>
-
-      <section class="hero">
-        <div class="hero-left">
-          <div class="hero-title">Sample Data Cost</div>
-          <div class="hero-sub">
-            Banner Dummy For Sample Data
-          </div>
-        </div>
-        <div class="hero-right">
-          <div class="hero-mini">
-            <div class="hero-mini-label">Total Head</div>
-            <div class="hero-mini-value" id="heroHead">—</div>
-            <div class="hero-mini-sub">Anggaran cost terdaftar</div>
-          </div>
-          <div class="hero-mini">
-            <div class="hero-mini-label">Total Pagu</div>
-            <div class="hero-mini-value" id="heroPagu">—</div>
-            <div class="hero-mini-sub">Akumulasi semua anggaran</div>
-          </div>
-          <div class="hero-mini">
-            <div class="hero-mini-label">Terpakai</div>
-            <div class="hero-mini-value" id="heroTerpakai">—</div>
-            <div class="hero-mini-sub">Dari realisasi cost</div>
-          </div>
-          <div class="hero-mini">
-            <div class="hero-mini-label">Sisa Pagu</div>
-            <div class="hero-mini-value" id="heroSisa">—</div>
-            <div class="hero-mini-sub">Saldo tersedia</div>
-          </div>
-        </div>
-      </section>
-
-      <div class="stats-row">
-        <div class="stat-card c-primary">
-          <div class="stat-icon"><i class="fa-solid fa-folder-tree"></i></div>
-          <div class="stat-label">Total Anggaran</div>
-          <div class="stat-value" id="statHead">—</div>
-          <div class="stat-sub">Head cost aktif</div>
-        </div>
-        <div class="stat-card c-accent">
-          <div class="stat-icon"><i class="fa-solid fa-wallet"></i></div>
-          <div class="stat-label">Nilai Pagu</div>
-          <div class="stat-value" id="statPagu">—</div>
-          <div class="stat-sub">Batas maksimal</div>
-        </div>
-        <div class="stat-card c-success">
-          <div class="stat-icon"><i class="fa-solid fa-chart-line"></i></div>
-          <div class="stat-label">Sudah Terpakai</div>
-          <div class="stat-value" id="statUsed">—</div>
-          <div class="stat-sub">Akumulasi realisasi</div>
-        </div>
-        <div class="stat-card c-warning">
-          <div class="stat-icon"><i class="fa-solid fa-coins"></i></div>
-          <div class="stat-label">Sisa Anggaran</div>
-          <div class="stat-value" id="statRemain">—</div>
-          <div class="stat-sub">Masih bisa dialokasikan</div>
-        </div>
-      </div>
-
-      <div class="toolbar">
-        <div class="search-wrap">
-          <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-          <input class="search-input" id="searchInput" type="text" placeholder="Cari kode, UPK, UPT, atau mata anggaran..." oninput="applyFilters()">
-        </div>
-
-        <select class="filter-select" id="filterEntitas" onchange="applyFilters()">
-          <option value="">Semua UPK</option>
-          <option value="Klinik">Klinik</option>
-          <option value="Yayasan">Yayasan</option>
-          <option value="Universitas">Universitas</option>
-        </select>
-
-        <select class="filter-select" id="filterStatus" onchange="applyFilters()">
-          <option value="">Semua Status</option>
-          <option value="Aktif">Aktif</option>
-          <option value="Draft">Draft</option>
-          <option value="Tutup">Tutup</option>
-        </select>
-
-        <div class="toolbar-right">
-          <button class="btn btn-accent btn-sm" onclick="seedDefaultData()"><i class="fa-solid fa-database"></i> Reset Sample</button>
-        </div>
-      </div>
-
-      <div class="panel">
-        <div class="panel-head">
-          <div>
-            <div class="panel-title"><i class="fa-solid fa-file-invoice-dollar" style="color:var(--primary)"></i> Daftar Head Anggaran Cost</div>
-            <div class="panel-sub" id="tableSubtitle">Memuat data...</div>
-          </div>
-        </div>
-
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th class="sortable" onclick="sortBy('kode')">Kode</th>
-                <th class="sortable" onclick="sortBy('entitas')">UPK</th>
-                <th class="sortable" onclick="sortBy('nama')">UPT / Mata Anggaran</th>
-                <th>Risiko</th>
-                <th class="sortable" onclick="sortBy('tahun')">Tahun</th>
-                <th class="sortable" onclick="sortBy('nominal')">Pagu</th>
-                <th>Terpakai</th>
-                <th>Sisa</th>
-                <th>Status</th>
-                <th style="text-align:right;">Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="budgetTbody"></tbody>
-          </table>
-        </div>
-
-        <div class="empty-state" id="emptyState" style="display:none;">
-          <i class="fa-solid fa-folder-open"></i>
-          <div class="empty-title">Anggaran tidak ditemukan</div>
-          <div class="empty-sub">Coba ubah pencarian atau filter.</div>
-        </div>
-
-        <div class="pagination" id="pagination"></div>
-      </div>
-    </div>
+<div id="sb-root"></div>
+<div class="main">
+  <div class="topbar">
+    <div class="breadcrumb">Sistem Anggaran <span>›</span> Perencanaan <span>›</span> Cost <span>›</span> <b>Anggaran Cost</b></div>
+    <div class="topbar-right"><div class="chip-info"><i class="fa-solid fa-folder-tree"></i> Sinkron dengan master terbaru</div><div class="topbar-date" id="topbarDate">—</div></div>
   </div>
 
-  <div class="overlay-modal" id="modalForm" onclick="closeModalIfBg(event,'modalForm')">
-    <div class="modal">
-      <div class="modal-head">
-        <div>
-          <div class="modal-title" id="modalTitle">Tambah Anggaran Cost</div>
-          <div class="modal-sub" id="modalSub">Buat head anggaran / pagu maksimal.</div>
-        </div>
-        <button class="modal-close" onclick="closeModal('modalForm')"><i class="fa-solid fa-xmark"></i></button>
+  <div class="content">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Anggaran <em>Cost</em></div>
+        <div class="page-sub">Halaman ini sekarang membaca data terbaru dari <b>Master UPK</b>, <b>Master UPT</b>, <b>Master Mata Anggaran</b>, dan <b>Master COA</b>. Risiko dihapus dari alur cost karena master terbaru mata anggaran sudah tidak memakainya.</div>
       </div>
-
-      
-<div class="modal-body">
-        <div class="section-title">Identitas Head Anggaran</div>
-
-        <input type="hidden" id="fMataId">
-        <input type="hidden" id="fMataNama">
-
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">UPK <span class="req">*</span></label>
-            <select class="form-select" id="fEntitas" onchange="handleUPKChange()">
-              <option value="">— Pilih UPK —</option>
-              <option value="Klinik">Klinik</option>
-              <option value="Yayasan">Yayasan</option>
-              <option value="Universitas">Universitas</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">UPT <span class="req">*</span></label>
-            <select class="form-select" id="fUpt" onchange="handleUPTChange()">
-              <option value="">— Pilih UPT —</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-group" style="margin-bottom:14px;">
-          <label class="form-label">Dropdown + Search Mata Anggaran <span class="req">*</span></label>
-          <div class="lookup-wrap">
-            <input
-              class="form-input"
-              id="fMataSearch"
-              type="text"
-              autocomplete="off"
-              placeholder="Ketik kode atau nama mata anggaran"
-              oninput="renderMataLookup()"
-              onfocus="renderMataLookup()"
-              onblur="hideMataLookup()"
-            >
-            <div class="lookup-results" id="mataLookupResults"></div>
-          </div>
-          <div class="lookup-help" id="mataLookupHelp">Pilih UPK dan UPT terlebih dahulu untuk menampilkan mata anggaran.</div>
-          <div class="lookup-selected" id="mataLookupSelected"></div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Kode Anggaran <span class="req">*</span></label>
-            <input class="form-input" id="fKode" type="text" placeholder="Mengikuti mata anggaran terpilih" readonly>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Tahun Anggaran <span class="req">*</span></label>
-            <select class="form-select" id="fTahun">
-              <option value="2026">2026</option>
-              <option value="2027">2027</option>
-              <option value="2028">2028</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-group" style="margin-bottom:14px;">
-          <label class="form-label">Risiko</label>
-          <select class="form-select" id="fRisk">
-            <option value="">— Pilih Risiko —</option>
-          </select>
-          <div class="lookup-help">Otomatis mengikuti mata anggaran, tetapi masih bisa diubah manual.</div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Qty <span class="req">*</span></label>
-            <input class="form-input" id="fQty" type="number" min="1" value="1" oninput="updateNominalPreview()">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Satuan <span class="req">*</span></label>
-            <input class="form-input" id="fSatuan" type="text" placeholder="Mengikuti mata anggaran" readonly>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Harga Satuan (Rp) <span class="req">*</span></label>
-            <input class="form-input" id="fHargaSatuan" type="number" min="0" placeholder="0" oninput="updateNominalPreview()">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Nilai Pagu (Rp) <span class="req">*</span></label>
-            <input class="form-input" id="fNominal" type="number" min="0" placeholder="0" readonly>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Preview Nilai</label>
-            <div class="form-input" id="nominalPreview" style="background:var(--bg);font-family:'DM Mono',monospace;">Rp 0</div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Status</label>
-            <select class="form-select" id="fStatus">
-              <option value="Aktif">Aktif</option>
-              <option value="Draft">Draft</option>
-              <option value="Tutup">Tutup</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Catatan</label>
-          <textarea class="form-textarea" id="fCatatan" placeholder="Contoh: pagu untuk pengadaan item sesuai mata anggaran terpilih."></textarea>
-        </div>
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn btn-ghost" onclick="closeModal('modalForm')">Batal</button>
-        <button class="btn btn-primary" onclick="saveBudget()"><i class="fa-solid fa-floppy-disk"></i> Simpan</button>
+      <div class="page-actions">
+        <button class="btn btn-ghost" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Export</button>
+        <button class="btn btn-accent" onclick="seedDefaultData()"><i class="fa-solid fa-database"></i> Reset Sample</button>
+        <button class="btn btn-primary" onclick="openAddModal()"><i class="fa-solid fa-plus"></i> Tambah Anggaran</button>
       </div>
     </div>
+
+    <section class="hero">
+      <div class="hero-left">
+        <div class="hero-title">Head anggaran mengikuti <em>Master Mata Anggaran</em></div>
+        <div class="hero-sub">Pilih Nama UPK, Nama UPT, lalu cari mata anggaran. Kode, satuan, harga satuan, dan COA akan otomatis ikut dari master terbaru.</div>
+      </div>
+      <div class="hero-right">
+        <div class="hero-mini"><div class="hero-mini-label">Total Head</div><div class="hero-mini-value" id="heroHead">0</div><div class="hero-mini-sub">Anggaran cost terdaftar</div></div>
+        <div class="hero-mini"><div class="hero-mini-label">Total Pagu</div><div class="hero-mini-value" id="heroPagu">Rp 0</div><div class="hero-mini-sub">Akumulasi anggaran</div></div>
+        <div class="hero-mini"><div class="hero-mini-label">Terpakai</div><div class="hero-mini-value" id="heroTerpakai">Rp 0</div><div class="hero-mini-sub">Dari realisasi cost</div></div>
+        <div class="hero-mini"><div class="hero-mini-label">Sisa Pagu</div><div class="hero-mini-value" id="heroSisa">Rp 0</div><div class="hero-mini-sub">Saldo tersedia</div></div>
+      </div>
+    </section>
+
+    <div class="stats-row">
+      <div class="stat-card c-primary"><div class="stat-icon"><i class="fa-solid fa-folder-tree"></i></div><div class="stat-label">Total Anggaran</div><div class="stat-value" id="statHead">0</div><div class="stat-sub">Head cost aktif</div></div>
+      <div class="stat-card c-accent"><div class="stat-icon"><i class="fa-solid fa-wallet"></i></div><div class="stat-label">Nilai Pagu</div><div class="stat-value" id="statPagu">Rp 0</div><div class="stat-sub">Batas maksimal</div></div>
+      <div class="stat-card c-success"><div class="stat-icon"><i class="fa-solid fa-chart-line"></i></div><div class="stat-label">Sudah Terpakai</div><div class="stat-value" id="statUsed">Rp 0</div><div class="stat-sub">Akumulasi realisasi</div></div>
+      <div class="stat-card c-warning"><div class="stat-icon"><i class="fa-solid fa-coins"></i></div><div class="stat-label">Sisa Anggaran</div><div class="stat-value" id="statRemain">Rp 0</div><div class="stat-sub">Masih bisa dipakai</div></div>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-wrap"><span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span><input class="search-input" id="searchInput" type="text" placeholder="Cari kode, mata anggaran, nama UPK, nama UPT, atau COA..." oninput="applyFilters()"></div>
+      <select class="filter-select" id="filterUpk" onchange="applyFilters()"><option value="">Semua UPK</option></select>
+      <select class="filter-select" id="filterStatus" onchange="applyFilters()">
+        <option value="">Semua Status</option>
+        <option value="Draft">Draft</option>
+        <option value="Aktif">Aktif</option>
+        <option value="Tutup">Tutup</option>
+      </select>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><div><div class="panel-title"><i class="fa-solid fa-file-invoice-dollar" style="color:var(--primary)"></i> Daftar Anggaran Cost</div><div class="panel-sub" id="tableSubtitle">Memuat data...</div></div></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th onclick="sortBy('kode')">Kode</th>
+              <th onclick="sortBy('upkNama')">Nama UPK</th>
+              <th onclick="sortBy('mataAnggaranNama')">Nama UPT / Mata Anggaran</th>
+              <th onclick="sortBy('tahun')">Tahun</th>
+              <th>COA</th>
+              <th onclick="sortBy('nominal')">Pagu</th>
+              <th>Terpakai</th>
+              <th>Sisa</th>
+              <th>Status</th>
+              <th style="text-align:right;">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="budgetTbody"></tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="emptyState" style="display:none;"><i class="fa-solid fa-folder-open"></i><div class="empty-title">Anggaran tidak ditemukan</div><div class="empty-sub">Coba ubah pencarian atau filter.</div></div>
+      <div class="pagination" id="pagination"></div>
+    </div>
   </div>
+</div>
 
-  <div class="toast-stack" id="toastStack"></div>
+<div class="overlay-modal" id="modalForm" onclick="closeModalIfBg(event,'modalForm')">
+  <div class="modal">
+    <div class="modal-head">
+      <div><div class="modal-title" id="modalTitle">Tambah Anggaran Cost</div><div class="modal-sub" id="modalSub">Buat head anggaran dari master terbaru.</div></div>
+      <button class="modal-close" onclick="closeModal('modalForm')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="fMataId">
+      <div class="section-title">Relasi Master</div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Nama UPK <span class="req">*</span></label><select class="form-select" id="fUpk" onchange="handleUpkChange()"></select></div>
+        <div class="form-group"><label class="form-label">Nama UPT <span class="req">*</span></label><select class="form-select" id="fUpt" onchange="handleUptChange()"></select></div>
+      </div>
 
-  
+      <div class="form-group" style="margin-bottom:14px;">
+        <label class="form-label">Cari Mata Anggaran <span class="req">*</span></label>
+        <div class="lookup-wrap">
+          <input class="form-input" id="fMataSearch" type="text" placeholder="Ketik kode atau nama mata anggaran" oninput="renderMataLookup()" onfocus="renderMataLookup()" onblur="hideMataLookup()">
+          <div class="lookup-results" id="mataLookupResults"></div>
+        </div>
+        <div class="helper" id="mataHelp">Pilih Nama UPK dan Nama UPT terlebih dahulu.</div>
+        <div class="lookup-selected" id="mataSelected"></div>
+      </div>
+
+      <div class="section-title">Detail Anggaran</div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Kode Mata Anggaran</label><input class="form-input" id="fKode" type="text" readonly></div>
+        <div class="form-group"><label class="form-label">Tahun Anggaran <span class="req">*</span></label><select class="form-select" id="fTahun"><option value="2026">2026</option><option value="2027">2027</option><option value="2028">2028</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Qty <span class="req">*</span></label><input class="form-input" id="fQty" type="number" min="1" value="1" oninput="updateNominalPreview()"></div>
+        <div class="form-group"><label class="form-label">Satuan <span class="req">*</span></label><input class="form-input" id="fSatuan" type="text" readonly></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Harga Satuan <span class="req">*</span></label><input class="form-input" id="fHarga" type="number" min="0" oninput="updateNominalPreview()"></div>
+        <div class="form-group"><label class="form-label">ID COA</label><input class="form-input" id="fCoa" type="text" readonly></div>
+      </div>
+      <div class="preview-box"><div class="preview-title">Preview Nilai Pagu</div><div class="preview-value" id="nominalPreview">Rp 0</div><input type="hidden" id="fNominal"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Status</label><select class="form-select" id="fStatus"><option value="Draft">Draft</option><option value="Aktif">Aktif</option><option value="Tutup">Tutup</option></select></div>
+        <div class="form-group"><label class="form-label">Catatan</label><input class="form-input" id="fCatatan" type="text" placeholder="Catatan anggaran cost"></div>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modalForm')">Batal</button><button class="btn btn-primary" onclick="saveBudget()"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div>
+  </div>
+</div>
+
+<div class="toast-stack" id="toastStack"></div>
 <script>
-    const STORAGE_BUDGETS = 'APP_COST_BUDGETS_V1';
-    const STORAGE_REALIZATIONS = 'APP_COST_REALIZATIONS_V1';
-    const STORAGE_RISKS = 'APP_MASTER_RISIKO_V1';
-    const STORAGE_UPK = 'APP_MASTER_UPK_V1';
-    const STORAGE_UPT = 'APP_MASTER_UPT_V1';
-    const STORAGE_MATA_ANGGARAN = 'APP_MASTER_MATA_ANGGARAN_V1';
+const STORAGE_UPK='APP_MASTER_UPK_V1';
+const STORAGE_UPT='APP_MASTER_UPT_V1';
+const STORAGE_MATA='APP_MASTER_MATA_ANGGARAN_V1';
+const STORAGE_COA='APP_MASTER_COA_V1';
+const STORAGE_BUDGETS='APP_COST_BUDGETS_V1';
+const STORAGE_REAL='APP_COST_REALIZATIONS_V1';
 
-    const seedBudgets = [
-      {
-        id: 1,
-        kode: 'MA-CLK-001',
-        entitas: 'Klinik',
-        uptId: 'UPT-002',
-        uptKode: 'B.KLINIK.II.05',
-        uptNama: 'Perlengkapan Kesehatan',
-        nama: 'Perlengkapan Kesehatan',
-        mataAnggaranId: 1,
-        mataAnggaranKode: 'MA-CLK-001',
-        mataAnggaranNama: 'Pembelian Obat Umum',
-        qty: 12,
-        satuan: 'box',
-        hargaSatuan: 275000,
-        risikoId: 1,
-        risikoNama: 'Risiko over budget operasional',
-        risikoSkala: 'Tinggi',
-        tahun: 2026,
-        nominal: 3300000,
-        status: 'Aktif',
-        catatan: 'Pagu untuk stok obat umum klinik.'
-      },
-      {
-        id: 2,
-        kode: 'MA-CLK-002',
-        entitas: 'Klinik',
-        uptId: 'UPT-001',
-        uptKode: 'B.KLINIK.I.01',
-        uptNama: 'Gaji Pegawai',
-        nama: 'Gaji Pegawai',
-        mataAnggaranId: 2,
-        mataAnggaranKode: 'MA-CLK-002',
-        mataAnggaranNama: 'ATK Front Office',
-        qty: 4,
-        satuan: 'paket',
-        hargaSatuan: 950000,
-        risikoId: 3,
-        risikoNama: 'Risiko ketidaksesuaian dokumentasi',
-        risikoSkala: 'Rendah',
-        tahun: 2026,
-        nominal: 3800000,
-        status: 'Draft',
-        catatan: 'Kebutuhan ATK front office.'
-      },
-      {
-        id: 3,
-        kode: 'MA-UNI-001',
-        entitas: 'Universitas',
-        uptId: 'UPT-004',
-        uptKode: 'B.UNTA.II.01',
-        uptNama: 'Operasional Akademik',
-        nama: 'Operasional Akademik',
-        mataAnggaranId: 3,
-        mataAnggaranKode: 'MA-UNI-001',
-        mataAnggaranNama: 'Listrik Gedung Fakultas',
-        qty: 12,
-        satuan: 'bulan',
-        hargaSatuan: 14500000,
-        risikoId: 2,
-        risikoNama: 'Risiko keterlambatan vendor',
-        risikoSkala: 'Sedang',
-        tahun: 2026,
-        nominal: 174000000,
-        status: 'Aktif',
-        catatan: 'Pagu listrik untuk gedung fakultas.'
-      }
-    ];
+function readJson(key){ try{ return JSON.parse(localStorage.getItem(key)) || []; } catch { return []; } }
+function writeJson(key,data){ localStorage.setItem(key, JSON.stringify(data)); }
+function esc(str){ return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function fmtCurrency(n){ return 'Rp ' + Number(n||0).toLocaleString('id-ID'); }
+function fmtShortCurrency(n){ const num=Number(n||0); if(num>=1_000_000_000) return 'Rp ' + (num/1_000_000_000).toFixed(num%1_000_000_000===0?0:1) + ' M'; if(num>=1_000_000) return 'Rp ' + (num/1_000_000).toFixed(num%1_000_000===0?0:1) + ' jt'; return fmtCurrency(num); }
+function normalizeText(v){ return String(v||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim(); }
+function unique(arr){ return [...new Set(arr.filter(Boolean))]; }
 
-    const seedRisks = [
-      { id: 1, nama: 'Risiko over budget operasional', skala: 'Tinggi' },
-      { id: 2, nama: 'Risiko keterlambatan vendor', skala: 'Sedang' },
-      { id: 3, nama: 'Risiko ketidaksesuaian dokumentasi', skala: 'Rendah' }
-    ];
+function normalizeUPKs(items){
+  return (items||[]).map((item, idx)=>({
+    id: String(item.id ?? item.id_upk ?? item.kode ?? ('UPK-'+(idx+1))),
+    kode: String(item.kode ?? item.code ?? item.id ?? ('UPK-'+(idx+1))),
+    nama: String(item.nama ?? item.name ?? item.entitas ?? item.label ?? ('UPK '+(idx+1))),
+    status: String(item.status ?? 'Aktif'),
+    catatan: String(item.catatan ?? item.note ?? '')
+  }));
+}
 
-    const seedUPK = [
-      { id:'UPK-001', kode:'KLINIK', nama:'Klinik' },
-      { id:'UPK-002', kode:'YAYASAN', nama:'Yayasan' },
-      { id:'UPK-003', kode:'UNIVERSITAS', nama:'Universitas' }
-    ];
-
-    const seedUPT = [
-      { id:'UPT-001', upkId:'UPK-001', kode:'B.KLINIK.I.01', nama:'Gaji Pegawai' },
-      { id:'UPT-002', upkId:'UPK-001', kode:'B.KLINIK.II.05', nama:'Perlengkapan Kesehatan' },
-      { id:'UPT-003', upkId:'UPK-002', kode:'B.YAYASAN.II.01', nama:'Administrasi Yayasan' },
-      { id:'UPT-004', upkId:'UPK-003', kode:'B.UNTA.II.01', nama:'Operasional Akademik' }
-    ];
-
-    const seedMataAnggaran = [
-      {
-        id:1,
-        kodeAnggaran:'MA-CLK-001',
-        namaMataAnggaran:'Pembelian Obat Umum',
-        idUpk:'UPK-001',
-        namaUpk:'Klinik',
-        idUpt:'UPT-002',
-        namaUpt:'Perlengkapan Kesehatan',
-        satuan:'box',
-        hargaSatuan:275000,
-        idCoa:'COA-002',
-        coaLabel:'06.1.01.02.18 · Biaya pembelian obat dan alat kesehatan - TP',
-        idRisk:1,
-        riskLabel:'Risiko over budget operasional',
-        riskSkala:'Tinggi'
-      },
-      {
-        id:2,
-        kodeAnggaran:'MA-CLK-002',
-        namaMataAnggaran:'ATK Front Office',
-        idUpk:'UPK-001',
-        namaUpk:'Klinik',
-        idUpt:'',
-        namaUpt:'',
-        satuan:'paket',
-        hargaSatuan:950000,
-        idCoa:'COA-003',
-        coaLabel:'06.1.01.03.02 · Biaya Alat Tulis Kantor - TP',
-        idRisk:3,
-        riskLabel:'Risiko ketidaksesuaian dokumentasi',
-        riskSkala:'Rendah'
-      },
-      {
-        id:3,
-        kodeAnggaran:'MA-UNI-001',
-        namaMataAnggaran:'Listrik Gedung Fakultas',
-        idUpk:'UPK-003',
-        namaUpk:'Universitas',
-        idUpt:'UPT-004',
-        namaUpt:'Operasional Akademik',
-        satuan:'bulan',
-        hargaSatuan:14500000,
-        idCoa:'COA-004',
-        coaLabel:'06.1.01.06.01 · Biaya Listrik - TP',
-        idRisk:2,
-        riskLabel:'Risiko keterlambatan vendor',
-        riskSkala:'Sedang'
-      }
-    ];
-
-    const seedRealizations = [
-      {
-        id: 1,
-        budgetId: 1,
-        tanggal: '2026-01-10',
-        kategori: 'Pembelian Stok',
-        detail: 'Pembelian stok obat bulan Januari',
-        qty: 1,
-        unitPrice: 1500000,
-        total: 1500000,
-        accurateStatus: 'Pending',
-        overBudget: false
-      },
-      {
-        id: 2,
-        budgetId: 1,
-        tanggal: '2026-01-25',
-        kategori: 'Pembelian Stok',
-        detail: 'Pembelian stok obat bulan Februari',
-        qty: 1,
-        unitPrice: 800000,
-        total: 800000,
-        accurateStatus: 'Pending',
-        overBudget: false
-      },
-      {
-        id: 3,
-        budgetId: 3,
-        tanggal: '2026-02-01',
-        kategori: 'Operasional Akademik',
-        detail: 'Pembayaran tagihan listrik',
-        qty: 1,
-        unitPrice: 14500000,
-        total: 14500000,
-        accurateStatus: 'Pending',
-        overBudget: false
-      }
-    ];
-
-    function readJson(key){
-      try { return JSON.parse(localStorage.getItem(key)) || []; }
-      catch { return []; }
-    }
-
-    function ensureSeed(){
-      if(!localStorage.getItem(STORAGE_BUDGETS)){
-        localStorage.setItem(STORAGE_BUDGETS, JSON.stringify(seedBudgets));
-      }
-      if(!localStorage.getItem(STORAGE_REALIZATIONS)){
-        localStorage.setItem(STORAGE_REALIZATIONS, JSON.stringify(seedRealizations));
-      }
-      if(!localStorage.getItem(STORAGE_RISKS)){
-        localStorage.setItem(STORAGE_RISKS, JSON.stringify(seedRisks));
-      }
-      if(!localStorage.getItem(STORAGE_UPK)){
-        localStorage.setItem(STORAGE_UPK, JSON.stringify(seedUPK));
-      }
-      if(!localStorage.getItem(STORAGE_UPT)){
-        localStorage.setItem(STORAGE_UPT, JSON.stringify(seedUPT));
-      }
-      if(!localStorage.getItem(STORAGE_MATA_ANGGARAN)){
-        localStorage.setItem(STORAGE_MATA_ANGGARAN, JSON.stringify(seedMataAnggaran));
-      }
-    }
-
-    function readBudgets(){ return readJson(STORAGE_BUDGETS); }
-    function writeBudgets(data){ localStorage.setItem(STORAGE_BUDGETS, JSON.stringify(data)); }
-    function readRealizations(){ return readJson(STORAGE_REALIZATIONS); }
-    function readRisks(){ return readJson(STORAGE_RISKS); }
-    function readUpks(){ return readJson(STORAGE_UPK); }
-    function readUpts(){ return readJson(STORAGE_UPT); }
-    function readMataAnggaran(){ return readJson(STORAGE_MATA_ANGGARAN); }
-
-    ensureSeed();
-
-    let BUDGETS = readBudgets();
-    let REALIZATIONS = readRealizations();
-    let RISKS = readRisks();
-    let UPKS = readUpks();
-    let UPTS = readUpts();
-    let MATA_ANGGARAN = readMataAnggaran();
-
-    const state = {
-      search: '',
-      filterEntitas: '',
-      filterStatus: '',
-      sortCol: 'kode',
-      sortDir: 'asc',
-      page: 1,
-      perPage: 8,
-      editingId: null
+function normalizeUPTs(items, upks){
+  const upkById = Object.fromEntries((upks||[]).map(u=>[String(u.id), u]));
+  return (items||[]).map((item, idx)=>{
+    const upkId = String(item.upkId ?? item.idUpk ?? item.id_upk ?? item.namaUpkId ?? '');
+    const upk = upkById[upkId];
+    return {
+      id: String(item.id ?? item.id_upt ?? item.kode ?? ('UPT-'+(idx+1))),
+      kode: String(item.kode ?? item.code ?? item.kodeUpt ?? ('UPT-'+(idx+1))),
+      nama: String(item.nama ?? item.name ?? item.namaUpt ?? ('UPT '+(idx+1))),
+      upkId,
+      upkNama: String(item.upkNama ?? item.namaUpk ?? upk?.nama ?? ''),
+      parentId: String(item.parentId ?? item.id_parent_upt ?? item.subUptDari ?? ''),
+      status: String(item.status ?? 'Aktif'),
+      catatan: String(item.catatan ?? item.note ?? '')
     };
+  });
+}
 
-    const mataLookupState = {
-      matches: [],
-      selectedId: ''
+function normalizeCOAs(items){
+  return (items||[]).map((item, idx)=>({
+    id: String(item.id ?? item.id_coa ?? item.kode ?? ('COA-'+(idx+1))),
+    kode: String(item.kode ?? item.code ?? item.id ?? ('COA-'+(idx+1))),
+    nama: String(item.nama ?? item.name ?? item.keterangan ?? item.label ?? ('COA '+(idx+1)))
+  }));
+}
+
+function normalizeMata(items, upks, upts, coas){
+  const upkById = Object.fromEntries((upks||[]).map(u=>[String(u.id), u]));
+  const coaById = Object.fromEntries((coas||[]).map(c=>[String(c.id), c]));
+  const uptById = Object.fromEntries((upts||[]).map(u=>[String(u.id), u]));
+  function findUpkByName(n){ return (upks||[]).find(x=>normalizeText(x.nama)===normalizeText(n)); }
+  function findUptByName(n, upkId=''){ return (upts||[]).find(x=>normalizeText(x.nama)===normalizeText(n) && (!upkId || String(x.upkId)===String(upkId))); }
+  return (items||[]).map((item, idx)=>{
+    const upkId = String(item.idUpk ?? item.upkId ?? item.id_upk ?? findUpkByName(item.namaUpk ?? item.upkNama ?? '')?.id ?? '');
+    const uptId = String(item.idUpt ?? item.uptId ?? item.id_upt ?? findUptByName(item.namaUpt ?? item.uptNama ?? '', upkId)?.id ?? '');
+    const coaId = String(item.idCoa ?? item.coaId ?? item.id_coa ?? '');
+    const coa = coaById[coaId];
+    return {
+      id: Number(item.id ?? idx+1),
+      kode: String(item.kodeMataAnggaran ?? item.kodeAnggaran ?? item.kode ?? ('MA-'+String(idx+1).padStart(3,'0'))),
+      nama: String(item.namaMataAnggaran ?? item.nama ?? item.name ?? ''),
+      upkId,
+      upkNama: String(item.namaUpk ?? item.upkNama ?? upkById[upkId]?.nama ?? ''),
+      uptId,
+      uptNama: String(item.namaUpt ?? item.uptNama ?? uptById[uptId]?.nama ?? ''),
+      satuan: String(item.satuan ?? ''),
+      hargaSatuan: Number(item.hargaSatuan ?? item.harga ?? 0),
+      coaId,
+      coaKode: String(item.coaKode ?? coa?.kode ?? ''),
+      coaNama: String(item.coaNama ?? coa?.nama ?? ''),
+      catatan: String(item.catatan ?? item.note ?? ''),
+      status: String(item.status ?? 'Aktif')
     };
+  });
+}
 
-    function fmtCurrency(n){
-      return 'Rp ' + (Number(n || 0)).toLocaleString('id-ID');
+function buildUptPathMap(upts){
+  const byId = Object.fromEntries((upts||[]).map(u=>[String(u.id), u]));
+  const memo = {};
+  function pathOf(id){
+    id = String(id||'');
+    if(!id || !byId[id]) return '';
+    if(memo[id]) return memo[id];
+    const node = byId[id];
+    const parent = node.parentId && byId[String(node.parentId)] ? pathOf(node.parentId) : '';
+    memo[id] = parent ? `${parent} › ${node.nama}` : node.nama;
+    return memo[id];
+  }
+  (upts||[]).forEach(u=>pathOf(u.id));
+  return memo;
+}
+
+function normalizeBudgets(items, masters){
+  const {upks, upts, mata, coas} = masters;
+  const upkById = Object.fromEntries(upks.map(u=>[String(u.id), u]));
+  const uptById = Object.fromEntries(upts.map(u=>[String(u.id), u]));
+  const mataById = Object.fromEntries(mata.map(m=>[String(m.id), m]));
+  const mataByCode = Object.fromEntries(mata.map(m=>[normalizeText(m.kode), m]));
+  const coaById = Object.fromEntries(coas.map(c=>[String(c.id), c]));
+  function findUpkByName(n){ return upks.find(x=>normalizeText(x.nama)===normalizeText(n)); }
+  function findUptByName(n, upkId=''){ return upts.find(x=>normalizeText(x.nama)===normalizeText(n) && (!upkId || String(x.upkId)===String(upkId))); }
+  return (items||[]).map((item, idx)=>{
+    const mataRef = item.mataAnggaranId ? mataById[String(item.mataAnggaranId)] : (mataByCode[normalizeText(item.mataAnggaranKode || item.kode || '')] || null);
+    let upkId = String(item.upkId ?? item.idUpk ?? item.id_upk ?? mataRef?.upkId ?? findUpkByName(item.upkNama ?? item.namaUpk ?? item.entitas ?? '')?.id ?? '');
+    let uptId = String(item.uptId ?? item.idUpt ?? item.id_upt ?? mataRef?.uptId ?? findUptByName(item.uptNama ?? item.nama ?? '', upkId)?.id ?? '');
+    const upk = upkById[upkId];
+    const upt = uptById[uptId];
+    const coaId = String(item.coaId ?? item.idCoa ?? item.id_coa ?? mataRef?.coaId ?? '');
+    const coa = coaById[coaId];
+    const qty = Number(item.qty ?? 1);
+    const harga = Number(item.hargaSatuan ?? item.unitPrice ?? mataRef?.hargaSatuan ?? ((item.nominal && qty) ? Number(item.nominal)/Math.max(1,qty) : 0));
+    return {
+      id: Number(item.id ?? idx+1),
+      kode: String(item.kode ?? item.mataAnggaranKode ?? mataRef?.kode ?? ('AC-'+String(idx+1).padStart(3,'0'))),
+      tahun: Number(item.tahun ?? new Date().getFullYear()),
+      upkId,
+      upkKode: String(item.upkKode ?? upk?.kode ?? ''),
+      upkNama: String(item.upkNama ?? item.namaUpk ?? item.entitas ?? upk?.nama ?? ''),
+      uptId,
+      uptKode: String(item.uptKode ?? upt?.kode ?? ''),
+      uptNama: String(item.uptNama ?? item.nama ?? upt?.nama ?? ''),
+      mataAnggaranId: String(item.mataAnggaranId ?? mataRef?.id ?? ''),
+      mataAnggaranKode: String(item.mataAnggaranKode ?? item.kode ?? mataRef?.kode ?? ''),
+      mataAnggaranNama: String(item.mataAnggaranNama ?? mataRef?.nama ?? item.nama ?? ''),
+      qty,
+      satuan: String(item.satuan ?? mataRef?.satuan ?? ''),
+      hargaSatuan: harga,
+      nominal: Number(item.nominal ?? (qty*harga)),
+      coaId,
+      coaKode: String(item.coaKode ?? coa?.kode ?? mataRef?.coaKode ?? ''),
+      coaNama: String(item.coaNama ?? coa?.nama ?? mataRef?.coaNama ?? ''),
+      catatan: String(item.catatan ?? item.note ?? ''),
+      status: String(item.status ?? 'Draft')
+    };
+  });
+}
+
+function normalizeRealisasi(items){
+  return (items||[]).map((item, idx)=>({
+    id: Number(item.id ?? idx+1),
+    budgetId: Number(item.budgetId ?? item.anggaranId ?? 0),
+    tanggal: String(item.tanggal ?? new Date().toISOString().slice(0,10)),
+    kategori: String(item.kategori ?? item.category ?? ''),
+    detail: String(item.detail ?? item.deskripsi ?? ''),
+    qty: Number(item.qty ?? 1),
+    unitPrice: Number(item.unitPrice ?? item.hargaSatuan ?? 0),
+    total: Number(item.total ?? ((item.qty ?? 1) * (item.unitPrice ?? item.hargaSatuan ?? 0))),
+    accurateStatus: String(item.accurateStatus ?? item.statusPush ?? 'Pending'),
+    overBudget: Boolean(item.overBudget),
+    catatan: String(item.catatan ?? item.note ?? '')
+  }));
+}
+
+function getMasters(){
+  const upks = normalizeUPKs(readJson(STORAGE_UPK));
+  const upts = normalizeUPTs(readJson(STORAGE_UPT), upks);
+  const coas = normalizeCOAs(readJson(STORAGE_COA));
+  const mata = normalizeMata(readJson(STORAGE_MATA), upks, upts, coas);
+  const uptPaths = buildUptPathMap(upts);
+  return { upks, upts, coas, mata, uptPaths };
+}
+
+function getUsage(realizations, budgetId, excludeId=null){
+  return realizations.filter(r=>Number(r.budgetId)===Number(budgetId) && Number(r.id)!==Number(excludeId)).reduce((s,r)=>s+Number(r.total||0),0);
+}
+
+function statusBudgetBadge(status){
+  if(status==='Aktif' || status==='Anggaran Aktif') return '<span class="badge badge-success">Aktif</span>';
+  if(status==='Tutup' || status==='Nonaktif') return '<span class="badge badge-danger">Tutup</span>';
+  return '<span class="badge badge-warning">Draft</span>';
+}
+
+
+let masters = getMasters();
+let BUDGETS = normalizeBudgets(readJson(STORAGE_BUDGETS), masters);
+let REAL = normalizeRealisasi(readJson(STORAGE_REAL));
+function persistBudgets(){ writeJson(STORAGE_BUDGETS, BUDGETS); }
+function refreshAll(){ masters = getMasters(); BUDGETS = normalizeBudgets(readJson(STORAGE_BUDGETS), masters); REAL = normalizeRealisasi(readJson(STORAGE_REAL)); }
+
+const state = { search:'', filterUpk:'', filterStatus:'', sortCol:'kode', sortDir:'asc', page:1, perPage:8, editingId:null };
+const lookupState = { matches:[] };
+
+function topbarDate(){
+  document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('id-ID',{weekday:'short',day:'numeric',month:'long',year:'numeric'});
+}
+
+function populateUpkFilter(){
+  const select = document.getElementById('filterUpk');
+  const current = state.filterUpk;
+  select.innerHTML = '<option value="">Semua UPK</option>' + masters.upks.filter(u=>u.status!=='Nonaktif').map(u=>`<option value="${esc(u.id)}">${esc(u.nama)}</option>`).join('');
+  select.value = current || '';
+}
+function populateUpkOptions(selected=''){
+  const select = document.getElementById('fUpk');
+  select.innerHTML = '<option value="">— Pilih Nama UPK —</option>' + masters.upks.filter(u=>u.status!=='Nonaktif').map(u=>`<option value="${esc(u.id)}">${esc(u.kode)} · ${esc(u.nama)}</option>`).join('');
+  select.value = selected || '';
+}
+function populateUptOptions(selected=''){
+  const upkId = document.getElementById('fUpk').value;
+  const select = document.getElementById('fUpt');
+  const items = masters.upts.filter(u=>String(u.upkId)===String(upkId) && u.status!=='Nonaktif').sort((a,b)=>String(masters.uptPaths[a.id]||a.nama).localeCompare(String(masters.uptPaths[b.id]||b.nama)));
+  select.innerHTML = '<option value="">— Pilih Nama UPT —</option>' + items.map(u=>`<option value="${esc(u.id)}">${esc(u.kode)} · ${esc(masters.uptPaths[u.id]||u.nama)}</option>`).join('');
+  select.value = selected || '';
+}
+function getMataMatches(){
+  const upkId = document.getElementById('fUpk').value;
+  const uptId = document.getElementById('fUpt').value;
+  const q = normalizeText(document.getElementById('fMataSearch').value);
+  if(!upkId || !uptId) return [];
+  return masters.mata
+    .filter(m=>String(m.upkId)===String(upkId))
+    .filter(m=>!m.uptId || String(m.uptId)===String(uptId))
+    .filter(m=>m.status!=='Nonaktif')
+    .filter(m=>!q || [m.kode,m.nama,m.uptNama,m.coaKode,m.coaNama,m.catatan].some(v=>normalizeText(v).includes(q)))
+    .sort((a,b)=>String(a.nama).localeCompare(String(b.nama)))
+    .slice(0,25);
+}
+function renderMataLookup(){
+  const box = document.getElementById('mataLookupResults');
+  if(!document.getElementById('fUpk').value || !document.getElementById('fUpt').value){
+    box.classList.remove('open');
+    box.innerHTML = '';
+    document.getElementById('mataHelp').textContent = 'Pilih Nama UPK dan Nama UPT terlebih dahulu.';
+    return;
+  }
+  const matches = getMataMatches();
+  lookupState.matches = matches;
+  document.getElementById('mataHelp').textContent = matches.length ? `Ditemukan ${matches.length} mata anggaran.` : 'Tidak ada mata anggaran yang cocok.';
+  if(!matches.length){
+    box.innerHTML = '<div class="lookup-empty">Data tidak ditemukan.</div>';
+    box.classList.add('open');
+    return;
+  }
+  box.innerHTML = matches.map((m, idx)=>`
+    <button type="button" class="lookup-item" onmousedown="selectMata(${idx}); return false;">
+      <div class="lookup-item-top"><span class="lookup-code">${esc(m.kode)}</span><span class="badge badge-neutral">${esc(m.satuan || '-')}</span></div>
+      <div class="lookup-name">${esc(m.nama)}</div>
+      <div class="lookup-meta">${esc(m.uptNama || 'Level UPK')} · ${fmtCurrency(m.hargaSatuan)} · ${esc(m.coaKode || '-')}</div>
+    </button>
+  `).join('');
+  box.classList.add('open');
+}
+function hideMataLookup(){ setTimeout(()=>document.getElementById('mataLookupResults').classList.remove('open'), 140); }
+function clearSelectedMata(resetSearch=true){
+  if(resetSearch) document.getElementById('fMataSearch').value='';
+  document.getElementById('fMataId').value='';
+  document.getElementById('fKode').value='';
+  document.getElementById('fSatuan').value='';
+  document.getElementById('fHarga').value='';
+  document.getElementById('fCoa').value='';
+  const sel = document.getElementById('mataSelected');
+  sel.innerHTML = '';
+  sel.style.display = 'none';
+  updateNominalPreview();
+}
+function selectMata(idx){
+  const item = lookupState.matches[idx];
+  if(!item) return;
+  document.getElementById('fMataId').value = item.id;
+  document.getElementById('fMataSearch').value = `${item.kode} — ${item.nama}`;
+  document.getElementById('fKode').value = item.kode;
+  document.getElementById('fSatuan').value = item.satuan || '';
+  document.getElementById('fHarga').value = Number(item.hargaSatuan || 0);
+  document.getElementById('fCoa').value = item.coaId || '';
+  const sel = document.getElementById('mataSelected');
+  sel.innerHTML = `<strong>${esc(item.kode)} · ${esc(item.nama)}</strong><span>UPK: ${esc(item.upkNama)}<br>UPT: ${esc(item.uptNama || 'Level UPK')}<br>Satuan: ${esc(item.satuan || '-')} · Harga Satuan: ${fmtCurrency(item.hargaSatuan)}<br>COA: ${esc(item.coaKode || '-')} ${item.coaNama ? '· '+esc(item.coaNama) : ''}</span>`;
+  sel.style.display = 'flex';
+  document.getElementById('mataLookupResults').classList.remove('open');
+  if(!Number(document.getElementById('fQty').value||0)) document.getElementById('fQty').value = 1;
+  updateNominalPreview();
+}
+function handleUpkChange(){ populateUptOptions(); clearSelectedMata(true); document.getElementById('mataHelp').textContent='Pilih Nama UPT terlebih dahulu.'; }
+function handleUptChange(){ clearSelectedMata(true); document.getElementById('mataHelp').textContent='Ketik kode atau nama mata anggaran.'; renderMataLookup(); }
+
+function updateNominalPreview(){
+  const qty = Number(document.getElementById('fQty').value || 0);
+  const harga = Number(document.getElementById('fHarga').value || 0);
+  const total = qty * harga;
+  document.getElementById('fNominal').value = total;
+  document.getElementById('nominalPreview').textContent = fmtCurrency(total);
+}
+function getFilteredBudgets(){
+  const q = normalizeText(state.search);
+  return BUDGETS.filter(b=>{
+    if(state.filterUpk && String(b.upkId)!==String(state.filterUpk)) return false;
+    if(state.filterStatus && String(b.status)!==String(state.filterStatus)) return false;
+    if(q){
+      const hay = [b.kode,b.upkNama,b.uptNama,b.mataAnggaranNama,b.coaKode,b.coaNama,b.catatan].join(' ');
+      if(!normalizeText(hay).includes(q)) return false;
     }
-
-    function fmtShortCurrency(n){
-      const num = Number(n || 0);
-      if(num >= 1000000000) return 'Rp ' + (num / 1000000000).toFixed(num % 1000000000 === 0 ? 0 : 1) + ' M';
-      if(num >= 1000000) return 'Rp ' + (num / 1000000).toFixed(num % 1000000 === 0 ? 0 : 1) + ' jt';
-      return fmtCurrency(num);
+    return true;
+  }).sort((a,b)=>{
+    const av = a[state.sortCol] ?? '';
+    const bv = b[state.sortCol] ?? '';
+    if(typeof av === 'string' || typeof bv === 'string'){
+      return state.sortDir==='asc' ? String(av).localeCompare(String(bv)) : String(bv).localeCompare(String(av));
     }
-
-    function normalizeText(value){
-      return String(value || '')
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[̀-ͯ]/g, '')
-        .trim();
-    }
-
-    function escapeHtml(str){
-      return String(str ?? '')
-        .replace(/&/g,'&amp;')
-        .replace(/</g,'&lt;')
-        .replace(/>/g,'&gt;')
-        .replace(/"/g,'&quot;')
-        .replace(/'/g,'&#39;');
-    }
-
-    function getUsage(budgetId){
-      const used = REALIZATIONS
-        .filter(r => Number(r.budgetId) === Number(budgetId))
-        .reduce((sum, r) => sum + Number(r.total || 0), 0);
-
-      const budget = BUDGETS.find(b => Number(b.id) === Number(budgetId));
-      const nominal = Number(budget?.nominal || 0);
-      const remain = nominal - used;
-      const pct = nominal > 0 ? Math.min(100, Math.round((used / nominal) * 100)) : 0;
-
-      return { used, remain, pct };
-    }
-
-    function getRiskById(id){
-      return RISKS.find(r => String(r.id) === String(id));
-    }
-
-    function getRiskByName(name){
-      return RISKS.find(r => normalizeText(r.nama) === normalizeText(name));
-    }
-
-    function getUpkByName(name){
-      return UPKS.find(item => normalizeText(item.nama) === normalizeText(name));
-    }
-
-    function getUptById(id){
-      return UPTS.find(item => String(item.id) === String(id));
-    }
-
-    function getMataById(id){
-      return MATA_ANGGARAN.find(item => String(item.id) === String(id));
-    }
-
-    function getUptsForEntitas(entitas){
-      const upk = getUpkByName(entitas);
-      if(!upk) return [];
-      return UPTS
-        .filter(item => String(item.upkId) === String(upk.id))
-        .sort((a,b) => String(a.nama || '').localeCompare(String(b.nama || '')));
-    }
-
-    function populateUptOptions(selected = ''){
-      const entitas = document.getElementById('fEntitas').value;
-      const select = document.getElementById('fUpt');
-      const options = getUptsForEntitas(entitas);
-      select.innerHTML = '<option value="">— Pilih UPT —</option>' + options.map(item => (
-        `<option value="${escapeHtml(item.id)}">${escapeHtml(item.kode || '-')} · ${escapeHtml(item.nama || '-')}</option>`
-      )).join('');
-      if(selected) select.value = String(selected);
-    }
-
-    function populateRiskOptions(selected = ''){
-      RISKS = readRisks();
-      const select = document.getElementById('fRisk');
-      const options = RISKS
-        .slice()
-        .sort((a, b) => String(a.nama || '').localeCompare(String(b.nama || '')))
-        .map(item => `<option value="${escapeHtml(String(item.id))}">${escapeHtml(item.nama)}${item.skala ? ` · ${escapeHtml(item.skala)}` : ''}</option>`)
-        .join('');
-      select.innerHTML = '<option value="">— Pilih Risiko —</option>' + options;
-
-      if(selected){
-        const byId = getRiskById(selected);
-        if(byId){
-          select.value = String(byId.id);
-          return;
-        }
-        const byName = getRiskByName(selected);
-        if(byName){
-          select.value = String(byName.id);
-        }
-      }
-    }
-
-    function setMataLookupHelp(message){
-      document.getElementById('mataLookupHelp').textContent = message;
-    }
-
-    function clearMataLookup(resetSearch = false){
-      const results = document.getElementById('mataLookupResults');
-      const selected = document.getElementById('mataLookupSelected');
-      results.innerHTML = '';
-      results.classList.remove('open');
-      selected.innerHTML = '';
-      selected.style.display = 'none';
-      mataLookupState.matches = [];
-      mataLookupState.selectedId = '';
-      document.getElementById('fMataId').value = '';
-      document.getElementById('fMataNama').value = '';
-      document.getElementById('fKode').value = '';
-      document.getElementById('fSatuan').value = '';
-      document.getElementById('fHargaSatuan').value = '';
-      if(resetSearch){
-        document.getElementById('fMataSearch').value = '';
-      }
-      updateNominalPreview();
-    }
-
-    function getFilteredMataAnggaran(){
-      const entitas = document.getElementById('fEntitas').value;
-      const uptId = document.getElementById('fUpt').value;
-      const query = document.getElementById('fMataSearch').value.trim();
-      const upk = getUpkByName(entitas);
-
-      if(!entitas || !upk){
-        setMataLookupHelp('Pilih UPK terlebih dahulu untuk menampilkan mata anggaran.');
-        return [];
-      }
-      if(!uptId){
-        setMataLookupHelp('Pilih UPT terlebih dahulu untuk memfilter mata anggaran.');
-        return [];
-      }
-
-      const needle = normalizeText(query);
-      const matches = MATA_ANGGARAN
-        .filter(item => String(item.idUpk) === String(upk.id))
-        .filter(item => !item.idUpt || String(item.idUpt) === String(uptId))
-        .filter(item => {
-          if(!needle) return true;
-          return [
-            item.kodeAnggaran,
-            item.namaMataAnggaran,
-            item.satuan,
-            item.namaUpt,
-            item.coaLabel,
-            item.riskLabel
-          ].some(value => normalizeText(value).includes(needle));
-        })
-        .sort((a, b) => String(a.namaMataAnggaran || '').localeCompare(String(b.namaMataAnggaran || '')))
-        .slice(0, 20);
-
-      setMataLookupHelp(`Mata anggaran tersedia: ${matches.length}. Cari dengan kode atau nama mata anggaran.`);
-      return matches;
-    }
-
-    function renderMataLookup(){
-      const results = document.getElementById('mataLookupResults');
-      const entitas = document.getElementById('fEntitas').value;
-      const uptId = document.getElementById('fUpt').value;
-
-      if(!entitas){
-        clearMataLookup(false);
-        setMataLookupHelp('Pilih UPK terlebih dahulu untuk menampilkan mata anggaran.');
-        return;
-      }
-      if(!uptId){
-        results.innerHTML = '';
-        results.classList.remove('open');
-        setMataLookupHelp('Pilih UPT terlebih dahulu untuk memfilter mata anggaran.');
-        return;
-      }
-
-      const matches = getFilteredMataAnggaran();
-      mataLookupState.matches = matches;
-
-      if(!matches.length){
-        results.innerHTML = '<div class="lookup-empty">Data mata anggaran tidak ditemukan untuk kombinasi UPK dan UPT ini.</div>';
-        results.classList.add('open');
-        return;
-      }
-
-      results.innerHTML = matches.map((item, index) => `
-        <button type="button" class="lookup-item" onmousedown="selectMataAnggaran(${index}); return false;">
-          <div class="lookup-item-top">
-            <span class="lookup-code">${escapeHtml(item.kodeAnggaran)}</span>
-            <span class="lookup-group">${escapeHtml(item.satuan || '-')}</span>
-          </div>
-          <div class="lookup-name">${escapeHtml(item.namaMataAnggaran)}</div>
-          <div class="lookup-accurate">${fmtCurrency(item.hargaSatuan)} · ${escapeHtml(item.namaUpt || 'Semua UPT pada UPK ini')} · ${escapeHtml(item.riskLabel || 'Tanpa risk')}</div>
-        </button>
-      `).join('');
-      results.classList.add('open');
-    }
-
-    function selectMataAnggaran(index){
-      const item = mataLookupState.matches[index];
-      if(!item) return;
-
-      document.getElementById('fMataId').value = item.id;
-      document.getElementById('fMataNama').value = item.namaMataAnggaran || '';
-      document.getElementById('fMataSearch').value = `${item.kodeAnggaran} — ${item.namaMataAnggaran}`;
-      document.getElementById('fKode').value = item.kodeAnggaran || '';
-      document.getElementById('fSatuan').value = item.satuan || '';
-      document.getElementById('fHargaSatuan').value = Number(item.hargaSatuan || 0);
-      mataLookupState.selectedId = String(item.id);
-
-      if(!Number(document.getElementById('fQty').value || 0)){
-        document.getElementById('fQty').value = 1;
-      }
-
-      if(item.idRisk){
-        const risk = getRiskById(item.idRisk);
-        if(risk){
-          document.getElementById('fRisk').value = String(risk.id);
-        }
-      }
-
-      const selected = document.getElementById('mataLookupSelected');
-      selected.innerHTML = `
-        <strong>${escapeHtml(item.kodeAnggaran)} · ${escapeHtml(item.namaMataAnggaran)}</strong>
-        <span>UPT: ${escapeHtml(item.namaUpt || 'Semua UPT pada UPK ini')}<br>Satuan: ${escapeHtml(item.satuan || '-')} · Harga: ${fmtCurrency(item.hargaSatuan)}<br>Risk: ${escapeHtml(item.riskLabel || '-')} ${item.riskSkala ? `(${escapeHtml(item.riskSkala)})` : ''}</span>
-      `;
-      selected.style.display = 'flex';
-      document.getElementById('mataLookupResults').classList.remove('open');
-      updateNominalPreview();
-    }
-
-    function hideMataLookup(){
-      setTimeout(() => {
-        document.getElementById('mataLookupResults').classList.remove('open');
-      }, 140);
-    }
-
-    function handleUPKChange(){
-      populateUptOptions();
-      clearMataLookup(true);
-      document.getElementById('fRisk').value = '';
-      setMataLookupHelp('Pilih UPT terlebih dahulu untuk memfilter mata anggaran.');
-    }
-
-    function handleUPTChange(){
-      clearMataLookup(true);
-      document.getElementById('fRisk').value = '';
-      setMataLookupHelp('Ketik kode atau nama mata anggaran untuk memilih item yang sesuai.');
-      renderMataLookup();
-    }
-
-    function setCustomMataDisplay(item){
-      const selected = document.getElementById('mataLookupSelected');
-      if(!item) {
-        selected.innerHTML = '';
-        selected.style.display = 'none';
-        return;
-      }
-      selected.innerHTML = `
-        <strong>${escapeHtml(item.kode || item.mataAnggaranKode || '-')} · ${escapeHtml(item.mataAnggaranNama || item.nama || '-')}</strong>
-        <span>UPT: ${escapeHtml(item.uptNama || item.nama || '-')}<br>Satuan: ${escapeHtml(item.satuan || '-')} · Harga: ${fmtCurrency(item.hargaSatuan || 0)}</span>
-      `;
-      selected.style.display = 'flex';
-    }
-
-    function updateNominalPreview(){
-      const qty = Number(document.getElementById('fQty').value || 0);
-      const harga = Number(document.getElementById('fHargaSatuan').value || 0);
-      const total = qty * harga;
-      document.getElementById('fNominal').value = total;
-      document.getElementById('nominalPreview').textContent = fmtCurrency(total);
-    }
-
-    function budgetBadge(status){
-      if(status === 'Aktif') return '<span class="badge badge-success"><i class="fa-solid fa-circle-check"></i>Aktif</span>';
-      if(status === 'Draft') return '<span class="badge badge-warning"><i class="fa-solid fa-pen"></i>Draft</span>';
-      return '<span class="badge badge-danger"><i class="fa-solid fa-lock"></i>Tutup</span>';
-    }
-
-    function progressColor(pct, remain){
-      if(remain < 0) return 'var(--danger)';
-      if(pct >= 80) return 'var(--accent)';
-      return 'var(--primary)';
-    }
-
-    function updateStats(){
-      const totalHead = BUDGETS.length;
-      const totalPagu = BUDGETS.reduce((sum,b) => sum + Number(b.nominal || 0), 0);
-      const totalUsed = REALIZATIONS.reduce((sum,r) => sum + Number(r.total || 0), 0);
-      const totalRemain = totalPagu - totalUsed;
-
-      document.getElementById('statHead').textContent = totalHead;
-      document.getElementById('statPagu').textContent = fmtShortCurrency(totalPagu);
-      document.getElementById('statUsed').textContent = fmtShortCurrency(totalUsed);
-      document.getElementById('statRemain').textContent = fmtShortCurrency(totalRemain);
-
-      document.getElementById('heroHead').textContent = totalHead;
-      document.getElementById('heroPagu').textContent = fmtShortCurrency(totalPagu);
-      document.getElementById('heroTerpakai').textContent = fmtShortCurrency(totalUsed);
-      document.getElementById('heroSisa').textContent = fmtShortCurrency(totalRemain);
-    }
-
-    function applyFilters(){
-      state.search = document.getElementById('searchInput').value.trim().toLowerCase();
-      state.filterEntitas = document.getElementById('filterEntitas').value;
-      state.filterStatus = document.getElementById('filterStatus').value;
-      state.page = 1;
-      render();
-    }
-
-    function getFiltered(){
-      return BUDGETS
-        .filter(item => {
-          if(state.filterEntitas && item.entitas !== state.filterEntitas) return false;
-          if(state.filterStatus && item.status !== state.filterStatus) return false;
-
-          if(state.search){
-            const hay = [
-              item.kode,
-              item.entitas,
-              item.nama,
-              item.uptKode || '',
-              item.uptNama || '',
-              item.mataAnggaranKode || '',
-              item.mataAnggaranNama || '',
-              item.risikoNama || '',
-              item.catatan || '',
-              item.satuan || ''
-            ].join(' ').toLowerCase();
-
-            if(!hay.includes(state.search)) return false;
-          }
-
-          return true;
-        })
-        .sort((a,b) => {
-          let av = a[state.sortCol];
-          let bv = b[state.sortCol];
-          if(typeof av === 'string') return state.sortDir === 'asc' ? String(av || '').localeCompare(String(bv || '')) : String(bv || '').localeCompare(String(av || ''));
-          return Number(state.sortDir === 'asc' ? (av || 0) - (bv || 0) : (bv || 0) - (av || 0));
-        });
-    }
-
-    function sortBy(col){
-      if(state.sortCol === col){
-        state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
-      } else {
-        state.sortCol = col;
-        state.sortDir = 'asc';
-      }
-      render();
-    }
-
-    function render(){
-      updateStats();
-
-      const data = getFiltered();
-      const start = (state.page - 1) * state.perPage;
-      const page = data.slice(start, start + state.perPage);
-
-      document.getElementById('tableSubtitle').textContent = `Menampilkan ${data.length} dari ${BUDGETS.length} head anggaran`;
-
-      const tbody = document.getElementById('budgetTbody');
-      const empty = document.getElementById('emptyState');
-
-      if(!page.length){
-        tbody.innerHTML = '';
-        empty.style.display = 'block';
-        document.getElementById('pagination').innerHTML = '';
-        return;
-      }
-
-      empty.style.display = 'none';
-
-      tbody.innerHTML = page.map(item => {
-        const usage = getUsage(item.id);
-        const pct = Number(item.nominal) > 0 ? Math.min(100, Math.round((usage.used / Number(item.nominal)) * 100)) : 0;
-        const color = progressColor(pct, usage.remain);
-        const uptLabel = item.uptNama || item.nama || '-';
-        const uptCode = item.uptKode || '';
-        const mataLabel = item.mataAnggaranNama || '-';
-        const qtyLabel = item.qty ? `${Number(item.qty).toLocaleString('id-ID')} ${item.satuan || ''}`.trim() : '-';
-        const priceLabel = item.hargaSatuan ? fmtCurrency(item.hargaSatuan) : '-';
-
-        return `
-          <tr>
-            <td class="mono">${escapeHtml(item.kode || '-')}</td>
-            <td><span class="badge badge-primary">${escapeHtml(item.entitas || '-')}</span></td>
-            <td>
-              <div class="title-cell">${escapeHtml(uptLabel)}</div>
-              <div class="title-sub">${escapeHtml(mataLabel)}${uptCode ? ` · ${escapeHtml(uptCode)}` : ''}${qtyLabel !== '-' ? ` · ${escapeHtml(qtyLabel)}` : ''}${priceLabel !== '-' ? ` × ${escapeHtml(priceLabel)}` : ''}</div>
-            </td>
-            <td>
-              <span class="badge badge-accent">${item.risikoNama ? escapeHtml(item.risikoNama) : '-'}</span>
-            </td>
-            <td class="mono">${escapeHtml(item.tahun || '-')}</td>
-            <td class="mono">${fmtCurrency(item.nominal)}</td>
-            <td>
-              <div class="progress-wrap">
-                <div class="progress-track">
-                  <div class="progress-fill" style="width:${pct}%;background:${color};"></div>
-                </div>
-                <div class="progress-label">${pct}%</div>
-              </div>
-              <div class="title-sub">${fmtCurrency(usage.used)}</div>
-            </td>
-            <td>
-              <div class="mono" style="color:${usage.remain < 0 ? 'var(--danger)' : 'var(--text)'}">${fmtCurrency(usage.remain)}</div>
-              <div class="title-sub">${usage.remain < 0 ? 'Melebihi pagu' : 'Tersedia'}</div>
-            </td>
-            <td>${budgetBadge(item.status)}</td>
-            <td style="text-align:right;">
-              <div class="actions-inline">
-                <button class="act-btn primary" onclick="openEditModal(${item.id})" title="Edit"><i class="fa-solid fa-pen"></i></button>
-                <button class="act-btn danger" onclick="deleteBudget(${item.id})" title="Hapus"><i class="fa-solid fa-trash"></i></button>
-              </div>
-            </td>
-          </tr>
-        `;
-      }).join('');
-
-      renderPagination(data.length);
-    }
-
-    function renderPagination(total){
-      const pages = Math.ceil(total / state.perPage);
-      const start = (state.page - 1) * state.perPage + 1;
-      const end = Math.min(state.page * state.perPage, total);
-
-      let buttons = '';
-      for(let i=1;i<=pages;i++){
-        buttons += `<button class="pg-btn ${i===state.page?'active':''}" onclick="goPage(${i})">${i}</button>`;
-      }
-
-      document.getElementById('pagination').innerHTML = `
-        <div class="pagination-info">Menampilkan ${start}-${end} dari ${total} data</div>
-        <div class="pagination-btns">
-          <button class="pg-btn" onclick="goPage(${state.page-1})" ${state.page<=1?'disabled':''}><i class="fa-solid fa-chevron-left"></i></button>
-          ${buttons}
-          <button class="pg-btn" onclick="goPage(${state.page+1})" ${state.page>=pages?'disabled':''}><i class="fa-solid fa-chevron-right"></i></button>
-        </div>
-      `;
-    }
-
-    function goPage(page){
-      const total = getFiltered().length;
-      const maxPage = Math.max(1, Math.ceil(total / state.perPage));
-      state.page = Math.max(1, Math.min(page, maxPage));
-      render();
-    }
-
-    function openAddModal(){
-      state.editingId = null;
-      document.getElementById('modalTitle').textContent = 'Tambah Anggaran Cost';
-      document.getElementById('modalSub').textContent = 'Buat head anggaran / pagu maksimal berdasarkan mata anggaran.';
-      document.getElementById('fEntitas').value = '';
-      populateUptOptions();
-      document.getElementById('fTahun').value = '2026';
-      document.getElementById('fQty').value = 1;
-      document.getElementById('fSatuan').value = '';
-      document.getElementById('fHargaSatuan').value = '';
-      document.getElementById('fNominal').value = '';
-      document.getElementById('fStatus').value = 'Aktif';
-      document.getElementById('fCatatan').value = '';
-      populateRiskOptions();
-      clearMataLookup(true);
-      setMataLookupHelp('Pilih UPK dan UPT terlebih dahulu untuk menampilkan mata anggaran.');
-      updateNominalPreview();
-      openModal('modalForm');
-    }
-
-    function openEditModal(id){
-      const item = BUDGETS.find(b => Number(b.id) === Number(id));
-      if(!item) return;
-
-      state.editingId = id;
-      document.getElementById('modalTitle').textContent = 'Edit Anggaran Cost';
-      document.getElementById('modalSub').textContent = `${item.kode || '-'} — ${item.mataAnggaranNama || item.uptNama || item.nama || '-'}`;
-      document.getElementById('fEntitas').value = item.entitas || '';
-      populateUptOptions(item.uptId || '');
-      document.getElementById('fTahun').value = item.tahun || '2026';
-      populateRiskOptions(item.risikoId || item.risikoNama || '');
-      document.getElementById('fQty').value = item.qty || 1;
-      document.getElementById('fSatuan').value = item.satuan || '';
-      document.getElementById('fHargaSatuan').value = item.hargaSatuan || (Number(item.nominal || 0) / Math.max(1, Number(item.qty || 1)));
-      document.getElementById('fStatus').value = item.status || 'Aktif';
-      document.getElementById('fCatatan').value = item.catatan || '';
-      document.getElementById('fKode').value = item.kode || item.mataAnggaranKode || '';
-      document.getElementById('fNominal').value = item.nominal || 0;
-
-      const mata = item.mataAnggaranId ? getMataById(item.mataAnggaranId) : null;
-      clearMataLookup(true);
-
-      if(mata){
-        document.getElementById('fMataId').value = mata.id;
-        document.getElementById('fMataNama').value = mata.namaMataAnggaran || '';
-        document.getElementById('fMataSearch').value = `${mata.kodeAnggaran} — ${mata.namaMataAnggaran}`;
-        mataLookupState.selectedId = String(mata.id);
-        setCustomMataDisplay({
-          kode: mata.kodeAnggaran,
-          mataAnggaranNama: mata.namaMataAnggaran,
-          uptNama: mata.namaUpt || item.uptNama,
-          satuan: mata.satuan,
-          hargaSatuan: mata.hargaSatuan
-        });
-      } else {
-        document.getElementById('fMataId').value = item.mataAnggaranId || '';
-        document.getElementById('fMataNama').value = item.mataAnggaranNama || '';
-        document.getElementById('fMataSearch').value = item.mataAnggaranNama ? `${item.kode || item.mataAnggaranKode || ''} — ${item.mataAnggaranNama}` : (item.kode || '');
-        setCustomMataDisplay({
-          kode: item.kode || item.mataAnggaranKode,
-          mataAnggaranNama: item.mataAnggaranNama,
-          uptNama: item.uptNama || item.nama,
-          satuan: item.satuan,
-          hargaSatuan: item.hargaSatuan
-        });
-      }
-
-      setMataLookupHelp('Ketik kode atau nama mata anggaran untuk mengganti item.');
-      updateNominalPreview();
-      openModal('modalForm');
-    }
-
-    function saveBudget(){
-      const entitas = document.getElementById('fEntitas').value;
-      const uptId = document.getElementById('fUpt').value;
-      const upt = getUptById(uptId);
-      const qty = Number(document.getElementById('fQty').value || 0);
-      const hargaSatuan = Number(document.getElementById('fHargaSatuan').value || 0);
-      const nominal = qty * hargaSatuan;
-      const risk = getRiskById(document.getElementById('fRisk').value);
-
-      const payload = {
-        kode: document.getElementById('fKode').value.trim(),
-        entitas,
-        uptId: upt?.id || '',
-        uptKode: upt?.kode || '',
-        uptNama: upt?.nama || '',
-        nama: upt?.nama || '',
-        mataAnggaranId: document.getElementById('fMataId').value ? Number(document.getElementById('fMataId').value) : '',
-        mataAnggaranKode: document.getElementById('fKode').value.trim(),
-        mataAnggaranNama: document.getElementById('fMataNama').value.trim(),
-        qty,
-        satuan: document.getElementById('fSatuan').value.trim(),
-        hargaSatuan,
-        risikoId: risk?.id || '',
-        risikoNama: risk?.nama || '',
-        risikoSkala: risk?.skala || '',
-        tahun: Number(document.getElementById('fTahun').value || 2026),
-        nominal,
-        status: document.getElementById('fStatus').value,
-        catatan: document.getElementById('fCatatan').value.trim()
-      };
-
-      if(!payload.entitas || !payload.uptId || !payload.kode || !payload.mataAnggaranNama || payload.qty <= 0 || !payload.satuan || payload.hargaSatuan <= 0 || payload.nominal <= 0){
-        showToast('warning', 'fa-triangle-exclamation', 'UPK, UPT, mata anggaran, qty, satuan, dan harga satuan wajib diisi.');
-        return;
-      }
-
-      const duplicate = BUDGETS.find(b =>
-        String(b.kode || '').toLowerCase() === payload.kode.toLowerCase() &&
-        Number(b.id) !== Number(state.editingId)
-      );
-
-      if(duplicate){
-        showToast('warning', 'fa-copy', 'Kode anggaran sudah digunakan.');
-        return;
-      }
-
-      if(state.editingId){
-        const idx = BUDGETS.findIndex(b => Number(b.id) === Number(state.editingId));
-        if(idx >= 0){
-          BUDGETS[idx] = { ...BUDGETS[idx], ...payload };
-          writeBudgets(BUDGETS);
-          showToast('success', 'fa-circle-check', 'Anggaran berhasil diperbarui.');
-        }
-      } else {
-        const newId = Math.max(0, ...BUDGETS.map(b => Number(b.id || 0))) + 1;
-        BUDGETS.unshift({ id: newId, ...payload });
-        writeBudgets(BUDGETS);
-        showToast('success', 'fa-circle-check', 'Anggaran baru berhasil ditambahkan.');
-      }
-
-      closeModal('modalForm');
-      render();
-    }
-
-    function deleteBudget(id){
-      const usage = REALIZATIONS.filter(r => Number(r.budgetId) === Number(id)).length;
-      const item = BUDGETS.find(b => Number(b.id) === Number(id));
-      if(!item) return;
-
-      if(usage > 0){
-        showToast('warning', 'fa-link', `Anggaran "${item.mataAnggaranNama || item.uptNama || item.nama}" sudah memiliki ${usage} realisasi. Tidak bisa dihapus.`);
-        return;
-      }
-
-      if(!confirm(`Hapus head anggaran "${item.mataAnggaranNama || item.uptNama || item.nama}"?`)) return;
-      BUDGETS = BUDGETS.filter(b => Number(b.id) !== Number(id));
-      writeBudgets(BUDGETS);
-      render();
-      showToast('success', 'fa-trash', 'Anggaran berhasil dihapus.');
-    }
-
-    function exportCSV(){
-      const rows = BUDGETS.map(item => {
-        const usage = getUsage(item.id);
-        return [
-          item.kode,
-          item.entitas,
-          item.uptKode || '',
-          item.uptNama || item.nama || '',
-          item.mataAnggaranNama || '',
-          item.qty || 0,
-          item.satuan || '',
-          item.hargaSatuan || 0,
-          item.risikoNama || '',
-          item.tahun,
-          item.nominal,
-          usage.used,
-          usage.remain,
-          item.status,
-          item.catatan || ''
-        ];
-      });
-
-      const header = ['Kode','UPK','Kode UPT','UPT','Mata Anggaran','Qty','Satuan','Harga Satuan','Risiko','Tahun','Pagu','Terpakai','Sisa','Status','Catatan'];
-      const csv = [header, ...rows]
-        .map(row => row.map(col => `"${String(col ?? '').replace(/"/g,'""')}"`).join(','))
-        .join('\n');
-
-      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'anggaran_cost.csv';
-      link.click();
-
-      showToast('success', 'fa-file-csv', 'Export CSV berhasil.');
-    }
-
-    function seedDefaultData(){
-      if(!confirm('Reset sample data Anggaran Cost, Realisasi Cost, master UPK/UPT, dan mata anggaran?')) return;
-      localStorage.setItem(STORAGE_BUDGETS, JSON.stringify(seedBudgets));
-      localStorage.setItem(STORAGE_REALIZATIONS, JSON.stringify(seedRealizations));
-      localStorage.setItem(STORAGE_RISKS, JSON.stringify(seedRisks));
-      localStorage.setItem(STORAGE_UPK, JSON.stringify(seedUPK));
-      localStorage.setItem(STORAGE_UPT, JSON.stringify(seedUPT));
-      localStorage.setItem(STORAGE_MATA_ANGGARAN, JSON.stringify(seedMataAnggaran));
-      BUDGETS = readBudgets();
-      REALIZATIONS = readRealizations();
-      RISKS = readRisks();
-      UPKS = readUpks();
-      UPTS = readUpts();
-      MATA_ANGGARAN = readMataAnggaran();
-      render();
-      showToast('success', 'fa-database', 'Sample data berhasil direset.');
-    }
-
-    function openModal(id){ document.getElementById(id).classList.add('open'); }
-    function closeModal(id){ document.getElementById(id).classList.remove('open'); }
-    function closeModalIfBg(event,id){ if(event.target === document.getElementById(id)) closeModal(id); }
-
-    function showToast(type, icon, message){
-      const stack = document.getElementById('toastStack');
-      const el = document.createElement('div');
-      el.className = `toast ${type}`;
-      el.innerHTML = `<i class="fa-solid ${icon}"></i><span>${message}</span>`;
-      stack.appendChild(el);
-      setTimeout(() => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateX(18px)';
-        el.style.transition = 'all .24s ease';
-        setTimeout(() => el.remove(), 240);
-      }, 3200);
-    }
-
-    window.addEventListener('storage', (event) => {
-      if(event.key === STORAGE_BUDGETS) BUDGETS = readBudgets();
-      if(event.key === STORAGE_REALIZATIONS) REALIZATIONS = readRealizations();
-      if(event.key === STORAGE_RISKS) RISKS = readRisks();
-      if(event.key === STORAGE_UPK) UPKS = readUpks();
-      if(event.key === STORAGE_UPT) UPTS = readUpts();
-      if(event.key === STORAGE_MATA_ANGGARAN) MATA_ANGGARAN = readMataAnggaran();
-      render();
-    });
-
-    document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('id-ID', {
-      weekday:'short', day:'numeric', month:'long', year:'numeric'
-    });
-
-    populateRiskOptions();
-    render();
-  </script>
-
-  <script src="../sidebar.js"></script>
-
+    return state.sortDir==='asc' ? Number(av)-Number(bv) : Number(bv)-Number(av);
+  });
+}
+function sortBy(col){ if(state.sortCol===col) state.sortDir = state.sortDir==='asc' ? 'desc' : 'asc'; else { state.sortCol=col; state.sortDir='asc'; } render(); }
+function applyFilters(){ state.search=document.getElementById('searchInput').value; state.filterUpk=document.getElementById('filterUpk').value; state.filterStatus=document.getElementById('filterStatus').value; state.page=1; render(); }
+function updateStats(){
+  const totalHead = BUDGETS.length;
+  const totalPagu = BUDGETS.reduce((s,b)=>s+Number(b.nominal||0),0);
+  const totalUsed = BUDGETS.reduce((s,b)=>s+getUsage(REAL,b.id),0);
+  const totalRemain = totalPagu-totalUsed;
+  document.getElementById('heroHead').textContent = totalHead;
+  document.getElementById('heroPagu').textContent = fmtShortCurrency(totalPagu);
+  document.getElementById('heroTerpakai').textContent = fmtShortCurrency(totalUsed);
+  document.getElementById('heroSisa').textContent = fmtShortCurrency(totalRemain);
+  document.getElementById('statHead').textContent = totalHead;
+  document.getElementById('statPagu').textContent = fmtShortCurrency(totalPagu);
+  document.getElementById('statUsed').textContent = fmtShortCurrency(totalUsed);
+  document.getElementById('statRemain').textContent = fmtShortCurrency(totalRemain);
+}
+function render(){
+  refreshAll();
+  populateUpkFilter();
+  updateStats();
+  const data = getFilteredBudgets();
+  const start = (state.page-1)*state.perPage;
+  const page = data.slice(start,start+state.perPage);
+  document.getElementById('tableSubtitle').textContent = `Menampilkan ${data.length} dari ${BUDGETS.length} anggaran cost`;
+  const tbody = document.getElementById('budgetTbody');
+  const empty = document.getElementById('emptyState');
+  if(!page.length){
+    tbody.innerHTML = ''; empty.style.display='block'; document.getElementById('pagination').innerHTML=''; return;
+  }
+  empty.style.display='none';
+  tbody.innerHTML = page.map(item=>{
+    const used = getUsage(REAL, item.id);
+    const remain = Number(item.nominal||0)-used;
+    const pct = Number(item.nominal||0)>0 ? Math.min(100, Math.round((used/Number(item.nominal))*100)) : 0;
+    const fillColor = remain < 0 ? 'var(--danger)' : (pct >= 80 ? 'var(--accent)' : 'var(--primary)');
+    return `<tr>
+      <td class="mono">${esc(item.kode)}</td>
+      <td><span class="badge badge-primary">${esc(item.upkNama || '-')}</span><div class="title-sub">${esc(item.upkKode || '')}</div></td>
+      <td>
+        <div class="title-cell">${esc(item.mataAnggaranNama || '-')}</div>
+        <div class="title-sub">${esc(item.uptNama || '-')} · ${esc(item.satuan || '-')} · ${Number(item.qty||0).toLocaleString('id-ID')} x ${fmtCurrency(item.hargaSatuan)}</div>
+      </td>
+      <td class="mono">${esc(item.tahun)}</td>
+      <td><div class="title-cell">${esc(item.coaKode || '-')}</div><div class="title-sub">${esc(item.coaNama || '-')}</div></td>
+      <td class="mono">${fmtCurrency(item.nominal)}</td>
+      <td>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${fillColor};"></div></div>
+        <div class="title-sub">${fmtCurrency(used)} · ${pct}%</div>
+      </td>
+      <td class="mono" style="color:${remain<0?'var(--danger)':'var(--text)'}">${fmtCurrency(remain)}</td>
+      <td>${statusBudgetBadge(item.status)}</td>
+      <td style="text-align:right"><div class="actions-inline"><button class="act-btn primary" onclick="openEditModal(${item.id})"><i class="fa-solid fa-pen"></i></button><button class="act-btn danger" onclick="deleteBudget(${item.id})"><i class="fa-solid fa-trash"></i></button></div></td>
+    </tr>`;
+  }).join('');
+  renderPagination(data.length);
+}
+function renderPagination(total){
+  const pages = Math.max(1, Math.ceil(total/state.perPage));
+  const start = total ? ((state.page-1)*state.perPage+1) : 0;
+  const end = Math.min(state.page*state.perPage, total);
+  let buttons='';
+  for(let i=1;i<=pages;i++) buttons += `<button class="pg-btn ${i===state.page?'active':''}" onclick="goPage(${i})">${i}</button>`;
+  document.getElementById('pagination').innerHTML = `<div class="pagination-info">Menampilkan ${start}-${end} dari ${total} data</div><div class="pagination-btns"><button class="pg-btn" onclick="goPage(${state.page-1})" ${state.page<=1?'disabled':''}><i class="fa-solid fa-chevron-left"></i></button>${buttons}<button class="pg-btn" onclick="goPage(${state.page+1})" ${state.page>=pages?'disabled':''}><i class="fa-solid fa-chevron-right"></i></button></div>`;
+}
+function goPage(p){ const max=Math.max(1,Math.ceil(getFilteredBudgets().length/state.perPage)); state.page=Math.max(1,Math.min(p,max)); render(); }
+
+function openAddModal(){
+  state.editingId=null;
+  document.getElementById('modalTitle').textContent='Tambah Anggaran Cost';
+  document.getElementById('modalSub').textContent='Gunakan master terbaru UPK, UPT, dan Mata Anggaran.';
+  populateUpkOptions();
+  populateUptOptions();
+  document.getElementById('fMataSearch').value='';
+  document.getElementById('fMataId').value='';
+  document.getElementById('fKode').value='';
+  document.getElementById('fTahun').value=String(new Date().getFullYear());
+  document.getElementById('fQty').value=1;
+  document.getElementById('fSatuan').value='';
+  document.getElementById('fHarga').value='';
+  document.getElementById('fNominal').value='';
+  document.getElementById('fStatus').value='Draft';
+  document.getElementById('fCatatan').value='';
+  document.getElementById('fCoa').value='';
+  document.getElementById('mataHelp').textContent='Pilih Nama UPK dan Nama UPT terlebih dahulu.';
+  clearSelectedMata(false);
+  updateNominalPreview();
+  openModal('modalForm');
+}
+function openEditModal(id){
+  const item = BUDGETS.find(b=>Number(b.id)===Number(id));
+  if(!item) return;
+  state.editingId=id;
+  document.getElementById('modalTitle').textContent='Edit Anggaran Cost';
+  document.getElementById('modalSub').textContent=`${item.kode} — ${item.mataAnggaranNama}`;
+  populateUpkOptions(item.upkId);
+  populateUptOptions(item.uptId);
+  document.getElementById('fMataId').value=item.mataAnggaranId || '';
+  document.getElementById('fMataSearch').value=`${item.mataAnggaranKode || item.kode} — ${item.mataAnggaranNama}`;
+  document.getElementById('fKode').value=item.kode || '';
+  document.getElementById('fTahun').value=String(item.tahun || new Date().getFullYear());
+  document.getElementById('fQty').value=Number(item.qty || 1);
+  document.getElementById('fSatuan').value=item.satuan || '';
+  document.getElementById('fHarga').value=Number(item.hargaSatuan || 0);
+  document.getElementById('fNominal').value=Number(item.nominal || 0);
+  document.getElementById('fStatus').value=item.status || 'Draft';
+  document.getElementById('fCatatan').value=item.catatan || '';
+  document.getElementById('fCoa').value=item.coaId || '';
+  const sel=document.getElementById('mataSelected');
+  sel.innerHTML=`<strong>${esc(item.mataAnggaranKode || item.kode)} · ${esc(item.mataAnggaranNama)}</strong><span>UPT: ${esc(item.uptNama || '-')}<br>Satuan: ${esc(item.satuan || '-')} · Harga Satuan: ${fmtCurrency(item.hargaSatuan)}<br>COA: ${esc(item.coaKode || '-')} ${item.coaNama ? '· '+esc(item.coaNama) : ''}</span>`;
+  sel.style.display='flex';
+  document.getElementById('mataHelp').textContent='Ketik untuk mengganti mata anggaran.';
+  updateNominalPreview();
+  openModal('modalForm');
+}
+function saveBudget(){
+  const upkId = document.getElementById('fUpk').value;
+  const uptId = document.getElementById('fUpt').value;
+  const mataId = document.getElementById('fMataId').value;
+  const upk = masters.upks.find(u=>String(u.id)===String(upkId));
+  const upt = masters.upts.find(u=>String(u.id)===String(uptId));
+  const mata = masters.mata.find(m=>String(m.id)===String(mataId)) || null;
+  const qty = Number(document.getElementById('fQty').value || 0);
+  const harga = Number(document.getElementById('fHarga').value || 0);
+  const nominal = qty * harga;
+  const coa = masters.coas.find(c=>String(c.id)===String(document.getElementById('fCoa').value||mata?.coaId||'')) || null;
+
+  const payload = {
+    kode: document.getElementById('fKode').value.trim(),
+    tahun: Number(document.getElementById('fTahun').value || new Date().getFullYear()),
+    upkId, upkKode: upk?.kode || '', upkNama: upk?.nama || '',
+    uptId, uptKode: upt?.kode || '', uptNama: upt ? (masters.uptPaths[upt.id] || upt.nama) : '',
+    mataAnggaranId: mata?.id || mataId || '',
+    mataAnggaranKode: mata?.kode || document.getElementById('fKode').value.trim(),
+    mataAnggaranNama: mata?.nama || (document.getElementById('fMataSearch').value.split('—')[1] || '').trim(),
+    qty, satuan: document.getElementById('fSatuan').value.trim(), hargaSatuan: harga, nominal,
+    coaId: coa?.id || '', coaKode: coa?.kode || '', coaNama: coa?.nama || '',
+    catatan: document.getElementById('fCatatan').value.trim(),
+    status: document.getElementById('fStatus').value
+  };
+  if(!payload.upkId || !payload.uptId || !payload.mataAnggaranNama || !payload.kode || qty <= 0 || harga <= 0 || !payload.satuan){
+    showToast('warning','fa-triangle-exclamation','Nama UPK, Nama UPT, Mata Anggaran, qty, satuan, dan harga satuan wajib diisi.');
+    return;
+  }
+  const dup = BUDGETS.find(b=>normalizeText(b.kode)===normalizeText(payload.kode) && Number(b.id)!==Number(state.editingId));
+  if(dup){
+    showToast('warning','fa-copy','Kode anggaran sudah digunakan.');
+    return;
+  }
+  if(state.editingId){
+    const idx = BUDGETS.findIndex(b=>Number(b.id)===Number(state.editingId));
+    if(idx>=0) BUDGETS[idx] = { ...BUDGETS[idx], ...payload };
+  } else {
+    const newId = Math.max(0, ...BUDGETS.map(b=>Number(b.id)||0)) + 1;
+    BUDGETS.unshift({ id:newId, ...payload });
+  }
+  persistBudgets();
+  closeModal('modalForm');
+  render();
+  showToast('success','fa-circle-check','Anggaran cost berhasil disimpan.');
+}
+function deleteBudget(id){
+  const item = BUDGETS.find(b=>Number(b.id)===Number(id));
+  if(!item) return;
+  const used = getUsage(REAL, item.id);
+  if(used > 0){
+    showToast('warning','fa-link','Anggaran sudah memiliki realisasi dan tidak bisa dihapus.');
+    return;
+  }
+  if(!confirm(`Hapus anggaran "${item.mataAnggaranNama}"?`)) return;
+  BUDGETS = BUDGETS.filter(b=>Number(b.id)!==Number(id));
+  persistBudgets();
+  render();
+  showToast('success','fa-trash','Anggaran cost berhasil dihapus.');
+}
+function exportCSV(){
+  const rows = getFilteredBudgets().map(b=>{
+    const used = getUsage(REAL,b.id);
+    return [b.kode,b.upkKode,b.upkNama,b.uptKode,b.uptNama,b.mataAnggaranKode,b.mataAnggaranNama,b.qty,b.satuan,b.hargaSatuan,b.nominal,used,b.nominal-used,b.coaId,b.coaKode,b.coaNama,b.status,b.catatan];
+  });
+  const header=['Kode Anggaran','Kode UPK','Nama UPK','Kode UPT','Nama UPT','Kode Mata Anggaran','Nama Mata Anggaran','Qty','Satuan','Harga Satuan','Pagu','Terpakai','Sisa','ID COA','Kode COA','Nama COA','Status','Catatan'];
+  const csv=[header,...rows].map(r=>r.map(c=>`"${String(c??'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='anggaran_cost_master_terbaru.csv'; a.click();
+  showToast('success','fa-file-csv','Export berhasil.');
+}
+function seedDefaultData(){
+  if(!confirm('Reset sample anggaran cost dari master terbaru?')) return;
+  refreshAll();
+  const activeMata = masters.mata.filter(m=>m.status!=='Nonaktif');
+  const sample = activeMata.slice(0, Math.min(3, activeMata.length)).map((m, idx)=>({
+    id: idx+1,
+    kode: m.kode,
+    tahun: new Date().getFullYear(),
+    upkId: m.upkId, upkKode: masters.upks.find(u=>String(u.id)===String(m.upkId))?.kode || '', upkNama: m.upkNama,
+    uptId: m.uptId, uptKode: masters.upts.find(u=>String(u.id)===String(m.uptId))?.kode || '', uptNama: m.uptId ? (masters.uptPaths[m.uptId] || m.uptNama) : '',
+    mataAnggaranId: m.id, mataAnggaranKode: m.kode, mataAnggaranNama: m.nama,
+    qty: idx===0?12:(idx===1?6:4),
+    satuan: m.satuan, hargaSatuan: m.hargaSatuan,
+    nominal: (idx===0?12:(idx===1?6:4))*Number(m.hargaSatuan||0),
+    coaId: m.coaId, coaKode: m.coaKode, coaNama: m.coaNama,
+    catatan: m.catatan || 'Sample anggaran dari master terbaru.',
+    status: idx===0 ? 'Aktif' : 'Draft'
+  }));
+  BUDGETS = sample;
+  persistBudgets();
+  render();
+  showToast('success','fa-database','Sample anggaran cost berhasil direset dari master terbaru.');
+}
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+function closeModalIfBg(e,id){ if(e.target===document.getElementById(id)) closeModal(id); }
+function showToast(type, icon, message){
+  const stack=document.getElementById('toastStack'); const el=document.createElement('div');
+  el.className=`toast ${type}`; el.innerHTML=`<i class="fa-solid ${icon}"></i><span>${esc(message)}</span>`; stack.appendChild(el);
+  setTimeout(()=>{el.style.opacity='0'; el.style.transform='translateX(18px)'; el.style.transition='all .24s ease'; setTimeout(()=>el.remove(),240)},3200);
+}
+window.addEventListener('storage', (e)=>{ if([STORAGE_UPK,STORAGE_UPT,STORAGE_MATA,STORAGE_COA,STORAGE_BUDGETS,STORAGE_REAL].includes(e.key)) render(); });
+topbarDate(); render();
+</script>
+<script src="../sidebar.js"></script>
 </body>
 </html>

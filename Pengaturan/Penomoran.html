@@ -651,7 +651,7 @@
         Sistem Anggaran <span>›</span> Akun <span>›</span> Pengaturan <span>›</span> <b>Penomoran</b>
       </div>
       <div class="topbar-right">
-        <div class="chip-info"><i class="fa-solid fa-hashtag"></i> Format nomor transaksi</div>
+        <div class="chip-info"><i class="fa-solid fa-hashtag"></i> Format kode master & dokumen</div>
         <div class="topbar-date" id="topbarDate">—</div>
       </div>
     </div>
@@ -669,21 +669,21 @@
 
       <section class="hero">
         <div class="hero-left">
-          <div class="hero-title">Sample Data Penomoran</div>
+          <div class="hero-title">Penomoran Master & Dokumen</div>
           <div class="hero-sub">
-            Banner Dummy For Sample Data
+            Atur format kode untuk Master UPK, Master UPT, Master Program, Master Kegiatan, Master Mata Anggaran, hingga dokumen Anggaran Cost dan Income.
           </div>
         </div>
         <div class="hero-right">
           <div class="hero-mini">
             <div class="hero-mini-label">Total Format</div>
             <div class="hero-mini-value" id="heroTotal">0</div>
-            <div class="hero-mini-sub">Template tersimpan</div>
+            <div class="hero-mini-sub">Template master & dokumen</div>
           </div>
           <div class="hero-mini">
-            <div class="hero-mini-label">Transaksi Aktif</div>
+            <div class="hero-mini-label">Tipe Aktif</div>
             <div class="hero-mini-value" id="heroType">—</div>
-            <div class="hero-mini-sub">Form saat ini</div>
+            <div class="hero-mini-sub">Master / dokumen saat ini</div>
           </div>
           <div class="hero-mini">
             <div class="hero-mini-label">Komponen</div>
@@ -709,11 +709,11 @@
           <div class="stat-icon"><i class="fa-solid fa-layer-group"></i></div>
           <div class="stat-label">Komponen Builder</div>
           <div class="stat-value" id="statComponents">0</div>
-          <div class="stat-sub">Komponen di form aktif</div>
+          <div class="stat-sub">Komponen builder aktif</div>
         </div>
         <div class="stat-card c-success">
           <div class="stat-icon"><i class="fa-solid fa-file-signature"></i></div>
-          <div class="stat-label">Tipe Transaksi</div>
+          <div class="stat-label">Tipe Master / Dokumen</div>
           <div class="stat-value" id="statTransaction">—</div>
           <div class="stat-sub">Pilihan saat ini</div>
         </div>
@@ -730,7 +730,7 @@
           <div class="panel-head">
             <div>
               <div class="panel-title"><i class="fa-solid fa-pen-ruler" style="color:var(--primary)"></i> Form Pengaturan Penomoran</div>
-              <div class="panel-sub">Susun komponen nomor transaksi sesuai kebutuhan sistem.</div>
+              <div class="panel-sub">Susun komponen kode untuk semua master terbaru dan dokumen anggaran sesuai kebutuhan sistem.</div>
             </div>
           </div>
 
@@ -740,18 +740,22 @@
             <div class="form-grid">
               <div class="form-label">Nama <span class="req">*</span></div>
               <div class="field-row">
-                <input class="form-input" id="fNama" type="text" placeholder="mis. Penomoran Faktur UBTH">
+                <input class="form-input" id="fNama" type="text" placeholder="mis. Penomoran Master Program">
               </div>
 
-              <div class="form-label">Tipe Transaksi</div>
+              <div class="form-label">Tipe Master / Dokumen</div>
               <div class="field-row">
                 <select class="form-select" id="fTransactionType" onchange="updatePreview()">
-                  <option value="Faktur Penjualan">Faktur Penjualan</option>
-                  <option value="Faktur Pembelian">Faktur Pembelian</option>
-                  <option value="Kas Masuk">Kas Masuk</option>
-                  <option value="Kas Keluar">Kas Keluar</option>
-                  <option value="Jurnal Umum">Jurnal Umum</option>
-                  <option value="Memorial">Memorial</option>
+                  <option value="Master UPK">Master UPK</option>
+                  <option value="Master UPT">Master UPT</option>
+                  <option value="Master Program">Master Program</option>
+                  <option value="Master Kegiatan">Master Kegiatan</option>
+                  <option value="Master Mata Anggaran">Master Mata Anggaran</option>
+                  <option value="Anggaran Cost">Anggaran Cost</option>
+                  <option value="Anggaran Income">Anggaran Income</option>
+                  <option value="Realisasi Cost">Realisasi Cost</option>
+                  <option value="Realisasi Income">Realisasi Income</option>
+                  <option value="Approval Anggaran">Approval Anggaran</option>
                 </select>
               </div>
 
@@ -798,13 +802,13 @@
               <div class="form-label">Contoh hasil penomoran</div>
               <div class="field-row">
                 <div class="preview-block">
-                  <div class="preview-value" id="previewText">B.UBTH.</div>
+                  <div class="preview-value" id="previewText">UPK.001</div>
                 </div>
 
                 <div class="hint-box">
                   <ul id="previewHints">
-                    <li>Tambahkan komponen <b>[Tahun]</b> dan <b>[Bulan]</b> untuk menghindari nomor bentrok saat Reset Bulanan terjadi.</li>
-                    <li>Tambahkan komponen <b>[Counter]</b> agar nomor berurut maju.</li>
+                    <li>Tambahkan komponen <b>[Kode Entitas]</b> jika format nomor perlu dibedakan per UPK.</li>
+                    <li>Tambahkan komponen <b>[Counter]</b> agar kode berurut maju.</li>
                   </ul>
                 </div>
               </div>
@@ -812,6 +816,7 @@
           </div>
         </div>
 
+        
         <div class="info-card">
           <div class="panel-title"><i class="fa-solid fa-circle-info" style="color:var(--primary)"></i> Panduan Komponen</div>
 
@@ -822,23 +827,23 @@
             </div>
             <div class="info-item">
               <div class="info-item-label">Teks Bebas</div>
-              <div class="info-item-value">Contoh: <code>B.UBTH</code>, <code>INV</code>, <code>YBTH</code></div>
+              <div class="info-item-value">Contoh: <code>UPK</code>, <code>UPT</code>, <code>PRG</code>, <code>KGT</code>, <code>MA</code>, <code>AC</code>, <code>AI</code></div>
             </div>
             <div class="info-item">
-              <div class="info-item-label">Tahun</div>
-              <div class="info-item-value">Akan menghasilkan format tahun aktif, misalnya <code>2026</code></div>
+              <div class="info-item-label">Kode Entitas</div>
+              <div class="info-item-value">Dipakai untuk membedakan kode berdasarkan UPK, misalnya preview <code>UPK</code> atau <code>ENT</code>.</div>
             </div>
             <div class="info-item">
-              <div class="info-item-label">Bulan</div>
-              <div class="info-item-value">Akan menghasilkan format bulan dua digit, misalnya <code>04</code></div>
-            </div>
-            <div class="info-item">
-              <div class="info-item-label">Hari</div>
-              <div class="info-item-value">Akan menghasilkan format hari dua digit, misalnya <code>11</code></div>
+              <div class="info-item-label">Tahun / Bulan / Hari</div>
+              <div class="info-item-value">Gunakan untuk penomoran yang reset periodik, misalnya <code>2026</code>, <code>04</code>, <code>16</code>.</div>
             </div>
             <div class="info-item">
               <div class="info-item-label">Counter</div>
-              <div class="info-item-value">Nomor berurut sesuai digit counter, misalnya <code>00001</code></div>
+              <div class="info-item-value">Nomor berurut sesuai digit counter, misalnya <code>001</code>, <code>0001</code>, atau <code>00001</code>.</div>
+            </div>
+            <div class="info-item">
+              <div class="info-item-label">Catatan Master UPT</div>
+              <div class="info-item-value">Untuk struktur UPT bertingkat, penomoran ini dipakai pada <b>Head UPT</b>. Kode sub UPT tetap dapat diturunkan dari parent di modul Master UPT.</div>
             </div>
           </div>
         </div>
@@ -861,7 +866,7 @@
             <thead>
               <tr>
                 <th>Nama</th>
-                <th>Tipe Transaksi</th>
+                <th>Tipe Master / Dokumen</th>
                 <th>Tipe Penomoran</th>
                 <th>Digit</th>
                 <th>Preview</th>
@@ -889,31 +894,99 @@
     const seedSchemes = [
       {
         id: 1,
-        nama: 'Penomoran Faktur UBTH',
-        transactionType: 'Faktur Penjualan',
-        resetType: 'Reset setiap bulan',
-        counterDigits: 5,
+        nama: 'Penomoran Master UPK',
+        transactionType: 'Master UPK',
+        resetType: 'Tidak Reset',
+        counterDigits: 3,
         components: [
-          { type: 'text', label: 'B.UBTH', value: 'B.UBTH' },
-          { type: 'separator', label: '.', value: '.' },
-          { type: 'year', label: '[Tahun]', value: '' },
-          { type: 'separator', label: '.', value: '.' },
-          { type: 'month', label: '[Bulan]', value: '' },
+          { type: 'text', label: 'UPK', value: 'UPK' },
           { type: 'separator', label: '.', value: '.' },
           { type: 'counter', label: '[Counter]', value: '' }
         ]
       },
       {
         id: 2,
-        nama: 'Kas Masuk Yayasan',
-        transactionType: 'Kas Masuk',
+        nama: 'Penomoran Master UPT',
+        transactionType: 'Master UPT',
+        resetType: 'Tidak Reset',
+        counterDigits: 1,
+        components: [
+          { type: 'text', label: 'UPT', value: 'UPT' },
+          { type: 'separator', label: '.', value: '.' },
+          { type: 'counter', label: '[Counter]', value: '' }
+        ]
+      },
+      {
+        id: 3,
+        nama: 'Penomoran Master Program',
+        transactionType: 'Master Program',
+        resetType: 'Tidak Reset',
+        counterDigits: 3,
+        components: [
+          { type: 'text', label: 'PRG', value: 'PRG' },
+          { type: 'separator', label: '.', value: '.' },
+          { type: 'entity', label: '[Entitas]', value: '' },
+          { type: 'separator', label: '.', value: '.' },
+          { type: 'counter', label: '[Counter]', value: '' }
+        ]
+      },
+      {
+        id: 4,
+        nama: 'Penomoran Master Kegiatan',
+        transactionType: 'Master Kegiatan',
         resetType: 'Reset setiap tahun',
         counterDigits: 4,
         components: [
-          { type: 'text', label: 'KM.YBTH', value: 'KM.YBTH' },
-          { type: 'separator', label: '/', value: '/' },
+          { type: 'text', label: 'KGT', value: 'KGT' },
+          { type: 'separator', label: '.', value: '.' },
           { type: 'year', label: '[Tahun]', value: '' },
-          { type: 'separator', label: '/', value: '/' },
+          { type: 'separator', label: '.', value: '.' },
+          { type: 'counter', label: '[Counter]', value: '' }
+        ]
+      },
+      {
+        id: 5,
+        nama: 'Penomoran Master Mata Anggaran',
+        transactionType: 'Master Mata Anggaran',
+        resetType: 'Tidak Reset',
+        counterDigits: 3,
+        components: [
+          { type: 'text', label: 'MA', value: 'MA' },
+          { type: 'separator', label: '.', value: '.' },
+          { type: 'entity', label: '[Entitas]', value: '' },
+          { type: 'separator', label: '.', value: '.' },
+          { type: 'counter', label: '[Counter]', value: '' }
+        ]
+      },
+      {
+        id: 6,
+        nama: 'Penomoran Anggaran Cost',
+        transactionType: 'Anggaran Cost',
+        resetType: 'Reset setiap tahun',
+        counterDigits: 4,
+        components: [
+          { type: 'text', label: 'AC', value: 'AC' },
+          { type: 'separator', label: '.', value: '.' },
+          { type: 'entity', label: '[Entitas]', value: '' },
+          { type: 'separator', label: '.', value: '.' },
+          { type: 'year', label: '[Tahun]', value: '' },
+          { type: 'separator', label: '.', value: '.' },
+          { type: 'counter', label: '[Counter]', value: '' }
+        ]
+      },
+      {
+        id: 7,
+        nama: 'Penomoran Anggaran Income',
+        transactionType: 'Anggaran Income',
+        resetType: 'Reset setiap tahun',
+        counterDigits: 4,
+        components: [
+          { type: 'text', label: 'AI', value: 'AI' },
+          { type: 'separator', label: '.', value: '.' },
+          { type: 'entity', label: '[Entitas]', value: '' },
+          { type: 'separator', label: '.', value: '.' },
+          { type: 'year', label: '[Tahun]', value: '' },
+          { type: 'separator', label: '.', value: '.' },
           { type: 'counter', label: '[Counter]', value: '' }
         ]
       }
@@ -1037,7 +1110,7 @@
         year: String(now.getFullYear()),
         month: String(now.getMonth() + 1).padStart(2, '0'),
         day: String(now.getDate()).padStart(2, '0'),
-        entity: 'UBTH',
+        entity: 'UPK',
         counter: padCounter(1, Number(counterDigits || 5))
       };
 
@@ -1049,12 +1122,12 @@
     }
 
     function updatePreview() {
-      const counterDigits = Number(document.getElementById('fCounterDigits').value || 5);
+      const counterDigits = Number(document.getElementById('fCounterDigits').value || 3);
       const transactionType = document.getElementById('fTransactionType').value || '—';
       const resetType = document.getElementById('fResetType').value || '—';
       const preview = currentComponents.length
         ? buildPreview(currentComponents, counterDigits)
-        : 'B.UBTH.';
+        : 'UPK.001';
 
       document.getElementById('previewText').textContent = preview;
       document.getElementById('heroPreview').textContent = preview.length > 12 ? preview.slice(0, 12) + '…' : preview;
@@ -1069,21 +1142,34 @@
       const hasMonth = currentComponents.some(x => x.type === 'month');
       const hasDay = currentComponents.some(x => x.type === 'day');
       const hasCounter = currentComponents.some(x => x.type === 'counter');
+      const hasEntity = currentComponents.some(x => x.type === 'entity');
+
+      if (resetType === 'Reset setiap tahun' && !hasYear) {
+        hints.push('Tambahkan komponen <b>[Tahun]</b> agar nomor tidak bentrok saat reset tahunan.');
+      }
 
       if (resetType === 'Reset setiap bulan' && (!hasYear || !hasMonth)) {
-        hints.push('Tambahkan komponen <b>[Tahun]</b> dan <b>[Bulan]</b> untuk menghindari nomor bentrok saat Reset Bulanan terjadi.');
+        hints.push('Tambahkan komponen <b>[Tahun]</b> dan <b>[Bulan]</b> untuk menghindari nomor bentrok saat reset bulanan.');
       }
 
       if (resetType === 'Reset setiap hari' && (!hasYear || !hasMonth || !hasDay)) {
         hints.push('Tambahkan komponen <b>[Tahun]</b>, <b>[Bulan]</b>, dan <b>[Hari]</b> agar reset harian aman.');
       }
 
+      if (['Master Program','Master Mata Anggaran','Anggaran Cost','Anggaran Income','Realisasi Cost','Realisasi Income'].includes(transactionType) && !hasEntity) {
+        hints.push('Tambahkan komponen <b>[Kode Entitas]</b> jika kode perlu dibedakan per UPK.');
+      }
+
+      if (transactionType === 'Master UPT') {
+        hints.push('Untuk <b>Sub UPT</b>, kode turunan tetap dapat mengikuti parent di modul Master UPT.');
+      }
+
       if (!hasCounter) {
-        hints.push('Tambahkan komponen <b>[Counter]</b> agar nomor berurut maju.');
+        hints.push('Tambahkan komponen <b>[Counter]</b> agar kode berurut maju.');
       }
 
       if (!currentComponents.length) {
-        hints.push('Tambahkan komponen pertama untuk mulai membentuk format nomor transaksi.');
+        hints.push('Tambahkan komponen pertama untuk mulai membentuk format kode master atau dokumen.');
       }
 
       document.getElementById('previewHints').innerHTML = hints.map(item => `<li>${item}</li>`).join('');
@@ -1191,14 +1277,15 @@
     function resetForm(showToastState = true) {
       editingId = null;
       document.getElementById('fNama').value = '';
-      document.getElementById('fTransactionType').value = 'Faktur Penjualan';
-      document.getElementById('fResetType').value = 'Reset setiap bulan';
-      document.getElementById('fCounterDigits').value = 5;
+      document.getElementById('fTransactionType').value = 'Master UPK';
+      document.getElementById('fResetType').value = 'Tidak Reset';
+      document.getElementById('fCounterDigits').value = 3;
       document.getElementById('fComponentType').value = 'separator';
       document.getElementById('fComponentValue').value = '';
       currentComponents = [
-        { type:'text', value:'B.UBTH', label:'B.UBTH' },
-        { type:'separator', value:'.', label:'.' }
+        { type:'text', value:'UPK', label:'UPK' },
+        { type:'separator', value:'.', label:'.' },
+        { type:'counter', value:'', label:'[Counter]' }
       ];
       handleComponentTypeChange();
       renderComponents();
@@ -1210,7 +1297,7 @@
     }
 
     function seedDefaultData() {
-      if (!confirm('Reset semua template penomoran ke data sample?')) return;
+      if (!confirm('Reset semua template penomoran untuk master dan dokumen ke data sample?')) return;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(seedSchemes));
       schemes = readSchemes();
       renderTable();

@@ -296,24 +296,23 @@
     const STORAGE_UPT = 'APP_MASTER_UPT_V1';
 
     const fallbackUPK = [
-      { id:1, kode:'UPK-001', nama:'Yayasan Bakti Tunas Husada', status:'Aktif' },
-      { id:2, kode:'UPK-002', nama:'Universitas Bakti Tunas Husada', status:'Aktif' },
-      { id:3, kode:'UPK-003', nama:'Klinik Bakti Tunas Husada', status:'Aktif' },
-      { id:4, kode:'UPK-004', nama:'BTH Student House', status:'Aktif' }
+      { id:'UPK-001', kode:'UPK-001', nama:'Yayasan', status:'Aktif' },
+      { id:'UPK-002', kode:'UPK-002', nama:'Universitas', status:'Aktif' },
+      { id:'UPK-003', kode:'UPK-003', nama:'Klinik', status:'Aktif' },
+      { id:'UPK-004', kode:'UPK-004', nama:'BTH Student House', status:'Aktif' }
     ];
 
     const fallbackUPT = [
-      { id:1, kode:'UPT-UBTH-WR-SDM', nama:'Wakil Rektor Bidang SDM, Humas dan Kerjasama', upkId:2, parentId:null, status:'Aktif' },
-      { id:2, kode:'SUB-WR-SDM', nama:'Bagian SDM', upkId:2, parentId:1, status:'Aktif' },
-      { id:3, kode:'SUB-WR-HUMAS', nama:'Bagian Humas dan Kerjasama', upkId:2, parentId:1, status:'Aktif' },
-      { id:4, kode:'SUB-WR-KARIR', nama:'Bagian Pusat Karir', upkId:2, parentId:1, status:'Aktif' },
-      { id:5, kode:'UPT-UBTH-FIK', nama:'Fakultas Ilmu Kesehatan', upkId:2, parentId:null, status:'Aktif' },
-      { id:6, kode:'SUB-FIK-LAB', nama:'Laboratorium Terpadu', upkId:2, parentId:5, status:'Aktif' },
-      { id:7, kode:'UPT-YBTH-SEKRETARIAT', nama:'Sekretariat Yayasan', upkId:1, parentId:null, status:'Aktif' },
-      { id:8, kode:'SUB-SEK-KEU', nama:'Bagian Keuangan dan Akuntansi', upkId:1, parentId:7, status:'Aktif' },
-      { id:9, kode:'UPT-KLINIK-MEDIS', nama:'Unit Pelayanan Medis', upkId:3, parentId:null, status:'Aktif' },
-      { id:10, kode:'SUB-MEDIS-PENUNJANG', nama:'Unit Penunjang Medis', upkId:3, parentId:9, status:'Aktif' },
-      { id:11, kode:'UPT-BSH-OPERASIONAL', nama:'Operasional Student House', upkId:4, parentId:null, status:'Aktif' }
+      { id:'UPT-UNI-WR', kode:'UPT.1', nama:'Wakil Rektor Bidang SDM, Humas dan Kerjasama', upkId:'UPK-002', parentId:'', status:'Aktif' },
+      { id:'UPT-UNI-SDM', kode:'UPT.1.1', nama:'Bagian SDM', upkId:'UPK-002', parentId:'UPT-UNI-WR', status:'Aktif' },
+      { id:'UPT-UNI-HUMAS', kode:'UPT.1.2', nama:'Bagian Humas dan Kerjasama', upkId:'UPK-002', parentId:'UPT-UNI-WR', status:'Aktif' },
+      { id:'UPT-UNI-KARIR', kode:'UPT.1.3', nama:'Bagian Pusat Karir', upkId:'UPK-002', parentId:'UPT-UNI-WR', status:'Aktif' },
+      { id:'UPT-UNI-FIK', kode:'UPT.2', nama:'Fakultas Ilmu Kesehatan', upkId:'UPK-002', parentId:'', status:'Aktif' },
+      { id:'UPT-YYS-SEK', kode:'UPT.3', nama:'Sekretariat Yayasan', upkId:'UPK-001', parentId:'', status:'Aktif' },
+      { id:'UPT-YYS-KEU', kode:'UPT.3.1', nama:'Bagian Keuangan dan Akuntansi', upkId:'UPK-001', parentId:'UPT-YYS-SEK', status:'Aktif' },
+      { id:'UPT-KLN-MEDIS', kode:'UPT.4', nama:'Unit Pelayanan Medis', upkId:'UPK-003', parentId:'', status:'Aktif' },
+      { id:'UPT-KLN-PENUNJANG', kode:'UPT.4.1', nama:'Unit Penunjang Medis', upkId:'UPK-003', parentId:'UPT-KLN-MEDIS', status:'Aktif' },
+      { id:'UPT-BSH-OPS', kode:'UPT.5', nama:'Operasional Student House', upkId:'UPK-004', parentId:'', status:'Aktif' }
     ];
 
     const fallbackRisks = [
@@ -326,43 +325,47 @@
     const seedBudgets = [
       {
         id:1,
-        kode:'AI-UBTH-001',
-        entitas:'Universitas Bakti Tunas Husada',
-        upkId:2, upkKode:'UPK-002', upkNama:'Universitas Bakti Tunas Husada',
-        uptId:3, uptKode:'SUB-WR-HUMAS', uptNama:'Bagian Humas dan Kerjasama',
+        kode:'AI-UNI-001',
+        entitas:'Universitas',
+        upkId:'UPK-002', upkKode:'UPK-002', upkNama:'Universitas',
+        uptId:'UPT-UNI-HUMAS', uptKode:'UPT.1.2', uptNama:'Bagian Humas dan Kerjasama',
         nama:'Target Kerjasama & Promosi Institusi 2026',
         risikoId:'R-IN-003', risikoNama:'Risiko keterlambatan pembayaran UKT', risikoSkala:'Tinggi',
-        tahun:2026, nominal:650000000, status:'Aktif', catatan:'Target uang masuk dari kerja sama institusi, sponsorship, dan promosi penerimaan mahasiswa.'
+        tahun:2026, nominal:650000000, status:'Aktif',
+        catatan:'Target uang masuk dari kerja sama institusi, sponsorship, dan promosi penerimaan mahasiswa.'
       },
       {
         id:2,
         kode:'AI-KLN-001',
-        entitas:'Klinik Bakti Tunas Husada',
-        upkId:3, upkKode:'UPK-003', upkNama:'Klinik Bakti Tunas Husada',
-        uptId:9, uptKode:'UPT-KLINIK-MEDIS', uptNama:'Unit Pelayanan Medis',
+        entitas:'Klinik',
+        upkId:'UPK-003', upkKode:'UPK-003', upkNama:'Klinik',
+        uptId:'UPT-KLN-MEDIS', uptKode:'UPT.4', uptNama:'Unit Pelayanan Medis',
         nama:'Target Pendapatan Layanan Medis 2026',
         risikoId:'R-IN-001', risikoNama:'Risiko penurunan kunjungan pasien', risikoSkala:'Sedang',
-        tahun:2026, nominal:950000000, status:'Aktif', catatan:'Target uang masuk dari layanan pasien, pemeriksaan, dan tindakan medis.'
+        tahun:2026, nominal:950000000, status:'Aktif',
+        catatan:'Target uang masuk dari layanan pasien, pemeriksaan, dan tindakan medis.'
       },
       {
         id:3,
         kode:'AI-YYS-001',
-        entitas:'Yayasan Bakti Tunas Husada',
-        upkId:1, upkKode:'UPK-001', upkNama:'Yayasan Bakti Tunas Husada',
-        uptId:8, uptKode:'SUB-SEK-KEU', uptNama:'Bagian Keuangan dan Akuntansi',
+        entitas:'Yayasan',
+        upkId:'UPK-001', upkKode:'UPK-001', upkNama:'Yayasan',
+        uptId:'UPT-YYS-KEU', uptKode:'UPT.3.1', uptNama:'Bagian Keuangan dan Akuntansi',
         nama:'Target Donasi & Kontribusi Yayasan 2026',
         risikoId:'R-IN-002', risikoNama:'Risiko fluktuasi donasi', risikoSkala:'Tinggi',
-        tahun:2026, nominal:420000000, status:'Aktif', catatan:'Target uang masuk dari donasi, kontribusi, dan penerimaan sosial yayasan.'
+        tahun:2026, nominal:420000000, status:'Aktif',
+        catatan:'Target uang masuk dari donasi, kontribusi, dan penerimaan sosial yayasan.'
       },
       {
         id:4,
-        kode:'AI-UBTH-002',
-        entitas:'Universitas Bakti Tunas Husada',
-        upkId:2, upkKode:'UPK-002', upkNama:'Universitas Bakti Tunas Husada',
-        uptId:4, uptKode:'SUB-WR-KARIR', uptNama:'Bagian Pusat Karir',
+        kode:'AI-UNI-002',
+        entitas:'Universitas',
+        upkId:'UPK-002', upkKode:'UPK-002', upkNama:'Universitas',
+        uptId:'UPT-UNI-KARIR', uptKode:'UPT.1.3', uptNama:'Bagian Pusat Karir',
         nama:'Target Event Career Center 2026',
         risikoId:'R-IN-004', risikoNama:'Risiko mismatch data penerimaan', risikoSkala:'Sedang',
-        tahun:2026, nominal:180000000, status:'Draft', catatan:'Target uang masuk dari job fair, tracer study premium, dan event pusat karir.'
+        tahun:2026, nominal:180000000, status:'Draft',
+        catatan:'Target uang masuk dari job fair, tracer study premium, dan event pusat karir.'
       }
     ];
 
@@ -382,6 +385,10 @@
       }
     }
 
+    function strId(value){
+      return String(value ?? '').trim();
+    }
+
     function ensureSeed(){
       if(!localStorage.getItem(STORAGE_BUDGETS)) localStorage.setItem(STORAGE_BUDGETS, JSON.stringify(seedBudgets));
       if(!localStorage.getItem(STORAGE_REALIZATIONS)) localStorage.setItem(STORAGE_REALIZATIONS, JSON.stringify(seedRealizations));
@@ -391,29 +398,42 @@
     function writeBudgets(data){ localStorage.setItem(STORAGE_BUDGETS, JSON.stringify(data)); }
     function writeRealizations(data){ localStorage.setItem(STORAGE_REALIZATIONS, JSON.stringify(data)); }
 
+    function normalizeUpk(item, idx){
+      const kode = strId(item.kode || item.code || item.kodeUpk || item.upkKode || '') || `UPK-${String(idx + 1).padStart(3,'0')}`;
+      return {
+        id: strId(item.id || item.id_upk || item.upkId || kode),
+        kode,
+        nama: String(item.nama || item.name || item.entitas || item.upkNama || kode).trim(),
+        status: String(item.status || 'Aktif')
+      };
+    }
+
+    function normalizeUpt(item, idx){
+      const kode = strId(item.kode || item.code || item.kodeUpt || item.uptKode || '') || `UPT-${String(idx + 1).padStart(3,'0')}`;
+      return {
+        id: strId(item.id || item.id_upt || item.uptId || kode),
+        kode,
+        nama: String(item.nama || item.name || item.uptNama || kode).trim(),
+        upkId: strId(item.upkId || item.id_upk || item.upk_id || item.idUpk || ''),
+        parentId: strId(item.parentId || item.id_parent_upt || item.parent || item.parentUptId || item.subOf || ''),
+        status: String(item.status || 'Aktif')
+      };
+    }
+
+    function normalizeRisk(item, idx){
+      if(typeof item === 'string') return { id:`RISK-${idx+1}`, nama:item, skala:'' };
+      return {
+        id: strId(item.id || item.id_risk || item.riskId || `RISK-${idx+1}`),
+        nama: String(item.nama || item.name || item.risikoNama || '').trim(),
+        skala: String(item.skala || item.level || item.risikoSkala || '').trim()
+      };
+    }
+
     function readBudgets(){ return readJSON(STORAGE_BUDGETS, seedBudgets); }
     function readRealizations(){ return readJSON(STORAGE_REALIZATIONS, seedRealizations); }
-    function readUpks(){
-      return readJSON(STORAGE_UPK, fallbackUPK).map((item, idx) => ({
-        id:Number(item.id) || (idx + 1), kode:item.kode || `UPK-${String(idx+1).padStart(3,'0')}`, nama:item.nama || '', status:item.status || 'Aktif'
-      }));
-    }
-    function readUpts(){
-      return readJSON(STORAGE_UPT, fallbackUPT).map((item, idx) => ({
-        id:Number(item.id) || (idx + 1),
-        kode:item.kode || `UPT-${String(idx+1).padStart(3,'0')}`,
-        nama:item.nama || '',
-        upkId:Number(item.upkId ?? item.id_upk ?? 0) || null,
-        parentId:Number(item.parentId ?? item.id_parent_upt ?? 0) || null,
-        status:item.status || 'Aktif'
-      }));
-    }
-    function readRisks(){
-      return readJSON(STORAGE_RISKS, fallbackRisks).map((item, idx) => {
-        if(typeof item === 'string') return { id:`RISK-${idx+1}`, nama:item, skala:'' };
-        return { id:item.id || `RISK-${idx+1}`, nama:item.nama || item.name || item.risikoNama || '', skala:item.skala || item.level || item.risikoSkala || '' };
-      }).filter(item => item.nama);
-    }
+    function readUpks(){ return readJSON(STORAGE_UPK, fallbackUPK).map(normalizeUpk).filter(item => item.nama); }
+    function readUpts(){ return readJSON(STORAGE_UPT, fallbackUPT).map(normalizeUpt).filter(item => item.nama); }
+    function readRisks(){ return readJSON(STORAGE_RISKS, fallbackRisks).map(normalizeRisk).filter(item => item.nama); }
 
     ensureSeed();
     let BUDGETS = readBudgets();
@@ -436,46 +456,67 @@
       return fmtCurrency(num);
     }
 
-    function getUpkById(id){ return UPKS.find(item => Number(item.id) === Number(id)); }
-    function getUptById(id){ return UPTS.find(item => Number(item.id) === Number(id)); }
-    function getRiskById(id){ return RISKS.find(item => String(item.id) === String(id)); }
-    function childrenOf(parentId){ return UPTS.filter(item => Number(item.parentId || 0) === Number(parentId || 0)); }
+    function getUpkById(id){ return UPKS.find(item => strId(item.id) === strId(id)); }
+    function getUptById(id){ return UPTS.find(item => strId(item.id) === strId(id)); }
+    function getRiskById(id){ return RISKS.find(item => strId(item.id) === strId(id)); }
+
     function inferLegacyUpk(entitas){
       const needle = normalizeText(entitas);
       if(!needle) return null;
-      return UPKS.find(item => normalizeText(item.nama).includes(needle)) || null;
+      return UPKS.find(item => normalizeText(item.nama).includes(needle) || needle.includes(normalizeText(item.nama))) || null;
     }
-    function buildUptDisplayName(upt){
+
+    function buildUptDisplayName(upt, seen = new Set()){
       if(!upt) return '';
+      if(seen.has(strId(upt.id))) return upt.nama;
+      seen.add(strId(upt.id));
       const parent = getUptById(upt.parentId);
-      return parent ? `${parent.nama} / ${upt.nama}` : upt.nama;
+      return parent ? `${buildUptDisplayName(parent, seen)} / ${upt.nama}` : upt.nama;
     }
+
     function hydrateBudget(item){
-      const upk = getUpkById(item.upkId) || UPKS.find(x => normalizeText(x.nama) === normalizeText(item.upkNama)) || inferLegacyUpk(item.entitas);
-      const upt = getUptById(item.uptId) || UPTS.find(x => normalizeText(x.nama) === normalizeText(item.uptNama) && (!upk || Number(x.upkId) === Number(upk.id)));
+      const upk = getUpkById(item.upkId) ||
+        UPKS.find(x => normalizeText(x.nama) === normalizeText(item.upkNama || item.entitas)) ||
+        inferLegacyUpk(item.entitas);
+
+      const upt = getUptById(item.uptId) ||
+        UPTS.find(x =>
+          normalizeText(x.nama) === normalizeText(item.uptNama) &&
+          (!upk || strId(x.upkId) === strId(upk.id))
+        );
+
       return {
         ...item,
-        upkId: upk?.id || item.upkId || '',
+        upkId: strId(upk?.id || item.upkId || ''),
         upkKode: upk?.kode || item.upkKode || '',
         upkNama: upk?.nama || item.upkNama || item.entitas || '',
-        uptId: upt?.id || item.uptId || '',
+        uptId: strId(upt?.id || item.uptId || ''),
         uptKode: upt?.kode || item.uptKode || '',
         uptNama: upt?.nama || item.uptNama || '',
         uptDisplay: upt ? buildUptDisplayName(upt) : (item.uptNama || '-'),
-        entitas: upk?.nama || item.entitas || ''
+        entitas: upk?.nama || item.entitas || item.upkNama || ''
       };
     }
+
     function getActualByBudget(budgetId, excludeId = null){
-      return REALIZATIONS.filter(r => Number(r.budgetId) === Number(budgetId) && Number(r.id) !== Number(excludeId)).reduce((sum, r) => sum + Number(r.total || 0), 0);
+      return REALIZATIONS
+        .filter(r => strId(r.budgetId) === strId(budgetId) && strId(r.id) !== strId(excludeId))
+        .reduce((sum, r) => sum + Number(r.total || 0), 0);
     }
+
     function getBudgetGapInfo(budgetId, excludeId = null){
-      const budget = hydrateBudget(readBudgets().find(item => Number(item.id) === Number(budgetId)) || BUDGETS.find(item => Number(item.id) === Number(budgetId)) || {});
+      const budget = hydrateBudget(
+        readBudgets().find(item => strId(item.id) === strId(budgetId)) ||
+        BUDGETS.find(item => strId(item.id) === strId(budgetId)) ||
+        {}
+      );
       const actual = getActualByBudget(budgetId, excludeId);
       const target = Number(budget.nominal || 0);
       const gap = actual - target;
       const pct = target > 0 ? Math.round((actual / target) * 100) : 0;
       return { budget, actual, target, gap, pct };
     }
+
     function refreshRefs(){
       BUDGETS = readBudgets();
       REALIZATIONS = readRealizations();
@@ -483,33 +524,45 @@
       UPTS = readUpts();
       RISKS = readRisks();
     }
+
     function populateUpkSelect(selectId, selected = '', includeAllLabel = 'Semua UPK'){
       const select = document.getElementById(selectId);
       if(!select) return;
-      const options = UPKS.slice().sort((a,b) => (a.nama || '').localeCompare(b.nama || '')).map(item => `<option value="${item.id}">${escapeHtml(item.kode)} · ${escapeHtml(item.nama)}</option>`).join('');
-      const first = includeAllLabel ? `<option value="">${includeAllLabel}</option>` : '<option value="">— Pilih UPK —</option>';
+      const options = UPKS
+        .slice()
+        .sort((a,b) => (a.nama || '').localeCompare(b.nama || ''))
+        .map(item => `<option value="${escapeHtml(strId(item.id))}">${escapeHtml(item.kode)} · ${escapeHtml(item.nama)}</option>`)
+        .join('');
+      const first = includeAllLabel !== '' ? `<option value="">${includeAllLabel}</option>` : '<option value="">— Pilih UPK —</option>';
       select.innerHTML = first + options;
-      if(selected !== undefined) select.value = String(selected || '');
+      select.value = strId(selected || '');
     }
+
     function populateUptSelect(selectId, upkId, selected = '', includeAll = false){
       const select = document.getElementById(selectId);
       if(!select) return;
-      const rows = UPTS.filter(item => !upkId || Number(item.upkId) === Number(upkId)).sort((a,b) => buildUptDisplayName(a).localeCompare(buildUptDisplayName(b)));
+      const rows = UPTS
+        .filter(item => !upkId || strId(item.upkId) === strId(upkId))
+        .sort((a,b) => buildUptDisplayName(a).localeCompare(buildUptDisplayName(b)));
       const first = includeAll ? '<option value="">Semua UPT</option>' : '<option value="">— Pilih UPT —</option>';
-      select.innerHTML = first + rows.map(item => `<option value="${item.id}">${escapeHtml(item.kode)} · ${escapeHtml(buildUptDisplayName(item))}</option>`).join('');
-      if(selected !== undefined) select.value = String(selected || '');
+      select.innerHTML = first + rows.map(item => `<option value="${escapeHtml(strId(item.id))}">${escapeHtml(item.kode)} · ${escapeHtml(buildUptDisplayName(item))}</option>`).join('');
+      select.value = strId(selected || '');
     }
+
     function populateRiskSelect(selectId, selected = ''){
       const select = document.getElementById(selectId);
       if(!select) return;
-      select.innerHTML = '<option value="">— Pilih Risiko —</option>' + RISKS.map(item => `<option value="${escapeHtml(String(item.id))}">${escapeHtml(item.nama)}${item.skala ? ` (${escapeHtml(item.skala)})` : ''}</option>`).join('');
-      if(selected) select.value = String(selected);
+      select.innerHTML = '<option value="">— Pilih Risiko —</option>' +
+        RISKS.map(item => `<option value="${escapeHtml(strId(item.id))}">${escapeHtml(item.nama)}${item.skala ? ` (${escapeHtml(item.skala)})` : ''}</option>`).join('');
+      select.value = strId(selected || '');
     }
+
     function getSelectedRisk(){
       const riskId = document.getElementById('fRisk') ? document.getElementById('fRisk').value : '';
       const risk = getRiskById(riskId);
       return { risikoId:risk?.id || '', risikoNama:risk?.nama || '', risikoSkala:risk?.skala || '' };
     }
+
     function showToast(type, icon, message){
       const stack = document.getElementById('toastStack');
       if(!stack) return;
@@ -524,9 +577,11 @@
         setTimeout(() => el.remove(), 240);
       }, 3200);
     }
+
     function openModal(id){ document.getElementById(id).classList.add('open'); }
     function closeModal(id){ document.getElementById(id).classList.remove('open'); }
     function closeModalIfBg(event,id){ if(event.target === document.getElementById(id)) closeModal(id); }
+
     window.addEventListener('storage', (event) => {
       if([STORAGE_BUDGETS, STORAGE_REALIZATIONS, STORAGE_RISKS, STORAGE_UPK, STORAGE_UPT].includes(event.key)){
         refreshRefs();
@@ -536,36 +591,48 @@
       }
     });
 
+
     function syncFilters(){
       populateUpkSelect('filterUpk', document.getElementById('filterUpk')?.value || '', 'Semua UPK');
       populateUptSelect('filterUpt', document.getElementById('filterUpk')?.value || '', document.getElementById('filterUpt')?.value || '', true);
     }
-    function onFilterUpkChange(){ populateUptSelect('filterUpt', document.getElementById('filterUpk').value, '', true); renderAll(); }
+
+    function onFilterUpkChange(){
+      populateUptSelect('filterUpt', document.getElementById('filterUpk').value, '', true);
+      renderAll();
+    }
+
     function getFilteredData(){
       refreshRefs();
       const q = document.getElementById('searchInput').value.trim().toLowerCase();
       const upkId = document.getElementById('filterUpk').value;
       const uptId = document.getElementById('filterUpt').value;
       const status = document.getElementById('filterStatus').value;
+
       return BUDGETS.map(hydrateBudget).map(item => {
-        const details = REALIZATIONS.filter(row => Number(row.budgetId) === Number(item.id));
+        const details = REALIZATIONS.filter(row => strId(row.budgetId) === strId(item.id));
         const actual = details.reduce((sum, row) => sum + Number(row.total || 0), 0);
         const gap = actual - Number(item.nominal || 0);
         const achievement = Number(item.nominal || 0) > 0 ? Math.round((actual / Number(item.nominal)) * 100) : 0;
         return { ...item, details, actual, gap, achievement, under: actual < Number(item.nominal || 0), over: actual > Number(item.nominal || 0) };
       }).filter(item => {
-        if(upkId && String(item.upkId) !== String(upkId)) return false;
-        if(uptId && String(item.uptId) !== String(uptId)) return false;
+        if(upkId && strId(item.upkId) !== strId(upkId)) return false;
+        if(uptId && strId(item.uptId) !== strId(uptId)) return false;
         if(status === 'normal' && (item.under || item.over)) return false;
         if(status === 'under' && !item.under) return false;
         if(status === 'over' && !item.over) return false;
         if(q){
-          const hay = [item.upkKode, item.upkNama, item.uptKode, item.uptDisplay, item.kode, item.nama, item.risikoNama || '', item.risikoSkala || '', item.catatan || '', ...item.details.map(d => `${d.kategori || ''} ${d.detail || ''} ${d.catatan || ''}`)].join(' ').toLowerCase();
+          const hay = [
+            item.upkKode, item.upkNama, item.uptKode, item.uptDisplay, item.kode, item.nama,
+            item.risikoNama || '', item.risikoSkala || '', item.catatan || '',
+            ...item.details.map(d => `${d.kategori || ''} ${d.detail || ''} ${d.catatan || ''}`)
+          ].join(' ').toLowerCase();
           if(!hay.includes(q)) return false;
         }
         return true;
       });
     }
+
     function renderStats(data){
       const totalTarget = data.reduce((sum, item) => sum + Number(item.nominal || 0), 0);
       const totalActual = data.reduce((sum, item) => sum + Number(item.actual || 0), 0);
@@ -574,15 +641,18 @@
       const totalPending = data.reduce((sum, item) => sum + item.details.filter(d => d.accurateStatus !== 'Sudah Push').length, 0);
       const totalRealizations = data.reduce((sum, item) => sum + item.details.length, 0);
       const achievement = totalTarget > 0 ? Math.round((totalActual / totalTarget) * 100) : 0;
+
       document.getElementById('heroTarget').textContent = fmtShortCurrency(totalTarget);
       document.getElementById('heroActual').textContent = fmtShortCurrency(totalActual);
       document.getElementById('heroGap').textContent = fmtShortCurrency(totalGap);
       document.getElementById('heroUnder').textContent = totalUnder;
+
       document.getElementById('statBudgets').textContent = data.length;
       document.getElementById('statRealizations').textContent = totalRealizations;
       document.getElementById('statAchievement').textContent = `${achievement}%`;
       document.getElementById('statPending').textContent = totalPending;
     }
+
     function renderBars(elId, values, color = 'var(--success)'){
       const el = document.getElementById(elId);
       if(!values.length){
@@ -596,6 +666,7 @@
           <div class="bar-track"><div class="bar-fill" style="width:${((v.actual || v.total || 0)/max)*100}%;background:${color};"></div></div>
         </div>`).join('');
     }
+
     function renderUpkSummary(data){
       const map = {};
       data.forEach(item => {
@@ -606,6 +677,7 @@
       });
       renderBars('upkSummary', Object.values(map).sort((a,b) => b.actual - a.actual), 'var(--primary)');
     }
+
     function renderUptSummary(data){
       const map = {};
       data.forEach(item => {
@@ -616,9 +688,13 @@
       });
       renderBars('uptSummary', Object.values(map).sort((a,b) => b.actual - a.actual).slice(0,8), 'var(--accent)');
     }
+
     function renderBudgetSummary(data){
       const tbody = document.getElementById('budgetSummaryBody');
-      if(!data.length){ tbody.innerHTML = `<tr><td colspan="10"><div class="empty-state"><i class="fa-solid fa-folder-open"></i><div class="empty-title">Belum ada head income</div><div class="empty-sub">Tambahkan Anggaran Income terlebih dahulu.</div></div></td></tr>`; return; }
+      if(!data.length){
+        tbody.innerHTML = `<tr><td colspan="10"><div class="empty-state"><i class="fa-solid fa-folder-open"></i><div class="empty-title">Belum ada head income</div><div class="empty-sub">Tambahkan Anggaran Income terlebih dahulu.</div></div></td></tr>`;
+        return;
+      }
       tbody.innerHTML = data.sort((a,b) => b.actual - a.actual).map(item => `
         <tr>
           <td><div class="title-cell">${escapeHtml(item.upkNama || '-')}</div><div class="title-sub">${escapeHtml(item.upkKode || '-')}</div></td>
@@ -633,10 +709,14 @@
           <td>${item.over ? '<span class="badge badge-success"><i class="fa-solid fa-arrow-trend-up"></i>Melebihi Target</span>' : item.under ? '<span class="badge badge-warning"><i class="fa-solid fa-hourglass-half"></i>Belum Tercapai</span>' : '<span class="badge badge-primary"><i class="fa-solid fa-circle-check"></i>Tepat Target</span>'}</td>
         </tr>`).join('');
     }
+
     function renderUnderTarget(data){
       const tbody = document.getElementById('underTargetBody');
       const items = data.filter(item => item.under);
-      if(!items.length){ tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><i class="fa-solid fa-trophy"></i><div class="empty-title">Semua target tercapai</div><div class="empty-sub">Tidak ada head income yang tertinggal dari target.</div></div></td></tr>`; return; }
+      if(!items.length){
+        tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><i class="fa-solid fa-trophy"></i><div class="empty-title">Semua target tercapai</div><div class="empty-sub">Tidak ada head income yang tertinggal dari target.</div></div></td></tr>`;
+        return;
+      }
       tbody.innerHTML = items.sort((a,b) => (a.actual - a.nominal) - (b.actual - b.nominal)).map(item => `
         <tr>
           <td><div class="title-cell">${escapeHtml(item.upkNama || '-')}</div><div class="title-sub">${escapeHtml(item.upkKode || '-')}</div></td>
@@ -649,22 +729,34 @@
           <td><div class="title-cell">${item.details.length} realisasi</div><div class="title-sub">${escapeHtml(item.details.map(x => x.kategori).filter(Boolean).slice(0,3).join(', ') || '-')}</div></td>
         </tr>`).join('');
     }
+
     function exportSummaryCSV(){
       const data = getFilteredData();
       const rows = data.map(item => [item.upkKode || '', item.upkNama || '', item.uptKode || '', item.uptDisplay || '', item.kode || '', item.nama || '', item.risikoId || '', item.risikoNama || '', item.risikoSkala || '', item.tahun || '', item.nominal || 0, item.actual || 0, item.gap || 0, item.achievement || 0, item.over ? 'Melebihi Target' : (item.under ? 'Belum Tercapai' : 'Tepat Target')]);
       const header = ['Kode UPK','Nama UPK','Kode UPT','Nama UPT','Kode Income','Nama Income','ID Risiko','Nama Risiko','Skala Risiko','Tahun','Target','Realisasi','Gap','Pencapaian %','Status'];
-      const csv = [header, ...rows].map(row => row.map(col => `"${String(col ?? '').replace(/"/g,'""')}"`).join(',')).join('\n');
-      const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' }); const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'report_income_summary.csv'; link.click();
+      const csv = [header, ...rows].map(row => row.map(col => `"${String(col ?? '').replace(/"/g,'""')}"`).join(',')).join('\\n');
+      const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'report_income_summary.csv';
+      link.click();
     }
+
     function renderAll(){
       syncFilters();
       const data = getFilteredData();
-      renderStats(data); renderUpkSummary(data); renderUptSummary(data); renderBudgetSummary(data); renderUnderTarget(data);
+      renderStats(data);
+      renderUpkSummary(data);
+      renderUptSummary(data);
+      renderBudgetSummary(data);
+      renderUnderTarget(data);
     }
+
     document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('id-ID', { weekday:'short', day:'numeric', month:'long', year:'numeric' });
     syncFilters();
     renderAll();
+
   </script>
-  <script src="/sidebar.js" defer></script>
+  <script src="../sidebar.js" defer></script>
 </body>
 </html>

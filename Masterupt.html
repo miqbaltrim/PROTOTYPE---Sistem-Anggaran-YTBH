@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Master UPT — Struktur UPT & Sub UPT</title>
+<title>Master UPT — Hierarki Dinamis</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="sidebar.css">
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -47,7 +48,7 @@
   .page-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
   .page-title{font-family:'Lora',serif;font-size:28px;line-height:1.25}
   .page-title em{color:var(--primary);font-style:italic}
-  .page-sub{margin-top:8px;max-width:860px;font-size:13.5px;line-height:1.7;color:var(--text-soft)}
+  .page-sub{margin-top:8px;max-width:880px;font-size:13.5px;line-height:1.7;color:var(--text-soft)}
   .page-actions{display:flex;gap:10px;flex-wrap:wrap}
 
   .btn{
@@ -61,9 +62,9 @@
   .btn-ghost:hover{background:var(--bg);color:var(--text)}
   .btn-accent{background:var(--accent);color:#fff;box-shadow:0 6px 18px rgba(246,139,33,.24)}
   .btn-accent:hover{transform:translateY(-1px);background:#ff9d3a}
-  .btn-sm{padding:7px 12px;font-size:12px}
   .btn-danger-ghost{background:#fff;color:var(--danger);border:1.5px solid rgba(217,64,64,.24)}
   .btn-danger-ghost:hover{background:var(--danger-soft)}
+  .btn-sm{padding:7px 12px;font-size:12px}
 
   .hero{
     background:linear-gradient(135deg,var(--primary) 0%, var(--primary-2) 100%);color:#fff;border-radius:22px;padding:24px 26px;
@@ -76,8 +77,6 @@
   .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:1.8px;color:rgba(255,255,255,.65);margin-bottom:8px}
   .hero-title{font-family:'Lora',serif;font-size:28px;line-height:1.25;max-width:720px}
   .hero-sub{margin-top:10px;font-size:13px;line-height:1.7;color:rgba(255,255,255,.76);max-width:650px}
-  .hero-chip{display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.12);font-size:12px;font-weight:700}
-  .hero-actions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
   .hero-right{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
   .hero-mini{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:15px 16px}
   .hero-mini-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.62);margin-bottom:7px}
@@ -167,6 +166,7 @@
   .indent-1{padding-left:18px}
   .indent-2{padding-left:36px}
   .indent-3{padding-left:54px}
+  .indent-4{padding-left:72px}
   .indent-wrap{display:flex;align-items:flex-start;gap:8px}
   .indent-mark{margin-top:3px;color:var(--text-muted)}
 
@@ -193,7 +193,7 @@
 
   .overlay-modal{position:fixed;inset:0;background:rgba(26,35,51,.42);backdrop-filter:blur(4px);z-index:300;display:none;align-items:center;justify-content:center;padding:16px}
   .overlay-modal.open{display:flex}
-  .modal{width:760px;max-width:100%;max-height:calc(100vh - 32px);overflow:auto;background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 24px 48px rgba(16,24,40,.18)}
+  .modal{width:720px;max-width:100%;max-height:calc(100vh - 32px);overflow:auto;background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 24px 48px rgba(16,24,40,.18)}
   .modal-head{padding:20px 22px 16px;border-bottom:1px solid var(--line-soft);display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
   .modal-title{font-family:'Lora',serif;font-size:20px;line-height:1.3}
   .modal-sub{margin-top:3px;font-size:12.5px;color:var(--text-muted)}
@@ -210,6 +210,8 @@
   .field-note{font-size:11.5px;color:var(--text-muted);line-height:1.6}
   .helper-box{background:var(--bg);border:1px solid var(--line-soft);border-radius:14px;padding:12px 14px;margin-bottom:14px;font-size:12px;color:var(--text-soft);line-height:1.7}
   .helper-box b{color:var(--text)}
+  .readonly-box{display:flex;align-items:center;min-height:42px;background:var(--bg);border:1.5px dashed var(--line);border-radius:11px;padding:10px 12px;font-family:'DM Mono',monospace;font-size:13px;color:var(--text)}
+  .code-hint{margin-top:6px;font-size:11.5px;color:var(--text-muted)}
 
   .toast-stack{position:fixed;right:22px;bottom:22px;z-index:500;display:flex;flex-direction:column;gap:8px}
   .toast{background:var(--text);color:#fff;padding:12px 16px;border-radius:12px;display:flex;align-items:center;gap:9px;box-shadow:0 10px 22px rgba(0,0,0,.2);font-size:13px;max-width:340px}
@@ -242,7 +244,7 @@
       Sistem Anggaran <span>›</span> Master Organisasi <span>›</span> <b>Master UPT</b>
     </div>
     <div class="topbar-right">
-      <div class="chip-info"><i class="fa-solid fa-sitemap"></i> Mendukung struktur UPT &amp; Sub UPT</div>
+      <div class="chip-info"><i class="fa-solid fa-sitemap"></i> Struktur UPT &amp; Sub UPT tidak terbatas</div>
       <div class="topbar-date" id="topbarDate">—</div>
     </div>
   </div>
@@ -250,7 +252,8 @@
   <div class="content">
     <div class="page-header">
       <div>
-        <div class="page-title">Master <em>UPT</em> dengan Struktur Sub UPT</div>
+        <div class="page-title">Master <em>UPT</em> Hierarkis</div>
+        <div class="page-sub">Field Master UPT disederhanakan menjadi <b>Nama UPK</b>, <b>Kode UPT otomatis</b>, <b>Nama UPT</b>, <b>Sub UPT</b>, <b>Status</b>, dan <b>Catatan</b>. Jika parent tidak dipilih, data otomatis menjadi <b>Head UPT</b>. Struktur bisa bertingkat tanpa batas, misalnya <b>UPT.1 → UPT.1.1 → UPT.1.1.1</b> dan seterusnya.</div>
       </div>
       <div class="page-actions">
         <button class="btn btn-ghost" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Export UPT</button>
@@ -261,29 +264,30 @@
 
     <section class="hero">
       <div class="hero-left">
-        <div class="eyebrow">Master Organisasi</div>
-        <div class="hero-title">Dummy Data</div>
+        <div class="eyebrow">Hierarki Organisasi</div>
+        <div class="hero-title">Kode UPT otomatis mengikuti posisi pada pohon UPT</div>
+        <div class="hero-sub">Saat UPT dipindah parent atau ditambah turunan baru, sistem akan menyusun ulang kode secara otomatis agar tetap konsisten dan berurutan.</div>
       </div>
       <div class="hero-right">
         <div class="hero-mini">
           <div class="hero-mini-label">Total UPT</div>
           <div class="hero-mini-value" id="heroTotalUpt">0</div>
-          <div class="hero-mini-sub">Seluruh UPT &amp; sub UPT</div>
+          <div class="hero-mini-sub">Semua node UPT</div>
         </div>
         <div class="hero-mini">
-          <div class="hero-mini-label">UPT Induk</div>
+          <div class="hero-mini-label">Head UPT</div>
           <div class="hero-mini-value" id="heroRootUpt">0</div>
-          <div class="hero-mini-sub">UPT level utama</div>
+          <div class="hero-mini-sub">UPT tanpa parent</div>
         </div>
         <div class="hero-mini">
           <div class="hero-mini-label">Sub UPT</div>
           <div class="hero-mini-value" id="heroChildUpt">0</div>
-          <div class="hero-mini-sub">Turunan dari UPT induk</div>
+          <div class="hero-mini-sub">Turunan dari UPT</div>
         </div>
         <div class="hero-mini">
-          <div class="hero-mini-label">UPK Induk</div>
+          <div class="hero-mini-label">UPK Terpakai</div>
           <div class="hero-mini-value" id="heroTotalUpk">0</div>
-          <div class="hero-mini-sub">Relasi ke master UPK</div>
+          <div class="hero-mini-sub">UPK yang memiliki UPT</div>
         </div>
       </div>
     </section>
@@ -293,46 +297,36 @@
         <div class="stat-icon"><i class="fa-solid fa-code-branch"></i></div>
         <div class="stat-label">Total UPT</div>
         <div class="stat-value" id="statTotalUpt">0</div>
-        <div class="stat-sub">Termasuk sub UPT</div>
+        <div class="stat-sub">Termasuk seluruh turunan</div>
       </div>
       <div class="stat-card c-accent">
         <div class="stat-icon"><i class="fa-solid fa-layer-group"></i></div>
-        <div class="stat-label">UPT Utama</div>
+        <div class="stat-label">Head UPT</div>
         <div class="stat-value" id="statRootUpt">0</div>
-        <div class="stat-sub">UPT tanpa parent</div>
+        <div class="stat-sub">UPT level utama</div>
       </div>
       <div class="stat-card c-success">
         <div class="stat-icon"><i class="fa-solid fa-diagram-project"></i></div>
         <div class="stat-label">Sub UPT</div>
         <div class="stat-value" id="statChildUpt">0</div>
-        <div class="stat-sub">UPT dengan parent UPT</div>
+        <div class="stat-sub">UPT bertingkat</div>
       </div>
       <div class="stat-card c-warning">
         <div class="stat-icon"><i class="fa-solid fa-building"></i></div>
         <div class="stat-label">UPK Terpakai</div>
         <div class="stat-value" id="statTotalUpk">0</div>
-        <div class="stat-sub">UPK yang punya UPT</div>
+        <div class="stat-sub">Relasi ke Master UPK</div>
       </div>
     </div>
 
     <div class="toolbar">
       <div class="search-wrap">
         <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-        <input class="search-input" id="searchInput" type="text" placeholder="Cari kode, nama UPT, kepala unit, parent UPT, atau UPK..." oninput="applyFilters()">
+        <input class="search-input" id="searchInput" type="text" placeholder="Cari kode, nama UPT, catatan, parent, atau nama UPK..." oninput="applyFilters()">
       </div>
 
       <select class="filter-select" id="filterUpk" onchange="applyFilters()">
         <option value="">Semua UPK</option>
-      </select>
-
-      <select class="filter-select" id="filterTipe" onchange="applyFilters()">
-        <option value="">Semua Jenis</option>
-        <option value="Lembaga">Lembaga</option>
-        <option value="Bagian">Bagian</option>
-        <option value="Pusat">Pusat</option>
-        <option value="Unit">Unit</option>
-        <option value="Fakultas">Fakultas</option>
-        <option value="Program">Program</option>
       </select>
 
       <select class="filter-select" id="filterStatus" onchange="applyFilters()">
@@ -380,9 +374,7 @@
               <th class="sortable" onclick="sortBy('kode')">Kode</th>
               <th class="sortable" onclick="sortBy('nama')">Nama UPT</th>
               <th>UPK</th>
-              <th>Parent UPT</th>
-              <th class="sortable" onclick="sortBy('tipe')">Jenis</th>
-              <th>Kepala</th>
+              <th>Sub dari</th>
               <th>Status</th>
               <th style="text-align:right;">Aksi</th>
             </tr>
@@ -404,42 +396,35 @@
     <div class="modal-head">
       <div>
         <div class="modal-title" id="modalTitle">Tambah UPT</div>
-        <div class="modal-sub" id="modalSub">Isi data UPT, lalu pilih parent jika ingin menjadikannya sub UPT.</div>
+        <div class="modal-sub" id="modalSub">Isi data UPT. Jika parent dipilih, data akan menjadi sub UPT.</div>
       </div>
       <button class="modal-close" onclick="closeModal('modalForm')"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="modal-body">
       <div class="helper-box" id="parentHintBox">
-        <b>Tips:</b> Kosongkan field <b>Sub UPT dari</b> jika data ini adalah UPT utama. Pilih parent UPT jika data ini ingin menjadi turunan/sub UPT.
+        <b>Catatan:</b> Jika field <b>Sub UPT</b> dikosongkan, data otomatis menjadi <b>Head UPT</b>. Kode UPT dibentuk otomatis mengikuti posisi pada struktur.
       </div>
 
       <div class="section-title">Relasi Organisasi</div>
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">UPK Induk <span class="req">*</span></label>
+          <label class="form-label">Nama UPK <span class="req">*</span></label>
           <select class="form-select" id="fUpk" onchange="handleFormUpkChange()"></select>
-          <div class="field-note">UPK wajib dipilih agar struktur UPT konsisten.</div>
+          <div class="field-note">UPT wajib terhubung ke salah satu UPK.</div>
         </div>
         <div class="form-group">
-          <label class="form-label">Sub UPT dari</label>
+          <label class="form-label">Sub UPT</label>
           <select class="form-select" id="fParent" onchange="handleParentChange()"></select>
-          <div class="field-note">Opsional. Jika dipilih, data akan disimpan sebagai turunan dari UPT induk tersebut.</div>
+          <div class="field-note">Pilih UPT yang sudah ada jika data ini ingin menjadi anak/turunan.</div>
         </div>
       </div>
 
       <div class="section-title">Identitas UPT</div>
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">Jenis UPT <span class="req">*</span></label>
-          <select class="form-select" id="fTipe">
-            <option value="">— Pilih Jenis —</option>
-            <option value="Lembaga">Lembaga</option>
-            <option value="Bagian">Bagian</option>
-            <option value="Pusat">Pusat</option>
-            <option value="Unit">Unit</option>
-            <option value="Fakultas">Fakultas</option>
-            <option value="Program">Program</option>
-          </select>
+          <label class="form-label">Kode UPT (Otomatis)</label>
+          <div class="readonly-box" id="fKodePreview">Otomatis saat disimpan</div>
+          <div class="code-hint">Contoh pola kode: <b>UPT.1</b>, <b>UPT.1.1</b>, <b>UPT.1.1.1</b>.</div>
         </div>
         <div class="form-group">
           <label class="form-label">Status</label>
@@ -450,40 +435,15 @@
         </div>
       </div>
       <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Kode UPT <span class="req">*</span></label>
-          <input class="form-input" id="fKode" type="text" placeholder="mis. UPT-LPPM-001">
-        </div>
-        <div class="form-group">
+        <div class="form-group" style="grid-column:span 2;">
           <label class="form-label">Nama UPT <span class="req">*</span></label>
           <input class="form-input" id="fNama" type="text" placeholder="mis. Wakil Rektor Bidang SDM, Humas dan Kerjasama">
+          <div class="field-note">Jika tidak memilih parent, nama ini otomatis menjadi <b>Head UPT</b>.</div>
         </div>
       </div>
-      <div class="form-group" style="margin-bottom:14px;">
-        <label class="form-label">Deskripsi</label>
-        <textarea class="form-textarea" id="fDeskripsi" placeholder="Ringkasan fungsi unit dan tanggung jawabnya..."></textarea>
-      </div>
-
-      <div class="section-title">Penanggung Jawab</div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Kepala / PIC UPT <span class="req">*</span></label>
-          <input class="form-input" id="fKepala" type="text" placeholder="Nama penanggung jawab unit">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Jumlah Personel</label>
-          <input class="form-input" id="fPegawai" type="number" min="0" placeholder="0">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Email</label>
-          <input class="form-input" id="fEmail" type="email" placeholder="upt@domain.ac.id">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Telepon</label>
-          <input class="form-input" id="fTelp" type="text" placeholder="0265-xxxxxxx">
-        </div>
+      <div class="form-group">
+        <label class="form-label">Catatan</label>
+        <textarea class="form-textarea" id="fCatatan" placeholder="Catatan tambahan untuk unit ini..."></textarea>
       </div>
     </div>
     <div class="modal-footer">
@@ -501,74 +461,26 @@ const STORAGE_UPT = 'APP_MASTER_UPT_V1';
 const LEGACY_UPK_KEYS = ['APP_ORG_UPK_DIVISIONS_V2'];
 const LEGACY_UPT_KEYS = ['APP_ORG_UPT_BRANCHES_V2'];
 
-const seedUPK = [
-  { id:1, kode:'UPK-001', nama:'Yayasan Bakti Tunas Husada', area:'Yayasan Pusat', status:'Aktif' },
-  { id:2, kode:'UPK-002', nama:'Universitas Bakti Tunas Husada', area:'Perguruan Tinggi', status:'Aktif' },
-  { id:3, kode:'UPK-003', nama:'Klinik Bakti Tunas Husada', area:'Layanan Kesehatan', status:'Aktif' },
-  { id:4, kode:'UPK-004', nama:'BTH Student House', area:'Asrama & Pembinaan', status:'Aktif' }
+const fallbackUPK = [
+  { id:1, kode:'UPK-001', nama:'Yayasan Bakti Tunas Husada', visi:'', misi:'', catatan:'', status:'Aktif' },
+  { id:2, kode:'UPK-002', nama:'Universitas Bakti Tunas Husada', visi:'', misi:'', catatan:'', status:'Aktif' },
+  { id:3, kode:'UPK-003', nama:'Klinik Bakti Tunas Husada', visi:'', misi:'', catatan:'', status:'Aktif' },
+  { id:4, kode:'UPK-004', nama:'BTH Student House', visi:'', misi:'', catatan:'', status:'Aktif' }
 ];
 
 const seedUPT = [
-  {
-    id:1, kode:'UPT-UBTH-WR-SDM', nama:'Wakil Rektor Bidang SDM, Humas dan Kerjasama', tipe:'Bidang',
-    upkId:2, id_upk:2, parentId:null, id_parent_upt:null,
-    deskripsi:'UPT induk yang menaungi pengelolaan SDM, humas, kerja sama, dan pusat karir di lingkungan universitas.',
-    kepala:'Wakil Rektor Bidang SDM, Humas dan Kerjasama', pegawai:14, email:'wr.sdmhumas@bth.ac.id', telp:'0265-1002001', status:'Aktif'
-  },
-  {
-    id:2, kode:'SUB-WR-SDM', nama:'Bagian SDM', tipe:'Bagian',
-    upkId:2, id_upk:2, parentId:1, id_parent_upt:1,
-    deskripsi:'Sub UPT yang menangani perencanaan kebutuhan pegawai, administrasi SDM, dan pengembangan pegawai.',
-    kepala:'Kepala Bagian SDM', pegawai:6, email:'sdm@bth.ac.id', telp:'0265-1002002', status:'Aktif'
-  },
-  {
-    id:3, kode:'SUB-WR-HUMAS', nama:'Bagian Humas dan Kerjasama', tipe:'Bagian',
-    upkId:2, id_upk:2, parentId:1, id_parent_upt:1,
-    deskripsi:'Sub UPT yang menangani komunikasi kelembagaan, publikasi, media, dan pengelolaan kerja sama institusi.',
-    kepala:'Kepala Bagian Humas dan Kerjasama', pegawai:5, email:'humas.kerjasama@bth.ac.id', telp:'0265-1002003', status:'Aktif'
-  },
-  {
-    id:4, kode:'SUB-WR-KARIR', nama:'Bagian Pusat Karir', tipe:'Bagian',
-    upkId:2, id_upk:2, parentId:1, id_parent_upt:1,
-    deskripsi:'Sub UPT untuk tracer study, layanan pengembangan karir, dan penguatan jejaring alumni serta mitra kerja.',
-    kepala:'Kepala Bagian Pusat Karir', pegawai:4, email:'pusatkarir@bth.ac.id', telp:'0265-1002004', status:'Aktif'
-  },
-  {
-    id:5, kode:'UPT-UBTH-FIK', nama:'Fakultas Ilmu Kesehatan', tipe:'Fakultas',
-    upkId:2, id_upk:2, parentId:null, id_parent_upt:null,
-    deskripsi:'UPT utama untuk koordinasi operasional Fakultas Ilmu Kesehatan.',
-    kepala:'Dekan FIK', pegawai:34, email:'fik@bth.ac.id', telp:'0265-1002101', status:'Aktif'
-  },
-  {
-    id:6, kode:'SUB-FIK-LAB', nama:'Laboratorium Terpadu', tipe:'Unit',
-    upkId:2, id_upk:2, parentId:5, id_parent_upt:5,
-    deskripsi:'Sub UPT laboratorium untuk mendukung praktikum dan penelitian.',
-    kepala:'Kepala Laboratorium', pegawai:8, email:'labterpadu@bth.ac.id', telp:'0265-1002102', status:'Aktif'
-  },
-  {
-    id:7, kode:'UPT-YBTH-SEKRETARIAT', nama:'Sekretariat Yayasan', tipe:'Bagian',
-    upkId:1, id_upk:1, parentId:null, id_parent_upt:null,
-    deskripsi:'UPT utama pengelolaan administrasi dan kesekretariatan yayasan.',
-    kepala:'Kepala Sekretariat', pegawai:10, email:'sekretariat@ybth.ac.id', telp:'0265-1001001', status:'Aktif'
-  },
-  {
-    id:8, kode:'SUB-SEK-KEU', nama:'Bagian Keuangan dan Akuntansi', tipe:'Bagian',
-    upkId:1, id_upk:1, parentId:7, id_parent_upt:7,
-    deskripsi:'Sub UPT yang menangani kas, akuntansi, dan laporan keuangan yayasan.',
-    kepala:'Manajer Keuangan', pegawai:7, email:'keuangan@ybth.ac.id', telp:'0265-1001002', status:'Aktif'
-  },
-  {
-    id:9, kode:'UPT-KLINIK-MEDIS', nama:'Unit Pelayanan Medis', tipe:'Unit',
-    upkId:3, id_upk:3, parentId:null, id_parent_upt:null,
-    deskripsi:'UPT utama pelayanan medis untuk operasional klinik.',
-    kepala:'Koordinator Medis', pegawai:18, email:'medis@klinikbth.ac.id', telp:'0265-1003001', status:'Aktif'
-  },
-  {
-    id:10, kode:'SUB-MEDIS-PENUNJANG', nama:'Unit Penunjang Medis', tipe:'Unit',
-    upkId:3, id_upk:3, parentId:9, id_parent_upt:9,
-    deskripsi:'Sub UPT yang mendukung laboratorium, farmasi, dan alat kesehatan.',
-    kepala:'Koordinator Penunjang', pegawai:9, email:'penunjang@klinikbth.ac.id', telp:'0265-1003002', status:'Aktif'
-  }
+  { id:1, upkId:2, parentId:null, nama:'Wakil Rektor Bidang SDM, Humas dan Kerjasama', status:'Aktif', catatan:'Head UPT untuk pengelolaan SDM, humas, kerja sama, dan pusat karir.' },
+  { id:2, upkId:2, parentId:1, nama:'Bagian SDM', status:'Aktif', catatan:'Sub UPT pengelolaan SDM.' },
+  { id:3, upkId:2, parentId:1, nama:'Bagian Humas dan Kerjasama', status:'Aktif', catatan:'Sub UPT humas dan kerja sama.' },
+  { id:4, upkId:2, parentId:1, nama:'Bagian Pusat Karir', status:'Aktif', catatan:'Sub UPT layanan karir.' },
+  { id:5, upkId:2, parentId:4, nama:'Career Development Center', status:'Aktif', catatan:'Turunan dari Bagian Pusat Karir.' },
+  { id:6, upkId:2, parentId:5, nama:'Layanan Tracer Study', status:'Aktif', catatan:'Turunan level 3 untuk tracer study.' },
+  { id:7, upkId:1, parentId:null, nama:'Sekretariat Yayasan', status:'Aktif', catatan:'Head UPT sekretariat yayasan.' },
+  { id:8, upkId:1, parentId:7, nama:'Bagian Keuangan dan Akuntansi', status:'Aktif', catatan:'Sub UPT keuangan yayasan.' },
+  { id:9, upkId:3, parentId:null, nama:'Pelayanan Medis', status:'Aktif', catatan:'Head UPT pelayanan klinik.' },
+  { id:10, upkId:3, parentId:9, nama:'Rawat Jalan', status:'Aktif', catatan:'Sub UPT rawat jalan.' },
+  { id:11, upkId:3, parentId:10, nama:'Rawat Jalan Umum', status:'Aktif', catatan:'Turunan rawat jalan umum.' },
+  { id:12, upkId:4, parentId:null, nama:'Pembinaan Mahasiswa', status:'Aktif', catatan:'Head UPT pembinaan Student House.' }
 ];
 
 let UPK_DATA = [];
@@ -580,7 +492,6 @@ const state = {
   sortDir:'asc',
   search:'',
   filterUpk:'',
-  filterTipe:'',
   filterStatus:'',
   editingId:null
 };
@@ -598,7 +509,7 @@ function normalizeText(value){
   return String(value || '')
     .toLowerCase()
     .normalize('NFD')
-    .replace(/[̀-ͯ]/g,'')
+    .replace(/[\u0300-\u036f]/g,'')
     .trim();
 }
 
@@ -627,125 +538,108 @@ function normalizeUpk(item, idx){
     id:Number(item.id) || (idx + 1),
     kode:item.kode || `UPK-${String(idx + 1).padStart(3,'0')}`,
     nama:item.nama || '',
-    area:item.area || '',
+    visi:item.visi || '',
+    misi:item.misi || '',
+    catatan:item.catatan || '',
     status:item.status || 'Aktif'
   };
 }
 
 function normalizeUpt(item, idx){
-  const upkId = item.upkId ?? item.id_upk ?? null;
-  const parentId = item.parentId ?? item.id_parent_upt ?? null;
   return {
     id:Number(item.id) || (idx + 1),
-    kode:item.kode || `UPT-${String(idx + 1).padStart(3,'0')}`,
+    upkId:item.upkId != null ? Number(item.upkId) : (item.id_upk != null ? Number(item.id_upk) : null),
+    id_upk:item.upkId != null ? Number(item.upkId) : (item.id_upk != null ? Number(item.id_upk) : null),
+    parentId:item.parentId != null ? Number(item.parentId) : (item.id_parent_upt != null ? Number(item.id_parent_upt) : null),
+    id_parent_upt:item.parentId != null ? Number(item.parentId) : (item.id_parent_upt != null ? Number(item.id_parent_upt) : null),
+    kode:item.kode || '',
     nama:item.nama || '',
-    tipe:item.tipe || 'Unit',
-    upkId:upkId ? Number(upkId) : null,
-    id_upk:upkId ? Number(upkId) : null,
-    parentId:parentId ? Number(parentId) : null,
-    id_parent_upt:parentId ? Number(parentId) : null,
-    deskripsi:item.deskripsi || '',
-    kepala:item.kepala || '',
-    pegawai:Number(item.pegawai) || 0,
-    email:item.email || '',
-    telp:item.telp || '',
-    status:item.status || 'Aktif'
+    status:item.status || 'Aktif',
+    catatan:item.catatan || item.deskripsi || ''
   };
-}
-
-function ensureSeed(){
-  UPK_DATA = readFromPrimaryOrLegacy(STORAGE_UPK, LEGACY_UPK_KEYS, seedUPK).map(normalizeUpk);
-  UPT_DATA = readFromPrimaryOrLegacy(STORAGE_UPT, LEGACY_UPT_KEYS, seedUPT).map(normalizeUpt);
-  writeCompat(STORAGE_UPK, LEGACY_UPK_KEYS, UPK_DATA);
-  writeCompat(STORAGE_UPT, LEGACY_UPT_KEYS, UPT_DATA);
 }
 
 function persistUPK(){ writeCompat(STORAGE_UPK, LEGACY_UPK_KEYS, UPK_DATA); }
 function persistUPT(){ writeCompat(STORAGE_UPT, LEGACY_UPT_KEYS, UPT_DATA); }
 
+function ensureSeed(){
+  UPK_DATA = readFromPrimaryOrLegacy(STORAGE_UPK, LEGACY_UPK_KEYS, fallbackUPK).map(normalizeUpk);
+  UPT_DATA = readFromPrimaryOrLegacy(STORAGE_UPT, LEGACY_UPT_KEYS, seedUPT).map(normalizeUpt);
+  if (!UPK_DATA.length) UPK_DATA = fallbackUPK.map(normalizeUpk);
+  if (!UPT_DATA.length) UPT_DATA = seedUPT.map(normalizeUpt);
+  regenerateCodes();
+  persistUPK();
+  persistUPT();
+}
+
 function getUpkById(id){ return UPK_DATA.find(item => Number(item.id) === Number(id)); }
 function getUptById(id){ return UPT_DATA.find(item => Number(item.id) === Number(id)); }
 function childrenOf(parentId){ return UPT_DATA.filter(item => Number(item.parentId || 0) === Number(parentId || 0)); }
 function rootItems(){ return UPT_DATA.filter(item => !item.parentId); }
-function isChild(item){ return Boolean(item.parentId); }
 function childCount(id){ return childrenOf(id).length; }
+function isHead(item){ return !item.parentId; }
 
-function iconByType(type){
-  return {
-    'Lembaga':'fa-solid fa-building-columns',
-    'Bagian':'fa-solid fa-sitemap',
-    'Pusat':'fa-solid fa-bullseye',
-    'Unit':'fa-solid fa-cubes',
-    'Fakultas':'fa-solid fa-graduation-cap',
-    'Program':'fa-solid fa-diagram-project'
-  }[type] || 'fa-solid fa-building';
-}
-
-function statusBadge(status){
-  if (status === 'Aktif') return '<span class="badge badge-success"><i class="fa-solid fa-circle-check"></i>Aktif</span>';
-  return '<span class="badge badge-neutral"><i class="fa-solid fa-circle-minus"></i>Nonaktif</span>';
-}
-
-function sortItems(items){
-  const col = state.sortCol;
-  const dir = state.sortDir === 'asc' ? 1 : -1;
+function sortTreeItems(items){
   return items.slice().sort((a,b) => {
-    const av = a[col] ?? '';
-    const bv = b[col] ?? '';
-    if (typeof av === 'string' || typeof bv === 'string') return String(av).localeCompare(String(bv)) * dir;
-    return ((Number(av) || 0) - (Number(bv) || 0)) * dir;
+    const byUpk = String(a.upkId || '').localeCompare(String(b.upkId || ''));
+    if (byUpk !== 0) return byUpk;
+    return Number(a.id) - Number(b.id);
   });
 }
 
-function itemMatches(item){
-  if (state.filterUpk && String(item.upkId) !== String(state.filterUpk)) return false;
-  if (state.filterTipe && item.tipe !== state.filterTipe) return false;
-  if (state.filterStatus && item.status !== state.filterStatus) return false;
-  if (state.search) {
-    const upk = getUpkById(item.upkId);
-    const parent = getUptById(item.parentId);
-    const hay = [
-      item.kode, item.nama, item.tipe, item.deskripsi, item.kepala, item.email,
-      upk?.kode || '', upk?.nama || '', parent?.kode || '', parent?.nama || ''
-    ].join(' ');
-    if (!normalizeText(hay).includes(normalizeText(state.search))) return false;
-  }
-  return true;
-}
-
-function nodeVisible(item){
-  if (itemMatches(item)) return true;
-  return childrenOf(item.id).some(nodeVisible);
-}
-
-function flattenVisibleTree(){
-  const rows = [];
-  function walk(items, depth){
-    sortItems(items).forEach(item => {
-      if (!nodeVisible(item)) return;
-      rows.push({ item, depth });
-      walk(childrenOf(item.id), depth + 1);
+function regenerateCodes(){
+  const roots = sortTreeItems(rootItems());
+  function walk(nodes, prefix){
+    sortTreeItems(nodes).forEach((node, index) => {
+      const code = prefix ? `${prefix}.${index + 1}` : `UPT.${index + 1}`;
+      node.kode = code;
+      const children = childrenOf(node.id);
+      if (children.length) walk(children, code);
     });
   }
-  walk(rootItems(), 0);
-  return rows;
+  walk(roots, '');
+}
+
+function getPreviewCode(parentId, editingId){
+  const editId = editingId ? Number(editingId) : null;
+  const siblings = sortTreeItems(UPT_DATA.filter(item =>
+    Number(item.parentId || 0) === Number(parentId || 0) &&
+    Number(item.id) !== Number(editId)
+  ));
+  const nextIndex = siblings.length + 1;
+  if (parentId){
+    const parent = getUptById(parentId);
+    return `${parent?.kode || 'UPT'}.${nextIndex}`;
+  }
+  return `UPT.${nextIndex}`;
 }
 
 function buildUpkOptions(){
   const filter = document.getElementById('filterUpk');
   const form = document.getElementById('fUpk');
-  const upkOptions = sortItems(UPK_DATA.map(item => ({ ...item, sortKey:`${item.kode} ${item.nama}` }))).sort((a,b)=>`${a.kode} ${a.nama}`.localeCompare(`${b.kode} ${b.nama}`));
-  filter.innerHTML = '<option value="">Semua UPK</option>' + upkOptions.map(item => `<option value="${item.id}">${escapeHTML(item.kode)} · ${escapeHTML(item.nama)}</option>`).join('');
-  if (state.filterUpk) filter.value = state.filterUpk;
-  form.innerHTML = '<option value="">— Pilih UPK —</option>' + upkOptions.map(item => `<option value="${item.id}">${escapeHTML(item.kode)} · ${escapeHTML(item.nama)}</option>`).join('');
+  const upks = UPK_DATA.slice().sort((a,b) => `${a.kode} ${a.nama}`.localeCompare(`${b.kode} ${b.nama}`));
+  filter.innerHTML = '<option value="">Semua UPK</option>' + upks.map(item => `<option value="${item.id}">${escapeHTML(item.kode)} · ${escapeHTML(item.nama)}</option>`).join('');
+  filter.value = state.filterUpk || '';
+  form.innerHTML = '<option value="">— Pilih UPK —</option>' + upks.map(item => `<option value="${item.id}">${escapeHTML(item.kode)} · ${escapeHTML(item.nama)}</option>`).join('');
 }
 
 function buildParentOptions(selectedUpkId, selectedParentId = ''){
-  const parentSelect = document.getElementById('fParent');
+  const select = document.getElementById('fParent');
   const editingId = state.editingId ? Number(state.editingId) : null;
-  const candidates = sortItems(UPT_DATA.filter(item => String(item.upkId) === String(selectedUpkId || '') && Number(item.id) !== Number(editingId)));
-  parentSelect.innerHTML = '<option value="">— Tidak ada (UPT utama) —</option>' + candidates.map(item => `<option value="${item.id}">${escapeHTML(item.kode)} · ${escapeHTML(item.nama)}</option>`).join('');
-  if (selectedParentId) parentSelect.value = String(selectedParentId);
+  const candidates = sortTreeItems(UPT_DATA.filter(item =>
+    String(item.upkId || '') === String(selectedUpkId || '') &&
+    Number(item.id) !== Number(editingId)
+  ));
+  select.innerHTML = '<option value="">— Tidak ada (Head UPT) —</option>' + candidates.map(item => `<option value="${item.id}">${escapeHTML(item.kode)} · ${escapeHTML(item.nama)}</option>`).join('');
+  if (selectedParentId) select.value = String(selectedParentId);
+}
+
+function updateCodePreview(){
+  const parentId = Number(document.getElementById('fParent').value || 0) || null;
+  const preview = state.editingId
+    ? (getUptById(state.editingId)?.kode || getPreviewCode(parentId, state.editingId))
+    : getPreviewCode(parentId, null);
+  document.getElementById('fKodePreview').textContent = preview || 'Otomatis saat disimpan';
 }
 
 function updateStats(){
@@ -763,10 +657,43 @@ function updateStats(){
   document.getElementById('heroTotalUpk').textContent = upkUsed;
 }
 
+function itemMatches(item){
+  if (state.filterUpk && String(item.upkId) !== String(state.filterUpk)) return false;
+  if (state.filterStatus && item.status !== state.filterStatus) return false;
+  if (state.search) {
+    const upk = getUpkById(item.upkId);
+    const parent = getUptById(item.parentId);
+    const hay = [
+      item.kode, item.nama, item.catatan, item.status,
+      upk?.kode || '', upk?.nama || '',
+      parent?.kode || '', parent?.nama || ''
+    ].join(' ');
+    if (!normalizeText(hay).includes(normalizeText(state.search))) return false;
+  }
+  return true;
+}
+
+function nodeVisible(item){
+  if (itemMatches(item)) return true;
+  return childrenOf(item.id).some(nodeVisible);
+}
+
+function flattenVisibleTree(){
+  const rows = [];
+  function walk(items, depth){
+    sortTreeItems(items).forEach(item => {
+      if (!nodeVisible(item)) return;
+      rows.push({ item, depth });
+      walk(childrenOf(item.id), depth + 1);
+    });
+  }
+  walk(rootItems(), 0);
+  return rows;
+}
+
 function applyFilters(){
   state.search = document.getElementById('searchInput').value.trim();
   state.filterUpk = document.getElementById('filterUpk').value;
-  state.filterTipe = document.getElementById('filterTipe').value;
   state.filterStatus = document.getElementById('filterStatus').value;
   render();
 }
@@ -786,8 +713,27 @@ function sortBy(col){
   render();
 }
 
+function sortTableRows(rows){
+  const dir = state.sortDir === 'asc' ? 1 : -1;
+  const col = state.sortCol;
+  return rows.slice().sort((a,b) => {
+    let av = a.item[col] ?? '';
+    let bv = b.item[col] ?? '';
+    if (col === 'kode'){
+      av = String(av); bv = String(bv);
+      return av.localeCompare(bv, undefined, {numeric:true}) * dir;
+    }
+    return String(av).localeCompare(String(bv)) * dir;
+  });
+}
+
+function statusBadge(status){
+  if (status === 'Aktif') return '<span class="badge badge-success"><i class="fa-solid fa-circle-check"></i>Aktif</span>';
+  return '<span class="badge badge-neutral"><i class="fa-solid fa-circle-minus"></i>Nonaktif</span>';
+}
+
 function renderAccordion(){
-  const roots = sortItems(rootItems()).filter(nodeVisible);
+  const roots = sortTreeItems(rootItems()).filter(nodeVisible);
   const list = document.getElementById('accordionList');
   const empty = document.getElementById('emptyAccordion');
   const visibleCount = flattenVisibleTree().length;
@@ -804,15 +750,15 @@ function renderAccordion(){
 
 function renderAccordionRoot(item){
   const upk = getUpkById(item.upkId);
-  const children = sortItems(childrenOf(item.id)).filter(nodeVisible);
+  const children = sortTreeItems(childrenOf(item.id)).filter(nodeVisible);
   return `
     <details class="tree-card" open>
       <summary class="tree-summary">
         <div class="tree-summary-left">
-          <div class="tree-icon"><i class="${iconByType(item.tipe)}"></i></div>
+          <div class="tree-icon"><i class="fa-solid fa-sitemap"></i></div>
           <div style="min-width:0;">
             <div class="tree-title">${escapeHTML(item.nama)}</div>
-            <div class="tree-code">${escapeHTML(item.kode)} · ${escapeHTML(item.tipe || 'UPT')}</div>
+            <div class="tree-code">${escapeHTML(item.kode)} · Head UPT</div>
             <div class="tree-meta">
               <span class="badge badge-primary"><i class="fa-solid fa-building"></i>${escapeHTML(upk?.nama || 'Tanpa UPK')}</span>
               ${statusBadge(item.status)}
@@ -828,21 +774,21 @@ function renderAccordionRoot(item){
       <div class="tree-body">
         <div class="tree-info-grid">
           <div class="info-box">
-            <div class="info-label">UPK Induk</div>
+            <div class="info-label">Nama UPK</div>
             <div class="info-value">${escapeHTML(upk?.kode || '-')} · ${escapeHTML(upk?.nama || '-')}</div>
           </div>
           <div class="info-box">
-            <div class="info-label">Kepala UPT</div>
-            <div class="info-value">${escapeHTML(item.kepala || '-')}</div>
+            <div class="info-label">Jenis Posisi</div>
+            <div class="info-value">Head UPT</div>
           </div>
           <div class="info-box">
-            <div class="info-label">Jumlah Personel</div>
-            <div class="info-value">${Number(item.pegawai) || 0} orang</div>
+            <div class="info-label">Jumlah Turunan Langsung</div>
+            <div class="info-value">${children.length} sub UPT</div>
           </div>
         </div>
         <div class="info-box" style="margin-bottom:16px;">
-          <div class="info-label">Deskripsi</div>
-          <div class="info-value" style="font-weight:600;color:var(--text-soft);">${escapeHTML(item.deskripsi || 'Belum ada deskripsi UPT.')}</div>
+          <div class="info-label">Catatan</div>
+          <div class="info-value" style="font-weight:600;color:var(--text-soft);">${escapeHTML(item.catatan || 'Belum ada catatan.')}</div>
         </div>
         <div class="tree-actions">
           <button class="btn btn-primary btn-sm" onclick="openAddModal(${item.id})"><i class="fa-solid fa-plus"></i> Tambah Sub UPT</button>
@@ -861,19 +807,17 @@ function renderAccordionRoot(item){
 function renderChildNode(item, depth){
   const upk = getUpkById(item.upkId);
   const parent = getUptById(item.parentId);
-  const children = sortItems(childrenOf(item.id)).filter(nodeVisible);
+  const children = sortTreeItems(childrenOf(item.id)).filter(nodeVisible);
   return `
-    <div class="child-card" style="margin-left:${Math.min(depth - 1, 3) * 18}px;">
+    <div class="child-card" style="margin-left:${Math.min(depth - 1, 5) * 18}px;">
       <div class="child-head">
         <div style="min-width:0;">
           <div class="child-title">${escapeHTML(item.nama)}</div>
-          <div class="child-code">${escapeHTML(item.kode)} · ${escapeHTML(item.tipe || 'Sub UPT')}</div>
-          <div class="child-sub">UPK: <b>${escapeHTML(upk?.nama || '-')}</b>${parent ? ` · Parent: <b>${escapeHTML(parent.nama)}</b>` : ''}</div>
+          <div class="child-code">${escapeHTML(item.kode)} · Sub UPT</div>
+          <div class="child-sub">UPK: <b>${escapeHTML(upk?.nama || '-')}</b> · Parent: <b>${escapeHTML(parent?.nama || '-')}</b></div>
           <div class="child-meta">
             ${statusBadge(item.status)}
-            <span class="badge badge-primary"><i class="fa-solid fa-user"></i>${escapeHTML(item.kepala || '-')}</span>
-            <span class="badge badge-accent"><i class="fa-solid fa-users"></i>${Number(item.pegawai) || 0} personel</span>
-            ${children.length ? `<span class="badge badge-warning"><i class="fa-solid fa-layer-group"></i>${children.length} turunan</span>` : ''}
+            ${children.length ? `<span class="badge badge-warning"><i class="fa-solid fa-layer-group"></i>${children.length} turunan</span>` : '<span class="badge badge-neutral"><i class="fa-solid fa-minus"></i>Leaf</span>'}
           </div>
         </div>
         <div class="actions-inline">
@@ -882,14 +826,14 @@ function renderChildNode(item, depth){
           <button class="act-btn danger" onclick="deleteUPT(${item.id})" title="Hapus"><i class="fa-solid fa-trash"></i></button>
         </div>
       </div>
-      ${item.deskripsi ? `<div class="child-sub" style="margin-top:10px;">${escapeHTML(item.deskripsi)}</div>` : ''}
+      ${item.catatan ? `<div class="child-sub" style="margin-top:10px;">${escapeHTML(item.catatan)}</div>` : ''}
       ${children.length ? `<div class="child-list" style="margin-top:12px;">${children.map(child => renderChildNode(child, depth + 1)).join('')}</div>` : ''}
     </div>
   `;
 }
 
 function renderTable(){
-  const rows = flattenVisibleTree();
+  const rows = sortTableRows(flattenVisibleTree());
   const tbody = document.getElementById('uptTableBody');
   const empty = document.getElementById('emptyTable');
   document.getElementById('tableSubtitle').textContent = `Menampilkan ${rows.length} data UPT/Sub UPT dalam tabel.`;
@@ -903,16 +847,16 @@ function renderTable(){
   tbody.innerHTML = rows.map(({ item, depth }) => {
     const upk = getUpkById(item.upkId);
     const parent = getUptById(item.parentId);
-    const indent = Math.min(depth, 3);
+    const indent = Math.min(depth, 4);
     return `
       <tr>
         <td class="mono">${escapeHTML(item.kode)}</td>
         <td>
           <div class="indent-wrap indent-${indent}">
-            ${depth ? `<span class="indent-mark"><i class="fa-solid fa-turn-down-right"></i></span>` : `<span class="indent-mark"><i class="${iconByType(item.tipe)}"></i></span>`}
+            ${depth ? `<span class="indent-mark"><i class="fa-solid fa-turn-down-right"></i></span>` : `<span class="indent-mark"><i class="fa-solid fa-sitemap"></i></span>`}
             <div>
               <div class="title-cell">${escapeHTML(item.nama)}</div>
-              <div class="title-sub">${escapeHTML(item.deskripsi || '-')}</div>
+              <div class="title-sub">${escapeHTML(item.catatan || (item.parentId ? 'Sub UPT' : 'Head UPT'))}</div>
             </div>
           </div>
         </td>
@@ -921,12 +865,7 @@ function renderTable(){
           <div class="title-sub">${escapeHTML(upk?.kode || '-')}</div>
         </td>
         <td>
-          ${parent ? `<div class="title-cell">${escapeHTML(parent.nama)}</div><div class="title-sub">${escapeHTML(parent.kode)}</div>` : '<span class="badge badge-neutral">UPT utama</span>'}
-        </td>
-        <td><span class="badge badge-accent"><i class="${iconByType(item.tipe)}"></i>${escapeHTML(item.tipe || '-')}</span></td>
-        <td>
-          <div class="title-cell">${escapeHTML(item.kepala || '-')}</div>
-          <div class="title-sub">${Number(item.pegawai) || 0} personel</div>
+          ${parent ? `<div class="title-cell">${escapeHTML(parent.nama)}</div><div class="title-sub">${escapeHTML(parent.kode)}</div>` : '<span class="badge badge-primary">Head UPT</span>'}
         </td>
         <td>${statusBadge(item.status)}</td>
         <td style="text-align:right;">
@@ -942,6 +881,7 @@ function renderTable(){
 }
 
 function render(){
+  regenerateCodes();
   buildUpkOptions();
   updateStats();
   renderAccordion();
@@ -952,26 +892,21 @@ function openAddModal(parentId = null){
   state.editingId = null;
   document.getElementById('modalTitle').textContent = parentId ? 'Tambah Sub UPT' : 'Tambah UPT';
   document.getElementById('modalSub').textContent = parentId ? 'Data akan dibuat sebagai turunan/sub UPT.' : 'Isi data UPT utama atau pilih parent jika ingin menjadi sub UPT.';
-  document.getElementById('fTipe').value = '';
-  document.getElementById('fKode').value = '';
   document.getElementById('fNama').value = '';
-  document.getElementById('fDeskripsi').value = '';
-  document.getElementById('fKepala').value = '';
-  document.getElementById('fPegawai').value = '';
-  document.getElementById('fEmail').value = '';
-  document.getElementById('fTelp').value = '';
+  document.getElementById('fCatatan').value = '';
   document.getElementById('fStatus').value = 'Aktif';
   buildUpkOptions();
   if (parentId){
     const parent = getUptById(parentId);
     document.getElementById('fUpk').value = String(parent?.upkId || '');
     buildParentOptions(parent?.upkId || '', parentId);
-    document.getElementById('parentHintBox').innerHTML = `<b>Mode sub UPT:</b> Data ini akan menjadi turunan dari <b>${escapeHTML(parent?.nama || '-')}</b>. UPK mengikuti parent agar strukturnya tetap konsisten.`;
+    document.getElementById('parentHintBox').innerHTML = `<b>Mode sub UPT:</b> Data ini akan menjadi turunan dari <b>${escapeHTML(parent?.nama || '-')}</b>. UPK mengikuti parent agar tetap konsisten.`;
   } else {
     document.getElementById('fUpk').value = '';
     buildParentOptions('', '');
-    document.getElementById('parentHintBox').innerHTML = '<b>Tips:</b> Kosongkan field <b>Sub UPT dari</b> jika data ini adalah UPT utama. Pilih parent UPT jika data ini ingin menjadi turunan/sub UPT.';
+    document.getElementById('parentHintBox').innerHTML = '<b>Catatan:</b> Jika field <b>Sub UPT</b> dikosongkan, data otomatis menjadi <b>Head UPT</b>. Kode UPT dibentuk otomatis mengikuti posisi pada struktur.';
   }
+  updateCodePreview();
   openModal('modalForm');
 }
 
@@ -984,30 +919,27 @@ function openEditModal(id){
   buildUpkOptions();
   document.getElementById('fUpk').value = String(item.upkId || '');
   buildParentOptions(item.upkId, item.parentId || '');
-  document.getElementById('fTipe').value = item.tipe || '';
-  document.getElementById('fKode').value = item.kode || '';
   document.getElementById('fNama').value = item.nama || '';
-  document.getElementById('fDeskripsi').value = item.deskripsi || '';
-  document.getElementById('fKepala').value = item.kepala || '';
-  document.getElementById('fPegawai').value = Number(item.pegawai) || '';
-  document.getElementById('fEmail').value = item.email || '';
-  document.getElementById('fTelp').value = item.telp || '';
+  document.getElementById('fCatatan').value = item.catatan || '';
   document.getElementById('fStatus').value = item.status || 'Aktif';
   document.getElementById('parentHintBox').innerHTML = item.parentId
     ? `<b>Mode edit sub UPT:</b> Unit ini saat ini berada di bawah <b>${escapeHTML(getUptById(item.parentId)?.nama || '-')}</b>.`
-    : '<b>Mode edit:</b> Unit ini merupakan UPT utama. Kamu tetap bisa mengubahnya menjadi sub UPT dengan memilih parent.';
+    : '<b>Mode edit:</b> Unit ini adalah <b>Head UPT</b>. Pilih parent jika ingin memindahkannya menjadi sub UPT.';
+  updateCodePreview();
   openModal('modalForm');
 }
 
 function handleFormUpkChange(){
   const upkId = document.getElementById('fUpk').value;
   buildParentOptions(upkId, '');
+  updateCodePreview();
 }
 
 function handleParentChange(){
   const parentId = document.getElementById('fParent').value;
   if (!parentId){
-    document.getElementById('parentHintBox').innerHTML = '<b>Tips:</b> Kosongkan field <b>Sub UPT dari</b> jika data ini adalah UPT utama. Pilih parent UPT jika data ini ingin menjadi turunan/sub UPT.';
+    document.getElementById('parentHintBox').innerHTML = '<b>Catatan:</b> Jika field <b>Sub UPT</b> dikosongkan, data otomatis menjadi <b>Head UPT</b>. Kode UPT dibentuk otomatis mengikuti posisi pada struktur.';
+    updateCodePreview();
     return;
   }
   const parent = getUptById(parentId);
@@ -1015,6 +947,7 @@ function handleParentChange(){
     document.getElementById('fUpk').value = String(parent.upkId || '');
     document.getElementById('parentHintBox').innerHTML = `<b>Sub UPT dipilih:</b> Data akan disimpan di bawah <b>${escapeHTML(parent.nama)}</b> dan tetap berada pada UPK <b>${escapeHTML(getUpkById(parent.upkId)?.nama || '-')}</b>.`;
   }
+  updateCodePreview();
 }
 
 function collectDescendants(id){
@@ -1036,28 +969,22 @@ function saveUPT(){
   const parent = parentId ? getUptById(parentId) : null;
 
   const payload = {
-    kode:document.getElementById('fKode').value.trim(),
-    nama:document.getElementById('fNama').value.trim(),
-    tipe:document.getElementById('fTipe').value,
     upkId:upkId || null,
     id_upk:upkId || null,
     parentId:parentId || null,
     id_parent_upt:parentId || null,
-    deskripsi:document.getElementById('fDeskripsi').value.trim(),
-    kepala:document.getElementById('fKepala').value.trim(),
-    pegawai:Number(document.getElementById('fPegawai').value || 0),
-    email:document.getElementById('fEmail').value.trim(),
-    telp:document.getElementById('fTelp').value.trim(),
-    status:document.getElementById('fStatus').value || 'Aktif'
+    nama:document.getElementById('fNama').value.trim(),
+    status:document.getElementById('fStatus').value || 'Aktif',
+    catatan:document.getElementById('fCatatan').value.trim()
   };
 
-  if (!payload.upkId || !payload.tipe || !payload.kode || !payload.nama || !payload.kepala){
-    showToast('warning','fa-triangle-exclamation','UPK, jenis UPT, kode, nama, dan kepala/PIC wajib diisi.');
+  if (!payload.upkId || !payload.nama){
+    showToast('warning','fa-triangle-exclamation','Nama UPK dan Nama UPT wajib diisi.');
     return;
   }
 
   if (parent && Number(parent.upkId) !== Number(payload.upkId)){
-    showToast('warning','fa-code-branch','Parent UPT harus berada pada UPK yang sama.');
+    showToast('warning','fa-code-branch','Sub UPT harus berada pada UPK yang sama dengan parent UPT.');
     return;
   }
 
@@ -1066,27 +993,35 @@ function saveUPT(){
     return;
   }
 
-  const duplicate = UPT_DATA.find(item => normalizeText(item.kode) === normalizeText(payload.kode) && Number(item.id) !== Number(state.editingId));
+  const duplicate = UPT_DATA.find(item =>
+    normalizeText(item.nama) === normalizeText(payload.nama) &&
+    Number(item.upkId || 0) === Number(payload.upkId || 0) &&
+    Number(item.parentId || 0) === Number(payload.parentId || 0) &&
+    Number(item.id) !== Number(state.editingId)
+  );
   if (duplicate){
-    showToast('warning','fa-copy','Kode UPT sudah digunakan.');
+    showToast('warning','fa-copy','Nama UPT yang sama sudah ada pada level dan parent yang sama.');
     return;
   }
 
   if (state.editingId){
     const descendants = collectDescendants(state.editingId);
     if (parentId && descendants.includes(parentId)){
-      showToast('warning','fa-arrow-rotate-left','Parent tidak boleh mengambil turunan dari unit yang sedang diedit.');
+      showToast('warning','fa-arrow-rotate-left','Parent tidak boleh memilih turunan dari unit yang sedang diedit.');
       return;
     }
     const idx = UPT_DATA.findIndex(item => Number(item.id) === Number(state.editingId));
-    if (idx >= 0) UPT_DATA[idx] = { ...UPT_DATA[idx], ...payload };
+    if (idx >= 0){
+      UPT_DATA[idx] = { ...UPT_DATA[idx], ...payload };
+    }
     showToast('success','fa-circle-check','Data UPT berhasil diperbarui.');
   } else {
     const newId = Math.max(0, ...UPT_DATA.map(item => Number(item.id) || 0)) + 1;
-    UPT_DATA.unshift({ id:newId, ...payload });
-    showToast('success','fa-circle-check', parentId ? 'Sub UPT berhasil ditambahkan.' : 'UPT baru berhasil ditambahkan.');
+    UPT_DATA.push({ id:newId, kode:'', ...payload });
+    showToast('success','fa-circle-check', parentId ? 'Sub UPT berhasil ditambahkan.' : 'Head UPT berhasil ditambahkan.');
   }
 
+  regenerateCodes();
   persistUPT();
   closeModal('modalForm');
   render();
@@ -1103,45 +1038,42 @@ function deleteUPT(id){
   if (!confirm(message)) return;
   const idsToDelete = new Set([id, ...descendants]);
   UPT_DATA = UPT_DATA.filter(entry => !idsToDelete.has(entry.id));
+  regenerateCodes();
   persistUPT();
   render();
   showToast('success','fa-trash', `${totalDelete} data berhasil dihapus.`);
 }
 
 function resetSampleData(){
-  if (!confirm('Reset data sample Master UPT dan Master UPK?')) return;
-  UPK_DATA = seedUPK.map(normalizeUpk);
+  if (!confirm('Reset data sample Master UPT?')) return;
   UPT_DATA = seedUPT.map(normalizeUpt);
-  persistUPK();
+  regenerateCodes();
   persistUPT();
   render();
-  showToast('success','fa-database','Sample data berhasil direset.');
+  showToast('success','fa-database','Sample data Master UPT berhasil direset.');
 }
 
 function exportCSV(){
-  const rows = flattenVisibleTree().map(({ item }) => {
+  const rows = flattenVisibleTree().map(({ item, depth }) => {
     const upk = getUpkById(item.upkId);
     const parent = getUptById(item.parentId);
     return [
       item.id,
       item.kode,
       item.nama,
-      item.tipe,
       upk?.id || '',
       upk?.kode || '',
       upk?.nama || '',
       parent?.id || '',
       parent?.kode || '',
       parent?.nama || '',
-      item.kepala || '',
-      item.pegawai || 0,
+      depth,
+      isHead(item) ? 'Head UPT' : 'Sub UPT',
       item.status || '',
-      item.email || '',
-      item.telp || '',
-      item.deskripsi || ''
+      item.catatan || ''
     ];
   });
-  const header = ['id','kode_upt','nama_upt','tipe','id_upk','kode_upk','nama_upk','id_parent_upt','kode_parent_upt','nama_parent_upt','kepala_upt','jumlah_personel','status','email','telepon','deskripsi'];
+  const header = ['id','kode_upt','nama_upt','id_upk','kode_upk','nama_upk','id_parent_upt','kode_parent_upt','nama_parent_upt','level','jenis_posisi','status','catatan'];
   const csv = [header, ...rows].map(row => row.map(col => `"${String(col ?? '').replace(/"/g,'""')}"`).join(',')).join('\n');
   const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
   const link = document.createElement('a');
@@ -1170,8 +1102,13 @@ function showToast(type, icon, message){
 }
 
 window.addEventListener('storage', (event) => {
-  if ([STORAGE_UPK, ...LEGACY_UPK_KEYS].includes(event.key)) UPK_DATA = readFromPrimaryOrLegacy(STORAGE_UPK, LEGACY_UPK_KEYS, seedUPK).map(normalizeUpk);
-  if ([STORAGE_UPT, ...LEGACY_UPT_KEYS].includes(event.key)) UPT_DATA = readFromPrimaryOrLegacy(STORAGE_UPT, LEGACY_UPT_KEYS, seedUPT).map(normalizeUpt);
+  if ([STORAGE_UPK, ...LEGACY_UPK_KEYS].includes(event.key)) {
+    UPK_DATA = readFromPrimaryOrLegacy(STORAGE_UPK, LEGACY_UPK_KEYS, fallbackUPK).map(normalizeUpk);
+  }
+  if ([STORAGE_UPT, ...LEGACY_UPT_KEYS].includes(event.key)) {
+    UPT_DATA = readFromPrimaryOrLegacy(STORAGE_UPT, LEGACY_UPT_KEYS, seedUPT).map(normalizeUpt);
+    regenerateCodes();
+  }
   render();
 });
 

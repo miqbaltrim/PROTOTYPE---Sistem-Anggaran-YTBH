@@ -254,6 +254,7 @@
     }
   </style>
 </head>
+
 <body data-page="mastermataanggaran">
   <div id="sb-root"></div>
 
@@ -263,7 +264,7 @@
         Sistem Anggaran <span>›</span> Master Data <span>›</span> <b>Master Mata Anggaran</b>
       </div>
       <div class="topbar-right">
-        <div class="chip-info"><i class="fa-solid fa-list-check"></i> Referensi item anggaran per UPK / UPT</div>
+        <div class="chip-info"><i class="fa-solid fa-cubes-stacked"></i> Referensi item anggaran per UPK / UPT</div>
         <div class="topbar-date" id="topbarDate">—</div>
       </div>
     </div>
@@ -275,13 +276,15 @@
         </div>
         <div class="page-actions">
           <button class="btn btn-ghost" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Export</button>
+          <button class="btn btn-accent" onclick="seedDefaultData()"><i class="fa-solid fa-database"></i> Reset Sample</button>
           <button class="btn btn-primary" onclick="openAddModal()"><i class="fa-solid fa-plus"></i> Tambah Mata Anggaran</button>
         </div>
       </div>
 
       <section class="hero">
         <div class="hero-left">
-          <div class="hero-title">Dummy Data</div>
+          <div class="hero-title">Master item anggaran berdasarkan <em>UPK</em> dan <em>UPT</em></div>
+          <div class="hero-sub">Kode mata anggaran dibuat otomatis. Nama UPT bersifat opsional dan akan mengikuti UPK yang dipilih agar relasi tetap konsisten.</div>
         </div>
         <div class="hero-right">
           <div class="hero-mini">
@@ -327,17 +330,17 @@
           <div class="stat-sub">Mapping akun tersedia</div>
         </div>
         <div class="stat-card c-warning">
-          <div class="stat-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
-          <div class="stat-label">Risk Terhubung</div>
-          <div class="stat-value" id="statRisk">—</div>
-          <div class="stat-sub">Mapping risiko tersedia</div>
+          <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
+          <div class="stat-label">Status Aktif</div>
+          <div class="stat-value" id="statActive">—</div>
+          <div class="stat-sub">Mata anggaran aktif</div>
         </div>
       </div>
 
       <div class="toolbar">
         <div class="search-wrap">
           <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-          <input class="search-input" id="searchInput" type="text" placeholder="Cari kode, nama mata anggaran, COA, risk, UPK, atau UPT..." oninput="applyFilters()">
+          <input class="search-input" id="searchInput" type="text" placeholder="Cari kode, nama mata anggaran, UPK, UPT, COA, catatan, atau status..." oninput="applyFilters()">
         </div>
 
         <select class="filter-select" id="filterUPK" onchange="applyFilters()">
@@ -350,9 +353,11 @@
           <option value="without_upt">Tanpa UPT</option>
         </select>
 
-        <div class="toolbar-right">
-          <button class="btn btn-accent btn-sm" onclick="seedDefaultData()"><i class="fa-solid fa-database"></i> Reset Sample</button>
-        </div>
+        <select class="filter-select" id="filterStatus" onchange="applyFilters()">
+          <option value="">Semua Status</option>
+          <option value="Aktif">Aktif</option>
+          <option value="Nonaktif">Nonaktif</option>
+        </select>
       </div>
 
       <div class="panel">
@@ -367,14 +372,15 @@
           <table>
             <thead>
               <tr>
-                <th>Kode Anggaran</th>
+                <th>Kode Mata Anggaran</th>
                 <th>Nama Mata Anggaran</th>
-                <th>UPK</th>
-                <th>UPT</th>
+                <th>Nama UPK</th>
+                <th>Nama UPT</th>
                 <th>Satuan</th>
                 <th>Harga Satuan</th>
-                <th>COA</th>
-                <th>Risk</th>
+                <th>ID COA</th>
+                <th>Catatan</th>
+                <th>Status</th>
                 <th style="text-align:right;">Aksi</th>
               </tr>
             </thead>
@@ -406,10 +412,16 @@
       <div class="modal-body">
         <div class="section-title">Identitas Mata Anggaran</div>
 
+        <div class="preview-box">
+          <div class="preview-title">Kode Mata Anggaran Otomatis</div>
+          <div class="preview-value" id="kodePreview">MA-0001</div>
+        </div>
+
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">Kode Anggaran <span class="req">*</span></label>
-            <input class="form-input" id="fKode" type="text" placeholder="mis. MA-CLK-001">
+            <label class="form-label">Kode Mata Anggaran</label>
+            <input class="form-input" id="fKode" type="text" readonly>
+            <div class="helper">Kode dibuat otomatis berdasarkan UPK yang dipilih.</div>
           </div>
           <div class="form-group">
             <label class="form-label">Nama Mata Anggaran <span class="req">*</span></label>
@@ -419,12 +431,11 @@
 
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">id_upk <span class="req">*</span></label>
+            <label class="form-label">Nama UPK <span class="req">*</span></label>
             <select class="form-select" id="fUpk" onchange="handleUPKChange()"></select>
-            <div class="helper">Wajib terhubung ke UPK.</div>
           </div>
           <div class="form-group">
-            <label class="form-label">id_upt</label>
+            <label class="form-label">Nama UPT</label>
             <select class="form-select" id="fUpt"></select>
             <div class="helper">Opsional. Jika diisi, UPT akan difilter berdasarkan UPK terpilih.</div>
           </div>
@@ -443,13 +454,21 @@
 
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">id_coa <span class="req">*</span></label>
+            <label class="form-label">ID COA <span class="req">*</span></label>
             <select class="form-select" id="fCoa"></select>
           </div>
           <div class="form-group">
-            <label class="form-label">id_risk <span class="req">*</span></label>
-            <select class="form-select" id="fRisk"></select>
+            <label class="form-label">Status <span class="req">*</span></label>
+            <select class="form-select" id="fStatus">
+              <option value="Aktif">Aktif</option>
+              <option value="Nonaktif">Nonaktif</option>
+            </select>
           </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:14px;">
+          <label class="form-label">Catatan</label>
+          <textarea class="form-textarea" id="fCatatan" placeholder="Catatan tambahan mata anggaran..."></textarea>
         </div>
 
         <div class="preview-box">
@@ -472,19 +491,18 @@
     const STORAGE_UPK = 'APP_MASTER_UPK_V1';
     const STORAGE_UPT = 'APP_MASTER_UPT_V1';
     const STORAGE_COA = 'APP_MASTER_COA_V1';
-    const STORAGE_RISK = 'APP_MASTER_RISIKO_V1';
 
     const seedUPK = [
-      { id:'UPK-001', kode:'KLINIK', nama:'Klinik' },
-      { id:'UPK-002', kode:'YAYASAN', nama:'Yayasan' },
-      { id:'UPK-003', kode:'UNIVERSITAS', nama:'Universitas' }
+      { id:1, kode:'UPK.1', nama:'Klinik' },
+      { id:2, kode:'UPK.2', nama:'Yayasan' },
+      { id:3, kode:'UPK.3', nama:'Universitas' }
     ];
 
     const seedUPT = [
-      { id:'UPT-001', upkId:'UPK-001', kode:'B.KLINIK.I.01', nama:'Gaji Pegawai' },
-      { id:'UPT-002', upkId:'UPK-001', kode:'B.KLINIK.II.05', nama:'Perlengkapan Kesehatan' },
-      { id:'UPT-003', upkId:'UPK-002', kode:'B.YAYASAN.II.01', nama:'Administrasi Yayasan' },
-      { id:'UPT-004', upkId:'UPK-003', kode:'B.UNTA.II.01', nama:'Operasional Akademik' }
+      { id:1, upkId:1, kode:'UPT.1', nama:'Pelayanan Medis' },
+      { id:2, upkId:1, kode:'UPT.1.1', nama:'Farmasi dan Apotek' },
+      { id:3, upkId:2, kode:'UPT.2', nama:'Sekretariat Yayasan' },
+      { id:4, upkId:3, kode:'UPT.3', nama:'Fakultas Ilmu Kesehatan' }
     ];
 
     const seedCOA = [
@@ -494,34 +512,27 @@
       { id:'COA-004', kode:'06.1.01.06.01', nama:'Biaya Listrik - TP' }
     ];
 
-    const seedRisk = [
-      { id:1, nama:'Risiko over budget operasional', skala:'Tinggi' },
-      { id:2, nama:'Risiko keterlambatan vendor', skala:'Sedang' },
-      { id:3, nama:'Risiko ketidaksesuaian dokumentasi', skala:'Rendah' }
-    ];
-
     const seedItems = [
       {
         id:1,
-        kodeAnggaran:'MA-CLK-001',
+        kodeAnggaran:'MA-KLIN-001',
         namaMataAnggaran:'Pembelian Obat Umum',
-        idUpk:'UPK-001',
+        idUpk:'1',
         namaUpk:'Klinik',
-        idUpt:'UPT-002',
-        namaUpt:'Perlengkapan Kesehatan',
+        idUpt:'2',
+        namaUpt:'Farmasi dan Apotek',
         satuan:'box',
         hargaSatuan:275000,
         idCoa:'COA-002',
         coaLabel:'06.1.01.02.18 · Biaya pembelian obat dan alat kesehatan - TP',
-        idRisk:1,
-        riskLabel:'Risiko over budget operasional',
-        riskSkala:'Tinggi'
+        catatan:'Untuk kebutuhan persediaan obat umum.',
+        status:'Aktif'
       },
       {
         id:2,
-        kodeAnggaran:'MA-CLK-002',
+        kodeAnggaran:'MA-KLIN-002',
         namaMataAnggaran:'ATK Front Office',
-        idUpk:'UPK-001',
+        idUpk:'1',
         namaUpk:'Klinik',
         idUpt:'',
         namaUpt:'',
@@ -529,25 +540,23 @@
         hargaSatuan:950000,
         idCoa:'COA-003',
         coaLabel:'06.1.01.03.02 · Biaya Alat Tulis Kantor - TP',
-        idRisk:3,
-        riskLabel:'Risiko ketidaksesuaian dokumentasi',
-        riskSkala:'Rendah'
+        catatan:'Dipakai di level UPK tanpa UPT khusus.',
+        status:'Aktif'
       },
       {
         id:3,
-        kodeAnggaran:'MA-UNI-001',
+        kodeAnggaran:'MA-UNIV-001',
         namaMataAnggaran:'Listrik Gedung Fakultas',
-        idUpk:'UPK-003',
+        idUpk:'3',
         namaUpk:'Universitas',
-        idUpt:'UPT-004',
-        namaUpt:'Operasional Akademik',
+        idUpt:'4',
+        namaUpt:'Fakultas Ilmu Kesehatan',
         satuan:'bulan',
         hargaSatuan:14500000,
         idCoa:'COA-004',
         coaLabel:'06.1.01.06.01 · Biaya Listrik - TP',
-        idRisk:2,
-        riskLabel:'Risiko keterlambatan vendor',
-        riskSkala:'Sedang'
+        catatan:'Monitoring per bulan.',
+        status:'Nonaktif'
       }
     ];
 
@@ -564,7 +573,6 @@
       if(!localStorage.getItem(STORAGE_UPK)) writeJson(STORAGE_UPK, seedUPK);
       if(!localStorage.getItem(STORAGE_UPT)) writeJson(STORAGE_UPT, seedUPT);
       if(!localStorage.getItem(STORAGE_COA)) writeJson(STORAGE_COA, seedCOA);
-      if(!localStorage.getItem(STORAGE_RISK)) writeJson(STORAGE_RISK, seedRisk);
       if(!localStorage.getItem(STORAGE_ITEMS)) writeJson(STORAGE_ITEMS, seedItems);
     }
 
@@ -584,16 +592,16 @@
     function normalizeUPKs(items){
       return (items || []).map((item, index) => ({
         id: String(item.id ?? item.id_upk ?? item.kode ?? `UPK-AUTO-${index+1}`),
-        kode: String(item.kode ?? item.code ?? item.entitas ?? item.nama ?? item.name ?? `UPK ${index+1}`),
-        nama: String(item.nama ?? item.name ?? item.entitas ?? item.kode ?? `UPK ${index+1}`)
+        kode: String(item.kode ?? item.code ?? item.kodeUpk ?? item.nama ?? item.name ?? `UPK.${index+1}`),
+        nama: String(item.nama ?? item.name ?? item.kode ?? `UPK ${index+1}`)
       }));
     }
 
     function normalizeUPTs(items){
       return (items || []).map((item, index) => ({
         id: String(item.id ?? item.id_upt ?? item.kode ?? `UPT-AUTO-${index+1}`),
-        upkId: String(item.upkId ?? item.idUpk ?? item.id_upk ?? item.parentId ?? item.upk_id ?? ''),
-        kode: String(item.kode ?? item.code ?? item.nama ?? item.name ?? `UPT ${index+1}`),
+        upkId: String(item.upkId ?? item.idUpk ?? item.id_upk ?? item.upk_id ?? ''),
+        kode: String(item.kode ?? item.code ?? item.nama ?? item.name ?? `UPT.${index+1}`),
         nama: String(item.nama ?? item.name ?? item.kode ?? `UPT ${index+1}`)
       }));
     }
@@ -606,37 +614,46 @@
       }));
     }
 
-    function normalizeRisks(items){
+    function normalizeItems(items){
       return (items || []).map((item, index) => ({
-        id: String(item.id ?? item.id_risk ?? `RISK-AUTO-${index+1}`),
-        nama: String(item.nama ?? item.name ?? `Risk ${index+1}`),
-        skala: String(item.skala ?? item.level ?? item.risikoSkala ?? '-')
+        id: Number(item.id ?? (index + 1)),
+        kodeAnggaran: String(item.kodeAnggaran ?? item.kode_mata_anggaran ?? item.kode ?? ''),
+        namaMataAnggaran: String(item.namaMataAnggaran ?? item.nama_mata_anggaran ?? item.nama ?? ''),
+        idUpk: String(item.idUpk ?? item.id_upk ?? item.upkId ?? ''),
+        namaUpk: String(item.namaUpk ?? item.nama_upk ?? ''),
+        idUpt: String(item.idUpt ?? item.id_upt ?? item.uptId ?? ''),
+        namaUpt: String(item.namaUpt ?? item.nama_upt ?? ''),
+        satuan: String(item.satuan ?? ''),
+        hargaSatuan: Number(item.hargaSatuan ?? item.harga_satuan ?? 0),
+        idCoa: String(item.idCoa ?? item.id_coa ?? ''),
+        coaLabel: String(item.coaLabel ?? item.coa_label ?? ''),
+        catatan: String(item.catatan ?? item.keterangan ?? ''),
+        status: String(item.status ?? 'Aktif')
       }));
     }
 
     ensureSeed();
 
-    let ITEMS = readJson(STORAGE_ITEMS);
-    let UPKS = normalizeUPKs(readJson(STORAGE_UPK));
-    let UPTS = normalizeUPTs(readJson(STORAGE_UPT));
-    let COAS = normalizeCOAs(readJson(STORAGE_COA));
-    let RISKS = normalizeRisks(readJson(STORAGE_RISK));
+    let ITEMS = [];
+    let UPKS = [];
+    let UPTS = [];
+    let COAS = [];
 
     const state = {
       search: '',
       filterUPK: '',
       filterRelation: '',
+      filterStatus: '',
       page: 1,
       perPage: 8,
       editingId: null
     };
 
     function refreshSources(){
-      ITEMS = readJson(STORAGE_ITEMS);
+      ITEMS = normalizeItems(readJson(STORAGE_ITEMS));
       UPKS = normalizeUPKs(readJson(STORAGE_UPK));
       UPTS = normalizeUPTs(readJson(STORAGE_UPT));
       COAS = normalizeCOAs(readJson(STORAGE_COA));
-      RISKS = normalizeRisks(readJson(STORAGE_RISK));
     }
 
     function getUPKLabel(id){
@@ -646,7 +663,7 @@
 
     function getUPTLabel(id){
       const found = UPTS.find(x => String(x.id) === String(id));
-      return found ? `${found.kode} · ${found.nama}` : '-';
+      return found ? `${found.nama}` : '-';
     }
 
     function getCOALabel(id){
@@ -654,13 +671,40 @@
       return found ? `${found.kode} · ${found.nama}` : '-';
     }
 
-    function getRiskRecord(id){
-      return RISKS.find(x => String(x.id) === String(id));
+    function upkPrefix(upkId){
+      const upk = UPKS.find(x => String(x.id) === String(upkId));
+      const source = String(upk?.kode || upk?.nama || 'MA')
+        .replace(/[^A-Za-z0-9]+/g, ' ')
+        .trim()
+        .split(/\s+/)
+        .join('')
+        .toUpperCase();
+      return (source || 'MA').slice(0, 4);
+    }
+
+    function generateKodeAnggaran(upkId, editingId = null){
+      const prefix = upkPrefix(upkId);
+      const used = ITEMS
+        .filter(item => !editingId || Number(item.id) !== Number(editingId))
+        .filter(item => String(item.idUpk) === String(upkId))
+        .map(item => {
+          const match = String(item.kodeAnggaran || '').match(/(\d+)(?!.*\d)/);
+          return match ? Number(match[1]) : 0;
+        });
+      const next = (used.length ? Math.max(...used) : 0) + 1;
+      return `MA-${prefix}-${String(next).padStart(3,'0')}`;
+    }
+
+    function updateKodeOtomatis(){
+      const upkId = document.getElementById('fUpk').value;
+      const current = generateKodeAnggaran(upkId, state.editingId);
+      document.getElementById('fKode').value = current;
+      document.getElementById('kodePreview').textContent = current || '-';
     }
 
     function populateStaticFilters(){
       const filter = document.getElementById('filterUPK');
-      const current = filter.value;
+      const current = state.filterUPK;
       filter.innerHTML = '<option value="">Semua UPK</option>' +
         UPKS.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.nama)}</option>`).join('');
       filter.value = current || '';
@@ -669,7 +713,7 @@
     function populateUPKOptions(selected=''){
       const select = document.getElementById('fUpk');
       select.innerHTML = '<option value="">— Pilih UPK —</option>' +
-        UPKS.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.id)} · ${escapeHtml(item.nama)}</option>`).join('');
+        UPKS.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.nama)}</option>`).join('');
       if(selected) select.value = String(selected);
     }
 
@@ -677,7 +721,7 @@
       const select = document.getElementById('fUpt');
       const items = UPTS.filter(item => !upkId || String(item.upkId) === String(upkId));
       select.innerHTML = '<option value="">— Tanpa UPT —</option>' +
-        items.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.id)} · ${escapeHtml(item.kode)} · ${escapeHtml(item.nama)}</option>`).join('');
+        items.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.nama)}</option>`).join('');
       if(selected) select.value = String(selected);
     }
 
@@ -688,19 +732,12 @@
       if(selected) select.value = String(selected);
     }
 
-    function populateRiskOptions(selected=''){
-      const select = document.getElementById('fRisk');
-      select.innerHTML = '<option value="">— Pilih Risk —</option>' +
-        RISKS.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.id)} · ${escapeHtml(item.nama)}${item.skala && item.skala !== '-' ? ` (${escapeHtml(item.skala)})` : ''}</option>`).join('');
-      if(selected) select.value = String(selected);
-    }
-
     function updateStats(data){
       const uniqueUpk = new Set(data.map(x => x.idUpk).filter(Boolean)).size;
       const uniqueUpt = new Set(data.map(x => x.idUpt).filter(Boolean)).size;
       const withoutUpt = data.filter(x => !x.idUpt).length;
       const coaLinked = data.filter(x => x.idCoa).length;
-      const riskLinked = data.filter(x => x.idRisk).length;
+      const activeCount = data.filter(x => x.status === 'Aktif').length;
       const totalEstimate = data.reduce((sum, x) => sum + Number(x.hargaSatuan || 0), 0);
 
       document.getElementById('heroTotal').textContent = data.length;
@@ -711,13 +748,14 @@
       document.getElementById('statTotal').textContent = data.length;
       document.getElementById('statWithoutUPT').textContent = withoutUpt;
       document.getElementById('statCOA').textContent = coaLinked;
-      document.getElementById('statRisk').textContent = riskLinked;
+      document.getElementById('statActive').textContent = activeCount;
     }
 
     function applyFilters(){
       state.search = document.getElementById('searchInput').value.trim().toLowerCase();
       state.filterUPK = document.getElementById('filterUPK').value;
       state.filterRelation = document.getElementById('filterRelation').value;
+      state.filterStatus = document.getElementById('filterStatus').value;
       state.page = 1;
       render();
     }
@@ -727,6 +765,7 @@
         if(state.filterUPK && String(item.idUpk) !== String(state.filterUPK)) return false;
         if(state.filterRelation === 'with_upt' && !item.idUpt) return false;
         if(state.filterRelation === 'without_upt' && item.idUpt) return false;
+        if(state.filterStatus && String(item.status) !== String(state.filterStatus)) return false;
 
         if(state.search){
           const hay = [
@@ -739,9 +778,8 @@
             item.satuan,
             item.idCoa,
             item.coaLabel,
-            item.idRisk,
-            item.riskLabel,
-            item.riskSkala
+            item.catatan,
+            item.status
           ].join(' ').toLowerCase();
           if(!hay.includes(state.search)) return false;
         }
@@ -781,12 +819,12 @@
             <div class="title-sub">ID: ${escapeHtml(item.id ?? '-')}</div>
           </td>
           <td>
-            <span class="badge badge-primary">${escapeHtml(item.idUpk)}</span>
-            <div class="title-sub">${escapeHtml(item.namaUpk || getUPKLabel(item.idUpk))}</div>
+            <div class="title-cell">${escapeHtml(item.namaUpk || getUPKLabel(item.idUpk))}</div>
+            <div class="title-sub">${escapeHtml(item.idUpk || '-')}</div>
           </td>
           <td>
             ${item.idUpt
-              ? `<span class="badge badge-accent">${escapeHtml(item.idUpt)}</span><div class="title-sub">${escapeHtml(item.namaUpt || getUPTLabel(item.idUpt))}</div>`
+              ? `<div class="title-cell">${escapeHtml(item.namaUpt || getUPTLabel(item.idUpt))}</div><div class="title-sub">${escapeHtml(item.idUpt)}</div>`
               : '<span class="badge badge-warning">Tanpa UPT</span>'}
           </td>
           <td><span class="badge badge-primary">${escapeHtml(item.satuan || '-')}</span></td>
@@ -796,8 +834,12 @@
             <div class="title-sub">${escapeHtml(item.coaLabel || getCOALabel(item.idCoa))}</div>
           </td>
           <td>
-            <div class="title-cell">${escapeHtml(item.idRisk || '-')}</div>
-            <div class="title-sub">${escapeHtml(item.riskLabel || (getRiskRecord(item.idRisk)?.nama || '-'))}${item.riskSkala ? ` · ${escapeHtml(item.riskSkala)}` : ''}</div>
+            <div class="title-cell">${escapeHtml(item.catatan || '-')}</div>
+          </td>
+          <td>
+            ${item.status === 'Aktif'
+              ? '<span class="badge badge-success">Aktif</span>'
+              : '<span class="badge badge-danger">Nonaktif</span>'}
           </td>
           <td style="text-align:right;">
             <div class="actions-inline">
@@ -845,20 +887,22 @@
     function handleUPKChange(selectedUpt=''){
       const upkId = document.getElementById('fUpk').value;
       populateUPTOptions(upkId, selectedUpt);
+      updateKodeOtomatis();
     }
 
     function openAddModal(){
       state.editingId = null;
       document.getElementById('modalTitle').textContent = 'Tambah Mata Anggaran';
       document.getElementById('modalSub').textContent = 'Buat referensi item anggaran.';
-      document.getElementById('fKode').value = '';
-      document.getElementById('fNama').value = '';
       populateUPKOptions();
       populateUPTOptions();
       populateCOAOptions();
-      populateRiskOptions();
+      document.getElementById('fNama').value = '';
       document.getElementById('fSatuan').value = '';
       document.getElementById('fHarga').value = '';
+      document.getElementById('fCatatan').value = '';
+      document.getElementById('fStatus').value = 'Aktif';
+      updateKodeOtomatis();
       updatePreview();
       openModal('modalForm');
     }
@@ -870,14 +914,16 @@
       state.editingId = id;
       document.getElementById('modalTitle').textContent = 'Edit Mata Anggaran';
       document.getElementById('modalSub').textContent = `${item.kodeAnggaran} — ${item.namaMataAnggaran}`;
-      document.getElementById('fKode').value = item.kodeAnggaran || '';
-      document.getElementById('fNama').value = item.namaMataAnggaran || '';
       populateUPKOptions(item.idUpk || '');
       populateUPTOptions(item.idUpk || '', item.idUpt || '');
       populateCOAOptions(item.idCoa || '');
-      populateRiskOptions(item.idRisk || '');
+      document.getElementById('fKode').value = item.kodeAnggaran || '';
+      document.getElementById('kodePreview').textContent = item.kodeAnggaran || '-';
+      document.getElementById('fNama').value = item.namaMataAnggaran || '';
       document.getElementById('fSatuan').value = item.satuan || '';
       document.getElementById('fHarga').value = item.hargaSatuan || 0;
+      document.getElementById('fCatatan').value = item.catatan || '';
+      document.getElementById('fStatus').value = item.status || 'Aktif';
       updatePreview();
       openModal('modalForm');
     }
@@ -886,11 +932,9 @@
       const idUpk = document.getElementById('fUpk').value;
       const idUpt = document.getElementById('fUpt').value;
       const idCoa = document.getElementById('fCoa').value;
-      const idRisk = document.getElementById('fRisk').value;
       const upk = UPKS.find(x => String(x.id) === String(idUpk));
       const upt = UPTS.find(x => String(x.id) === String(idUpt));
       const coa = COAS.find(x => String(x.id) === String(idCoa));
-      const risk = getRiskRecord(idRisk);
 
       const payload = {
         kodeAnggaran: document.getElementById('fKode').value.trim(),
@@ -903,20 +947,19 @@
         hargaSatuan: Number(document.getElementById('fHarga').value || 0),
         idCoa,
         coaLabel: coa ? `${coa.kode} · ${coa.nama}` : '',
-        idRisk,
-        riskLabel: risk?.nama || '',
-        riskSkala: risk?.skala || ''
+        catatan: document.getElementById('fCatatan').value.trim(),
+        status: document.getElementById('fStatus').value
       };
 
-      if(!payload.kodeAnggaran || !payload.namaMataAnggaran || !payload.idUpk || !payload.satuan || payload.hargaSatuan <= 0 || !payload.idCoa || !payload.idRisk){
-        showToast('warning', 'fa-triangle-exclamation', 'Kode, nama, id_upk, satuan, harga satuan, id_coa, dan id_risk wajib diisi.');
+      if(!payload.idUpk || !payload.kodeAnggaran || !payload.namaMataAnggaran || !payload.satuan || payload.hargaSatuan <= 0 || !payload.idCoa || !payload.status){
+        showToast('warning', 'fa-triangle-exclamation', 'Nama UPK, kode otomatis, nama mata anggaran, satuan, harga satuan, ID COA, dan status wajib diisi.');
         return;
       }
 
       if(payload.idUpt){
         const uptFound = UPTS.find(x => String(x.id) === String(payload.idUpt));
         if(!uptFound || String(uptFound.upkId) !== String(payload.idUpk)){
-          showToast('warning', 'fa-link', 'id_upt harus berada di bawah UPK yang dipilih.');
+          showToast('warning', 'fa-link', 'Nama UPT harus berada di bawah UPK yang dipilih.');
           return;
         }
       }
@@ -927,7 +970,7 @@
       );
 
       if(duplicate){
-        showToast('warning', 'fa-copy', 'Kode anggaran sudah digunakan.');
+        showToast('warning', 'fa-copy', 'Kode mata anggaran sudah digunakan.');
         return;
       }
 
@@ -959,7 +1002,7 @@
     }
 
     function exportCSV(){
-      const rows = ITEMS.map(item => [
+      const rows = getFiltered().map(item => [
         item.id,
         item.kodeAnggaran,
         item.namaMataAnggaran,
@@ -971,12 +1014,11 @@
         item.hargaSatuan,
         item.idCoa,
         item.coaLabel,
-        item.idRisk,
-        item.riskLabel,
-        item.riskSkala || ''
+        item.catatan || '',
+        item.status || ''
       ]);
 
-      const header = ['ID','Kode Anggaran','Nama Mata Anggaran','id_upk','Nama UPK','id_upt','Nama UPT','Satuan','Harga Satuan','id_coa','COA','id_risk','Risk','Skala Risk'];
+      const header = ['ID','Kode Mata Anggaran','Nama Mata Anggaran','ID UPK','Nama UPK','ID UPT','Nama UPT','Satuan','Harga Satuan','ID COA','COA','Catatan','Status'];
       const csv = [header, ...rows]
         .map(row => row.map(col => `"${String(col ?? '').replace(/"/g,'""')}"`).join(','))
         .join('\n');
@@ -994,7 +1036,6 @@
       writeJson(STORAGE_UPK, seedUPK);
       writeJson(STORAGE_UPT, seedUPT);
       writeJson(STORAGE_COA, seedCOA);
-      writeJson(STORAGE_RISK, seedRisk);
       writeJson(STORAGE_ITEMS, seedItems);
       refreshSources();
       render();
@@ -1009,7 +1050,7 @@
       const stack = document.getElementById('toastStack');
       const el = document.createElement('div');
       el.className = `toast ${type}`;
-      el.innerHTML = `<i class="fa-solid ${icon}"></i><span>${message}</span>`;
+      el.innerHTML = `<i class="fa-solid ${icon}"></i><span>${escapeHtml(message)}</span>`;
       stack.appendChild(el);
       setTimeout(() => {
         el.style.opacity = '0';
@@ -1020,7 +1061,7 @@
     }
 
     window.addEventListener('storage', (event) => {
-      if([STORAGE_ITEMS, STORAGE_UPK, STORAGE_UPT, STORAGE_COA, STORAGE_RISK].includes(event.key)){
+      if([STORAGE_ITEMS, STORAGE_UPK, STORAGE_UPT, STORAGE_COA].includes(event.key)){
         refreshSources();
         render();
       }
@@ -1030,9 +1071,10 @@
       weekday:'short', day:'numeric', month:'long', year:'numeric'
     });
 
+    refreshSources();
     render();
   </script>
 
-  <script src="/sidebar.js" defer></script>
+  <script src="sidebar.js" defer></script>
 </body>
 </html>
