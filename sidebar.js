@@ -81,7 +81,7 @@ const SB_CONFIG = {
           children: [
             { nav:'mastercoa', href:'MasterCOA.html', icon:'fa-solid fa-sitemap', label:'Master COA' },
             { nav:'masterupk', href:'MasterUPK.html', icon:'fa-solid fa-arrows-rotate', label:'Master UPK' },
-            { nav:'masterupt', href:'MasterUPT.html', icon:'fa-solid fa-building-columns', label:'Master UPT' },
+            { nav:'masterupt', href:'Masterupt.html', icon:'fa-solid fa-building-columns', label:'Master UPT' },
             { nav:'mastermataanggaran', href:'MasterMataAnggaran.html', icon:'fa-solid fa-building-columns', label:'Master Mata Anggaran' },
             { nav:'masterprogram', href:'MasterProgram.html', icon:'fa-solid fa-diagram-project', label:'Master Program' },
             { nav:'masterkegiatan', href:'MasterKegiatan.html', icon:'fa-solid fa-list-check', label:'Master Kegiatan' },
