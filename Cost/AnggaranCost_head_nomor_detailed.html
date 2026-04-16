@@ -338,7 +338,7 @@
         <div class="page-actions"><button class="btn btn-ghost" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Export</button><button class="btn btn-primary" onclick="openAddModal()"><i class="fa-solid fa-plus"></i> Tambah Anggaran</button></div>
       </div>
       <section class="hero">
-        <div class="hero-left"><div class="hero-title">Anggaran Cost mengikuti master terbaru</div><div class="hero-sub">Form anggaran sekarang memakai <b>Nomor Anggaran Cost</b> sebagai identitas head, lalu diikuti <b>Nama UPK</b>, <b>Nama UPT</b>, <b>Nama Program</b>, <b>Nama Kegiatan</b>, <b>Waktu Awal</b>, dan <b>Waktu Akhir</b>. Di bawahnya detail dibagi menjadi <b>Sumber Dana</b> yang mengambil <b>Mata Anggaran bertipe Pendapatan</b> dan <b>Pengeluaran</b> yang mengambil <b>Mata Anggaran bertipe Pengeluaran</b>, lengkap dengan informasi <b>Output</b>, <b>Penanggung Jawab</b>, <b>Target Kegiatan</b>, <b>Resiko</b>, <b>Tingkat Resiko</b>, <b>Manfaat</b>, dan <b>Status</b>.</div></div>
+        <div class="hero-left"><div class="hero-title">Anggaran Cost mengikuti master terbaru</div><div class="hero-sub">Form anggaran sekarang memakai <b>Nomor Anggaran Cost</b> sebagai identitas head, lalu diikuti <b>Nama UPK</b>, <b>Nama UPT</b>, <b>Nama Program</b>, <b>Nama Kegiatan</b>, <b>Waktu Awal</b>, dan <b>Waktu Akhir</b>. Di bawahnya kamu bisa menambah beberapa <b>Detail Mata Anggaran</b> sekaligus, lengkap dengan informasi <b>Output</b>, <b>Penanggung Jawab</b>, <b>Target Kegiatan</b>, <b>Resiko</b>, <b>Tingkat Resiko</b>, <b>Manfaat</b>, dan <b>Status</b>.</div></div>
         <div class="hero-right">
           <div class="hero-mini"><div class="hero-mini-label">Total Head</div><div class="hero-mini-value" id="heroHead">0</div><div class="hero-mini-sub">Head anggaran cost</div></div>
           <div class="hero-mini"><div class="hero-mini-label">Total Pagu</div><div class="hero-mini-value" id="heroPagu">Rp 0</div><div class="hero-mini-sub">Akumulasi seluruh pagu</div></div>
@@ -369,13 +369,12 @@
               <th class="sortable" onclick="sortBy('programNama')">Program</th>
               <th class="sortable" onclick="sortBy('kegiatanNama')">Kegiatan</th>
               <th>Periode</th>
-              <th class="sortable" onclick="sortBy('detailKategori')">Jenis Detail</th>
               <th class="sortable" onclick="sortBy('mataAnggaranNama')">Mata Anggaran</th>
               <th>Output / PJ</th>
               <th>Qty</th>
               <th>Satuan</th>
               <th class="sortable" onclick="sortBy('hargaSatuan')">Harga Satuan</th>
-              <th class="sortable" onclick="sortBy('nominal')">Nilai</th>
+              <th class="sortable" onclick="sortBy('nominal')">Nilai Pagu</th>
               <th>Status</th>
               <th style="text-align:right;">Aksi</th>
             </tr></thead>
@@ -399,7 +398,7 @@
       <button class="modal-close" onclick="closeModal('modalForm')"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="modal-body">
-      <div class="helper-box"><b>Catatan:</b> <b>Nomor Anggaran Cost</b> dibuat otomatis di level <b>Head Anggaran</b>. Head berisi <b>UPK</b>, <b>UPT</b>, <b>Program</b>, <b>Kegiatan</b>, serta <b>Waktu Awal</b> dan <b>Waktu Akhir</b>. Di bawahnya detail dipisah menjadi <b>Sumber Dana</b> yang hanya mengambil <b>Mata Anggaran bertipe Pendapatan</b> dan <b>Pengeluaran</b> yang hanya mengambil <b>Mata Anggaran bertipe Pengeluaran</b>. Informasi seperti <b>Output</b>, <b>Penanggung Jawab</b>, <b>Target</b>, <b>Resiko</b>, <b>Tingkat Resiko</b>, <b>Manfaat</b>, dan <b>Status</b> berlaku untuk seluruh detail pada nomor anggaran cost yang sama.</div>
+      <div class="helper-box"><b>Catatan:</b> <b>Nomor Anggaran Cost</b> dibuat otomatis di level <b>Head Anggaran</b>. Head berisi <b>UPK</b>, <b>UPT</b>, <b>Program</b>, <b>Kegiatan</b>, serta <b>Waktu Awal</b> dan <b>Waktu Akhir</b>. Di bawahnya kamu bisa menambahkan banyak <b>Mata Anggaran</b> sekaligus. Informasi seperti <b>Output</b>, <b>Penanggung Jawab</b>, <b>Target</b>, <b>Resiko</b>, <b>Tingkat Resiko</b>, <b>Manfaat</b>, dan <b>Status</b> berlaku untuk seluruh detail pada nomor anggaran cost yang sama.</div>
 
       <div class="section-title">Head Anggaran</div>
       <div class="form-row">
@@ -449,17 +448,16 @@
         </div>
       </div>
 
-      
-      <div class="section-title">Detail Mata Anggaran Sumber Dana</div>
+      <div class="section-title">Detail Mata Anggaran</div>
       <div class="line-toolbar">
-        <div class="form-note">Bagian ini mengambil <b>Mata Anggaran</b> dengan <b>Tipe Pendapatan</b>. Gunakan untuk sumber dana yang membiayai head anggaran cost ini.</div>
-        <button class="btn btn-accent btn-sm" type="button" onclick="addBudgetLine('sumber')"><i class="fa-solid fa-plus"></i> Tambah Sumber Dana</button>
+        <div class="form-note">Cari <b>Mata Anggaran</b> berdasarkan <b>kode</b> atau <b>nama</b>. Isi <b>Qty</b>, lalu subtotal akan dihitung otomatis dari <b>Qty × Harga Satuan</b>.</div>
+        <button class="btn btn-accent btn-sm" type="button" onclick="addBudgetLine()"><i class="fa-solid fa-plus"></i> Tambah Mata Anggaran</button>
       </div>
       <div class="line-table-wrap">
         <table class="line-table">
           <thead>
             <tr>
-              <th style="width:38%;">Mata Anggaran Sumber Dana</th>
+              <th style="width:38%;">Mata Anggaran</th>
               <th style="width:10%;">Qty</th>
               <th style="width:12%;">Satuan</th>
               <th style="width:14%;">Harga Satuan</th>
@@ -468,52 +466,15 @@
               <th style="width:56px;"></th>
             </tr>
           </thead>
-          <tbody id="sourceLineItemsBody"></tbody>
+          <tbody id="lineItemsBody"></tbody>
         </table>
       </div>
       <div class="budget-box" style="margin-top:14px;">
-        <div class="budget-box-title">Total Sumber Dana</div>
-        <div class="budget-box-value" id="formSourceTotal">Rp 0</div>
+        <div class="budget-box-title">Total seluruh detail mata anggaran</div>
+        <div class="budget-box-value" id="formGrandTotal">Rp 0</div>
       </div>
 
-      <div class="section-title">Detail Mata Anggaran Pengeluaran</div>
-      <div class="line-toolbar">
-        <div class="form-note">Bagian ini mengambil <b>Mata Anggaran</b> dengan <b>Tipe Pengeluaran</b>. Gunakan untuk rincian biaya / penggunaan anggaran pada head ini.</div>
-        <button class="btn btn-accent btn-sm" type="button" onclick="addBudgetLine('pengeluaran')"><i class="fa-solid fa-plus"></i> Tambah Pengeluaran</button>
-      </div>
-      <div class="line-table-wrap">
-        <table class="line-table">
-          <thead>
-            <tr>
-              <th style="width:38%;">Mata Anggaran Pengeluaran</th>
-              <th style="width:10%;">Qty</th>
-              <th style="width:12%;">Satuan</th>
-              <th style="width:14%;">Harga Satuan</th>
-              <th style="width:14%;">Subtotal</th>
-              <th style="width:12%;">Catatan Baris</th>
-              <th style="width:56px;"></th>
-            </tr>
-          </thead>
-          <tbody id="expenseLineItemsBody"></tbody>
-        </table>
-      </div>
-      <div class="budget-box" style="margin-top:14px;">
-        <div class="budget-box-title">Total Pengeluaran</div>
-        <div class="budget-box-value" id="formExpenseTotal">Rp 0</div>
-      </div>
-
-      <div class="small-select-grid" style="margin-top:14px;">
-        <div class="budget-box" style="margin-bottom:0;">
-          <div class="budget-box-title">Ringkasan Total Detail</div>
-          <div class="budget-box-value" id="formGrandTotal">Rp 0</div>
-        </div>
-        <div class="budget-box" style="margin-bottom:0;">
-          <div class="budget-box-title">Selisih Sumber Dana - Pengeluaran</div>
-          <div class="budget-box-value" id="formBalanceTotal">Rp 0</div>
-        </div>
-      </div>
-
-<div class="section-title">Informasi Kegiatan pada Head</div>
+      <div class="section-title">Informasi Kegiatan pada Head</div>
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">Output <span class="req">*</span></label>
@@ -618,19 +579,15 @@ const fallbackKegiatan = [
   {id:3,upkId:'3',upkKode:'UPK-003',upkNama:'Klinik Bakti Tunas Husada',uptId:'6',uptKode:'UPT.3',uptNama:'Administrasi Klinik',programId:'3',programKode:'PRG-003-001',programNama:'Program Pelayanan Klinik',kode:'KGT-003-001',nama:'Pengadaan Lemari Arsip Pasien',status:'Aktif',output:'Barang',waktuAwalBulan:'Februari',waktuAwalTahun:'2026',waktuAkhirBulan:'Februari',waktuAkhirTahun:'2026',penanggungJawab:'Kepala Administrasi Klinik',targetKegiatan:'2 unit lemari arsip',resiko:'Barang datang tidak sesuai spesifikasi',tingkatResiko:'2',manfaat:'Penyimpanan dokumen pasien lebih aman dan rapi'}
 ];
 const fallbackMata = [
-  {id:1,kodeAnggaran:'MA-001',namaMataAnggaran:'ATK Umum',idUpk:'1',namaUpk:'Yayasan Bakti Tunas Husada',idUpt:'',namaUpt:'',satuan:'paket',hargaSatuan:1500000,tipe:'Pengeluaran',catatan:'Untuk kebutuhan umum',status:'Aktif'},
-  {id:2,kodeAnggaran:'MA-002',namaMataAnggaran:'Publikasi & Promosi',idUpk:'2',namaUpk:'Universitas Bakti Tunas Husada',idUpt:'4',namaUpt:'Bagian Humas dan Kerjasama',satuan:'kegiatan',hargaSatuan:5000000,tipe:'Pengeluaran',catatan:'Untuk promosi institusi',status:'Aktif'},
-  {id:3,kodeAnggaran:'MA-003',namaMataAnggaran:'Pengadaan Perlengkapan Arsip',idUpk:'3',namaUpk:'Klinik Bakti Tunas Husada',idUpt:'6',namaUpt:'Administrasi Klinik',satuan:'unit',hargaSatuan:2750000,tipe:'Pengeluaran',catatan:'Untuk rak/lemari arsip',status:'Aktif'},
-  {id:4,kodeAnggaran:'MA-004',namaMataAnggaran:'Konsumsi Kegiatan',idUpk:'2',namaUpk:'Universitas Bakti Tunas Husada',idUpt:'5',namaUpt:'Bagian Pusat Karir',satuan:'paket',hargaSatuan:1800000,tipe:'Pengeluaran',catatan:'Untuk kebutuhan konsumsi event',status:'Aktif'},
-  {id:5,kodeAnggaran:'MA-005',namaMataAnggaran:'Pendapatan Sponsorship Event',idUpk:'2',namaUpk:'Universitas Bakti Tunas Husada',idUpt:'5',namaUpt:'Bagian Pusat Karir',satuan:'paket',hargaSatuan:12000000,tipe:'Pendapatan',catatan:'Sumber dana sponsorship kegiatan',status:'Aktif'},
-  {id:6,kodeAnggaran:'MA-006',namaMataAnggaran:'Pendapatan Layanan Klinik',idUpk:'3',namaUpk:'Klinik Bakti Tunas Husada',idUpt:'6',namaUpt:'Administrasi Klinik',satuan:'paket',hargaSatuan:8000000,tipe:'Pendapatan',catatan:'Estimasi sumber dana layanan klinik',status:'Aktif'}
+  {id:1,kodeAnggaran:'MA-001',namaMataAnggaran:'ATK Umum',idUpk:'1',namaUpk:'Yayasan Bakti Tunas Husada',idUpt:'',namaUpt:'',satuan:'paket',hargaSatuan:1500000,catatan:'Untuk kebutuhan umum',status:'Aktif'},
+  {id:2,kodeAnggaran:'MA-002',namaMataAnggaran:'Publikasi & Promosi',idUpk:'2',namaUpk:'Universitas Bakti Tunas Husada',idUpt:'4',namaUpt:'Bagian Humas dan Kerjasama',satuan:'kegiatan',hargaSatuan:5000000,catatan:'Untuk promosi institusi',status:'Aktif'},
+  {id:3,kodeAnggaran:'MA-003',namaMataAnggaran:'Pengadaan Perlengkapan Arsip',idUpk:'3',namaUpk:'Klinik Bakti Tunas Husada',idUpt:'6',namaUpt:'Administrasi Klinik',satuan:'unit',hargaSatuan:2750000,catatan:'Untuk rak/lemari arsip',status:'Aktif'},
+  {id:4,kodeAnggaran:'MA-004',namaMataAnggaran:'Konsumsi Kegiatan',idUpk:'2',namaUpk:'Universitas Bakti Tunas Husada',idUpt:'5',namaUpt:'Bagian Pusat Karir',satuan:'paket',hargaSatuan:1800000,catatan:'Untuk kebutuhan konsumsi event',status:'Aktif'}
 ];
 const seedBudgets = [
-  {id:1,nomorAnggaranCost:'AC-2026-0001',upkId:'2',upkKode:'UPK-002',upkNama:'Universitas Bakti Tunas Husada',uptId:'5',uptKode:'UPT.2.3',uptNama:'Wakil Rektor Bidang SDM, Humas dan Kerjasama / Bagian Pusat Karir',programId:'2',programKode:'PRG-002-001',programNama:'Program Akademik dan Kemahasiswaan',kegiatanId:'2',kegiatanKode:'KGT-002-001',kegiatanNama:'Pelaksanaan Career Day',waktuAwalBulan:'April',waktuAwalTahun:'2026',waktuAkhirBulan:'Mei',waktuAkhirTahun:'2026',output:'Laporan Kegiatan',penanggungJawab:'Kepala Pusat Karir',targetKegiatan:'1 event dan 20 mitra',resiko:'Partisipasi mitra industri tidak sesuai target',tingkatResiko:'4',manfaat:'Meningkatkan jejaring kerja mahasiswa dan alumni',detailKategori:'Pengeluaran',tipeMataAnggaran:'Pengeluaran',mataAnggaranId:'2',mataAnggaranKode:'MA-002',mataAnggaranNama:'Publikasi & Promosi',qty:3,satuan:'kegiatan',hargaSatuan:5000000,nominal:15000000,status:'Aktif',catatan:'Head Career Day 2026'},
-  {id:2,nomorAnggaranCost:'AC-2026-0001',upkId:'2',upkKode:'UPK-002',upkNama:'Universitas Bakti Tunas Husada',uptId:'5',uptKode:'UPT.2.3',uptNama:'Wakil Rektor Bidang SDM, Humas dan Kerjasama / Bagian Pusat Karir',programId:'2',programKode:'PRG-002-001',programNama:'Program Akademik dan Kemahasiswaan',kegiatanId:'2',kegiatanKode:'KGT-002-001',kegiatanNama:'Pelaksanaan Career Day',waktuAwalBulan:'April',waktuAwalTahun:'2026',waktuAkhirBulan:'Mei',waktuAkhirTahun:'2026',output:'Laporan Kegiatan',penanggungJawab:'Kepala Pusat Karir',targetKegiatan:'1 event dan 20 mitra',resiko:'Partisipasi mitra industri tidak sesuai target',tingkatResiko:'4',manfaat:'Meningkatkan jejaring kerja mahasiswa dan alumni',detailKategori:'Pengeluaran',tipeMataAnggaran:'Pengeluaran',mataAnggaranId:'4',mataAnggaranKode:'MA-004',mataAnggaranNama:'Konsumsi Kegiatan',qty:2,satuan:'paket',hargaSatuan:1800000,nominal:3600000,status:'Aktif',catatan:'Head Career Day 2026'},
-  {id:3,nomorAnggaranCost:'AC-2026-0001',upkId:'2',upkKode:'UPK-002',upkNama:'Universitas Bakti Tunas Husada',uptId:'5',uptKode:'UPT.2.3',uptNama:'Wakil Rektor Bidang SDM, Humas dan Kerjasama / Bagian Pusat Karir',programId:'2',programKode:'PRG-002-001',programNama:'Program Akademik dan Kemahasiswaan',kegiatanId:'2',kegiatanKode:'KGT-002-001',kegiatanNama:'Pelaksanaan Career Day',waktuAwalBulan:'April',waktuAwalTahun:'2026',waktuAkhirBulan:'Mei',waktuAkhirTahun:'2026',output:'Laporan Kegiatan',penanggungJawab:'Kepala Pusat Karir',targetKegiatan:'1 event dan 20 mitra',resiko:'Partisipasi mitra industri tidak sesuai target',tingkatResiko:'4',manfaat:'Meningkatkan jejaring kerja mahasiswa dan alumni',detailKategori:'Sumber Dana',tipeMataAnggaran:'Pendapatan',mataAnggaranId:'5',mataAnggaranKode:'MA-005',mataAnggaranNama:'Pendapatan Sponsorship Event',qty:1,satuan:'paket',hargaSatuan:12000000,nominal:12000000,status:'Aktif',catatan:'Head Career Day 2026'},
-  {id:4,nomorAnggaranCost:'AC-2026-0002',upkId:'3',upkKode:'UPK-003',upkNama:'Klinik Bakti Tunas Husada',uptId:'6',uptKode:'UPT.3',uptNama:'Administrasi Klinik',programId:'3',programKode:'PRG-003-001',programNama:'Program Pelayanan Klinik',kegiatanId:'3',kegiatanKode:'KGT-003-001',kegiatanNama:'Pengadaan Lemari Arsip Pasien',waktuAwalBulan:'Februari',waktuAwalTahun:'2026',waktuAkhirBulan:'Februari',waktuAkhirTahun:'2026',output:'Barang',penanggungJawab:'Kepala Administrasi Klinik',targetKegiatan:'2 unit lemari arsip',resiko:'Barang datang tidak sesuai spesifikasi',tingkatResiko:'2',manfaat:'Penyimpanan dokumen pasien lebih aman dan rapi',detailKategori:'Pengeluaran',tipeMataAnggaran:'Pengeluaran',mataAnggaranId:'3',mataAnggaranKode:'MA-003',mataAnggaranNama:'Pengadaan Perlengkapan Arsip',qty:2,satuan:'unit',hargaSatuan:2750000,nominal:5500000,status:'Draft',catatan:'Head pengadaan lemari arsip'},
-  {id:5,nomorAnggaranCost:'AC-2026-0002',upkId:'3',upkKode:'UPK-003',upkNama:'Klinik Bakti Tunas Husada',uptId:'6',uptKode:'UPT.3',uptNama:'Administrasi Klinik',programId:'3',programKode:'PRG-003-001',programNama:'Program Pelayanan Klinik',kegiatanId:'3',kegiatanKode:'KGT-003-001',kegiatanNama:'Pengadaan Lemari Arsip Pasien',waktuAwalBulan:'Februari',waktuAwalTahun:'2026',waktuAkhirBulan:'Februari',waktuAkhirTahun:'2026',output:'Barang',penanggungJawab:'Kepala Administrasi Klinik',targetKegiatan:'2 unit lemari arsip',resiko:'Barang datang tidak sesuai spesifikasi',tingkatResiko:'2',manfaat:'Penyimpanan dokumen pasien lebih aman dan rapi',detailKategori:'Sumber Dana',tipeMataAnggaran:'Pendapatan',mataAnggaranId:'6',mataAnggaranKode:'MA-006',mataAnggaranNama:'Pendapatan Layanan Klinik',qty:1,satuan:'paket',hargaSatuan:8000000,nominal:8000000,status:'Draft',catatan:'Head pengadaan lemari arsip'}
+  {id:1,nomorAnggaranCost:'AC-2026-0001',upkId:'2',upkKode:'UPK-002',upkNama:'Universitas Bakti Tunas Husada',uptId:'5',uptKode:'UPT.2.3',uptNama:'Wakil Rektor Bidang SDM, Humas dan Kerjasama / Bagian Pusat Karir',programId:'2',programKode:'PRG-002-001',programNama:'Program Akademik dan Kemahasiswaan',kegiatanId:'2',kegiatanKode:'KGT-002-001',kegiatanNama:'Pelaksanaan Career Day',waktuAwalBulan:'April',waktuAwalTahun:'2026',waktuAkhirBulan:'Mei',waktuAkhirTahun:'2026',output:'Laporan Kegiatan',penanggungJawab:'Kepala Pusat Karir',targetKegiatan:'1 event dan 20 mitra',resiko:'Partisipasi mitra industri tidak sesuai target',tingkatResiko:'4',manfaat:'Meningkatkan jejaring kerja mahasiswa dan alumni',mataAnggaranId:'2',mataAnggaranKode:'MA-002',mataAnggaranNama:'Publikasi & Promosi',qty:3,satuan:'kegiatan',hargaSatuan:5000000,nominal:15000000,status:'Aktif',catatan:'Head Career Day 2026'},
+  {id:2,nomorAnggaranCost:'AC-2026-0001',upkId:'2',upkKode:'UPK-002',upkNama:'Universitas Bakti Tunas Husada',uptId:'5',uptKode:'UPT.2.3',uptNama:'Wakil Rektor Bidang SDM, Humas dan Kerjasama / Bagian Pusat Karir',programId:'2',programKode:'PRG-002-001',programNama:'Program Akademik dan Kemahasiswaan',kegiatanId:'2',kegiatanKode:'KGT-002-001',kegiatanNama:'Pelaksanaan Career Day',waktuAwalBulan:'April',waktuAwalTahun:'2026',waktuAkhirBulan:'Mei',waktuAkhirTahun:'2026',output:'Laporan Kegiatan',penanggungJawab:'Kepala Pusat Karir',targetKegiatan:'1 event dan 20 mitra',resiko:'Partisipasi mitra industri tidak sesuai target',tingkatResiko:'4',manfaat:'Meningkatkan jejaring kerja mahasiswa dan alumni',mataAnggaranId:'4',mataAnggaranKode:'MA-004',mataAnggaranNama:'Konsumsi Kegiatan',qty:2,satuan:'paket',hargaSatuan:1800000,nominal:3600000,status:'Aktif',catatan:'Head Career Day 2026'},
+  {id:3,nomorAnggaranCost:'AC-2026-0002',upkId:'3',upkKode:'UPK-003',upkNama:'Klinik Bakti Tunas Husada',uptId:'6',uptKode:'UPT.3',uptNama:'Administrasi Klinik',programId:'3',programKode:'PRG-003-001',programNama:'Program Pelayanan Klinik',kegiatanId:'3',kegiatanKode:'KGT-003-001',kegiatanNama:'Pengadaan Lemari Arsip Pasien',waktuAwalBulan:'Februari',waktuAwalTahun:'2026',waktuAkhirBulan:'Februari',waktuAkhirTahun:'2026',output:'Barang',penanggungJawab:'Kepala Administrasi Klinik',targetKegiatan:'2 unit lemari arsip',resiko:'Barang datang tidak sesuai spesifikasi',tingkatResiko:'2',manfaat:'Penyimpanan dokumen pasien lebih aman dan rapi',mataAnggaranId:'3',mataAnggaranKode:'MA-003',mataAnggaranNama:'Pengadaan Perlengkapan Arsip',qty:2,satuan:'unit',hargaSatuan:2750000,nominal:5500000,status:'Draft',catatan:'Head pengadaan lemari arsip'}
 ];
 const seedRealizations = [
   {id:1,budgetId:1,tanggal:'2026-04-18',kategori:'Publikasi',detail:'Pembayaran desain materi promosi',qty:1,unitPrice:3500000,total:3500000,accurateStatus:'Pending',overBudget:false,catatan:'Tahap desain'},
@@ -702,22 +659,7 @@ function normalizeKegiatan(item, idx){
   };
 }
 function normalizeMata(item, idx){
-  const rawTipe = String(item.tipe ?? item.type ?? item.jenis ?? item.kategori ?? '').toLowerCase();
-  const tipe = rawTipe.includes('pendapatan') ? 'Pendapatan' : (rawTipe.includes('pengeluaran') ? 'Pengeluaran' : 'Pengeluaran');
-  return {
-    id:String(item.id ?? idx+1),
-    kodeAnggaran:item.kodeAnggaran || item.kode || `MA-${String(idx+1).padStart(3,'0')}`,
-    namaMataAnggaran:item.namaMataAnggaran || item.nama || '',
-    idUpk:String(item.idUpk || item.upkId || item.id_upk || ''),
-    namaUpk:item.namaUpk || item.upkNama || '',
-    idUpt:String(item.idUpt || item.uptId || item.id_upt || ''),
-    namaUpt:item.namaUpt || item.uptNama || '',
-    satuan:item.satuan || '',
-    hargaSatuan:Number(item.hargaSatuan || 0),
-    tipe,
-    catatan:item.catatan || '',
-    status:item.status || 'Aktif'
-  };
+  return {id:String(item.id ?? idx+1), kodeAnggaran:item.kodeAnggaran || item.kode || `MA-${String(idx+1).padStart(3,'0')}`, namaMataAnggaran:item.namaMataAnggaran || item.nama || '', idUpk:String(item.idUpk || item.upkId || item.id_upk || ''), namaUpk:item.namaUpk || item.upkNama || '', idUpt:String(item.idUpt || item.uptId || item.id_upt || ''), namaUpt:item.namaUpt || item.uptNama || '', satuan:item.satuan || '', hargaSatuan:Number(item.hargaSatuan || 0), catatan:item.catatan || '', status:item.status || 'Aktif'};
 }
 function defaultNomorAnggaran(year, idx){
   return `AC-${String(year || CURRENT_YEAR)}-${String(idx + 1).padStart(4,'0')}`;
@@ -726,10 +668,6 @@ function normalizeBudget(item, idx){
   const linkedKegiatan = (item.kegiatanId || item.kegiatan_id) ? getKegiatan(String(item.kegiatanId || item.kegiatan_id)) : null;
   const startYear = item.waktuAwalTahun || linkedKegiatan?.waktuAwalTahun || item.tahun || CURRENT_YEAR;
   const nomor = item.nomorAnggaranCost || item.nomor || item.nomorTransaksi || defaultNomorAnggaran(startYear, idx);
-  const rawDetail = String(item.detailKategori || item.jenisDetail || item.kategoriDetail || item.detail || '').toLowerCase();
-  const rawTipe = String(item.tipeMataAnggaran || item.tipe || '').toLowerCase();
-  const detailKategori = rawDetail.includes('sumber') ? 'Sumber Dana' : (rawDetail.includes('pengeluaran') ? 'Pengeluaran' : (rawTipe.includes('pendapatan') ? 'Sumber Dana' : 'Pengeluaran'));
-  const tipeMataAnggaran = rawTipe.includes('pendapatan') ? 'Pendapatan' : (rawTipe.includes('pengeluaran') ? 'Pengeluaran' : (detailKategori === 'Sumber Dana' ? 'Pendapatan' : 'Pengeluaran'));
   return {
     id:Number(item.id ?? idx+1),
     nomorAnggaranCost:String(nomor),
@@ -755,8 +693,6 @@ function normalizeBudget(item, idx){
     resiko:item.resiko || linkedKegiatan?.resiko || '',
     tingkatResiko:String(item.tingkatResiko || linkedKegiatan?.tingkatResiko || ''),
     manfaat:item.manfaat || linkedKegiatan?.manfaat || '',
-    detailKategori,
-    tipeMataAnggaran,
     mataAnggaranId:String(item.mataAnggaranId || ''),
     mataAnggaranKode:item.mataAnggaranKode || item.kode || '',
     mataAnggaranNama:item.mataAnggaranNama || '',
@@ -765,9 +701,7 @@ function normalizeBudget(item, idx){
     hargaSatuan:Number(item.hargaSatuan || 0),
     nominal:Number(item.nominal || (Number(item.qty||0) * Number(item.hargaSatuan||0))),
     status:item.status || 'Draft',
-    catatan:item.catatan || '',
-    catatanHead:item.catatanHead || '',
-    catatanDetail:item.catatanDetail || item.detailCatatan || ''
+    catatan:item.catatan || ''
   };
 }
 function normalizeRealization(item, idx){
@@ -782,11 +716,8 @@ function getMataAnggaran(){ const src=readJson(STORAGE_MATA); return (src.length
 function getBudgets(){ return readJson(STORAGE_BUDGETS).map(normalizeBudget); }
 function getRealizations(){ return readJson(STORAGE_REALIZATIONS).map(normalizeRealization); }
 
-
 let UPKS=[], UPTS=[], PROGRAMS=[], KEGIATANS=[], MATA=[], BUDGETS=[], REALIZATIONS=[];
-let formSourceLines = [];
-let formExpenseLines = [];
-
+let formLines = [];
 function reloadRefs(){
   UPKS=getUPKs();
   UPTS=getUPTs();
@@ -856,12 +787,7 @@ function updateHeadSummary(){
 }
 
 function nextLineUid(){ return 'L' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
-function createEmptyLine(kind='pengeluaran'){ return { uid: nextLineUid(), kind, mataId:'', query:'', qty:1, satuan:'', hargaSatuan:0, subtotal:0, catatan:'', resultsOpen:false }; }
-function detailLabel(kind){ return kind === 'sumber' ? 'Sumber Dana' : 'Pengeluaran'; }
-function mataTypeForKind(kind){ return kind === 'sumber' ? 'Pendapatan' : 'Pengeluaran'; }
-function getLinesByKind(kind){ return kind === 'sumber' ? formSourceLines : formExpenseLines; }
-function setLinesByKind(kind, lines){ if(kind === 'sumber') formSourceLines = lines; else formExpenseLines = lines; }
-function getAllFormLines(){ return [...formSourceLines, ...formExpenseLines]; }
+function createEmptyLine(){ return { uid: nextLineUid(), mataId:'', query:'', qty:1, satuan:'', hargaSatuan:0, subtotal:0, catatan:'', resultsOpen:false }; }
 
 const state = {
   page:1,
@@ -875,18 +801,14 @@ const state = {
   editingGroupIds:[]
 };
 
-function getFilteredMataOptions(query='', tipe=''){
+function getFilteredMataOptions(query=''){
   const upkId = document.getElementById('fUpk')?.value || '';
   const uptId = document.getElementById('fUpt')?.value || '';
-  const expected = (tipe || '').toLowerCase();
   let items = MATA.filter(m => m.status !== 'Nonaktif' && (!upkId || String(m.idUpk) === String(upkId)));
   if(uptId) items = items.filter(m => !m.idUpt || String(m.idUpt) === String(uptId));
-  if(expected){
-    items = items.filter(m => String(m.tipe || '').toLowerCase() === expected);
-  }
   const q = normalizeText(query);
   if(q){
-    items = items.filter(m => normalizeText([m.kodeAnggaran, m.namaMataAnggaran, m.namaUpt, m.satuan, m.catatan, m.tipe].join(' ')).includes(q));
+    items = items.filter(m => normalizeText([m.kodeAnggaran, m.namaMataAnggaran, m.namaUpt, m.satuan, m.catatan].join(' ')).includes(q));
   }
   return items.sort((a,b) => (a.namaMataAnggaran || '').localeCompare(b.namaMataAnggaran || ''));
 }
@@ -941,29 +863,12 @@ function populateFormKegiatan(selected=''){
   el.value=selected || '';
 }
 
-function resetLinesForContext(kind, selectedUptId){
-  const lines = getLinesByKind(kind).map(line => {
-    const mata = getMata(line.mataId);
-    if(mata){
-      const tipeMatch = String(mata.tipe || '').toLowerCase() === mataTypeForKind(kind).toLowerCase();
-      const uptMatch = !selectedUptId || !mata.idUpt || String(mata.idUpt) === String(selectedUptId);
-      if(!tipeMatch || !uptMatch){
-        return createEmptyLine(kind);
-      }
-    }
-    return {...line, kind, resultsOpen:false};
-  });
-  setLinesByKind(kind, lines.length ? lines : [createEmptyLine(kind)]);
-}
-
 function handleUpkChange(){
   populateFormUpt();
   populateFormProgram();
   populateFormKegiatan();
-  ['sumber','pengeluaran'].forEach(kind => {
-    setLinesByKind(kind, getLinesByKind(kind).map(() => createEmptyLine(kind)));
-  });
-  renderAllLineItems();
+  formLines = formLines.map(line => ({...line, mataId:'', query:'', satuan:'', hargaSatuan:0, subtotal:0, resultsOpen:false}));
+  renderLineItems();
   updateHeadSummary();
 }
 function handleUptChange(){
@@ -971,8 +876,14 @@ function handleUptChange(){
   populateFormProgram(keepProgram);
   populateFormKegiatan();
   const selectedUptId = document.getElementById('fUpt').value;
-  ['sumber','pengeluaran'].forEach(kind => resetLinesForContext(kind, selectedUptId));
-  renderAllLineItems();
+  formLines = formLines.map(line => {
+    const mata = getMata(line.mataId);
+    if(mata && mata.idUpt && String(mata.idUpt) !== String(selectedUptId)){
+      return {...line, mataId:'', query:'', satuan:'', hargaSatuan:0, subtotal:0, resultsOpen:false};
+    }
+    return {...line, resultsOpen:false};
+  });
+  renderLineItems();
   updateHeadSummary();
 }
 function handleProgramChange(){
@@ -997,116 +908,97 @@ function handleKegiatanChange(){
   updateHeadSummary();
 }
 
-function addBudgetLine(kind='pengeluaran', prefill=null){
-  const line = Object.assign(createEmptyLine(kind), prefill || {}, {kind});
+function addBudgetLine(prefill=null){
+  const line = Object.assign(createEmptyLine(), prefill || {});
   line.qty = Math.max(1, Number(line.qty || 1));
   line.hargaSatuan = Number(line.hargaSatuan || 0);
   line.subtotal = line.qty * line.hargaSatuan;
-  const lines = getLinesByKind(kind);
-  setLinesByKind(kind, [...lines, line]);
-  renderLineItems(kind);
+  formLines.push(line);
+  renderLineItems();
 }
-function removeBudgetLine(kind, uid){
-  let lines = getLinesByKind(kind).filter(line => line.uid !== uid);
-  if(!lines.length) lines = [createEmptyLine(kind)];
-  setLinesByKind(kind, lines);
-  renderLineItems(kind);
+function removeBudgetLine(uid){
+  if(formLines.length <= 1) formLines = [createEmptyLine()];
+  else formLines = formLines.filter(line => line.uid !== uid);
+  renderLineItems();
 }
-function updateLineQty(kind, uid, value){
-  const lines = getLinesByKind(kind).map(line => {
-    if(line.uid !== uid) return line;
-    const qty = Math.max(1, Number(value || 1));
-    return {...line, qty, subtotal: qty * Number(line.hargaSatuan || 0)};
-  });
-  setLinesByKind(kind, lines);
-  renderLineItems(kind);
+function updateLineQty(uid, value){
+  const line = formLines.find(x => x.uid === uid);
+  if(!line) return;
+  line.qty = Math.max(1, Number(value || 1));
+  line.subtotal = line.qty * Number(line.hargaSatuan || 0);
+  renderLineItems();
 }
-function updateLineCatatan(kind, uid, value){
-  const lines = getLinesByKind(kind).map(line => line.uid === uid ? {...line, catatan:value} : line);
-  setLinesByKind(kind, lines);
+function updateLineCatatan(uid, value){
+  const line = formLines.find(x => x.uid === uid);
+  if(!line) return;
+  line.catatan = value;
 }
-function updateLineQuery(kind, uid, value){
-  const lines = getLinesByKind(kind).map(line => line.uid === uid ? {...line, query:value, resultsOpen:true} : line);
-  setLinesByKind(kind, lines);
-  renderLineItems(kind);
+function updateLineQuery(uid, value){
+  const line = formLines.find(x => x.uid === uid);
+  if(!line) return;
+  line.query = value;
+  line.resultsOpen = true;
+  renderLineItems();
 }
-function openLineResults(kind, uid){
-  const lines = getLinesByKind(kind).map(line => line.uid === uid ? {...line, resultsOpen:true} : line);
-  setLinesByKind(kind, lines);
-  renderLineItems(kind);
+function openLineResults(uid){
+  const line = formLines.find(x => x.uid === uid);
+  if(!line) return;
+  line.resultsOpen = true;
+  renderLineItems();
 }
-function getLineMatches(line, kind){
-  return getFilteredMataOptions(line.query || '', mataTypeForKind(kind)).slice(0, 20);
+function getLineMatches(line){
+  return getFilteredMataOptions(line.query || '').slice(0, 20);
 }
-function selectLineMata(kind, uid, mataId){
+function selectLineMata(uid, mataId){
+  const line = formLines.find(x => x.uid === uid);
   const mata = getMata(mataId);
-  if(!mata) return;
-  const lines = getLinesByKind(kind).map(line => {
-    if(line.uid !== uid) return line;
-    return {
-      ...line,
-      mataId:String(mata.id),
-      query:`${mata.kodeAnggaran} · ${mata.namaMataAnggaran}`,
-      satuan:mata.satuan || '',
-      hargaSatuan:Number(mata.hargaSatuan || 0),
-      subtotal:Number(line.qty || 1) * Number(mata.hargaSatuan || 0),
-      resultsOpen:false
-    };
-  });
-  setLinesByKind(kind, lines);
-  renderLineItems(kind);
+  if(!line || !mata) return;
+  line.mataId = String(mata.id);
+  line.query = `${mata.kodeAnggaran} · ${mata.namaMataAnggaran}`;
+  line.satuan = mata.satuan || '';
+  line.hargaSatuan = Number(mata.hargaSatuan || 0);
+  line.subtotal = Number(line.qty || 1) * line.hargaSatuan;
+  line.resultsOpen = false;
+  renderLineItems();
 }
-function renderLineItems(kind){
-  const tbody = document.getElementById(kind === 'sumber' ? 'sourceLineItemsBody' : 'expenseLineItemsBody');
+function renderLineItems(){
+  const tbody = document.getElementById('lineItemsBody');
   if(!tbody) return;
-  const lines = getLinesByKind(kind);
-  if(!lines.length){
-    setLinesByKind(kind, [createEmptyLine(kind)]);
-    return renderLineItems(kind);
-  }
-  tbody.innerHTML = lines.map(line => {
+  if(!formLines.length) formLines = [createEmptyLine()];
+  tbody.innerHTML = formLines.map(line => {
     const mata = getMata(line.mataId);
-    const matches = getLineMatches(line, kind);
+    const matches = getLineMatches(line);
     const uptLabel = mata?.idUpt ? buildUptDisplayName(getUpt(mata.idUpt)) : 'Level UPK';
-    const label = detailLabel(kind);
     return `
       <tr>
         <td>
           <div class="line-cell-stack">
             <div class="lookup-shell">
-              <input class="lookup-input" type="text" value="${escapeHtml(line.query || '')}" placeholder="Cari kode / nama mata anggaran ${label.toLowerCase()}" oninput="updateLineQuery('${kind}', '${line.uid}', this.value)" onfocus="openLineResults('${kind}', '${line.uid}')">
+              <input class="lookup-input" type="text" value="${escapeHtml(line.query || '')}" placeholder="Cari kode / nama mata anggaran" oninput="updateLineQuery('${line.uid}', this.value)" onfocus="openLineResults('${line.uid}')">
               <div class="lookup-results-inline ${line.resultsOpen ? 'open' : ''}">
                 ${matches.length ? matches.map(item => {
                   const itemUpt = item.idUpt ? buildUptDisplayName(getUpt(item.idUpt)) : 'Level UPK';
-                  return `<button type="button" class="lookup-result-btn" onclick="selectLineMata('${kind}', '${line.uid}', '${escapeHtml(String(item.id))}')"><span class="lookup-result-code">${escapeHtml(item.kodeAnggaran)}</span><span class="lookup-result-name">${escapeHtml(item.namaMataAnggaran)}</span><span class="lookup-result-sub">${escapeHtml(item.tipe || mataTypeForKind(kind))} · ${escapeHtml(itemUpt)} · ${escapeHtml(item.satuan || '-')} · ${fmtCurrency(item.hargaSatuan || 0)}</span></button>`;
-                }).join('') : `<div class="lookup-result-empty">Tidak ada mata anggaran ${label.toLowerCase()} yang cocok.</div>`}
+                  return `<button type="button" class="lookup-result-btn" onclick="selectLineMata('${line.uid}', '${escapeHtml(String(item.id))}')"><span class="lookup-result-code">${escapeHtml(item.kodeAnggaran)}</span><span class="lookup-result-name">${escapeHtml(item.namaMataAnggaran)}</span><span class="lookup-result-sub">${escapeHtml(itemUpt)} · ${escapeHtml(item.satuan || '-')} · ${fmtCurrency(item.hargaSatuan || 0)}</span></button>`;
+                }).join('') : '<div class="lookup-result-empty">Tidak ada mata anggaran yang cocok.</div>'}
               </div>
             </div>
-            ${mata ? `<div class="lookup-picked"><strong>${escapeHtml(mata.namaMataAnggaran)}</strong><span>${escapeHtml(mata.kodeAnggaran)} · ${escapeHtml(mata.tipe || mataTypeForKind(kind))} · ${escapeHtml(uptLabel)} · ${escapeHtml(mata.catatan || 'Tanpa catatan')}</span></div>` : `<div class="line-meta">Pilih ${label.toLowerCase()} berdasarkan kode atau nama mata anggaran.</div>`}
+            ${mata ? `<div class="lookup-picked"><strong>${escapeHtml(mata.namaMataAnggaran)}</strong><span>${escapeHtml(mata.kodeAnggaran)} · ${escapeHtml(uptLabel)} · ${escapeHtml(mata.catatan || 'Tanpa catatan')}</span></div>` : `<div class="line-meta">Pilih mata anggaran berdasarkan kode atau nama.</div>`}
           </div>
         </td>
-        <td><input class="form-input" type="number" min="1" value="${Number(line.qty || 1)}" oninput="updateLineQty('${kind}', '${line.uid}', this.value)"></td>
+        <td><input class="form-input" type="number" min="1" value="${Number(line.qty || 1)}" oninput="updateLineQty('${line.uid}', this.value)"></td>
         <td><input class="form-input" type="text" readonly style="background:var(--bg)" value="${escapeHtml(line.satuan || '')}"></td>
         <td><input class="form-input" type="text" readonly style="background:var(--bg)" value="${escapeHtml(fmtCurrency(line.hargaSatuan || 0))}"></td>
         <td><input class="form-input" type="text" readonly style="background:var(--bg)" value="${escapeHtml(fmtCurrency(line.subtotal || 0))}"></td>
-        <td><input class="form-input" type="text" value="${escapeHtml(line.catatan || '')}" placeholder="Catatan detail" oninput="updateLineCatatan('${kind}', '${line.uid}', this.value)"></td>
-        <td><button type="button" class="line-remove" onclick="removeBudgetLine('${kind}', '${line.uid}')" title="Hapus baris"><i class="fa-solid fa-trash"></i></button></td>
+        <td><input class="form-input" type="text" value="${escapeHtml(line.catatan || '')}" placeholder="Catatan detail" oninput="updateLineCatatan('${line.uid}', this.value)"></td>
+        <td><button type="button" class="line-remove" onclick="removeBudgetLine('${line.uid}')" title="Hapus baris"><i class="fa-solid fa-trash"></i></button></td>
       </tr>
     `;
   }).join('');
   updateFormGrandTotal();
 }
-function renderAllLineItems(){
-  renderLineItems('sumber');
-  renderLineItems('pengeluaran');
-}
 function updateFormGrandTotal(){
-  const sourceTotal = formSourceLines.reduce((sum, line) => sum + Number(line.subtotal || 0), 0);
-  const expenseTotal = formExpenseLines.reduce((sum, line) => sum + Number(line.subtotal || 0), 0);
-  document.getElementById('formSourceTotal').textContent = fmtCurrency(sourceTotal);
-  document.getElementById('formExpenseTotal').textContent = fmtCurrency(expenseTotal);
-  document.getElementById('formGrandTotal').textContent = fmtCurrency(sourceTotal + expenseTotal);
-  document.getElementById('formBalanceTotal').textContent = fmtCurrency(sourceTotal - expenseTotal);
+  const total = formLines.reduce((sum, line) => sum + Number(line.subtotal || 0), 0);
+  document.getElementById('formGrandTotal').textContent = fmtCurrency(total);
 }
 
 function budgetUsage(budgetId){
@@ -1116,7 +1008,8 @@ function budgetUsage(budgetId){
   return { used, remain: nominal - used, pct: nominal > 0 ? Math.round((used/nominal)*100) : 0 };
 }
 function getUniqueHeadCount(){
-  return new Set(BUDGETS.map(item => String(item.nomorAnggaranCost || ''))).size;
+  const nums = new Set(BUDGETS.map(item => String(item.nomorAnggaranCost || '')));
+  return nums.size;
 }
 function updateStats(){
   const totalHead = getUniqueHeadCount();
@@ -1151,7 +1044,7 @@ function getFiltered(){
       const hay = [
         item.nomorAnggaranCost,item.upkNama,item.uptNama,item.programNama,item.kegiatanNama,
         item.waktuAwalBulan,item.waktuAwalTahun,item.waktuAkhirBulan,item.waktuAkhirTahun,
-        item.detailKategori,item.tipeMataAnggaran,item.mataAnggaranKode,item.mataAnggaranNama,item.output,item.penanggungJawab,item.targetKegiatan,
+        item.mataAnggaranKode,item.mataAnggaranNama,item.output,item.penanggungJawab,item.targetKegiatan,
         item.resiko,item.manfaat,item.catatan,item.satuan
       ].join(' ').toLowerCase();
       if(!hay.includes(state.search)) return false;
@@ -1191,10 +1084,6 @@ function riskBadge(level){
   if(lv === 3) return `<span class="badge badge-warning">Risiko ${lv}</span>`;
   return `<span class="badge badge-success">Risiko ${lv}</span>`;
 }
-function detailKategoriBadge(item){
-  if(item.detailKategori === 'Sumber Dana') return `<span class="badge badge-primary">Sumber Dana</span><div class="title-sub">${escapeHtml(item.tipeMataAnggaran || 'Pendapatan')}</div>`;
-  return `<span class="badge badge-accent">Pengeluaran</span><div class="title-sub">${escapeHtml(item.tipeMataAnggaran || 'Pengeluaran')}</div>`;
-}
 function formatPeriode(item){
   const start = [item.waktuAwalBulan, item.waktuAwalTahun].filter(Boolean).join(' ');
   const end = [item.waktuAkhirBulan, item.waktuAkhirTahun].filter(Boolean).join(' ');
@@ -1207,7 +1096,7 @@ function render(){
   const data = getFiltered();
   const start = (state.page-1)*state.perPage;
   const page = data.slice(start,start+state.perPage);
-  document.getElementById('tableSubtitle').textContent = `Menampilkan ${data.length} dari ${BUDGETS.length} detail mata anggaran (${getUniqueHeadCount()} nomor anggaran cost)`; 
+  document.getElementById('tableSubtitle').textContent = `Menampilkan ${data.length} dari ${BUDGETS.length} detail mata anggaran (${getUniqueHeadCount()} nomor anggaran cost)`;
   const tbody=document.getElementById('budgetTbody');
   const empty=document.getElementById('emptyState');
   if(!page.length){
@@ -1225,8 +1114,6 @@ function render(){
       <td><div class="title-cell">${escapeHtml(item.uptNama || 'Level UPK')}</div><div class="title-sub">${escapeHtml(item.uptKode || '-')}</div></td>
       <td><div class="title-cell">${escapeHtml(item.programNama || '-')}</div><div class="title-sub">${escapeHtml(item.programKode || 'Tanpa Program')}</div></td>
       <td><div class="title-cell">${escapeHtml(item.kegiatanNama || '-')}</div><div class="title-sub">${escapeHtml(item.kegiatanKode || 'Tanpa Kegiatan')}</div><div class="title-sub">${escapeHtml(item.targetKegiatan || '-')}</div></td>
-      <td><div class="title-cell">${escapeHtml(formatPeriode(item))}</div><div class="title-sub">${escapeHtml(item.manfaat || '-')}</div></td>
-      <td>${detailKategoriBadge(item)}</td>
       <td><div class="title-cell">${escapeHtml(item.mataAnggaranNama || '-')}</div><div class="title-sub">${escapeHtml(item.mataAnggaranKode || '-')}</div><div class="title-sub">${escapeHtml(item.catatan || '-')}</div></td>
       <td><div class="title-cell">${escapeHtml(item.output || '-')}</div><div class="title-sub">PJ: ${escapeHtml(item.penanggungJawab || '-')}</div><div class="title-sub">${riskBadge(item.tingkatResiko)} ${item.resiko ? '· ' + escapeHtml(item.resiko) : ''}</div></td>
       <td class="mono">${Number(item.qty||0).toLocaleString('id-ID')}</td>
@@ -1256,16 +1143,15 @@ function openAddModal(){
   state.editingGroupNo = '';
   state.editingGroupIds = [];
   document.getElementById('modalTitle').textContent='Tambah Anggaran Cost';
-  document.getElementById('modalSub').textContent='Isi head anggaran cost lalu tambahkan detail sumber dana dan pengeluaran sekaligus.';
+  document.getElementById('modalSub').textContent='Isi head anggaran cost lalu tambahkan beberapa detail mata anggaran sekaligus.';
   fillMonthYearOptions();
   resetHeadFields();
   populateFormUpk();
   document.getElementById('fStartYear').value = String(CURRENT_YEAR);
   document.getElementById('fEndYear').value = String(CURRENT_YEAR);
-  formSourceLines = [createEmptyLine('sumber')];
-  formExpenseLines = [createEmptyLine('pengeluaran')];
+  formLines = [createEmptyLine()];
   syncNomorAnggaranCost();
-  renderAllLineItems();
+  renderLineItems();
   updateHeadSummary();
   openModal('modalForm');
 }
@@ -1281,7 +1167,7 @@ function openEditModal(id){
   state.editingGroupNo = item.nomorAnggaranCost || '';
   state.editingGroupIds = group.map(row => Number(row.id));
   document.getElementById('modalTitle').textContent='Edit Anggaran Cost';
-  document.getElementById('modalSub').textContent=`${escapeHtml(item.nomorAnggaranCost || '-')} · ${group.length} detail sumber dana/pengeluaran`;
+  document.getElementById('modalSub').textContent=`${escapeHtml(item.nomorAnggaranCost || '-')} · ${group.length} detail mata anggaran`;
   fillMonthYearOptions();
   populateFormUpk(item.upkId || '');
   populateFormUpt(item.uptId || '');
@@ -1299,36 +1185,20 @@ function openEditModal(id){
   document.getElementById('fTingkatResiko').value = item.tingkatResiko || '';
   document.getElementById('fManfaat').value = item.manfaat || '';
   document.getElementById('fStatus').value = item.status || 'Draft';
-  document.getElementById('fCatatan').value = item.catatanHead || item.catatan || '';
-  formSourceLines = group.filter(row => row.detailKategori === 'Sumber Dana').map(row => ({
+  document.getElementById('fCatatan').value = item.catatan || '';
+  formLines = group.map(row => ({
     uid: nextLineUid(),
     existingId: row.id,
-    kind:'sumber',
     mataId: String(row.mataAnggaranId || ''),
     query: `${row.mataAnggaranKode || ''} · ${row.mataAnggaranNama || ''}`.trim(),
     qty: Number(row.qty || 1),
     satuan: row.satuan || '',
     hargaSatuan: Number(row.hargaSatuan || 0),
     subtotal: Number(row.nominal || 0),
-    catatan: row.catatanDetail || '',
+    catatan: row.catatan || '',
     resultsOpen:false
   }));
-  formExpenseLines = group.filter(row => row.detailKategori !== 'Sumber Dana').map(row => ({
-    uid: nextLineUid(),
-    existingId: row.id,
-    kind:'pengeluaran',
-    mataId: String(row.mataAnggaranId || ''),
-    query: `${row.mataAnggaranKode || ''} · ${row.mataAnggaranNama || ''}`.trim(),
-    qty: Number(row.qty || 1),
-    satuan: row.satuan || '',
-    hargaSatuan: Number(row.hargaSatuan || 0),
-    subtotal: Number(row.nominal || 0),
-    catatan: row.catatanDetail || '',
-    resultsOpen:false
-  }));
-  if(!formSourceLines.length) formSourceLines = [createEmptyLine('sumber')];
-  if(!formExpenseLines.length) formExpenseLines = [createEmptyLine('pengeluaran')];
-  renderAllLineItems();
+  renderLineItems();
   updateHeadSummary();
   openModal('modalForm');
 }
@@ -1366,7 +1236,7 @@ function buildHeadPayload(){
     catatan: document.getElementById('fCatatan').value.trim()
   };
 }
-function buildDetailPayload(head, line, kind){
+function buildDetailPayload(head, line){
   const mata = getMata(line.mataId);
   return {
     nomorAnggaranCost: head.nomorAnggaranCost,
@@ -1392,8 +1262,6 @@ function buildDetailPayload(head, line, kind){
     resiko: head.resiko,
     tingkatResiko: head.tingkatResiko,
     manfaat: head.manfaat,
-    detailKategori: detailLabel(kind),
-    tipeMataAnggaran: mata?.tipe || mataTypeForKind(kind),
     mataAnggaranId: mata?.id || '',
     mataAnggaranKode: mata?.kodeAnggaran || '',
     mataAnggaranNama: mata?.namaMataAnggaran || '',
@@ -1402,8 +1270,6 @@ function buildDetailPayload(head, line, kind){
     hargaSatuan: Number(mata?.hargaSatuan || 0),
     nominal: Number(line.qty || 0) * Number(mata?.hargaSatuan || 0),
     status: head.status,
-    catatanHead: head.catatan,
-    catatanDetail: line.catatan || '',
     catatan: line.catatan ? `${head.catatan ? head.catatan + ' | ' : ''}${line.catatan}` : head.catatan
   };
 }
@@ -1416,32 +1282,10 @@ function sameBudgetContext(a, b){
     && String(a.waktuAwalTahun||'')===String(b.waktuAwalTahun||'')
     && String(a.waktuAkhirBulan||'')===String(b.waktuAkhirBulan||'')
     && String(a.waktuAkhirTahun||'')===String(b.waktuAkhirTahun||'')
-    && String(a.detailKategori||'')===String(b.detailKategori||'')
     && String(a.mataAnggaranId||'')===String(b.mataAnggaranId||'');
 }
 function hasRealizationForBudget(id){
   return REALIZATIONS.some(item => Number(item.budgetId) === Number(id));
-}
-function collectValidLines(kind){
-  return getLinesByKind(kind).map(line => {
-    const mata = getMata(line.mataId);
-    if(!mata) return null;
-    const qty = Number(line.qty || 0);
-    if(qty <= 0) return null;
-    if(String(mata.tipe || '').toLowerCase() !== mataTypeForKind(kind).toLowerCase()) return null;
-    return {...line, qty, mataId:String(mata.id), kind};
-  }).filter(Boolean);
-}
-function validateUniqueLines(lines, kind){
-  const seen = new Set();
-  for(const line of lines){
-    if(seen.has(String(line.mataId))){
-      showToast('warning','fa-copy',`Ada mata anggaran ${detailLabel(kind).toLowerCase()} yang dipilih lebih dari satu kali.`);
-      return false;
-    }
-    seen.add(String(line.mataId));
-  }
-  return true;
 }
 function saveBudget(){
   reloadRefs();
@@ -1459,28 +1303,39 @@ function saveBudget(){
     return;
   }
 
-  const sourceLines = collectValidLines('sumber');
-  const expenseLines = collectValidLines('pengeluaran');
-  if(!expenseLines.length){
-    showToast('warning','fa-triangle-exclamation','Tambahkan minimal satu detail mata anggaran pengeluaran yang valid.');
+  const validLines = formLines.map(line => {
+    const mata = getMata(line.mataId);
+    if(!mata) return null;
+    const qty = Number(line.qty || 0);
+    if(qty <= 0) return null;
+    return {...line, mataId:String(mata.id), qty};
+  }).filter(Boolean);
+
+  if(!validLines.length){
+    showToast('warning','fa-triangle-exclamation','Tambahkan minimal satu detail mata anggaran yang valid.');
     return;
   }
-  if(!validateUniqueLines(sourceLines, 'sumber') || !validateUniqueLines(expenseLines, 'pengeluaran')) return;
 
-  const payloads = [
-    ...sourceLines.map(line => buildDetailPayload(head, line, 'sumber')),
-    ...expenseLines.map(line => buildDetailPayload(head, line, 'pengeluaran'))
-  ];
+  const seen = new Set();
+  for(const line of validLines){
+    if(seen.has(String(line.mataId))){
+      showToast('warning','fa-copy','Ada mata anggaran yang dipilih lebih dari satu kali.');
+      return;
+    }
+    seen.add(String(line.mataId));
+  }
+
+  const payloads = validLines.map(line => buildDetailPayload(head, line));
   const excludedIds = new Set(state.editingGroupIds || []);
   const duplicateOutside = payloads.find(payload => BUDGETS.some(item => !excludedIds.has(Number(item.id)) && sameBudgetContext(item, payload)));
   if(duplicateOutside){
-    showToast('warning','fa-copy',`Detail "${duplicateOutside.mataAnggaranNama}" pada kategori ${duplicateOutside.detailKategori} sudah ada pada head yang sama.`);
+    showToast('warning','fa-copy',`Detail mata anggaran "${duplicateOutside.mataAnggaranNama}" sudah ada pada head yang sama.`);
     return;
   }
 
   if(state.editingGroupNo){
     const existingGroup = BUDGETS.filter(item => excludedIds.has(Number(item.id))).sort((a,b) => Number(a.id) - Number(b.id));
-    const removedWithRealization = existingGroup.filter(row => hasRealizationForBudget(row.id) && !payloads.some(payload => String(payload.detailKategori) === String(row.detailKategori) && String(payload.mataAnggaranId) === String(row.mataAnggaranId)));
+    const removedWithRealization = existingGroup.filter(row => hasRealizationForBudget(row.id) && !payloads.some(payload => String(payload.mataAnggaranId) === String(row.mataAnggaranId)));
     if(removedWithRealization.length){
       showToast('warning','fa-link',`Detail "${removedWithRealization[0].mataAnggaranNama}" sudah punya realisasi dan tidak bisa dihapus dari grup ini.`);
       return;
@@ -1489,7 +1344,7 @@ function saveBudget(){
     let nextId = Math.max(0, ...BUDGETS.map(item => Number(item.id || 0))) + 1;
     const usedExistingIds = new Set();
     const merged = payloads.map(payload => {
-      let reuse = existingGroup.find(row => !usedExistingIds.has(Number(row.id)) && String(row.detailKategori) === String(payload.detailKategori) && String(row.mataAnggaranId) === String(payload.mataAnggaranId));
+      let reuse = existingGroup.find(row => !usedExistingIds.has(Number(row.id)) && String(row.mataAnggaranId) === String(payload.mataAnggaranId));
       if(!reuse){
         reuse = existingGroup.find(row => !usedExistingIds.has(Number(row.id)) && !hasRealizationForBudget(row.id));
       }
@@ -1502,12 +1357,12 @@ function saveBudget(){
 
     BUDGETS = BUDGETS.filter(item => !excludedIds.has(Number(item.id)));
     BUDGETS = [...merged, ...BUDGETS];
-    showToast('success','fa-circle-check', 'Nomor anggaran cost berhasil diperbarui.');
+    showToast('success','fa-circle-check', merged.length > 1 ? 'Nomor anggaran cost berhasil diperbarui.' : 'Detail anggaran cost berhasil diperbarui.');
   } else {
     let nextId = Math.max(0, ...BUDGETS.map(item => Number(item.id || 0))) + 1;
     const inserted = payloads.map(payload => ({id:nextId++, ...payload}));
     BUDGETS = [...inserted, ...BUDGETS];
-    showToast('success','fa-circle-check', `${inserted.length} detail sumber dana / pengeluaran berhasil disimpan pada nomor ${head.nomorAnggaranCost}.`);
+    showToast('success','fa-circle-check', `${inserted.length} detail mata anggaran berhasil disimpan pada nomor ${head.nomorAnggaranCost}.`);
   }
 
   writeJson(STORAGE_BUDGETS, BUDGETS);
@@ -1521,7 +1376,7 @@ function deleteBudget(id){
     showToast('warning','fa-link',`Detail "${item.mataAnggaranNama || item.nomorAnggaranCost}" sudah memiliki realisasi.`);
     return;
   }
-  if(!confirm(`Hapus detail ${item.detailKategori} "${item.mataAnggaranNama}" dari nomor ${item.nomorAnggaranCost}?`)) return;
+  if(!confirm(`Hapus detail mata anggaran "${item.mataAnggaranNama}" dari nomor ${item.nomorAnggaranCost}?`)) return;
   BUDGETS = BUDGETS.filter(b=>Number(b.id)!==Number(id));
   writeJson(STORAGE_BUDGETS, BUDGETS);
   render();
@@ -1533,10 +1388,10 @@ function exportCSV(){
     `${item.waktuAwalBulan || ''} ${item.waktuAwalTahun || ''}`.trim(),
     `${item.waktuAkhirBulan || ''} ${item.waktuAkhirTahun || ''}`.trim(),
     item.output || '', item.penanggungJawab || '', item.targetKegiatan || '', item.resiko || '', item.tingkatResiko || '', item.manfaat || '',
-    item.detailKategori || '', item.tipeMataAnggaran || '', item.mataAnggaranKode||'',item.mataAnggaranNama||'',item.qty,item.satuan,item.hargaSatuan,item.nominal,item.status,item.catatan||''
+    item.mataAnggaranKode||'',item.mataAnggaranNama||'',item.qty,item.satuan,item.hargaSatuan,item.nominal,item.status,item.catatan||''
   ]);
-  const header=['Nomor Anggaran Cost','Nama UPK','Nama UPT','Nama Program','Nama Kegiatan','Waktu Awal','Waktu Akhir','Output','Penanggung Jawab','Target Kegiatan','Resiko','Tingkat Resiko','Manfaat','Jenis Detail','Tipe Mata Anggaran','Kode Mata Anggaran','Nama Mata Anggaran','Qty','Satuan','Harga Satuan','Nilai','Status','Catatan'];
-  const csv=[header,...rows].map(r=>r.map(c=>`"${String(c??'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const header=['Nomor Anggaran Cost','Nama UPK','Nama UPT','Nama Program','Nama Kegiatan','Waktu Awal','Waktu Akhir','Output','Penanggung Jawab','Target Kegiatan','Resiko','Tingkat Resiko','Manfaat','Kode Mata Anggaran','Nama Mata Anggaran','Qty','Satuan','Harga Satuan','Nilai Pagu','Status','Catatan'];
+  const csv=[header,...rows].map(r=>r.map(c=>`"${String(c??'').replace(/"/g,'""')}"`).join(',')).join('\\n');
   const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
   const link=document.createElement('a');
   link.href=URL.createObjectURL(blob);
@@ -1554,13 +1409,11 @@ function seedDefaultData(){
 
 document.addEventListener('click', (event) => {
   if(!event.target.closest('.lookup-shell')){
-    let changed = false;
-    [formSourceLines, formExpenseLines].forEach(lines => {
-      lines.forEach(line => {
-        if(line.resultsOpen){ line.resultsOpen = false; changed = true; }
-      });
-    });
-    if(changed) renderAllLineItems();
+    const changed = formLines.some(line => line.resultsOpen);
+    if(changed){
+      formLines.forEach(line => line.resultsOpen = false);
+      renderLineItems();
+    }
   }
 });
 window.addEventListener('storage', e => {

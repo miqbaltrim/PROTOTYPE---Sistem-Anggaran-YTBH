@@ -1,612 +1,452 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Realisasi Cost — Sinkron Master Terbaru</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link rel="stylesheet" href="../sidebar.css">
-<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#f4f7fc;--bg-soft:#e9eff9;--line:#d7e2f1;--line-soft:#e7eef7;
-    --primary:#3972B8;--primary-2:#2a5d9a;--primary-soft:rgba(57,114,184,.10);
-    --accent:#F68B21;--accent-soft:rgba(246,139,33,.12);--success:#217a4a;
-    --success-soft:rgba(33,122,74,.10);--warning:#c07010;--warning-soft:rgba(192,112,16,.12);
-    --danger:#d94040;--danger-soft:rgba(217,64,64,.10);--text:#1a2333;--text-soft:#60718f;
-    --text-muted:#8ea0ba;--white:#fff;--shadow-sm:0 2px 10px rgba(57,114,184,.07);--shadow:0 10px 28px rgba(57,114,184,.12)
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-  .main{margin-left:240px;min-height:100vh;display:flex;flex-direction:column}
-  .topbar{position:sticky;top:0;z-index:50;background:rgba(244,247,252,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:14px 34px;display:flex;justify-content:space-between;align-items:center;gap:16px}
-  .breadcrumb{display:flex;gap:6px;flex-wrap:wrap;font-size:13px;color:var(--text-muted)} .breadcrumb b{color:var(--text);font-weight:700}
-  .topbar-right{display:flex;align-items:center;gap:10px}.chip-info,.topbar-date{padding:7px 12px;border-radius:999px;background:var(--bg-soft);border:1px solid var(--line);font-size:12px;color:var(--text-soft)}
-  .content{padding:30px 34px 42px;display:flex;flex-direction:column;gap:22px}
-  .page-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
-  .page-title{font-family:'Lora',serif;font-size:28px;line-height:1.25}.page-title em{color:var(--primary);font-style:italic}
-  .page-sub{margin-top:8px;max-width:920px;font-size:13.5px;line-height:1.7;color:var(--text-soft)}
-  .page-actions{display:flex;gap:10px;flex-wrap:wrap}
-  .btn{border:none;border-radius:11px;padding:10px 16px;display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:.18s;font-family:'Plus Jakarta Sans',sans-serif}
-  .btn i{font-size:12px}.btn-primary{background:var(--primary);color:#fff;box-shadow:0 6px 18px rgba(57,114,184,.24)}.btn-primary:hover{transform:translateY(-1px);background:#467ec1}.btn-ghost{background:#fff;color:var(--text-soft);border:1.5px solid var(--line)}.btn-ghost:hover{background:var(--bg);color:var(--text)}.btn-accent{background:var(--accent);color:#fff;box-shadow:0 6px 18px rgba(246,139,33,.24)}.btn-accent:hover{transform:translateY(-1px);background:#ff9d3a}.btn-sm{padding:7px 12px;font-size:12px}
-  .hero{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-2) 100%);color:#fff;border-radius:22px;padding:24px 26px;box-shadow:0 16px 36px rgba(57,114,184,.22);display:grid;grid-template-columns:1.15fr .95fr;gap:18px;overflow:hidden;position:relative}
-  .hero::before,.hero::after{content:'';position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.12)}.hero::before{width:180px;height:180px;top:-50px;right:-20px}.hero::after{width:120px;height:120px;bottom:-45px;right:90px}.hero-left,.hero-right{position:relative;z-index:1}
-  .hero-title{font-family:'Lora',serif;font-size:28px;line-height:1.25}.hero-sub{margin-top:10px;font-size:13px;line-height:1.7;color:rgba(255,255,255,.78);max-width:760px}
-  .hero-right{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.hero-mini{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:15px 16px}.hero-mini-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.62);margin-bottom:7px}.hero-mini-value{font-family:'DM Mono',monospace;font-size:20px;font-weight:500}.hero-mini-sub{margin-top:6px;font-size:12px;color:rgba(255,255,255,.66)}
-  .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.stat-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px 18px 16px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden;transition:.18s}.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}.stat-card::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px}.c-primary::after{background:var(--primary)}.c-accent::after{background:var(--accent)}.c-success::after{background:var(--success)}.c-warning::after{background:var(--warning)}
-  .stat-icon{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-size:16px}.c-primary .stat-icon{background:var(--primary-soft);color:var(--primary)}.c-accent .stat-icon{background:var(--accent-soft);color:var(--accent)}.c-success .stat-icon{background:var(--success-soft);color:var(--success)}.c-warning .stat-icon{background:var(--warning-soft);color:var(--warning)}.stat-label{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);font-weight:700;margin-bottom:5px}.stat-value{font-family:'DM Mono',monospace;font-size:23px;line-height:1}.stat-sub{margin-top:6px;font-size:12px;color:var(--text-muted)}
-  .toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-  .search-wrap{position:relative;flex:1;min-width:240px}.search-icon{position:absolute;top:50%;left:13px;transform:translateY(-50%);color:var(--text-muted);font-size:13px}
-  .search-input,.filter-select,.form-input,.form-select,.form-textarea{width:100%;border:1.5px solid var(--line);background:#fff;border-radius:11px;padding:10px 12px;font-size:13px;color:var(--text);outline:none;transition:.18s;font-family:'Plus Jakarta Sans',sans-serif}.search-input{padding-left:36px}.search-input:focus,.filter-select:focus,.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(57,114,184,.16)}
-  .toolbar-right{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
-  .panel{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-sm)}.panel-head{padding:16px 20px;border-bottom:1px solid var(--line-soft);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}.panel-title{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}.panel-sub{font-size:12px;color:var(--text-muted);margin-top:2px}.panel-body{padding:18px}.table-wrap{overflow-x:auto}
-  table{width:100%;border-collapse:collapse} thead th{text-align:left;padding:11px 16px;background:var(--bg);border-bottom:1px solid var(--line);font-size:10.5px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);white-space:nowrap} tbody tr{border-bottom:1px solid var(--line-soft)} tbody tr:last-child{border-bottom:none} tbody tr:hover{background:rgba(57,114,184,.025)} tbody td{padding:14px 16px;font-size:13px;color:var(--text-soft);vertical-align:top}
-  .title-cell{color:var(--text);font-weight:700}.title-sub{margin-top:3px;font-size:11.5px;color:var(--text-muted)}.mono{font-family:'DM Mono',monospace;color:var(--text)}
-  .badge{display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:700;white-space:nowrap}.badge-primary{background:var(--primary-soft);color:var(--primary)}.badge-accent{background:var(--accent-soft);color:#a05a00}.badge-success{background:var(--success-soft);color:var(--success)}.badge-warning{background:var(--warning-soft);color:var(--warning)}.badge-danger{background:var(--danger-soft);color:var(--danger)}.badge-neutral{background:var(--bg-soft);color:var(--text-soft)}
-  .actions-inline{display:inline-flex;gap:5px;white-space:nowrap}.act-btn{width:31px;height:31px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--text-soft);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:.16s;font-size:12px}.act-btn:hover{background:var(--bg);color:var(--text)}.act-btn.primary:hover{background:var(--primary-soft);color:var(--primary)}.act-btn.danger:hover{background:var(--danger-soft);color:var(--danger)}.act-btn.success:hover{background:var(--success-soft);color:var(--success)}
-  .pagination{padding:14px 20px;border-top:1px solid var(--line-soft);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.pagination-info{font-size:12.5px;color:var(--text-muted)}.pagination-btns{display:flex;gap:4px;flex-wrap:wrap}.pg-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--text-soft);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;font-weight:700}.pg-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}.pg-btn:disabled{opacity:.45;cursor:default}
-  .empty-state{padding:60px 16px;text-align:center}.empty-state i{font-size:36px;color:#c9d8ea;margin-bottom:12px}.empty-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:5px}.empty-sub{font-size:13px;color:var(--text-muted)}
-  .overlay-modal{position:fixed;inset:0;background:rgba(26,35,51,.42);backdrop-filter:blur(4px);z-index:300;display:none;align-items:center;justify-content:center;padding:16px}.overlay-modal.open{display:flex}.modal{width:820px;max-width:100%;max-height:calc(100vh - 32px);overflow:auto;background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 24px 48px rgba(16,24,40,.18)}.modal-head{padding:20px 22px 16px;border-bottom:1px solid var(--line-soft);display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.modal-title{font-family:'Lora',serif;font-size:20px;line-height:1.3}.modal-sub{margin-top:3px;font-size:12.5px;color:var(--text-muted)}.modal-close{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--text-muted);cursor:pointer}.modal-body{padding:20px 22px}.modal-footer{padding:16px 22px;border-top:1px solid var(--line-soft);display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}.section-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.4px;color:var(--text-muted);margin-bottom:12px;display:flex;align-items:center;gap:8px}.section-title::after{content:'';flex:1;height:1px;background:var(--line-soft)}.form-row{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:14px}.form-group{display:flex;flex-direction:column;gap:6px}.form-label{font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--text)}.req{color:var(--danger)}.form-textarea{resize:vertical;min-height:90px}
-  .helper{font-size:11.5px;color:var(--text-muted);line-height:1.6}.preview-box,.budget-box{background:var(--bg);border:1px solid var(--line-soft);border-radius:14px;padding:12px 14px;margin-bottom:14px}.preview-title,.budget-box-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);font-weight:800;margin-bottom:6px}.preview-value,.budget-box-value{font-family:'DM Mono',monospace;font-size:15px;color:var(--text);font-weight:500;line-height:1.6}
-  .lookup-wrap{position:relative}.lookup-results{position:absolute;left:0;right:0;top:calc(100% + 8px);z-index:20;display:none;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);max-height:260px;overflow:auto;padding:8px}.lookup-results.open{display:block}.lookup-item{width:100%;border:none;background:#fff;border-radius:12px;padding:10px 12px;text-align:left;display:flex;flex-direction:column;gap:4px;cursor:pointer;transition:.16s;font-family:'Plus Jakarta Sans',sans-serif}.lookup-item:hover{background:var(--bg)}.lookup-item-top{display:flex;align-items:center;justify-content:space-between;gap:12px}.lookup-code{font-family:'DM Mono',monospace;font-size:12px;color:var(--primary);font-weight:700}.lookup-name{font-size:13px;font-weight:700;color:var(--text)}.lookup-meta{font-size:11.5px;color:var(--text-soft)}.lookup-empty{padding:12px 10px;font-size:12px;color:var(--text-muted)}.lookup-selected{margin-top:10px;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--bg);display:none;gap:4px;flex-direction:column}.lookup-selected strong{font-size:13px;color:var(--text)}.lookup-selected span{font-size:11.5px;color:var(--text-soft);line-height:1.6}
-  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}.bar-list{display:grid;gap:12px}.bar-item{display:grid;gap:6px}.bar-row{display:flex;justify-content:space-between;gap:10px;align-items:center}.bar-label{font-size:13px;font-weight:700;color:var(--text)}.bar-value{font-size:12px;color:var(--text-soft);font-family:'DM Mono',monospace}.bar-track{width:100%;height:10px;background:var(--bg-soft);border-radius:999px;overflow:hidden}.bar-fill{height:100%;border-radius:999px;background:var(--primary)}
-  .warning-banner{background:linear-gradient(135deg,#fff7e9 0%,#fff3dd 100%);border:1px solid rgba(192,112,16,.22);border-radius:18px;padding:16px 18px;display:flex;align-items:flex-start;gap:12px}.warning-banner i{color:var(--warning);font-size:18px;margin-top:2px}.warning-banner-title{font-weight:800;color:var(--text)}.warning-banner-sub{font-size:13px;line-height:1.7;color:var(--text-soft);margin-top:3px}
-  @media (max-width:1200px){.hero{grid-template-columns:1fr}.stats-row{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}}
-  @media (max-width:900px){.main{margin-left:0}}
-  @media (max-width:720px){.content{padding:20px 16px 34px}.topbar{padding:12px 16px}.stats-row,.form-row,.hero-right,.grid-2{grid-template-columns:1fr}.page-header{flex-direction:column}.toolbar-right{width:100%;margin-left:0;justify-content:space-between}}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Realisasi Cost — Sistem Anggaran</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../sidebar.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f4f7fc;
+      --bg-soft:#e9eff9;
+      --line:#d7e2f1;
+      --line-soft:#e7eef7;
+      --primary:#3972B8;
+      --primary-soft:rgba(57,114,184,.10);
+      --accent:#F68B21;
+      --accent-soft:rgba(246,139,33,.12);
+      --success:#217a4a;
+      --success-soft:rgba(33,122,74,.10);
+      --warning:#c07010;
+      --warning-soft:rgba(192,112,16,.12);
+      --danger:#d94040;
+      --danger-soft:rgba(217,64,64,.10);
+      --text:#1a2333;
+      --text-soft:#60718f;
+      --text-muted:#8ea0ba;
+      --white:#fff;
+      --radius:18px;
+      --radius-sm:11px;
+      --shadow-sm:0 2px 10px rgba(57,114,184,.07);
+      --shadow:0 10px 28px rgba(57,114,184,.12);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:'Plus Jakarta Sans',sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      min-height:100vh;
+    }
+    .main{margin-left:240px;min-height:100vh;display:flex;flex-direction:column}
+    .topbar{
+      position:sticky;top:0;z-index:50;
+      background:rgba(244,247,252,.92);
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--line);
+      padding:14px 34px;
+      display:flex;justify-content:space-between;align-items:center;gap:16px;
+    }
+    .breadcrumb{display:flex;gap:6px;flex-wrap:wrap;font-size:13px;color:var(--text-muted)}
+    .breadcrumb b{color:var(--text);font-weight:700}
+    .topbar-right{display:flex;align-items:center;gap:10px}
+    .chip-info,.topbar-date{
+      padding:7px 12px;border-radius:999px;background:var(--bg-soft);
+      border:1px solid var(--line);font-size:12px;color:var(--text-soft)
+    }
+    .content{padding:30px 34px 42px;display:flex;flex-direction:column;gap:22px}
+    .page-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+    .page-title{font-family:'Lora',serif;font-size:28px;line-height:1.25}
+    .page-title em{color:var(--primary);font-style:italic}
+    .page-sub{margin-top:8px;max-width:780px;font-size:13.5px;line-height:1.7;color:var(--text-soft)}
+    .page-actions{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{
+      border:none;border-radius:11px;padding:10px 16px;display:inline-flex;align-items:center;gap:8px;
+      font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:.18s;
+      font-family:'Plus Jakarta Sans',sans-serif;
+    }
+    .btn i{font-size:12px}
+    .btn-primary{background:var(--primary);color:#fff;box-shadow:0 6px 18px rgba(57,114,184,.24)}
+    .btn-primary:hover{transform:translateY(-1px);background:#467ec1}
+    .btn-ghost{background:#fff;color:var(--text-soft);border:1.5px solid var(--line)}
+    .btn-ghost:hover{background:var(--bg);color:var(--text)}
+    .btn-accent{background:var(--accent);color:#fff;box-shadow:0 6px 18px rgba(246,139,33,.24)}
+    .btn-accent:hover{transform:translateY(-1px);background:#ff9d3a}
+    .btn-sm{padding:7px 12px;font-size:12px}
+
+    .hero{
+      background:linear-gradient(135deg, var(--primary) 0%, #2a5d9a 100%);
+      color:#fff;border-radius:22px;padding:24px 26px;
+      box-shadow:0 16px 36px rgba(57,114,184,.22);
+      display:grid;grid-template-columns:1.2fr .9fr;gap:18px;overflow:hidden;position:relative;
+    }
+    .hero::before,.hero::after{content:'';position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.12)}
+    .hero::before{width:180px;height:180px;top:-50px;right:-20px}
+    .hero::after{width:120px;height:120px;bottom:-45px;right:90px}
+    .hero-left,.hero-right{position:relative;z-index:1}
+    .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:1.8px;color:rgba(255,255,255,.65);margin-bottom:8px}
+    .hero-title{font-family:'Lora',serif;font-size:28px;line-height:1.25}
+    .hero-sub{margin-top:10px;font-size:13px;line-height:1.7;color:rgba(255,255,255,.78);max-width:700px}
+    .hero-actions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
+    .hero-chip{
+      display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-radius:999px;
+      background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.12);font-size:12px;font-weight:700;
+    }
+    .hero-right{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .hero-mini{
+      background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;padding:15px 16px
+    }
+    .hero-mini-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.62);margin-bottom:7px}
+    .hero-mini-value{font-family:'DM Mono',monospace;font-size:20px;font-weight:500}
+    .hero-mini-sub{margin-top:6px;font-size:12px;color:rgba(255,255,255,.66)}
+
+    .warning-banner{
+      background:linear-gradient(135deg, #fff7e9 0%, #fff3dd 100%);
+      border:1px solid rgba(192,112,16,.22);
+      border-radius:18px;
+      padding:16px 18px;
+      display:flex;align-items:flex-start;gap:12px;
+    }
+    .warning-banner i{color:var(--warning);font-size:18px;margin-top:2px}
+    .warning-banner-title{font-weight:800;color:var(--text)}
+    .warning-banner-sub{font-size:13px;line-height:1.7;color:var(--text-soft);margin-top:3px}
+
+    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .stat-card{
+      background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px 18px 16px;
+      box-shadow:var(--shadow-sm);position:relative;overflow:hidden;transition:.18s;
+    }
+    .stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+    .stat-card::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px}
+    .c-primary::after{background:var(--primary)}
+    .c-accent::after{background:var(--accent)}
+    .c-success::after{background:var(--success)}
+    .c-warning::after{background:var(--warning)}
+    .stat-icon{
+      width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+      margin-bottom:12px;font-size:16px
+    }
+    .c-primary .stat-icon{background:var(--primary-soft);color:var(--primary)}
+    .c-accent .stat-icon{background:var(--accent-soft);color:var(--accent)}
+    .c-success .stat-icon{background:var(--success-soft);color:var(--success)}
+    .c-warning .stat-icon{background:var(--warning-soft);color:var(--warning)}
+    .stat-label{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);font-weight:700;margin-bottom:5px}
+    .stat-value{font-family:'DM Mono',monospace;font-size:23px;line-height:1}
+    .stat-sub{margin-top:6px;font-size:12px;color:var(--text-muted)}
+
+    .toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .search-wrap{position:relative;flex:1;min-width:240px}
+    .search-icon{position:absolute;top:50%;left:13px;transform:translateY(-50%);color:var(--text-muted);font-size:13px}
+    .search-input,.filter-select,.form-input,.form-select,.form-textarea{
+      width:100%;border:1.5px solid var(--line);background:#fff;border-radius:11px;
+      padding:10px 12px;font-size:13px;color:var(--text);outline:none;transition:.18s;
+      font-family:'Plus Jakarta Sans',sans-serif;
+    }
+    .search-input{padding-left:36px}
+    .search-input:focus,.filter-select:focus,.form-input:focus,.form-select:focus,.form-textarea:focus{
+      border-color:var(--primary);box-shadow:0 0 0 3px rgba(57,114,184,.16)
+    }
+    .toolbar-right{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+
+    .panel{
+      background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-sm)
+    }
+    .panel-head{
+      padding:16px 20px;border-bottom:1px solid var(--line-soft);
+      display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap
+    }
+    .panel-title{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
+    .panel-sub{font-size:12px;color:var(--text-muted);margin-top:2px}
+    .table-wrap{overflow-x:auto}
+    table{width:100%;border-collapse:collapse}
+    thead th{
+      text-align:left;padding:11px 16px;background:var(--bg);border-bottom:1px solid var(--line);
+      font-size:10.5px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);white-space:nowrap
+    }
+    tbody tr{border-bottom:1px solid var(--line-soft)}
+    tbody tr:last-child{border-bottom:none}
+    tbody tr:hover{background:rgba(57,114,184,.025)}
+    tbody td{padding:14px 16px;font-size:13px;color:var(--text-soft);vertical-align:top}
+    .mono{font-family:'DM Mono',monospace;color:var(--text)}
+    .title-cell{color:var(--text);font-weight:700}
+    .title-sub{margin-top:3px;font-size:11.5px;color:var(--text-muted)}
+    .badge{
+      display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:999px;
+      font-size:11px;font-weight:700;white-space:nowrap
+    }
+    .badge-primary{background:var(--primary-soft);color:var(--primary)}
+    .badge-accent{background:var(--accent-soft);color:#a05a00}
+    .badge-success{background:var(--success-soft);color:var(--success)}
+    .badge-warning{background:var(--warning-soft);color:var(--warning)}
+    .badge-danger{background:var(--danger-soft);color:var(--danger)}
+
+    .budget-box{
+      background:var(--bg);border:1px solid var(--line-soft);border-radius:14px;padding:12px 14px;margin-bottom:14px
+    }
+    .budget-box-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);font-weight:800;margin-bottom:6px}
+    .budget-box-value{font-family:'DM Mono',monospace;font-size:16px;color:var(--text);font-weight:500}
+
+    .actions-inline{display:inline-flex;gap:5px;white-space:nowrap}
+    .act-btn{
+      width:31px;height:31px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--text-soft);
+      cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:.16s;font-size:12px
+    }
+    .act-btn:hover{background:var(--bg);color:var(--text)}
+    .act-btn.primary:hover{background:var(--primary-soft);color:var(--primary)}
+    .act-btn.accent:hover{background:var(--accent-soft);color:var(--accent)}
+    .act-btn.danger:hover{background:var(--danger-soft);color:var(--danger)}
+    .act-btn.success:hover{background:var(--success-soft);color:var(--success)}
+
+    .pagination{
+      padding:14px 20px;border-top:1px solid var(--line-soft);
+      display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap
+    }
+    .pagination-info{font-size:12.5px;color:var(--text-muted)}
+    .pagination-btns{display:flex;gap:4px}
+    .pg-btn{
+      width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--text-soft);
+      display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;font-weight:700
+    }
+    .pg-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+    .pg-btn:disabled{opacity:.45;cursor:default}
+
+    .empty-state{padding:60px 16px;text-align:center}
+    .empty-state i{font-size:36px;color:#c9d8ea;margin-bottom:12px}
+    .empty-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:5px}
+    .empty-sub{font-size:13px;color:var(--text-muted)}
+
+    .overlay-modal{
+      position:fixed;inset:0;background:rgba(26,35,51,.42);backdrop-filter:blur(4px);z-index:300;display:none;
+      align-items:center;justify-content:center;padding:16px
+    }
+    .overlay-modal.open{display:flex}
+    .modal{
+      width:780px;max-width:100%;max-height:calc(100vh - 32px);overflow:auto;background:#fff;border:1px solid var(--line);
+      border-radius:20px;box-shadow:0 24px 48px rgba(16,24,40,.18)
+    }
+    .modal-head{
+      padding:20px 22px 16px;border-bottom:1px solid var(--line-soft);
+      display:flex;justify-content:space-between;gap:12px;align-items:flex-start
+    }
+    .modal-title{font-family:'Lora',serif;font-size:20px;line-height:1.3}
+    .modal-sub{margin-top:3px;font-size:12.5px;color:var(--text-muted)}
+    .modal-close{
+      width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--text-muted);cursor:pointer
+    }
+    .modal-body{padding:20px 22px}
+    .modal-footer{padding:16px 22px;border-top:1px solid var(--line-soft);display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+    .section-title{
+      font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.4px;color:var(--text-muted);
+      margin-bottom:12px;display:flex;align-items:center;gap:8px
+    }
+    .section-title::after{content:'';flex:1;height:1px;background:var(--line-soft)}
+    .form-row{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:14px}
+    .form-group{display:flex;flex-direction:column;gap:6px}
+    .form-label{font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--text)}
+    .req{color:var(--danger)}
+    .form-textarea{resize:vertical;min-height:90px}
+
+    .toast-stack{position:fixed;right:22px;bottom:22px;z-index:500;display:flex;flex-direction:column;gap:8px}
+    .toast{
+      background:var(--text);color:#fff;padding:12px 16px;border-radius:12px;display:flex;align-items:center;gap:9px;
+      box-shadow:0 10px 22px rgba(0,0,0,.2);font-size:13px;max-width:340px
+    }
+    .toast.success{background:#1b6b41}
+    .toast.warning{background:#8d5807}
+    .toast.danger{background:#8a2d2d}
+
+    @media (max-width:1200px){
+      .hero{grid-template-columns:1fr}
+      .stats-row{grid-template-columns:repeat(2,1fr)}
+    }
+    @media (max-width:900px){.main{margin-left:0}}
+    @media (max-width:720px){
+      .content{padding:20px 16px 34px}
+      .topbar{padding:12px 16px}
+      .stats-row,.form-row,.hero-right{grid-template-columns:1fr}
+      .page-header{flex-direction:column}
+      .toolbar-right{width:100%;margin-left:0;justify-content:space-between}
+    }
+  
+
+.helper-box{background:var(--bg);border:1px solid var(--line-soft);border-radius:14px;padding:12px 14px;margin-bottom:14px;font-size:12px;color:var(--text-soft);line-height:1.7}.helper-box b{color:var(--text)}
+.budget-box{background:var(--bg);border:1px solid var(--line-soft);border-radius:14px;padding:12px 14px;margin-bottom:14px}
+.budget-box-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);font-weight:800;margin-bottom:6px}
+.budget-box-value{font-family:'DM Mono',monospace;font-size:14px;color:var(--text);line-height:1.7}
+.form-note{font-size:11.5px;color:var(--text-muted);line-height:1.6}
+.small-select-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:14px}
+@media (max-width:720px){.small-select-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body data-page="realisasicost">
-<div id="sb-root"></div>
-<div class="main">
-  <div class="topbar">
-    <div class="breadcrumb">Sistem Anggaran <span>›</span> Perencanaan <span>›</span> Cost <span>›</span> <b>Realisasi Cost</b></div>
-    <div class="topbar-right"><div class="chip-info"><i class="fa-solid fa-list-check"></i> Sinkron master terbaru</div><div class="topbar-date" id="topbarDate">—</div></div>
-  </div>
-
-  <div class="content">
-    <div class="page-header">
-      <div>
-        <div class="page-title">Realisasi <em>Cost</em></div>
-        <div class="page-sub">Realisasi cost sekarang membaca data anggaran cost yang sudah menyesuaikan master terbaru. Informasi <b>Nama UPK</b>, <b>Nama UPT</b>, <b>Mata Anggaran</b>, dan <b>COA</b> akan ikut otomatis dari head anggaran yang dipilih.</div>
-      </div>
-      <div class="page-actions">
-        <button class="btn btn-ghost" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Export</button>
-        <button class="btn btn-accent" onclick="pushAllPending()"><i class="fa-solid fa-cloud-arrow-up"></i> Push Semua Pending</button>
-        <button class="btn btn-primary" onclick="openAddModal()"><i class="fa-solid fa-plus"></i> Tambah Realisasi</button>
-      </div>
-    </div>
-
-    <section class="hero">
-      <div class="hero-left">
-        <div class="hero-title">Detail penggunaan anggaran sesuai <em>master terbaru</em></div>
-        <div class="hero-sub">Setelah memilih head anggaran, halaman ini menampilkan UPK, UPT, Mata Anggaran, dan COA secara otomatis agar input realisasi tetap konsisten.</div>
-      </div>
-      <div class="hero-right">
-        <div class="hero-mini"><div class="hero-mini-label">Total Detail</div><div class="hero-mini-value" id="heroDetail">0</div><div class="hero-mini-sub">Baris realisasi</div></div>
-        <div class="hero-mini"><div class="hero-mini-label">Nilai Realisasi</div><div class="hero-mini-value" id="heroNominal">Rp 0</div><div class="hero-mini-sub">Akumulasi cost</div></div>
-        <div class="hero-mini"><div class="hero-mini-label">Pending Accurate</div><div class="hero-mini-value" id="heroPending">0</div><div class="hero-mini-sub">Belum push</div></div>
-        <div class="hero-mini"><div class="hero-mini-label">Over Budget</div><div class="hero-mini-value" id="heroOver">0</div><div class="hero-mini-sub">Butuh perhatian</div></div>
-      </div>
-    </section>
-
-    <div class="warning-banner">
-      <i class="fa-solid fa-triangle-exclamation"></i>
-      <div>
-        <div class="warning-banner-title">Kontrol Pagu Otomatis</div>
-        <div class="warning-banner-sub">Jika nominal realisasi melebihi sisa anggaran dari head terpilih, sistem tetap menyimpan data dan memberi tanda <b>Over Budget</b> agar mudah direview.</div>
-      </div>
-    </div>
-
-    <div class="stats-row">
-      <div class="stat-card c-primary"><div class="stat-icon"><i class="fa-solid fa-file-lines"></i></div><div class="stat-label">Total Realisasi</div><div class="stat-value" id="statDetail">0</div><div class="stat-sub">Jumlah detail cost</div></div>
-      <div class="stat-card c-accent"><div class="stat-icon"><i class="fa-solid fa-money-bill-wave"></i></div><div class="stat-label">Nilai Realisasi</div><div class="stat-value" id="statNominal">Rp 0</div><div class="stat-sub">Total nominal input</div></div>
-      <div class="stat-card c-success"><div class="stat-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div><div class="stat-label">Sudah Push</div><div class="stat-value" id="statPush">0</div><div class="stat-sub">Ke Accurate</div></div>
-      <div class="stat-card c-warning"><div class="stat-icon"><i class="fa-solid fa-circle-exclamation"></i></div><div class="stat-label">Melebihi Pagu</div><div class="stat-value" id="statOver">0</div><div class="stat-sub">Butuh review</div></div>
-    </div>
-
-    <div class="toolbar">
-      <div class="search-wrap"><span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span><input class="search-input" id="searchInput" type="text" placeholder="Cari Nama UPK, Nama UPT, Mata Anggaran, COA, kategori, atau detail..." oninput="applyFilters()"></div>
-      <select class="filter-select" id="filterUpk" onchange="applyFilters()"><option value="">Semua UPK</option></select>
-      <select class="filter-select" id="filterAccurate" onchange="applyFilters()"><option value="">Semua Status Accurate</option><option value="Pending">Pending</option><option value="Sudah Push">Sudah Push</option></select>
-      <select class="filter-select" id="filterBudget" onchange="applyFilters()"><option value="">Semua Status Budget</option><option value="Normal">Normal</option><option value="Over Budget">Over Budget</option></select>
-      <div class="toolbar-right"><button class="btn btn-ghost btn-sm" onclick="importSample()"><i class="fa-solid fa-file-import"></i> Import Sample</button></div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-head"><div><div class="panel-title"><i class="fa-solid fa-list-check" style="color:var(--primary)"></i> Daftar Realisasi Cost</div><div class="panel-sub" id="tableSubtitle">Memuat data...</div></div></div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Tanggal</th>
-              <th>Nama UPK</th>
-              <th>Nama UPT / Mata Anggaran</th>
-              <th>Detail Realisasi</th>
-              <th>COA</th>
-              <th>Kategori</th>
-              <th>Nominal</th>
-              <th>Status Budget</th>
-              <th>Accurate</th>
-              <th style="text-align:right;">Aksi</th>
-            </tr>
-          </thead>
-          <tbody id="realTbody"></tbody>
-        </table>
-      </div>
-      <div class="empty-state" id="emptyState" style="display:none;"><i class="fa-solid fa-list-check"></i><div class="empty-title">Realisasi tidak ditemukan</div><div class="empty-sub">Coba ubah pencarian atau filter.</div></div>
-      <div class="pagination" id="pagination"></div>
+  <div id="sb-root"></div>
+  <div class="main">
+    <div class="topbar"><div class="breadcrumb">Sistem Anggaran <span>›</span> Perencanaan <span>›</span> Cost <span>›</span> <b>Realisasi Cost</b></div><div class="topbar-right"><div class="chip-info"><i class="fa-solid fa-list-check"></i> Detail Penggunaan Anggaran</div><div class="topbar-date" id="topbarDate">—</div></div></div>
+    <div class="content">
+      <div class="page-header"><div><div class="page-title">Realisasi <em>Cost</em></div></div><div class="page-actions"><button class="btn btn-ghost" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Export</button><button class="btn btn-accent" onclick="pushAllPending()"><i class="fa-solid fa-cloud-arrow-up"></i> Push Semua Pending</button><button class="btn btn-primary" onclick="openAddModal()"><i class="fa-solid fa-plus"></i> Tambah Realisasi</button></div></div>
+      <section class="hero"><div class="hero-left"><div class="hero-title">Realisasi Cost mengikuti struktur anggaran terbaru</div><div class="hero-sub">Sebelum menyimpan realisasi, pilih <b>Nama UPK</b>, <b>Nama UPT</b>, <b>Nama Program</b>, <b>Nama Kegiatan</b>, dan <b>Nama Mata Anggaran</b> untuk menemukan head anggaran yang tepat.</div></div><div class="hero-right"><div class="hero-mini"><div class="hero-mini-label">Total Detail</div><div class="hero-mini-value" id="heroDetail">0</div><div class="hero-mini-sub">Baris realisasi</div></div><div class="hero-mini"><div class="hero-mini-label">Nilai Realisasi</div><div class="hero-mini-value" id="heroNominal">Rp 0</div><div class="hero-mini-sub">Akumulasi cost</div></div><div class="hero-mini"><div class="hero-mini-label">Pending Accurate</div><div class="hero-mini-value" id="heroPending">0</div><div class="hero-mini-sub">Belum push</div></div><div class="hero-mini"><div class="hero-mini-label">Over Budget</div><div class="hero-mini-value" id="heroOver">0</div><div class="hero-mini-sub">Butuh perhatian</div></div></div></section>
+      <div class="warning-banner"><i class="fa-solid fa-triangle-exclamation"></i><div><div class="warning-banner-title">Kontrol pagu tetap aktif</div><div class="warning-banner-sub">Jika nominal realisasi melebihi sisa pagu dari head anggaran yang dipilih, sistem tetap menyimpan data dan memberi tanda <b>Over Budget</b>.</div></div></div>
+      <div class="stats-row"><div class="stat-card c-primary"><div class="stat-icon"><i class="fa-solid fa-file-lines"></i></div><div class="stat-label">Total Realisasi</div><div class="stat-value" id="statDetail">0</div><div class="stat-sub">Jumlah detail cost</div></div><div class="stat-card c-accent"><div class="stat-icon"><i class="fa-solid fa-money-bill-wave"></i></div><div class="stat-label">Nilai Realisasi</div><div class="stat-value" id="statNominal">Rp 0</div><div class="stat-sub">Total nominal input</div></div><div class="stat-card c-success"><div class="stat-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div><div class="stat-label">Sudah Push</div><div class="stat-value" id="statPush">0</div><div class="stat-sub">Ke Accurate</div></div><div class="stat-card c-warning"><div class="stat-icon"><i class="fa-solid fa-circle-exclamation"></i></div><div class="stat-label">Melebihi Pagu</div><div class="stat-value" id="statOver">0</div><div class="stat-sub">Butuh review</div></div></div>
+      <div class="toolbar"><div class="search-wrap"><span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span><input class="search-input" id="searchInput" type="text" placeholder="Cari UPK, UPT, Program, Kegiatan, Mata Anggaran, atau detail..." oninput="applyFilters()"></div><select class="filter-select" id="filterUpk" onchange="applyFilters()"><option value="">Semua UPK</option></select><select class="filter-select" id="filterAccurate" onchange="applyFilters()"><option value="">Semua Status Accurate</option><option value="Pending">Pending</option><option value="Sudah Push">Sudah Push</option></select><select class="filter-select" id="filterBudget" onchange="applyFilters()"><option value="">Semua Status Budget</option><option value="Normal">Normal</option><option value="Over Budget">Over Budget</option></select></div>
+      <div class="panel"><div class="panel-head"><div><div class="panel-title"><i class="fa-solid fa-list-check" style="color:var(--primary)"></i> Daftar Realisasi Cost</div><div class="panel-sub" id="tableSubtitle">Memuat data...</div></div></div><div class="table-wrap"><table><thead><tr><th>Tanggal</th><th>UPK</th><th>UPT</th><th>Program</th><th>Kegiatan</th><th>Mata Anggaran</th><th>Detail Realisasi</th><th>Nominal</th><th>Status Budget</th><th>Accurate</th><th style="text-align:right;">Aksi</th></tr></thead><tbody id="realTbody"></tbody></table></div><div class="empty-state" id="emptyState" style="display:none;"><i class="fa-solid fa-list-check"></i><div class="empty-title">Realisasi tidak ditemukan</div><div class="empty-sub">Coba ubah pencarian atau filter.</div></div><div class="pagination" id="pagination"></div></div>
     </div>
   </div>
-</div>
 
-<div class="overlay-modal" id="modalForm" onclick="closeModalIfBg(event,'modalForm')">
-  <div class="modal">
-    <div class="modal-head"><div><div class="modal-title" id="modalTitle">Tambah Realisasi Cost</div><div class="modal-sub" id="modalSub">Input detail penggunaan dana dari head anggaran.</div></div><button class="modal-close" onclick="closeModal('modalForm')"><i class="fa-solid fa-xmark"></i></button></div>
-    <div class="modal-body">
-      <div class="section-title">Relasi dengan Head Anggaran</div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Tanggal <span class="req">*</span></label><input class="form-input" id="fTanggal" type="date"></div>
-        <div class="form-group"><label class="form-label">Head Anggaran <span class="req">*</span></label><select class="form-select" id="fBudget" onchange="updateBudgetInfo()"></select></div>
+  <div class="overlay-modal" id="modalForm" onclick="closeModalIfBg(event,'modalForm')">
+    <div class="modal">
+      <div class="modal-head"><div><div class="modal-title" id="modalTitle">Tambah Realisasi Cost</div><div class="modal-sub" id="modalSub">Pilih struktur anggaran kemudian isi detail realisasi.</div></div><button class="modal-close" onclick="closeModal('modalForm')"><i class="fa-solid fa-xmark"></i></button></div>
+      <div class="modal-body">
+        <div class="helper-box"><b>Catatan:</b> Filter <b>Nama Program</b> mengikuti semua program pada <b>UPK</b> yang dipilih, sedangkan <b>Nama Kegiatan</b> menyesuaikan Program dan UPT. Setelah struktur dipilih, sistem akan menampilkan <b>Head Anggaran</b> yang cocok.</div>
+        <div class="section-title">Struktur Anggaran</div>
+        <div class="form-row"><div class="form-group"><label class="form-label">Tanggal <span class="req">*</span></label><input class="form-input" id="fTanggal" type="date"></div><div class="form-group"><label class="form-label">Nama UPK <span class="req">*</span></label><select class="form-select" id="fUpk" onchange="handleUpkChange()"></select></div></div>
+        <div class="form-row"><div class="form-group"><label class="form-label">Nama UPT</label><select class="form-select" id="fUpt" onchange="handleUptChange()"></select></div><div class="form-group"><label class="form-label">Nama Program</label><select class="form-select" id="fProgram" onchange="handleProgramChange()"></select></div></div>
+        <div class="form-row"><div class="form-group"><label class="form-label">Nama Kegiatan</label><select class="form-select" id="fKegiatan" onchange="handleKegiatanChange()"></select></div><div class="form-group"><label class="form-label">Nama Mata Anggaran</label><select class="form-select" id="fMata" onchange="handleMataChange()"></select></div></div>
+        <div class="form-group"><label class="form-label">Head Anggaran <span class="req">*</span></label><select class="form-select" id="fBudget" onchange="updateBudgetInfo()"></select><div class="form-note">Head anggaran ditampilkan sesuai kombinasi Nama UPK, Nama UPT, Nama Program, Nama Kegiatan, dan Nama Mata Anggaran yang dipilih.</div></div>
+        <div class="budget-box"><div class="budget-box-title">Info Head Anggaran</div><div class="budget-box-value" id="budgetInfo">Pilih head anggaran terlebih dahulu</div></div>
+        <div class="section-title">Detail Realisasi</div>
+        <div class="form-row"><div class="form-group"><label class="form-label">Kategori <span class="req">*</span></label><select class="form-select" id="fKategori"><option value="">— Pilih Kategori —</option><option value="Pengadaan">Pengadaan</option><option value="Publikasi">Publikasi</option><option value="Operasional">Operasional</option><option value="Administrasi">Administrasi</option><option value="Pemeliharaan">Pemeliharaan</option><option value="Lainnya">Lainnya</option></select></div><div class="form-group"><label class="form-label">Detail <span class="req">*</span></label><input class="form-input" id="fDetail" type="text" placeholder="mis. Pembayaran vendor promosi"></div></div>
+        <div class="form-row"><div class="form-group"><label class="form-label">Qty Realisasi <span class="req">*</span></label><input class="form-input" id="fQty" type="number" min="1" value="1" oninput="updateTotalPreview()"></div><div class="form-group"><label class="form-label">Harga Satuan Realisasi <span class="req">*</span></label><input class="form-input" id="fHarga" type="number" min="0" value="0" oninput="updateTotalPreview()"></div></div>
+        <div class="form-row"><div class="form-group"><label class="form-label">Total Realisasi</label><div class="form-input" id="totalPreview" style="background:var(--bg);font-family:'DM Mono',monospace;">Rp 0</div></div><div class="form-group"><label class="form-label">Status Accurate</label><select class="form-select" id="fAccurate"><option value="Pending">Pending</option><option value="Sudah Push">Sudah Push</option></select></div></div>
+        <div class="form-group"><label class="form-label">Catatan</label><textarea class="form-textarea" id="fCatatan" placeholder="Catatan realisasi cost"></textarea></div>
       </div>
-      <div class="budget-box"><div class="budget-box-title">Info Head Anggaran</div><div class="budget-box-value" id="budgetInfo">Pilih head anggaran terlebih dahulu</div></div>
-
-      <div class="section-title">Detail Realisasi</div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Kategori <span class="req">*</span></label><select class="form-select" id="fKategori"><option value="">— Pilih Kategori —</option><option value="Pembelian Stok">Pembelian Stok</option><option value="Gaji">Gaji</option><option value="Operasional">Operasional</option><option value="Administrasi">Administrasi</option><option value="Pemeliharaan">Pemeliharaan</option><option value="Lainnya">Lainnya</option></select></div>
-        <div class="form-group"><label class="form-label">Detail <span class="req">*</span></label><input class="form-input" id="fDetail" type="text" placeholder="mis. Pembelian stok obat"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Qty <span class="req">*</span></label><input class="form-input" id="fQty" type="number" min="1" value="1" oninput="updateTotalPreview()"></div>
-        <div class="form-group"><label class="form-label">Harga Satuan <span class="req">*</span></label><input class="form-input" id="fHarga" type="number" min="0" value="0" oninput="updateTotalPreview()"></div>
-      </div>
-      <div class="preview-box"><div class="preview-title">Total Realisasi</div><div class="preview-value" id="totalPreview">Rp 0</div></div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Status Accurate</label><select class="form-select" id="fAccurate"><option value="Pending">Pending</option><option value="Sudah Push">Sudah Push</option></select></div>
-        <div class="form-group"><label class="form-label">Catatan</label><input class="form-input" id="fCatatan" type="text" placeholder="Catatan realisasi"></div>
-      </div>
+      <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modalForm')">Batal</button><button class="btn btn-primary" onclick="saveRealization()"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div>
     </div>
-    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modalForm')">Batal</button><button class="btn btn-primary" onclick="saveRealization()"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div>
   </div>
-</div>
+  <div class="toast-stack" id="toastStack"></div>
+  <script>
+const STORAGE_BUDGETS = 'APP_COST_BUDGETS_V1';
+const STORAGE_REALIZATIONS = 'APP_COST_REALIZATIONS_V1';
+const STORAGE_UPK = 'APP_MASTER_UPK_V1';
+const STORAGE_UPT = 'APP_MASTER_UPT_V1';
+const STORAGE_PROGRAM = 'APP_MASTER_PROGRAM_V1';
+const STORAGE_KEGIATAN = 'APP_MASTER_KEGIATAN_V1';
+const STORAGE_MATA = 'APP_MASTER_MATA_ANGGARAN_V1';
+const LEGACY_UPK = 'APP_ORG_UPK_DIVISIONS_V2';
+const LEGACY_UPT = 'APP_ORG_UPT_BRANCHES_V2';
 
-<div class="toast-stack" id="toastStack"></div>
-<script>
-const STORAGE_UPK='APP_MASTER_UPK_V1';
-const STORAGE_UPT='APP_MASTER_UPT_V1';
-const STORAGE_MATA='APP_MASTER_MATA_ANGGARAN_V1';
-const STORAGE_COA='APP_MASTER_COA_V1';
-const STORAGE_BUDGETS='APP_COST_BUDGETS_V1';
-const STORAGE_REAL='APP_COST_REALIZATIONS_V1';
+const MONTHS = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 
-function readJson(key){ try{ return JSON.parse(localStorage.getItem(key)) || []; } catch { return []; } }
+const fallbackUPK = [
+  {id:1,kode:'UPK-001',nama:'Yayasan Bakti Tunas Husada',status:'Aktif'},
+  {id:2,kode:'UPK-002',nama:'Universitas Bakti Tunas Husada',status:'Aktif'},
+  {id:3,kode:'UPK-003',nama:'Klinik Bakti Tunas Husada',status:'Aktif'}
+];
+const fallbackUPT = [
+  {id:1,kode:'UPT.1',nama:'Sekretariat Yayasan',upkId:1,parentId:null,status:'Aktif'},
+  {id:2,kode:'UPT.2',nama:'Wakil Rektor Bidang SDM, Humas dan Kerjasama',upkId:2,parentId:null,status:'Aktif'},
+  {id:3,kode:'UPT.2.1',nama:'Bagian SDM',upkId:2,parentId:2,status:'Aktif'},
+  {id:4,kode:'UPT.2.2',nama:'Bagian Humas dan Kerjasama',upkId:2,parentId:2,status:'Aktif'},
+  {id:5,kode:'UPT.2.3',nama:'Bagian Pusat Karir',upkId:2,parentId:2,status:'Aktif'},
+  {id:6,kode:'UPT.3',nama:'Administrasi Klinik',upkId:3,parentId:null,status:'Aktif'}
+];
+const fallbackPrograms = [
+  {id:1,kode:'PRG-001-001',nama:'Program Tata Kelola Yayasan',upkId:'1',upkKode:'UPK-001',upkNama:'Yayasan Bakti Tunas Husada',uptId:'',uptKode:'',uptNama:'',status:'Aktif',catatan:'Level UPK'},
+  {id:2,kode:'PRG-002-001',nama:'Program Akademik dan Kemahasiswaan',upkId:'2',upkKode:'UPK-002',upkNama:'Universitas Bakti Tunas Husada',uptId:'2',uptKode:'UPT.2',uptNama:'Wakil Rektor Bidang SDM, Humas dan Kerjasama',status:'Aktif',catatan:'Level UPT'},
+  {id:3,kode:'PRG-003-001',nama:'Program Pelayanan Klinik',upkId:'3',upkKode:'UPK-003',upkNama:'Klinik Bakti Tunas Husada',uptId:'6',uptKode:'UPT.3',uptNama:'Administrasi Klinik',status:'Aktif',catatan:'Level UPT'}
+];
+const fallbackKegiatan = [
+  {id:1,upkId:'1',upkKode:'UPK-001',upkNama:'Yayasan Bakti Tunas Husada',uptId:'',uptKode:'',uptNama:'',programId:'1',programKode:'PRG-001-001',programNama:'Program Tata Kelola Yayasan',kode:'KGT-001-001',nama:'Penyusunan Laporan Tata Kelola',status:'Aktif',output:'Laporan Kegiatan',waktuAwalBulan:'Januari',waktuAwalTahun:'2026',waktuAkhirBulan:'Maret',waktuAkhirTahun:'2026',penanggungJawab:'Sekretaris Yayasan',targetKegiatan:'3 dokumen tata kelola',resiko:'Keterlambatan pengumpulan data unit',tingkatResiko:'3',manfaat:'Dokumen tata kelola lebih tertib dan terukur'},
+  {id:2,upkId:'2',upkKode:'UPK-002',upkNama:'Universitas Bakti Tunas Husada',uptId:'5',uptKode:'UPT.2.3',uptNama:'Bagian Pusat Karir',programId:'2',programKode:'PRG-002-001',programNama:'Program Akademik dan Kemahasiswaan',kode:'KGT-002-001',nama:'Pelaksanaan Career Day',status:'Aktif',output:'Laporan Kegiatan',waktuAwalBulan:'April',waktuAwalTahun:'2026',waktuAkhirBulan:'Mei',waktuAkhirTahun:'2026',penanggungJawab:'Kepala Pusat Karir',targetKegiatan:'1 event dan 20 mitra',resiko:'Partisipasi mitra industri tidak sesuai target',tingkatResiko:'4',manfaat:'Meningkatkan jejaring kerja mahasiswa dan alumni'},
+  {id:3,upkId:'3',upkKode:'UPK-003',upkNama:'Klinik Bakti Tunas Husada',uptId:'6',uptKode:'UPT.3',uptNama:'Administrasi Klinik',programId:'3',programKode:'PRG-003-001',programNama:'Program Pelayanan Klinik',kode:'KGT-003-001',nama:'Pengadaan Lemari Arsip Pasien',status:'Aktif',output:'Barang',waktuAwalBulan:'Februari',waktuAwalTahun:'2026',waktuAkhirBulan:'Februari',waktuAkhirTahun:'2026',penanggungJawab:'Kepala Administrasi Klinik',targetKegiatan:'2 unit lemari arsip',resiko:'Barang datang tidak sesuai spesifikasi',tingkatResiko:'2',manfaat:'Penyimpanan dokumen pasien lebih aman dan rapi'}
+];
+const fallbackMata = [
+  {id:1,kodeAnggaran:'MA-001',namaMataAnggaran:'ATK Umum',idUpk:'1',namaUpk:'Yayasan Bakti Tunas Husada',idUpt:'',namaUpt:'',satuan:'paket',hargaSatuan:1500000,idCoa:'COA-001',coaLabel:'COA ATK',catatan:'Untuk kebutuhan umum',status:'Aktif'},
+  {id:2,kodeAnggaran:'MA-002',namaMataAnggaran:'Publikasi & Promosi',idUpk:'2',namaUpk:'Universitas Bakti Tunas Husada',idUpt:'4',namaUpt:'Bagian Humas dan Kerjasama',satuan:'kegiatan',hargaSatuan:5000000,idCoa:'COA-002',coaLabel:'COA Promosi',catatan:'Untuk promosi institusi',status:'Aktif'},
+  {id:3,kodeAnggaran:'MA-003',namaMataAnggaran:'Pengadaan Perlengkapan Arsip',idUpk:'3',namaUpk:'Klinik Bakti Tunas Husada',idUpt:'6',namaUpt:'Administrasi Klinik',satuan:'unit',hargaSatuan:2750000,idCoa:'COA-003',coaLabel:'COA Arsip',catatan:'Untuk rak/lemari arsip',status:'Aktif'}
+];
+const seedBudgets = [
+  {id:1,kode:'MA-002-2026',upkId:'2',upkKode:'UPK-002',upkNama:'Universitas Bakti Tunas Husada',uptId:'4',uptKode:'UPT.2.2',uptNama:'Bagian Humas dan Kerjasama',programId:'2',programKode:'PRG-002-001',programNama:'Program Akademik dan Kemahasiswaan',kegiatanId:'2',kegiatanKode:'KGT-002-001',kegiatanNama:'Pelaksanaan Career Day',mataAnggaranId:'2',mataAnggaranKode:'MA-002',mataAnggaranNama:'Publikasi & Promosi',tahun:2026,qty:3,satuan:'kegiatan',hargaSatuan:5000000,nominal:15000000,status:'Aktif',catatan:'Pagu publikasi dan promosi event.'},
+  {id:2,kode:'MA-003-2026',upkId:'3',upkKode:'UPK-003',upkNama:'Klinik Bakti Tunas Husada',uptId:'6',uptKode:'UPT.3',uptNama:'Administrasi Klinik',programId:'3',programKode:'PRG-003-001',programNama:'Program Pelayanan Klinik',kegiatanId:'3',kegiatanKode:'KGT-003-001',kegiatanNama:'Pengadaan Lemari Arsip Pasien',mataAnggaranId:'3',mataAnggaranKode:'MA-003',mataAnggaranNama:'Pengadaan Perlengkapan Arsip',tahun:2026,qty:2,satuan:'unit',hargaSatuan:2750000,nominal:5500000,status:'Draft',catatan:'Tahap awal pengadaan lemari arsip.'}
+];
+const seedRealizations = [
+  {id:1,budgetId:1,tanggal:'2026-01-18',kategori:'Publikasi',detail:'Pembayaran desain materi promosi',qty:1,unitPrice:3500000,total:3500000,accurateStatus:'Pending',overBudget:false,catatan:'Tahap desain'},
+  {id:2,budgetId:2,tanggal:'2026-02-10',kategori:'Pengadaan',detail:'Pembelian 1 lemari arsip',qty:1,unitPrice:2750000,total:2750000,accurateStatus:'Sudah Push',overBudget:false,catatan:'Batch pertama'}
+];
+
+function readJson(key){ try { return JSON.parse(localStorage.getItem(key)) || []; } catch { return []; } }
 function writeJson(key,data){ localStorage.setItem(key, JSON.stringify(data)); }
-function esc(str){ return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
-function fmtCurrency(n){ return 'Rp ' + Number(n||0).toLocaleString('id-ID'); }
-function fmtShortCurrency(n){ const num=Number(n||0); if(num>=1_000_000_000) return 'Rp ' + (num/1_000_000_000).toFixed(num%1_000_000_000===0?0:1) + ' M'; if(num>=1_000_000) return 'Rp ' + (num/1_000_000).toFixed(num%1_000_000===0?0:1) + ' jt'; return fmtCurrency(num); }
-function normalizeText(v){ return String(v||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim(); }
-function unique(arr){ return [...new Set(arr.filter(Boolean))]; }
-
-function normalizeUPKs(items){
-  return (items||[]).map((item, idx)=>({
-    id: String(item.id ?? item.id_upk ?? item.kode ?? ('UPK-'+(idx+1))),
-    kode: String(item.kode ?? item.code ?? item.id ?? ('UPK-'+(idx+1))),
-    nama: String(item.nama ?? item.name ?? item.entitas ?? item.label ?? ('UPK '+(idx+1))),
-    status: String(item.status ?? 'Aktif'),
-    catatan: String(item.catatan ?? item.note ?? '')
-  }));
+function ensureSeed(){
+  if(!localStorage.getItem(STORAGE_BUDGETS)) writeJson(STORAGE_BUDGETS, seedBudgets);
+  if(!localStorage.getItem(STORAGE_REALIZATIONS)) writeJson(STORAGE_REALIZATIONS, seedRealizations);
 }
-
-function normalizeUPTs(items, upks){
-  const upkById = Object.fromEntries((upks||[]).map(u=>[String(u.id), u]));
-  return (items||[]).map((item, idx)=>{
-    const upkId = String(item.upkId ?? item.idUpk ?? item.id_upk ?? item.namaUpkId ?? '');
-    const upk = upkById[upkId];
-    return {
-      id: String(item.id ?? item.id_upt ?? item.kode ?? ('UPT-'+(idx+1))),
-      kode: String(item.kode ?? item.code ?? item.kodeUpt ?? ('UPT-'+(idx+1))),
-      nama: String(item.nama ?? item.name ?? item.namaUpt ?? ('UPT '+(idx+1))),
-      upkId,
-      upkNama: String(item.upkNama ?? item.namaUpk ?? upk?.nama ?? ''),
-      parentId: String(item.parentId ?? item.id_parent_upt ?? item.subUptDari ?? ''),
-      status: String(item.status ?? 'Aktif'),
-      catatan: String(item.catatan ?? item.note ?? '')
-    };
-  });
-}
-
-function normalizeCOAs(items){
-  return (items||[]).map((item, idx)=>({
-    id: String(item.id ?? item.id_coa ?? item.kode ?? ('COA-'+(idx+1))),
-    kode: String(item.kode ?? item.code ?? item.id ?? ('COA-'+(idx+1))),
-    nama: String(item.nama ?? item.name ?? item.keterangan ?? item.label ?? ('COA '+(idx+1)))
-  }));
-}
-
-function normalizeMata(items, upks, upts, coas){
-  const upkById = Object.fromEntries((upks||[]).map(u=>[String(u.id), u]));
-  const coaById = Object.fromEntries((coas||[]).map(c=>[String(c.id), c]));
-  const uptById = Object.fromEntries((upts||[]).map(u=>[String(u.id), u]));
-  function findUpkByName(n){ return (upks||[]).find(x=>normalizeText(x.nama)===normalizeText(n)); }
-  function findUptByName(n, upkId=''){ return (upts||[]).find(x=>normalizeText(x.nama)===normalizeText(n) && (!upkId || String(x.upkId)===String(upkId))); }
-  return (items||[]).map((item, idx)=>{
-    const upkId = String(item.idUpk ?? item.upkId ?? item.id_upk ?? findUpkByName(item.namaUpk ?? item.upkNama ?? '')?.id ?? '');
-    const uptId = String(item.idUpt ?? item.uptId ?? item.id_upt ?? findUptByName(item.namaUpt ?? item.uptNama ?? '', upkId)?.id ?? '');
-    const coaId = String(item.idCoa ?? item.coaId ?? item.id_coa ?? '');
-    const coa = coaById[coaId];
-    return {
-      id: Number(item.id ?? idx+1),
-      kode: String(item.kodeMataAnggaran ?? item.kodeAnggaran ?? item.kode ?? ('MA-'+String(idx+1).padStart(3,'0'))),
-      nama: String(item.namaMataAnggaran ?? item.nama ?? item.name ?? ''),
-      upkId,
-      upkNama: String(item.namaUpk ?? item.upkNama ?? upkById[upkId]?.nama ?? ''),
-      uptId,
-      uptNama: String(item.namaUpt ?? item.uptNama ?? uptById[uptId]?.nama ?? ''),
-      satuan: String(item.satuan ?? ''),
-      hargaSatuan: Number(item.hargaSatuan ?? item.harga ?? 0),
-      coaId,
-      coaKode: String(item.coaKode ?? coa?.kode ?? ''),
-      coaNama: String(item.coaNama ?? coa?.nama ?? ''),
-      catatan: String(item.catatan ?? item.note ?? ''),
-      status: String(item.status ?? 'Aktif')
-    };
-  });
-}
-
-function buildUptPathMap(upts){
-  const byId = Object.fromEntries((upts||[]).map(u=>[String(u.id), u]));
-  const memo = {};
-  function pathOf(id){
-    id = String(id||'');
-    if(!id || !byId[id]) return '';
-    if(memo[id]) return memo[id];
-    const node = byId[id];
-    const parent = node.parentId && byId[String(node.parentId)] ? pathOf(node.parentId) : '';
-    memo[id] = parent ? `${parent} › ${node.nama}` : node.nama;
-    return memo[id];
-  }
-  (upts||[]).forEach(u=>pathOf(u.id));
-  return memo;
-}
-
-function normalizeBudgets(items, masters){
-  const {upks, upts, mata, coas} = masters;
-  const upkById = Object.fromEntries(upks.map(u=>[String(u.id), u]));
-  const uptById = Object.fromEntries(upts.map(u=>[String(u.id), u]));
-  const mataById = Object.fromEntries(mata.map(m=>[String(m.id), m]));
-  const mataByCode = Object.fromEntries(mata.map(m=>[normalizeText(m.kode), m]));
-  const coaById = Object.fromEntries(coas.map(c=>[String(c.id), c]));
-  function findUpkByName(n){ return upks.find(x=>normalizeText(x.nama)===normalizeText(n)); }
-  function findUptByName(n, upkId=''){ return upts.find(x=>normalizeText(x.nama)===normalizeText(n) && (!upkId || String(x.upkId)===String(upkId))); }
-  return (items||[]).map((item, idx)=>{
-    const mataRef = item.mataAnggaranId ? mataById[String(item.mataAnggaranId)] : (mataByCode[normalizeText(item.mataAnggaranKode || item.kode || '')] || null);
-    let upkId = String(item.upkId ?? item.idUpk ?? item.id_upk ?? mataRef?.upkId ?? findUpkByName(item.upkNama ?? item.namaUpk ?? item.entitas ?? '')?.id ?? '');
-    let uptId = String(item.uptId ?? item.idUpt ?? item.id_upt ?? mataRef?.uptId ?? findUptByName(item.uptNama ?? item.nama ?? '', upkId)?.id ?? '');
-    const upk = upkById[upkId];
-    const upt = uptById[uptId];
-    const coaId = String(item.coaId ?? item.idCoa ?? item.id_coa ?? mataRef?.coaId ?? '');
-    const coa = coaById[coaId];
-    const qty = Number(item.qty ?? 1);
-    const harga = Number(item.hargaSatuan ?? item.unitPrice ?? mataRef?.hargaSatuan ?? ((item.nominal && qty) ? Number(item.nominal)/Math.max(1,qty) : 0));
-    return {
-      id: Number(item.id ?? idx+1),
-      kode: String(item.kode ?? item.mataAnggaranKode ?? mataRef?.kode ?? ('AC-'+String(idx+1).padStart(3,'0'))),
-      tahun: Number(item.tahun ?? new Date().getFullYear()),
-      upkId,
-      upkKode: String(item.upkKode ?? upk?.kode ?? ''),
-      upkNama: String(item.upkNama ?? item.namaUpk ?? item.entitas ?? upk?.nama ?? ''),
-      uptId,
-      uptKode: String(item.uptKode ?? upt?.kode ?? ''),
-      uptNama: String(item.uptNama ?? item.nama ?? upt?.nama ?? ''),
-      mataAnggaranId: String(item.mataAnggaranId ?? mataRef?.id ?? ''),
-      mataAnggaranKode: String(item.mataAnggaranKode ?? item.kode ?? mataRef?.kode ?? ''),
-      mataAnggaranNama: String(item.mataAnggaranNama ?? mataRef?.nama ?? item.nama ?? ''),
-      qty,
-      satuan: String(item.satuan ?? mataRef?.satuan ?? ''),
-      hargaSatuan: harga,
-      nominal: Number(item.nominal ?? (qty*harga)),
-      coaId,
-      coaKode: String(item.coaKode ?? coa?.kode ?? mataRef?.coaKode ?? ''),
-      coaNama: String(item.coaNama ?? coa?.nama ?? mataRef?.coaNama ?? ''),
-      catatan: String(item.catatan ?? item.note ?? ''),
-      status: String(item.status ?? 'Draft')
-    };
-  });
-}
-
-function normalizeRealisasi(items){
-  return (items||[]).map((item, idx)=>({
-    id: Number(item.id ?? idx+1),
-    budgetId: Number(item.budgetId ?? item.anggaranId ?? 0),
-    tanggal: String(item.tanggal ?? new Date().toISOString().slice(0,10)),
-    kategori: String(item.kategori ?? item.category ?? ''),
-    detail: String(item.detail ?? item.deskripsi ?? ''),
-    qty: Number(item.qty ?? 1),
-    unitPrice: Number(item.unitPrice ?? item.hargaSatuan ?? 0),
-    total: Number(item.total ?? ((item.qty ?? 1) * (item.unitPrice ?? item.hargaSatuan ?? 0))),
-    accurateStatus: String(item.accurateStatus ?? item.statusPush ?? 'Pending'),
-    overBudget: Boolean(item.overBudget),
-    catatan: String(item.catatan ?? item.note ?? '')
-  }));
-}
-
-function getMasters(){
-  const upks = normalizeUPKs(readJson(STORAGE_UPK));
-  const upts = normalizeUPTs(readJson(STORAGE_UPT), upks);
-  const coas = normalizeCOAs(readJson(STORAGE_COA));
-  const mata = normalizeMata(readJson(STORAGE_MATA), upks, upts, coas);
-  const uptPaths = buildUptPathMap(upts);
-  return { upks, upts, coas, mata, uptPaths };
-}
-
-function getUsage(realizations, budgetId, excludeId=null){
-  return realizations.filter(r=>Number(r.budgetId)===Number(budgetId) && Number(r.id)!==Number(excludeId)).reduce((s,r)=>s+Number(r.total||0),0);
-}
-
-function statusBudgetBadge(status){
-  if(status==='Aktif' || status==='Anggaran Aktif') return '<span class="badge badge-success">Aktif</span>';
-  if(status==='Tutup' || status==='Nonaktif') return '<span class="badge badge-danger">Tutup</span>';
-  return '<span class="badge badge-warning">Draft</span>';
-}
-
-
-let masters = getMasters();
-let BUDGETS = normalizeBudgets(readJson(STORAGE_BUDGETS), masters);
-let REAL = normalizeRealisasi(readJson(STORAGE_REAL));
-const state = { search:'', filterUpk:'', filterAccurate:'', filterBudget:'', page:1, perPage:8, editingId:null };
-
-function topbarDate(){ document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('id-ID',{weekday:'short',day:'numeric',month:'long',year:'numeric'}); }
-function refreshAll(){ masters=getMasters(); BUDGETS=normalizeBudgets(readJson(STORAGE_BUDGETS), masters); REAL=normalizeRealisasi(readJson(STORAGE_REAL)); }
-function persistReal(){ writeJson(STORAGE_REAL, REAL); }
-
-function populateUpkFilter(){
-  const select = document.getElementById('filterUpk');
-  const current = state.filterUpk;
-  select.innerHTML = '<option value="">Semua UPK</option>' + masters.upks.filter(u=>u.status!=='Nonaktif').map(u=>`<option value="${esc(u.id)}">${esc(u.nama)}</option>`).join('');
-  select.value = current || '';
-}
-function populateBudgetOptions(selected=''){
-  const select = document.getElementById('fBudget');
-  const items = BUDGETS.filter(b=>String(b.status)!=='Tutup').sort((a,b)=>String(a.upkNama+' '+a.uptNama+' '+a.mataAnggaranNama).localeCompare(String(b.upkNama+' '+b.uptNama+' '+b.mataAnggaranNama)));
-  select.innerHTML = '<option value="">— Pilih Head Anggaran —</option>' + items.map(b=>`<option value="${b.id}">${esc(b.kode)} · ${esc(b.upkNama)} · ${esc(b.uptNama || '-') } · ${esc(b.mataAnggaranNama)}</option>`).join('');
-  select.value = selected || '';
-  updateBudgetInfo();
-}
-function getBudget(id){ return BUDGETS.find(b=>Number(b.id)===Number(id)); }
-function decorate(item){
-  const budget = getBudget(item.budgetId);
-  const usedBefore = getUsage(REAL, item.budgetId, item.id);
-  return {
-    ...item,
-    upkNama: budget?.upkNama || '-',
-    uptNama: budget?.uptNama || '-',
-    mataAnggaranNama: budget?.mataAnggaranNama || '-',
-    mataAnggaranKode: budget?.mataAnggaranKode || budget?.kode || '-',
-    coaKode: budget?.coaKode || '',
-    coaNama: budget?.coaNama || '',
-    budgetNominal: Number(budget?.nominal || 0),
-    budgetStatus: budget?.status || 'Draft',
-    remainBefore: Number(budget?.nominal || 0) - usedBefore
-  };
-}
-function updateBudgetInfo(){
-  const id = document.getElementById('fBudget').value;
-  const budget = getBudget(id);
-  if(!budget){
-    document.getElementById('budgetInfo').textContent = 'Pilih head anggaran terlebih dahulu';
-    return;
-  }
-  const used = getUsage(REAL, id, state.editingId);
-  const remain = Number(budget.nominal||0) - used;
-  document.getElementById('budgetInfo').textContent = `${budget.upkNama} | ${budget.uptNama || '-'} | ${budget.mataAnggaranNama} | COA: ${budget.coaKode || '-'} | Pagu: ${fmtCurrency(budget.nominal)} | Terpakai: ${fmtCurrency(used)} | Sisa: ${fmtCurrency(remain)}`;
-}
-function updateTotalPreview(){
-  const qty = Number(document.getElementById('fQty').value || 0);
-  const harga = Number(document.getElementById('fHarga').value || 0);
-  document.getElementById('totalPreview').textContent = fmtCurrency(qty*harga);
-}
-function applyFilters(){
-  state.search = document.getElementById('searchInput').value;
-  state.filterUpk = document.getElementById('filterUpk').value;
-  state.filterAccurate = document.getElementById('filterAccurate').value;
-  state.filterBudget = document.getElementById('filterBudget').value;
-  state.page = 1;
-  render();
-}
-function accurateBadge(status){ return status==='Sudah Push' ? '<span class="badge badge-success"><i class="fa-solid fa-cloud-check"></i>Sudah Push</span>' : '<span class="badge badge-warning"><i class="fa-solid fa-clock"></i>Pending</span>'; }
-function budgetBadge(over){ return over ? '<span class="badge badge-danger">Over Budget</span>' : '<span class="badge badge-success">Normal</span>'; }
-function getFiltered(){
-  const q = normalizeText(state.search);
-  return REAL.map(decorate).filter(item=>{
-    if(state.filterUpk && String(getBudget(item.budgetId)?.upkId)!==String(state.filterUpk)) return false;
-    if(state.filterAccurate && item.accurateStatus !== state.filterAccurate) return false;
-    if(state.filterBudget==='Normal' && item.overBudget) return false;
-    if(state.filterBudget==='Over Budget' && !item.overBudget) return false;
-    if(q){
-      const hay = [item.upkNama,item.uptNama,item.mataAnggaranNama,item.mataAnggaranKode,item.coaKode,item.coaNama,item.kategori,item.detail,item.catatan].join(' ');
-      if(!normalizeText(hay).includes(q)) return false;
-    }
-    return true;
-  }).sort((a,b)=>new Date(b.tanggal)-new Date(a.tanggal));
-}
-function updateStats(){
-  const totalDetail = REAL.length;
-  const totalNominal = REAL.reduce((s,r)=>s+Number(r.total||0),0);
-  const totalPush = REAL.filter(r=>r.accurateStatus==='Sudah Push').length;
-  const totalPending = REAL.filter(r=>r.accurateStatus!=='Sudah Push').length;
-  const totalOver = REAL.filter(r=>r.overBudget).length;
-  document.getElementById('statDetail').textContent = totalDetail;
-  document.getElementById('statNominal').textContent = fmtShortCurrency(totalNominal);
-  document.getElementById('statPush').textContent = totalPush;
-  document.getElementById('statOver').textContent = totalOver;
-  document.getElementById('heroDetail').textContent = totalDetail;
-  document.getElementById('heroNominal').textContent = fmtShortCurrency(totalNominal);
-  document.getElementById('heroPending').textContent = totalPending;
-  document.getElementById('heroOver').textContent = totalOver;
-}
-function render(){
-  refreshAll();
-  populateUpkFilter();
-  updateStats();
-  const data = getFiltered();
-  const start=(state.page-1)*state.perPage;
-  const page=data.slice(start,start+state.perPage);
-  document.getElementById('tableSubtitle').textContent = `Menampilkan ${data.length} dari ${REAL.length} detail realisasi`;
-  const tbody=document.getElementById('realTbody'); const empty=document.getElementById('emptyState');
-  if(!page.length){ tbody.innerHTML=''; empty.style.display='block'; document.getElementById('pagination').innerHTML=''; return; }
-  empty.style.display='none';
-  tbody.innerHTML = page.map(item=>`
-    <tr>
-      <td class="mono">${esc(item.tanggal)}</td>
-      <td><span class="badge badge-primary">${esc(item.upkNama)}</span></td>
-      <td><div class="title-cell">${esc(item.uptNama || '-')}</div><div class="title-sub">${esc(item.mataAnggaranNama)} · ${esc(item.mataAnggaranKode)}</div></td>
-      <td><div class="title-cell">${esc(item.detail)}</div><div class="title-sub">${esc(item.catatan || '-')}</div></td>
-      <td><div class="title-cell">${esc(item.coaKode || '-')}</div><div class="title-sub">${esc(item.coaNama || '-')}</div></td>
-      <td><span class="badge badge-accent">${esc(item.kategori || '-')}</span></td>
-      <td class="mono">${fmtCurrency(item.total)}</td>
-      <td>${budgetBadge(item.overBudget)}</td>
-      <td>${accurateBadge(item.accurateStatus)}</td>
-      <td style="text-align:right"><div class="actions-inline"><button class="act-btn success" onclick="pushOne(${item.id})"><i class="fa-solid fa-cloud-arrow-up"></i></button><button class="act-btn primary" onclick="openEditModal(${item.id})"><i class="fa-solid fa-pen"></i></button><button class="act-btn danger" onclick="deleteRealization(${item.id})"><i class="fa-solid fa-trash"></i></button></div></td>
-    </tr>
-  `).join('');
-  renderPagination(data.length);
-}
-function renderPagination(total){
-  const pages=Math.max(1,Math.ceil(total/state.perPage)); const start=total?((state.page-1)*state.perPage+1):0; const end=Math.min(state.page*state.perPage,total);
-  let buttons=''; for(let i=1;i<=pages;i++) buttons += `<button class="pg-btn ${i===state.page?'active':''}" onclick="goPage(${i})">${i}</button>`;
-  document.getElementById('pagination').innerHTML=`<div class="pagination-info">Menampilkan ${start}-${end} dari ${total} data</div><div class="pagination-btns"><button class="pg-btn" onclick="goPage(${state.page-1})" ${state.page<=1?'disabled':''}><i class="fa-solid fa-chevron-left"></i></button>${buttons}<button class="pg-btn" onclick="goPage(${state.page+1})" ${state.page>=pages?'disabled':''}><i class="fa-solid fa-chevron-right"></i></button></div>`;
-}
-function goPage(p){ const max=Math.max(1,Math.ceil(getFiltered().length/state.perPage)); state.page=Math.max(1,Math.min(p,max)); render(); }
-
-function openAddModal(){
-  state.editingId=null;
-  document.getElementById('modalTitle').textContent='Tambah Realisasi Cost';
-  document.getElementById('modalSub').textContent='Input detail penggunaan dana dari head anggaran terbaru.';
-  document.getElementById('fTanggal').value = new Date().toISOString().slice(0,10);
-  document.getElementById('fKategori').value='';
-  document.getElementById('fDetail').value='';
-  document.getElementById('fQty').value=1;
-  document.getElementById('fHarga').value=0;
-  document.getElementById('fAccurate').value='Pending';
-  document.getElementById('fCatatan').value='';
-  populateBudgetOptions();
-  updateTotalPreview();
-  openModal('modalForm');
-}
-function openEditModal(id){
-  const item = REAL.find(r=>Number(r.id)===Number(id));
-  if(!item) return;
-  state.editingId=id;
-  document.getElementById('modalTitle').textContent='Edit Realisasi Cost';
-  document.getElementById('modalSub').textContent=`${item.detail}`;
-  document.getElementById('fTanggal').value=item.tanggal;
-  document.getElementById('fKategori').value=item.kategori || '';
-  document.getElementById('fDetail').value=item.detail || '';
-  document.getElementById('fQty').value=Number(item.qty || 1);
-  document.getElementById('fHarga').value=Number(item.unitPrice || 0);
-  document.getElementById('fAccurate').value=item.accurateStatus || 'Pending';
-  document.getElementById('fCatatan').value=item.catatan || '';
-  populateBudgetOptions(item.budgetId);
-  updateTotalPreview();
-  openModal('modalForm');
-}
-function saveRealization(){
-  const budgetId = Number(document.getElementById('fBudget').value || 0);
-  const qty = Number(document.getElementById('fQty').value || 0);
-  const unitPrice = Number(document.getElementById('fHarga').value || 0);
-  const total = qty * unitPrice;
-  const payload = {
-    budgetId,
-    tanggal: document.getElementById('fTanggal').value,
-    kategori: document.getElementById('fKategori').value,
-    detail: document.getElementById('fDetail').value.trim(),
-    qty, unitPrice, total,
-    accurateStatus: document.getElementById('fAccurate').value,
-    catatan: document.getElementById('fCatatan').value.trim()
-  };
-  if(!payload.budgetId || !payload.tanggal || !payload.kategori || !payload.detail || qty <= 0 || unitPrice <= 0){
-    showToast('warning','fa-triangle-exclamation','Head anggaran, tanggal, kategori, detail, qty, dan harga satuan wajib diisi.');
-    return;
-  }
-  const remainBefore = Number(getBudget(budgetId)?.nominal || 0) - getUsage(REAL, budgetId, state.editingId);
-  payload.overBudget = total > remainBefore;
-  if(state.editingId){
-    const idx = REAL.findIndex(r=>Number(r.id)===Number(state.editingId));
-    if(idx>=0) REAL[idx] = { ...REAL[idx], ...payload };
-  } else {
-    const newId = Math.max(0, ...REAL.map(r=>Number(r.id)||0)) + 1;
-    REAL.unshift({ id:newId, ...payload });
-  }
-  persistReal();
-  closeModal('modalForm');
-  render();
-  showToast(payload.overBudget ? 'warning' : 'success', payload.overBudget ? 'fa-circle-exclamation' : 'fa-circle-check', payload.overBudget ? 'Realisasi disimpan tetapi melebihi sisa anggaran.' : 'Realisasi cost berhasil disimpan.');
-}
-function pushOne(id){
-  const idx = REAL.findIndex(r=>Number(r.id)===Number(id));
-  if(idx<0) return;
-  REAL[idx].accurateStatus='Sudah Push'; persistReal(); render();
-  showToast('success','fa-cloud-arrow-up','Realisasi ditandai sudah push.');
-}
-function pushAllPending(){
-  let count=0;
-  REAL = REAL.map(r=>{ if(r.accurateStatus!=='Sudah Push'){ count++; return { ...r, accurateStatus:'Sudah Push' }; } return r; });
-  persistReal(); render();
-  showToast('success','fa-cloud-arrow-up',`${count} realisasi berhasil dipush.`);
-}
-function importSample(){
-  refreshAll();
-  const active = BUDGETS.filter(b=>String(b.status)!=='Tutup');
-  if(!active.length){ showToast('warning','fa-folder-open','Buat anggaran cost terlebih dahulu.'); return; }
-  const picked = active.slice(0, Math.min(2, active.length));
-  let nextId = Math.max(0, ...REAL.map(r=>Number(r.id)||0)) + 1;
-  picked.forEach((b, idx)=>{
-    REAL.unshift({
-      id: nextId++,
-      budgetId: b.id,
-      tanggal: new Date().toISOString().slice(0,10),
-      kategori: idx===0 ? 'Operasional' : 'Pembelian Stok',
-      detail: `Import sample - ${b.mataAnggaranNama}`,
-      qty: 1,
-      unitPrice: Math.max(1, Math.round(Number(b.hargaSatuan || b.nominal || 0)/Math.max(1, idx+2))),
-      total: Math.max(1, Math.round(Number(b.hargaSatuan || b.nominal || 0)/Math.max(1, idx+2))),
-      accurateStatus: 'Pending',
-      overBudget: false,
-      catatan: 'Data sample dari master terbaru'
-    });
-  });
-  persistReal(); render();
-  showToast('success','fa-file-import',`${picked.length} sample realisasi berhasil diimport.`);
-}
-function deleteRealization(id){
-  const item = REAL.find(r=>Number(r.id)===Number(id));
-  if(!item) return;
-  if(!confirm(`Hapus realisasi "${item.detail}"?`)) return;
-  REAL = REAL.filter(r=>Number(r.id)!==Number(id));
-  persistReal(); render();
-  showToast('success','fa-trash','Realisasi berhasil dihapus.');
-}
-function exportCSV(){
-  const rows = getFiltered().map(item=>[
-    item.tanggal,item.upkNama,item.uptNama,item.mataAnggaranKode,item.mataAnggaranNama,item.coaKode,item.coaNama,item.kategori,item.detail,item.qty,item.unitPrice,item.total,item.overBudget?'Over Budget':'Normal',item.accurateStatus,item.catatan||''
-  ]);
-  const header=['Tanggal','Nama UPK','Nama UPT','Kode Mata Anggaran','Nama Mata Anggaran','Kode COA','Nama COA','Kategori','Detail','Qty','Harga Satuan','Total','Status Budget','Status Accurate','Catatan'];
-  const csv=[header,...rows].map(r=>r.map(c=>`"${String(c??'').replace(/"/g,'""')}"`).join(',')).join('\n');
-  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='realisasi_cost_master_terbaru.csv'; a.click();
-  showToast('success','fa-file-csv','Export berhasil.');
-}
+function escapeHtml(str){ return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function normalizeText(v){ return String(v || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim(); }
+function fmtCurrency(n){ return 'Rp ' + Number(n || 0).toLocaleString('id-ID'); }
+function fmtShortCurrency(n){ const num = Number(n || 0); if(num >= 1000000000) return 'Rp ' + (num/1000000000).toFixed(num%1000000000===0?0:1) + ' M'; if(num >= 1000000) return 'Rp ' + (num/1000000).toFixed(num%1000000===0?0:1) + ' jt'; return fmtCurrency(num); }
+function showToast(type, icon, message){ const stack=document.getElementById('toastStack'); if(!stack) return; const el=document.createElement('div'); el.className=`toast ${type}`; el.innerHTML=`<i class="fa-solid ${icon}"></i><span>${escapeHtml(message)}</span>`; stack.appendChild(el); setTimeout(()=>{el.style.opacity='0';el.style.transform='translateX(18px)';el.style.transition='all .24s ease'; setTimeout(()=>el.remove(),240)},3200); }
 function openModal(id){ document.getElementById(id).classList.add('open'); }
 function closeModal(id){ document.getElementById(id).classList.remove('open'); }
-function closeModalIfBg(e,id){ if(e.target===document.getElementById(id)) closeModal(id); }
-function showToast(type, icon, message){
-  const stack=document.getElementById('toastStack'); const el=document.createElement('div');
-  el.className=`toast ${type}`; el.innerHTML=`<i class="fa-solid ${icon}"></i><span>${esc(message)}</span>`; stack.appendChild(el);
-  setTimeout(()=>{el.style.opacity='0'; el.style.transform='translateX(18px)'; el.style.transition='all .24s ease'; setTimeout(()=>el.remove(),240)},3200);
-}
-window.addEventListener('storage', (e)=>{ if([STORAGE_UPK,STORAGE_UPT,STORAGE_MATA,STORAGE_COA,STORAGE_BUDGETS,STORAGE_REAL].includes(e.key)) render(); });
-topbarDate(); render();
+function closeModalIfBg(event,id){ if(event.target === document.getElementById(id)) closeModal(id); }
+
+function normalizeUPK(item, idx){ return {id:String(item.id ?? idx+1), kode:item.kode || `UPK-${String(idx+1).padStart(3,'0')}`, nama:item.nama || item.name || '', status:item.status || 'Aktif'}; }
+function normalizeUPT(item, idx){ return {id:String(item.id ?? idx+1), kode:item.kode || `UPT.${idx+1}`, nama:item.nama || item.name || '', upkId:String(item.upkId ?? item.id_upk ?? ''), parentId:String(item.parentId ?? item.id_parent_upt ?? ''), status:item.status || 'Aktif'}; }
+function normalizeProgram(item, idx){ return {id:String(item.id ?? idx+1), kode:item.kode || `PRG-${String(idx+1).padStart(3,'0')}`, nama:item.nama || item.name || '', upkId:String(item.upkId || item.id_upk || ''), upkKode:item.upkKode || '', upkNama:item.upkNama || '', uptId:String(item.uptId || item.id_upt || ''), uptKode:item.uptKode || '', uptNama:item.uptNama || '', status:item.status || 'Aktif', catatan:item.catatan || item.keterangan || ''}; }
+function normalizeKegiatan(item, idx){ return {id:String(item.id ?? idx+1), upkId:String(item.upkId || ''), upkKode:item.upkKode || '', upkNama:item.upkNama || '', uptId:String(item.uptId || ''), uptKode:item.uptKode || '', uptNama:item.uptNama || '', programId:String(item.programId || ''), programKode:item.programKode || '', programNama:item.programNama || '', kode:item.kode || `KGT-${String(idx+1).padStart(4,'0')}`, nama:item.nama || '', status:item.status || 'Aktif', output:item.output || '', waktuAwalBulan:item.waktuAwalBulan || '', waktuAwalTahun:String(item.waktuAwalTahun || ''), waktuAkhirBulan:item.waktuAkhirBulan || '', waktuAkhirTahun:String(item.waktuAkhirTahun || ''), penanggungJawab:item.penanggungJawab || '', targetKegiatan:item.targetKegiatan || '', resiko:item.resiko || '', tingkatResiko:String(item.tingkatResiko || ''), manfaat:item.manfaat || ''}; }
+function normalizeMata(item, idx){ return {id:String(item.id ?? idx+1), kodeAnggaran:item.kodeAnggaran || item.kode || `MA-${String(idx+1).padStart(3,'0')}`, namaMataAnggaran:item.namaMataAnggaran || item.nama || '', idUpk:String(item.idUpk || item.upkId || item.id_upk || ''), namaUpk:item.namaUpk || item.upkNama || '', idUpt:String(item.idUpt || item.uptId || item.id_upt || ''), namaUpt:item.namaUpt || item.uptNama || '', satuan:item.satuan || '', hargaSatuan:Number(item.hargaSatuan || 0), idCoa:item.idCoa || item.id_coa || '', coaLabel:item.coaLabel || item.coa || '', catatan:item.catatan || '', status:item.status || 'Aktif'}; }
+function normalizeBudget(item, idx){ return {id:Number(item.id ?? idx+1), kode:item.kode || '', upkId:String(item.upkId || ''), upkKode:item.upkKode || '', upkNama:item.upkNama || item.entitas || '', uptId:String(item.uptId || ''), uptKode:item.uptKode || '', uptNama:item.uptNama || '', programId:String(item.programId || ''), programKode:item.programKode || '', programNama:item.programNama || '', kegiatanId:String(item.kegiatanId || ''), kegiatanKode:item.kegiatanKode || '', kegiatanNama:item.kegiatanNama || '', mataAnggaranId:String(item.mataAnggaranId || ''), mataAnggaranKode:item.mataAnggaranKode || item.kode || '', mataAnggaranNama:item.mataAnggaranNama || '', tahun:Number(item.tahun || new Date().getFullYear()), qty:Number(item.qty || 0), satuan:item.satuan || '', hargaSatuan:Number(item.hargaSatuan || 0), nominal:Number(item.nominal || (Number(item.qty||0)*Number(item.hargaSatuan||0))), status:item.status || 'Draft', catatan:item.catatan || ''}; }
+function normalizeRealization(item, idx){ return {id:Number(item.id ?? idx+1), budgetId:Number(item.budgetId || 0), tanggal:item.tanggal || '', kategori:item.kategori || '', detail:item.detail || '', qty:Number(item.qty || 0), unitPrice:Number(item.unitPrice || 0), total:Number(item.total || 0), accurateStatus:item.accurateStatus || 'Pending', overBudget:Boolean(item.overBudget), catatan:item.catatan || ''}; }
+
+function getUPKs(){ const modern=readJson(STORAGE_UPK); const legacy=readJson(LEGACY_UPK); const src=modern.length?modern:(legacy.length?legacy:fallbackUPK); return src.map(normalizeUPK); }
+function getUPTs(){ const modern=readJson(STORAGE_UPT); const legacy=readJson(LEGACY_UPT); const src=modern.length?modern:(legacy.length?legacy:fallbackUPT); return src.map(normalizeUPT); }
+function getPrograms(){ const src=readJson(STORAGE_PROGRAM); return (src.length?src:fallbackPrograms).map(normalizeProgram); }
+function getKegiatans(){ const src=readJson(STORAGE_KEGIATAN); return (src.length?src:fallbackKegiatan).map(normalizeKegiatan); }
+function getMataAnggaran(){ const src=readJson(STORAGE_MATA); return (src.length?src:fallbackMata).map(normalizeMata); }
+function getBudgets(){ return readJson(STORAGE_BUDGETS).map(normalizeBudget); }
+function getRealizations(){ return readJson(STORAGE_REALIZATIONS).map(normalizeRealization); }
+
+let UPKS=[], UPTS=[], PROGRAMS=[], KEGIATANS=[], MATA=[], BUDGETS=[], REALIZATIONS=[];
+function reloadRefs(){ UPKS=getUPKs(); UPTS=getUPTs(); PROGRAMS=getPrograms(); KEGIATANS=getKegiatans(); MATA=getMataAnggaran(); BUDGETS=getBudgets(); REALIZATIONS=getRealizations(); }
+function getUpk(id){ return UPKS.find(x=>String(x.id)===String(id)); }
+function getUpt(id){ return UPTS.find(x=>String(x.id)===String(id)); }
+function getProgram(id){ return PROGRAMS.find(x=>String(x.id)===String(id)); }
+function getKegiatan(id){ return KEGIATANS.find(x=>String(x.id)===String(id)); }
+function getMata(id){ return MATA.find(x=>String(x.id)===String(id)); }
+function buildUptDisplayName(upt){ if(!upt) return ''; const seen=new Set(); let parts=[upt.nama || '']; let current=upt; while(current && current.parentId && !seen.has(String(current.parentId))){ seen.add(String(current.parentId)); current=getUpt(current.parentId); if(current) parts.unshift(current.nama || ''); } return parts.join(' / '); }
+function getUpkCodeSuffix(upkId){ const upk=getUpk(upkId); const nums=(String(upk?.kode || '').match(/\d+/g)||[]).join(''); return nums ? nums.slice(-3).padStart(3,'0') : 'GEN'; }
+function yearsOptions(start=2025,end=2029){ let html=''; for(let y=start;y<=end;y++) html += `<option value="${y}">${y}</option>`; return html; }
+window.addEventListener('storage', e=>{ if([STORAGE_BUDGETS,STORAGE_REALIZATIONS,STORAGE_UPK,STORAGE_UPT,STORAGE_PROGRAM,STORAGE_KEGIATAN,STORAGE_MATA,LEGACY_UPK,LEGACY_UPT].includes(e.key)){ if(typeof render==='function') render(); }});
+
+ensureSeed();
+const state = { page:1, perPage:8, search:'', filterUpk:'', filterAccurate:'', filterBudget:'', editingId:null };
+
+function populateFilterUpk(){ const el=document.getElementById('filterUpk'); const current=el.value; el.innerHTML='<option value="">Semua UPK</option>'+UPKS.filter(u=>u.status!=='Nonaktif').map(u=>`<option value="${u.id}">${escapeHtml(u.nama)}</option>`).join(''); if([...el.options].some(o=>o.value===current)) el.value=current; }
+function populateFormUpk(selected=''){ const el=document.getElementById('fUpk'); el.innerHTML='<option value="">— Pilih Nama UPK —</option>'+UPKS.filter(u=>u.status!=='Nonaktif').map(u=>`<option value="${u.id}">${escapeHtml(u.kode)} · ${escapeHtml(u.nama)}</option>`).join(''); el.value=selected || ''; populateFormUpt(); populateFormProgram(); populateFormKegiatan(); populateFormMata(); populateBudgetOptions(); }
+function populateFormUpt(selected=''){ const upkId=document.getElementById('fUpk').value; const items=UPTS.filter(u=>u.status!=='Nonaktif' && (!upkId || String(u.upkId)===String(upkId))).sort((a,b)=>buildUptDisplayName(a).localeCompare(buildUptDisplayName(b))); const el=document.getElementById('fUpt'); el.innerHTML='<option value="">— Tidak dipilih / level UPK —</option>'+items.map(u=>`<option value="${u.id}">${escapeHtml(u.kode)} · ${escapeHtml(buildUptDisplayName(u))}</option>`).join(''); el.value=selected || ''; }
+function populateFormProgram(selected=''){ const upkId=document.getElementById('fUpk').value; const items=PROGRAMS.filter(p=>p.status!=='Nonaktif' && (!upkId || String(p.upkId)===String(upkId))).sort((a,b)=>(a.nama||'').localeCompare(b.nama||'')); const el=document.getElementById('fProgram'); el.innerHTML='<option value="">— Tidak dipilih —</option>'+items.map(p=>{ const upt=p.uptId?getUpt(p.uptId):null; const uptLabel=upt?buildUptDisplayName(upt):'Level UPK'; return `<option value="${p.id}">${escapeHtml(p.kode)} · ${escapeHtml(p.nama)} · ${escapeHtml(uptLabel)}</option>`; }).join(''); el.value=selected || ''; }
+function populateFormKegiatan(selected=''){ const upkId=document.getElementById('fUpk').value; const uptId=document.getElementById('fUpt').value; const programId=document.getElementById('fProgram').value; let items=KEGIATANS.filter(k=>k.status!=='Nonaktif' && (!upkId || String(k.upkId)===String(upkId))); if(programId) items=items.filter(k=>String(k.programId||'')===String(programId)); else if(uptId) items=items.filter(k=>!k.uptId || String(k.uptId)===String(uptId)); const el=document.getElementById('fKegiatan'); el.innerHTML='<option value="">— Tidak dipilih —</option>'+items.sort((a,b)=>(a.nama||'').localeCompare(b.nama||'')).map(k=>{ const program = k.programNama || 'Tanpa Program'; const upt = k.uptId ? buildUptDisplayName(getUpt(k.uptId)) : 'Level UPK'; return `<option value="${k.id}">${escapeHtml(k.kode)} · ${escapeHtml(k.nama)} · ${escapeHtml(program)} · ${escapeHtml(upt)}</option>`; }).join(''); el.value=selected || ''; }
+function populateFormMata(selected=''){ const upkId=document.getElementById('fUpk').value; const uptId=document.getElementById('fUpt').value; let items=MATA.filter(m=>m.status!=='Nonaktif' && (!upkId || String(m.idUpk)===String(upkId))); if(uptId) items=items.filter(m=>!m.idUpt || String(m.idUpt)===String(uptId)); const el=document.getElementById('fMata'); el.innerHTML='<option value="">— Tidak dipilih —</option>'+items.sort((a,b)=>(a.namaMataAnggaran||'').localeCompare(b.namaMataAnggaran||'')).map(m=>{ const upt = m.idUpt ? buildUptDisplayName(getUpt(m.idUpt)) : 'Level UPK'; return `<option value="${m.id}">${escapeHtml(m.kodeAnggaran)} · ${escapeHtml(m.namaMataAnggaran)} · ${escapeHtml(upt)}</option>`; }).join(''); el.value=selected || ''; }
+function handleUpkChange(){ populateFormUpt(); populateFormProgram(); populateFormKegiatan(); populateFormMata(); populateBudgetOptions(); }
+function handleUptChange(){ const keepProgram=document.getElementById('fProgram').value; populateFormProgram(keepProgram); populateFormKegiatan(); populateFormMata(); populateBudgetOptions(); }
+function handleProgramChange(){ populateFormKegiatan(); populateBudgetOptions(); }
+function handleKegiatanChange(){ populateBudgetOptions(); }
+function handleMataChange(){ populateBudgetOptions(); }
+function populateBudgetOptions(selected=''){ const upkId=document.getElementById('fUpk').value; const uptId=document.getElementById('fUpt').value; const programId=document.getElementById('fProgram').value; const kegiatanId=document.getElementById('fKegiatan').value; const mataId=document.getElementById('fMata').value; let items=BUDGETS.filter(b=>b.status!=='Tutup'); if(upkId) items=items.filter(b=>String(b.upkId)===String(upkId)); if(uptId) items=items.filter(b=>String(b.uptId||'')===String(uptId)); if(programId) items=items.filter(b=>String(b.programId||'')===String(programId)); if(kegiatanId) items=items.filter(b=>String(b.kegiatanId||'')===String(kegiatanId)); if(mataId) items=items.filter(b=>String(b.mataAnggaranId||'')===String(mataId)); const el=document.getElementById('fBudget'); el.innerHTML='<option value="">— Pilih Head Anggaran —</option>'+items.sort((a,b)=>(a.kode||'').localeCompare(b.kode||'')).map(b=>`<option value="${b.id}">${escapeHtml(b.kode)} · ${escapeHtml(b.upkNama)} · ${escapeHtml(b.mataAnggaranNama)}</option>`).join(''); el.value=selected || ''; updateBudgetInfo(); }
+function updateBudgetInfo(){ const budget=BUDGETS.find(b=>Number(b.id)===Number(document.getElementById('fBudget').value)); const box=document.getElementById('budgetInfo'); if(!budget){ box.textContent='Pilih head anggaran terlebih dahulu'; return; } const usedBefore=REALIZATIONS.filter(r=>Number(r.budgetId)===Number(budget.id) && Number(r.id)!==Number(state.editingId)).reduce((s,r)=>s+Number(r.total||0),0); const remain=Number(budget.nominal||0)-usedBefore; box.innerHTML=`UPK: ${escapeHtml(budget.upkNama || '-')} | UPT: ${escapeHtml(budget.uptNama || 'Level UPK')}<br>Program: ${escapeHtml(budget.programNama || '-')} | Kegiatan: ${escapeHtml(budget.kegiatanNama || '-')}<br>Mata Anggaran: ${escapeHtml(budget.mataAnggaranNama || '-')} | Tahun: ${escapeHtml(budget.tahun || '-')}<br>Qty Anggaran: ${Number(budget.qty||0).toLocaleString('id-ID')} ${escapeHtml(budget.satuan || '')} | Harga Satuan: ${fmtCurrency(budget.hargaSatuan)}<br>Nilai Pagu: ${fmtCurrency(budget.nominal)} | Sisa saat ini: ${fmtCurrency(remain)}<br>Catatan Anggaran: ${escapeHtml(budget.catatan || '-')}`; }
+function updateTotalPreview(){ const qty=Number(document.getElementById('fQty').value || 0); const harga=Number(document.getElementById('fHarga').value || 0); document.getElementById('totalPreview').textContent=fmtCurrency(qty*harga); }
+function decorateRealization(item){ const budget=BUDGETS.find(b=>Number(b.id)===Number(item.budgetId)) || {}; return {...item, budget}; }
+function remainingBeforeInput(budgetId, excludeId=null){ const budget=BUDGETS.find(b=>Number(b.id)===Number(budgetId)); if(!budget) return 0; const used=REALIZATIONS.filter(r=>Number(r.budgetId)===Number(budgetId) && Number(r.id)!==Number(excludeId)).reduce((s,r)=>s+Number(r.total||0),0); return Number(budget.nominal||0)-used; }
+function accurateBadge(status){ return status==='Sudah Push' ? '<span class="badge badge-success">Sudah Push</span>' : '<span class="badge badge-warning">Pending</span>'; }
+function budgetStatusBadge(over){ return over ? '<span class="badge badge-danger">Over Budget</span>' : '<span class="badge badge-primary">Normal</span>'; }
+function updateStats(){ const totalDetail=REALIZATIONS.length; const totalNominal=REALIZATIONS.reduce((s,r)=>s+Number(r.total||0),0); const totalPush=REALIZATIONS.filter(r=>r.accurateStatus==='Sudah Push').length; const totalPending=REALIZATIONS.filter(r=>r.accurateStatus!=='Sudah Push').length; const totalOver=REALIZATIONS.filter(r=>r.overBudget).length; document.getElementById('statDetail').textContent=totalDetail; document.getElementById('statNominal').textContent=fmtShortCurrency(totalNominal); document.getElementById('statPush').textContent=totalPush; document.getElementById('statOver').textContent=totalOver; document.getElementById('heroDetail').textContent=totalDetail; document.getElementById('heroNominal').textContent=fmtShortCurrency(totalNominal); document.getElementById('heroPending').textContent=totalPending; document.getElementById('heroOver').textContent=totalOver; }
+function applyFilters(){ state.search=document.getElementById('searchInput').value.trim().toLowerCase(); state.filterUpk=document.getElementById('filterUpk').value; state.filterAccurate=document.getElementById('filterAccurate').value; state.filterBudget=document.getElementById('filterBudget').value; state.page=1; render(); }
+function getFiltered(){ return REALIZATIONS.map(decorateRealization).filter(item=>{ const b=item.budget||{}; if(state.filterUpk && String(b.upkId)!==String(state.filterUpk)) return false; if(state.filterAccurate && item.accurateStatus!==state.filterAccurate) return false; if(state.filterBudget==='Normal' && item.overBudget) return false; if(state.filterBudget==='Over Budget' && !item.overBudget) return false; if(state.search){ const hay=[item.tanggal,b.upkNama,b.uptNama,b.programNama,b.kegiatanNama,b.mataAnggaranNama,item.kategori,item.detail,item.catatan].join(' ').toLowerCase(); if(!hay.includes(state.search)) return false; } return true; }).sort((a,b)=>new Date(b.tanggal)-new Date(a.tanggal)); }
+function renderPagination(total){ const pages=Math.ceil(total/state.perPage); if(!pages){ document.getElementById('pagination').innerHTML=''; return; } const start=(state.page-1)*state.perPage+1; const end=Math.min(state.page*state.perPage,total); let buttons=''; for(let i=1;i<=pages;i++) buttons += `<button class="pg-btn ${i===state.page?'active':''}" onclick="goPage(${i})">${i}</button>`; document.getElementById('pagination').innerHTML=`<div class="pagination-info">Menampilkan ${start}-${end} dari ${total} data</div><div class="pagination-btns"><button class="pg-btn" onclick="goPage(${state.page-1})" ${state.page<=1?'disabled':''}><i class="fa-solid fa-chevron-left"></i></button>${buttons}<button class="pg-btn" onclick="goPage(${state.page+1})" ${state.page>=pages?'disabled':''}><i class="fa-solid fa-chevron-right"></i></button></div>`; }
+function goPage(page){ const maxPage=Math.max(1,Math.ceil(getFiltered().length/state.perPage)); state.page=Math.max(1,Math.min(page,maxPage)); render(); }
+function render(){ reloadRefs(); populateFilterUpk(); updateStats(); const data=getFiltered(); const start=(state.page-1)*state.perPage; const page=data.slice(start,start+state.perPage); document.getElementById('tableSubtitle').textContent=`Menampilkan ${data.length} dari ${REALIZATIONS.length} detail realisasi`; const tbody=document.getElementById('realTbody'); const empty=document.getElementById('emptyState'); if(!page.length){ tbody.innerHTML=''; empty.style.display='block'; renderPagination(0); return; } empty.style.display='none'; tbody.innerHTML=page.map(item=>{ const b=item.budget||{}; return `<tr><td class="mono">${escapeHtml(item.tanggal)}</td><td><div class="title-cell">${escapeHtml(b.upkNama || '-')}</div><div class="title-sub">${escapeHtml(b.upkKode || '-')}</div></td><td><div class="title-cell">${escapeHtml(b.uptNama || 'Level UPK')}</div><div class="title-sub">${escapeHtml(b.uptKode || '-')}</div></td><td><div class="title-cell">${escapeHtml(b.programNama || '-')}</div><div class="title-sub">${escapeHtml(b.programKode || 'Tanpa Program')}</div></td><td><div class="title-cell">${escapeHtml(b.kegiatanNama || '-')}</div><div class="title-sub">${escapeHtml(b.kegiatanKode || 'Tanpa Kegiatan')}</div></td><td><div class="title-cell">${escapeHtml(b.mataAnggaranNama || '-')}</div><div class="title-sub">${escapeHtml(b.mataAnggaranKode || '-')}</div></td><td><div class="title-cell">${escapeHtml(item.detail)}</div><div class="title-sub">${escapeHtml(item.kategori || '-')} · ${escapeHtml(item.catatan || '-')}</div></td><td class="mono">${fmtCurrency(item.total)}</td><td>${budgetStatusBadge(item.overBudget)}</td><td>${accurateBadge(item.accurateStatus)}</td><td style="text-align:right;"><div class="actions-inline"><button class="act-btn success" onclick="pushOne(${item.id})"><i class="fa-solid fa-cloud-arrow-up"></i></button><button class="act-btn primary" onclick="openEditModal(${item.id})"><i class="fa-solid fa-pen"></i></button><button class="act-btn danger" onclick="deleteRealization(${item.id})"><i class="fa-solid fa-trash"></i></button></div></td></tr>`; }).join(''); renderPagination(data.length); }
+function openAddModal(){ state.editingId=null; document.getElementById('modalTitle').textContent='Tambah Realisasi Cost'; document.getElementById('modalSub').textContent='Pilih struktur anggaran kemudian isi detail realisasi.'; document.getElementById('fTanggal').value=new Date().toISOString().slice(0,10); populateFormUpk(); document.getElementById('fKategori').value=''; document.getElementById('fDetail').value=''; document.getElementById('fQty').value='1'; document.getElementById('fHarga').value='0'; document.getElementById('fAccurate').value='Pending'; document.getElementById('fCatatan').value=''; updateTotalPreview(); openModal('modalForm'); }
+function openEditModal(id){ const item=REALIZATIONS.find(r=>Number(r.id)===Number(id)); if(!item) return; const budget=BUDGETS.find(b=>Number(b.id)===Number(item.budgetId)); state.editingId=id; document.getElementById('modalTitle').textContent='Edit Realisasi Cost'; document.getElementById('modalSub').textContent=item.detail || 'Edit detail realisasi'; document.getElementById('fTanggal').value=item.tanggal || ''; populateFormUpk(budget?.upkId || ''); populateFormUpt(budget?.uptId || ''); populateFormProgram(budget?.programId || ''); populateFormKegiatan(budget?.kegiatanId || ''); populateFormMata(budget?.mataAnggaranId || ''); populateBudgetOptions(budget?.id || ''); document.getElementById('fKategori').value=item.kategori || ''; document.getElementById('fDetail').value=item.detail || ''; document.getElementById('fQty').value=Number(item.qty || 0); document.getElementById('fHarga').value=Number(item.unitPrice || 0); document.getElementById('fAccurate').value=item.accurateStatus || 'Pending'; document.getElementById('fCatatan').value=item.catatan || ''; updateTotalPreview(); openModal('modalForm'); }
+function saveRealization(){ const budgetId=Number(document.getElementById('fBudget').value || 0); const qty=Number(document.getElementById('fQty').value || 0); const unitPrice=Number(document.getElementById('fHarga').value || 0); const total=qty*unitPrice; const payload={ budgetId, tanggal:document.getElementById('fTanggal').value, kategori:document.getElementById('fKategori').value, detail:document.getElementById('fDetail').value.trim(), qty, unitPrice, total, accurateStatus:document.getElementById('fAccurate').value, catatan:document.getElementById('fCatatan').value.trim() }; if(!payload.budgetId || !payload.tanggal || !payload.kategori || !payload.detail || qty<=0 || unitPrice<=0 || total<=0){ showToast('warning','fa-triangle-exclamation','Tanggal, struktur anggaran, kategori, detail, qty, dan harga satuan realisasi wajib diisi.'); return; } payload.overBudget = total > remainingBeforeInput(payload.budgetId, state.editingId); if(state.editingId){ const idx=REALIZATIONS.findIndex(r=>Number(r.id)===Number(state.editingId)); if(idx>=0) REALIZATIONS[idx]={...REALIZATIONS[idx], ...payload}; } else { const newId=Math.max(0,...REALIZATIONS.map(r=>Number(r.id||0)))+1; REALIZATIONS.unshift({id:newId, ...payload}); } writeJson(STORAGE_REALIZATIONS, REALIZATIONS); closeModal('modalForm'); render(); showToast(payload.overBudget?'warning':'success', payload.overBudget?'fa-circle-exclamation':'fa-circle-check', payload.overBudget?'Realisasi tersimpan dan melebihi sisa pagu.':'Realisasi cost berhasil disimpan.'); }
+function pushOne(id){ const idx=REALIZATIONS.findIndex(r=>Number(r.id)===Number(id)); if(idx<0) return; REALIZATIONS[idx].accurateStatus='Sudah Push'; writeJson(STORAGE_REALIZATIONS, REALIZATIONS); render(); showToast('success','fa-cloud-arrow-up','Realisasi berhasil ditandai sudah push.'); }
+function pushAllPending(){ let count=0; REALIZATIONS=REALIZATIONS.map(r=>{ if(r.accurateStatus!=='Sudah Push'){ count++; return {...r, accurateStatus:'Sudah Push'}; } return r; }); writeJson(STORAGE_REALIZATIONS, REALIZATIONS); render(); showToast('success','fa-cloud-arrow-up',`${count} realisasi berhasil dipush.`); }
+function deleteRealization(id){ const item=REALIZATIONS.find(r=>Number(r.id)===Number(id)); if(!item) return; if(!confirm(`Hapus realisasi "${item.detail}"?`)) return; REALIZATIONS=REALIZATIONS.filter(r=>Number(r.id)!==Number(id)); writeJson(STORAGE_REALIZATIONS, REALIZATIONS); render(); showToast('success','fa-trash','Realisasi cost berhasil dihapus.'); }
+function exportCSV(){ const rows=REALIZATIONS.map(r=>{ const b=BUDGETS.find(x=>Number(x.id)===Number(r.budgetId)) || {}; return [r.tanggal,b.upkNama||'',b.uptNama||'',b.programNama||'',b.kegiatanNama||'',b.mataAnggaranNama||'',b.tahun||'',b.qty||0,b.satuan||'',b.hargaSatuan||0,b.catatan||'',r.kategori||'',r.detail||'',r.qty||0,r.unitPrice||0,r.total||0,r.overBudget?'Over Budget':'Normal',r.accurateStatus||'',r.catatan||'']; }); const header=['Tanggal','Nama UPK','Nama UPT','Nama Program','Nama Kegiatan','Nama Mata Anggaran','Tahun Anggaran','Qty Anggaran','Satuan','Harga Satuan Anggaran','Catatan Anggaran','Kategori','Detail Realisasi','Qty Realisasi','Harga Satuan Realisasi','Total Realisasi','Status Budget','Status Accurate','Catatan Realisasi']; const csv=[header,...rows].map(r=>r.map(c=>`"${String(c??'').replace(/"/g,'""')}"`).join(',')).join('\n'); const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}); const link=document.createElement('a'); link.href=URL.createObjectURL(blob); link.download='realisasi_cost.csv'; link.click(); showToast('success','fa-file-csv','Export CSV berhasil.'); }
+
+document.getElementById('topbarDate').textContent=new Date().toLocaleDateString('id-ID',{weekday:'short', day:'numeric', month:'long', year:'numeric'});
+render();
 </script>
-<script src="../sidebar.js"></script>
+  <script src="../sidebar.js" defer></script>
 </body>
 </html>

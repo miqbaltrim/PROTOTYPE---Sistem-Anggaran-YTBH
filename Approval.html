@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Approval — Sistem Anggaran</title>
+  <title>Approval Anggaran Cost — Sistem Anggaran</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Times+New+Roman:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root{
       --bg:#f4f7fc;
@@ -23,237 +23,259 @@
       --warning-soft:rgba(192,112,16,.12);
       --danger:#d94040;
       --danger-soft:rgba(217,64,64,.10);
-      --text:#1a2333;
-      --text-soft:#60718f;
-      --text-muted:#8ea0ba;
+      --ink:#1a2333;
+      --ink-soft:#60718f;
+      --muted:#8ea0ba;
+      --white:#fff;
       --shadow-sm:0 2px 10px rgba(57,114,184,.07);
       --shadow:0 10px 28px rgba(57,114,184,.12);
     }
-
     *{box-sizing:border-box;margin:0;padding:0}
-    body{
-      font-family:'Plus Jakarta Sans',sans-serif;
-      background:var(--bg);
-      color:var(--text);
-      min-height:100vh;
-    }
-
+    body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
     .main{margin-left:240px;min-height:100vh;display:flex;flex-direction:column}
-    .topbar{
-      position:sticky;top:0;z-index:50;
-      background:rgba(244,247,252,.92);
-      backdrop-filter:blur(12px);
-      border-bottom:1px solid var(--line);
-      padding:14px 34px;
-      display:flex;justify-content:space-between;align-items:center;gap:16px;
-    }
-    .breadcrumb{display:flex;gap:6px;flex-wrap:wrap;font-size:13px;color:var(--text-muted)}
-    .breadcrumb b{color:var(--text);font-weight:700}
+    .topbar{position:sticky;top:0;z-index:50;background:rgba(244,247,252,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:14px 34px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+    .breadcrumb{display:flex;gap:6px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+    .breadcrumb b{color:var(--ink);font-weight:700}
     .topbar-right{display:flex;align-items:center;gap:10px}
-    .chip-info,.topbar-date{
-      padding:7px 12px;border-radius:999px;background:var(--bg-soft);
-      border:1px solid var(--line);font-size:12px;color:var(--text-soft);white-space:nowrap;
-    }
-
+    .chip-info,.topbar-date{padding:7px 12px;border-radius:999px;background:var(--bg-soft);border:1px solid var(--line);font-size:12px;color:var(--ink-soft);white-space:nowrap}
     .content{padding:30px 34px 42px;display:flex;flex-direction:column;gap:22px}
     .page-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
     .page-title{font-family:'Lora',serif;font-size:28px;line-height:1.25}
     .page-title em{color:var(--primary);font-style:italic}
-    .page-sub{margin-top:8px;max-width:860px;font-size:13.5px;line-height:1.7;color:var(--text-soft)}
+    .page-sub{margin-top:8px;max-width:920px;font-size:13.5px;line-height:1.7;color:var(--ink-soft)}
     .page-actions{display:flex;gap:10px;flex-wrap:wrap}
-
-    .btn{
-      border:none;border-radius:11px;padding:10px 16px;display:inline-flex;align-items:center;gap:8px;
-      font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:.18s;
-      font-family:'Plus Jakarta Sans',sans-serif;
-    }
+    .btn{border:none;border-radius:11px;padding:10px 16px;display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:.18s;font-family:'Plus Jakarta Sans',sans-serif}
     .btn i{font-size:12px}
     .btn-primary{background:var(--primary);color:#fff;box-shadow:0 6px 18px rgba(57,114,184,.24)}
     .btn-primary:hover{transform:translateY(-1px);background:#467ec1}
-    .btn-ghost{background:#fff;color:var(--text-soft);border:1.5px solid var(--line)}
-    .btn-ghost:hover{background:var(--bg);color:var(--text)}
+    .btn-ghost{background:#fff;color:var(--ink-soft);border:1.5px solid var(--line)}
+    .btn-ghost:hover{background:var(--bg);color:var(--ink)}
     .btn-success{background:var(--success);color:#fff;box-shadow:0 6px 18px rgba(33,122,74,.24)}
     .btn-success:hover{transform:translateY(-1px);background:#2b8a57}
     .btn-danger{background:var(--danger);color:#fff;box-shadow:0 6px 18px rgba(217,64,64,.22)}
     .btn-danger:hover{transform:translateY(-1px);background:#e55353}
+    .btn-print{background:#1a2333;color:#fff;box-shadow:0 6px 18px rgba(26,35,51,.24)}
+    .btn-print:hover{transform:translateY(-1px);background:#263347}
     .btn-sm{padding:7px 12px;font-size:12px}
-
-    .hero{
-      background:linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
-      color:#fff;border-radius:22px;padding:24px 26px;
-      box-shadow:0 16px 36px rgba(57,114,184,.22);
-      display:grid;grid-template-columns:1.2fr .9fr;gap:18px;position:relative;overflow:hidden;
-    }
-    .hero::before,.hero::after{
-      content:'';position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.12);
-    }
+    .hero{background:linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);color:#fff;border-radius:22px;padding:24px 26px;box-shadow:0 16px 36px rgba(57,114,184,.22);display:grid;grid-template-columns:1.15fr .95fr;gap:18px;position:relative;overflow:hidden}
+    .hero::before,.hero::after{content:'';position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.12)}
     .hero::before{width:180px;height:180px;top:-50px;right:-20px}
     .hero::after{width:120px;height:120px;bottom:-45px;right:90px}
     .hero-left,.hero-right{position:relative;z-index:1}
-    .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:1.8px;color:rgba(255,255,255,.65);margin-bottom:8px}
-    .hero-title{font-family:'Lora',serif;font-size:28px;line-height:1.25;max-width:720px}
-    .hero-sub{margin-top:10px;font-size:13px;line-height:1.7;color:rgba(255,255,255,.76);max-width:690px}
-    .hero-actions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
-    .hero-chip{
-      display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-radius:999px;
-      background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.12);font-size:12px;font-weight:700;
-    }
+    .hero-title{font-family:'Lora',serif;font-size:28px;line-height:1.25;max-width:730px}
+    .hero-sub{margin-top:10px;font-size:13px;line-height:1.7;color:rgba(255,255,255,.76);max-width:710px}
     .hero-right{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-    .hero-mini{
-      background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.12);
-      border-radius:16px;padding:15px 16px;
-    }
+    .hero-mini{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:15px 16px}
     .hero-mini-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.62);margin-bottom:7px}
     .hero-mini-value{font-family:'DM Mono',monospace;font-size:20px;font-weight:500}
     .hero-mini-sub{margin-top:6px;font-size:12px;color:rgba(255,255,255,.66)}
-
     .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-    .stat-card{
-      background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px 18px 16px;
-      box-shadow:var(--shadow-sm);position:relative;overflow:hidden;transition:.18s;
-    }
+    .stat-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px 18px 16px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden;transition:.18s}
     .stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
     .stat-card::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px}
     .c-primary::after{background:var(--primary)}
     .c-accent::after{background:var(--accent)}
     .c-success::after{background:var(--success)}
     .c-warning::after{background:var(--warning)}
-    .stat-icon{
-      width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;
-      margin-bottom:12px;font-size:16px;
-    }
+    .stat-icon{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-size:16px}
     .c-primary .stat-icon{background:var(--primary-soft);color:var(--primary)}
     .c-accent .stat-icon{background:var(--accent-soft);color:var(--accent)}
     .c-success .stat-icon{background:var(--success-soft);color:var(--success)}
     .c-warning .stat-icon{background:var(--warning-soft);color:var(--warning)}
-    .stat-label{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);font-weight:700;margin-bottom:5px}
+    .stat-label{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);font-weight:700;margin-bottom:5px}
     .stat-value{font-family:'DM Mono',monospace;font-size:23px;line-height:1}
-    .stat-sub{margin-top:6px;font-size:12px;color:var(--text-muted)}
-
-    .toolbar{
-      display:flex;align-items:center;gap:10px;flex-wrap:wrap;
-      background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 16px;box-shadow:var(--shadow-sm);
-    }
+    .stat-sub{margin-top:6px;font-size:12px;color:var(--muted)}
+    .toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 16px;box-shadow:var(--shadow-sm)}
     .search-wrap{position:relative;flex:1;min-width:240px}
-    .search-icon{position:absolute;top:50%;left:13px;transform:translateY(-50%);color:var(--text-muted);font-size:13px}
-    .search-input,.filter-select,.form-input,.form-select,.form-textarea{
-      width:100%;border:1.5px solid var(--line);background:#fff;border-radius:11px;
-      padding:10px 12px;font-size:13px;color:var(--text);outline:none;transition:.18s;
-      font-family:'Plus Jakarta Sans',sans-serif;
-    }
+    .search-icon{position:absolute;top:50%;left:13px;transform:translateY(-50%);color:var(--muted);font-size:13px}
+    .search-input,.filter-select,.form-input,.form-select,.form-textarea{width:100%;border:1.5px solid var(--line);background:#fff;border-radius:11px;padding:10px 12px;font-size:13px;color:var(--ink);outline:none;transition:.18s;font-family:'Plus Jakarta Sans',sans-serif}
     .search-input{padding-left:36px}
-    .search-input:focus,.filter-select:focus,.form-input:focus,.form-select:focus,.form-textarea:focus{
-      border-color:var(--primary);box-shadow:0 0 0 3px rgba(57,114,184,.16)
-    }
-
-    .panel{
-      background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-sm);
-    }
-    .panel-head{
-      padding:16px 20px;border-bottom:1px solid var(--line-soft);
-      display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
-    }
-    .panel-title{font-size:14px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px}
-    .panel-sub{font-size:12px;color:var(--text-muted);margin-top:2px}
+    .search-input:focus,.filter-select:focus,.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(57,114,184,.16)}
+    .panel{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-sm)}
+    .panel-head{padding:16px 20px;border-bottom:1px solid var(--line-soft);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+    .panel-title{font-size:14px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:8px}
+    .panel-sub{font-size:12px;color:var(--muted);margin-top:2px}
     .table-wrap{overflow-x:auto}
     table{width:100%;border-collapse:collapse}
-    thead th{
-      text-align:left;padding:11px 16px;background:var(--bg);border-bottom:1px solid var(--line);
-      font-size:10.5px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);white-space:nowrap;
-    }
+    thead th{text-align:left;padding:11px 16px;background:var(--bg);border-bottom:1px solid var(--line);font-size:10.5px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);white-space:nowrap}
     tbody tr{border-bottom:1px solid var(--line-soft)}
     tbody tr:last-child{border-bottom:none}
     tbody tr:hover{background:rgba(57,114,184,.025)}
-    tbody td{padding:14px 16px;font-size:13px;color:var(--text-soft);vertical-align:top}
-    .title-cell{color:var(--text);font-weight:700}
-    .title-sub{margin-top:3px;font-size:11.5px;color:var(--text-muted)}
-    .mono{font-family:'DM Mono',monospace;color:var(--text)}
-    .badge{
-      display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:999px;
-      font-size:11px;font-weight:700;white-space:nowrap;
-    }
+    tbody td{padding:14px 16px;font-size:13px;color:var(--ink-soft);vertical-align:top}
+    .title-cell{color:var(--ink);font-weight:700}
+    .title-sub{margin-top:3px;font-size:11.5px;color:var(--muted)}
+    .mono{font-family:'DM Mono',monospace;color:var(--ink)}
+    .badge{display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:700;white-space:nowrap}
     .badge-primary{background:var(--primary-soft);color:var(--primary)}
     .badge-accent{background:var(--accent-soft);color:#a05a00}
     .badge-success{background:var(--success-soft);color:var(--success)}
     .badge-warning{background:var(--warning-soft);color:var(--warning)}
     .badge-danger{background:var(--danger-soft);color:var(--danger)}
-
     .actions-inline{display:inline-flex;gap:5px;white-space:nowrap}
-    .act-btn{
-      width:31px;height:31px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--text-soft);
-      cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:.16s;font-size:12px;
-    }
-    .act-btn:hover{background:var(--bg);color:var(--text)}
+    .act-btn{width:31px;height:31px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--ink-soft);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:.16s;font-size:12px}
+    .act-btn:hover{background:var(--bg);color:var(--ink)}
     .act-btn.primary:hover{background:var(--primary-soft);color:var(--primary)}
-
-    .overlay-modal{
-      position:fixed;inset:0;background:rgba(26,35,51,.42);backdrop-filter:blur(4px);z-index:300;display:none;
-      align-items:center;justify-content:center;padding:16px;
-    }
+    .act-btn.success:hover{background:var(--success-soft);color:var(--success)}
+    .empty-state{padding:64px 16px;text-align:center}
+    .empty-state i{font-size:36px;color:#c9d8ea;margin-bottom:12px}
+    .empty-title{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:5px}
+    .empty-sub{font-size:13px;color:var(--muted)}
+    .overlay-modal{position:fixed;inset:0;background:rgba(26,35,51,.42);backdrop-filter:blur(4px);z-index:300;display:none;align-items:center;justify-content:center;padding:16px}
     .overlay-modal.open{display:flex}
-    .modal{
-      width:820px;max-width:100%;max-height:calc(100vh - 32px);overflow:auto;background:#fff;border:1px solid var(--line);
-      border-radius:20px;box-shadow:0 24px 48px rgba(16,24,40,.18);
-    }
-    .modal-head{
-      padding:20px 22px 16px;border-bottom:1px solid var(--line-soft);
-      display:flex;justify-content:space-between;gap:12px;align-items:flex-start;
-    }
+    .modal{width:1180px;max-width:100%;max-height:calc(100vh - 32px);overflow:auto;background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 24px 48px rgba(16,24,40,.18)}
+    .modal-head{padding:20px 22px 16px;border-bottom:1px solid var(--line-soft);display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
     .modal-title{font-family:'Lora',serif;font-size:20px;line-height:1.3}
-    .modal-sub{margin-top:3px;font-size:12.5px;color:var(--text-muted)}
-    .modal-close{
-      width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--text-muted);cursor:pointer;
-    }
+    .modal-sub{margin-top:3px;font-size:12.5px;color:var(--muted)}
+    .modal-close{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--muted);cursor:pointer}
     .modal-body{padding:20px 22px}
     .modal-footer{padding:16px 22px;border-top:1px solid var(--line-soft);display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
-
-    .detail-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:16px}
-    .detail-box{
-      background:var(--bg);border:1px solid var(--line-soft);border-radius:14px;padding:14px;
-    }
-    .detail-label{
-      font-size:10.5px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);font-weight:800;margin-bottom:6px;
-    }
-    .detail-value{font-size:13px;color:var(--text);font-weight:700;line-height:1.55}
+    .letter-box{border:1px solid var(--line);border-radius:18px;padding:22px;background:linear-gradient(180deg,#fff, #fbfdff)}
+    .letter-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap;padding-bottom:16px;border-bottom:1px dashed var(--line)}
+    .letter-title{font-family:'Lora',serif;font-size:24px;line-height:1.25;color:var(--ink)}
+    .letter-sub{margin-top:6px;font-size:13px;color:var(--ink-soft);line-height:1.7;max-width:760px}
+    .letter-no{padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--bg);min-width:240px}
+    .letter-no-label{font-size:10.5px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:800;margin-bottom:6px}
+    .letter-no-value{font-family:'DM Mono',monospace;font-size:18px;color:var(--ink)}
+    .detail-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}
+    .detail-box{background:var(--bg);border:1px solid var(--line-soft);border-radius:14px;padding:14px}
+    .detail-label{font-size:10.5px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:800;margin-bottom:6px}
+    .detail-value{font-size:13px;color:var(--ink);font-weight:700;line-height:1.55}
+    .summary-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+    .summary-card{border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff}
+    .summary-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:800;margin-bottom:8px}
+    .summary-value{font-family:'DM Mono',monospace;font-size:20px;color:var(--ink)}
+    .summary-sub{margin-top:6px;font-size:12px;color:var(--ink-soft)}
+    .section-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.4px;color:var(--muted);margin:20px 0 12px;display:flex;align-items:center;gap:8px}
+    .section-title::after{content:'';flex:1;height:1px;background:var(--line-soft)}
+    .detail-table-wrap{border:1px solid var(--line);border-radius:16px;overflow:auto;background:#fff}
+    .detail-table{width:100%;border-collapse:collapse}
+    .detail-table th{background:var(--bg);padding:11px 12px;border-bottom:1px solid var(--line);font-size:10.5px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);white-space:nowrap;text-align:left}
+    .detail-table td{padding:12px;border-bottom:1px solid var(--line-soft);vertical-align:top;font-size:13px;color:var(--ink-soft)}
+    .detail-table tr:last-child td{border-bottom:none}
+    .detail-table tfoot td{background:#fbfdff;font-weight:700;color:var(--ink)}
+    .tiny-note{font-size:12px;color:var(--ink-soft);line-height:1.7;margin-top:10px}
     .history-list{display:grid;gap:10px;margin-top:10px}
-    .history-item{
-      border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff;
-    }
-    .history-title{font-size:13px;font-weight:700;color:var(--text)}
-    .history-sub{margin-top:4px;font-size:12px;color:var(--text-muted);line-height:1.6}
-
+    .history-item{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff}
+    .history-title{font-size:13px;font-weight:700;color:var(--ink)}
+    .history-sub{margin-top:4px;font-size:12px;color:var(--muted);line-height:1.6}
+    .letter-empty{padding:20px 14px;text-align:center;color:var(--muted);font-size:13px}
+    .toolbar-note{font-size:12px;color:var(--ink-soft)}
     .toast-stack{position:fixed;right:22px;bottom:22px;z-index:500;display:flex;flex-direction:column;gap:8px}
-    .toast{
-      background:var(--text);color:#fff;padding:12px 16px;border-radius:12px;display:flex;align-items:center;gap:9px;
-      box-shadow:0 10px 22px rgba(0,0,0,.2);font-size:13px;max-width:340px;
-    }
-    .toast.success{background:#1b6b41}
-    .toast.warning{background:#8d5807}
-    .toast.danger{background:#8a2d2d}
+    .toast{background:var(--ink);color:#fff;padding:12px 16px;border-radius:12px;display:flex;align-items:center;gap:9px;box-shadow:0 10px 22px rgba(0,0,0,.2);font-size:13px;max-width:340px}
+    .toast.success{background:#1b6b41}.toast.warning{background:#8d5807}.toast.danger{background:#8a2d2d}
 
-    @media (max-width:1200px){
-      .hero{grid-template-columns:1fr}
-      .stats-row,.detail-grid{grid-template-columns:repeat(2,1fr)}
+    /* ===== PRINT PREVIEW MODAL ===== */
+    .print-modal-overlay{position:fixed;inset:0;background:rgba(10,14,26,.72);backdrop-filter:blur(6px);z-index:500;display:none;align-items:flex-start;justify-content:center;padding:24px 16px;overflow-y:auto}
+    .print-modal-overlay.open{display:flex}
+    .print-modal-container{width:100%;max-width:860px;display:flex;flex-direction:column;gap:14px}
+    .print-modal-toolbar{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .print-modal-info{color:#fff;font-size:13px;display:flex;align-items:center;gap:9px}
+    .print-modal-info i{color:#7ec8a0;font-size:14px}
+    .print-modal-info b{font-weight:700}
+    .print-modal-actions{display:flex;gap:9px;flex-wrap:wrap}
+
+    /* The actual paper */
+    #printSheet{
+      background:#fff;
+      border-radius:4px;
+      box-shadow:0 20px 60px rgba(0,0,0,.38);
+      padding:60px 72px;
+      font-family:'Times New Roman','Times',Georgia,serif;
+      color:#000;
+      font-size:13pt;
+      line-height:1.55;
+      width:100%;
     }
+
+    /* ─── Header Surat ─── */
+    .surat-header{text-align:center;padding-bottom:14px;border-bottom:3px double #000;margin-bottom:20px}
+    .surat-logo-row{display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:10px}
+    .surat-logo-circle{width:68px;height:68px;border:3px solid #000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;letter-spacing:-1px;font-family:'Times New Roman',serif;flex-shrink:0}
+    .surat-org-info{text-align:left}
+    .surat-instansi{font-size:10pt;font-weight:400;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:2px}
+    .surat-fakultas{font-size:14pt;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:2px}
+    .surat-universitas{font-size:17pt;font-weight:900;letter-spacing:0.5px;text-transform:uppercase}
+    .surat-address{font-size:8.5pt;color:#444;margin-top:3px}
+    .surat-doc-title{margin-top:14px}
+    .surat-doc-title h1{font-size:15pt;font-weight:900;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:2px}
+    .surat-doc-title h2{font-size:12pt;font-weight:700;font-style:italic;margin-bottom:2px}
+    .surat-nomor{font-size:10pt;font-weight:400;margin-top:4px}
+
+    /* ─── Info rows ─── */
+    .surat-info-table{width:100%;border-collapse:collapse;margin:18px 0}
+    .surat-info-table td{padding:3px 0;font-size:11pt;vertical-align:top}
+    .surat-info-table .col-no{width:28px;font-weight:700;color:#000}
+    .surat-info-table .col-label{width:180px;font-weight:700}
+    .surat-info-table .col-sep{width:18px;text-align:center}
+    .surat-info-table .col-val{color:#111}
+
+    /* ─── Section heading ─── */
+    .surat-section-head{background:#000;color:#fff;text-align:center;font-size:10.5pt;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:5px 10px;margin:20px 0 0}
+
+    /* ─── Rincian table ─── */
+    .surat-tabel{width:100%;border-collapse:collapse;margin:0 0 18px;font-size:10pt}
+    .surat-tabel th{background:#e8e8e8;border:1.5px solid #555;padding:6px 8px;text-align:center;font-weight:700;font-size:9.5pt;text-transform:uppercase}
+    .surat-tabel td{border:1.5px solid #555;padding:5px 8px;vertical-align:top}
+    .surat-tabel .td-center{text-align:center}
+    .surat-tabel .td-right{text-align:right}
+    .surat-tabel .tfoot-row td{background:#f0f0f0;font-weight:700;font-size:10pt}
+    .surat-tabel .grand-total-row td{background:#d4d4d4;font-weight:900;font-size:11pt}
+
+    /* ─── Summary info ─── */
+    .surat-summary-box{border:1.5px solid #000;padding:10px 14px;margin:14px 0;font-size:10.5pt}
+    .surat-summary-box table{width:100%;border-collapse:collapse}
+    .surat-summary-box td{padding:2px 4px;vertical-align:top}
+    .surat-summary-box .s-label{font-weight:700;width:220px}
+    .surat-summary-box .s-sep{width:14px;text-align:center}
+    .surat-summary-box .s-val{text-align:right;font-family:'Courier New',monospace}
+    .surat-summary-box .s-total td{border-top:1.5px solid #000;font-weight:900;font-size:11.5pt;padding-top:6px}
+
+    /* ─── TTD area ─── */
+    .surat-ttd-section{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:30px;font-size:10.5pt}
+    .surat-ttd-col{text-align:center}
+    .surat-ttd-label{font-weight:700;margin-bottom:4px}
+    .surat-ttd-space{height:64px;border-bottom:1.5px solid #000;margin:10px auto;width:180px}
+    .surat-ttd-name{font-weight:700;font-size:11.5pt;text-decoration:underline}
+    .surat-ttd-jabatan{font-size:9.5pt;color:#333}
+
+    /* ─── Stamp / watermark ─── */
+    .surat-stamp{display:inline-block;border:4px double #1a5c2e;border-radius:50%;padding:10px 16px;color:#1a5c2e;font-weight:900;font-size:11pt;text-align:center;transform:rotate(-12deg);margin-top:6px;letter-spacing:1px}
+    .surat-stamp span{display:block;font-size:9pt;font-weight:700;letter-spacing:2px;text-transform:uppercase}
+
+    /* ─── Status ribbon ─── */
+    .surat-ribbon{position:absolute;top:36px;right:-28px;background:#1a5c2e;color:#fff;font-size:9pt;font-weight:700;padding:5px 42px;transform:rotate(45deg);letter-spacing:1.5px;text-transform:uppercase;pointer-events:none}
+
+    .surat-wrapper{position:relative;overflow:hidden}
+
+    @media (max-width:1200px){.hero{grid-template-columns:1fr}.stats-row{grid-template-columns:repeat(2,1fr)}.detail-grid{grid-template-columns:repeat(2,1fr)}.summary-row{grid-template-columns:1fr}}
     @media (max-width:900px){.main{margin-left:0}}
-    @media (max-width:720px){
-      .content{padding:20px 16px 34px}
-      .topbar{padding:12px 16px}
-      .stats-row,.hero-right,.detail-grid{grid-template-columns:1fr}
-      .page-header{flex-direction:column}
+    @media (max-width:720px){.content{padding:20px 16px 34px}.topbar{padding:12px 16px}.stats-row,.hero-right,.detail-grid{grid-template-columns:1fr}.page-header{flex-direction:column}}
+
+    /* ===== PRINT MEDIA ===== */
+    @media print{
+      body *{visibility:hidden}
+      #printSheet, #printSheet *{visibility:visible}
+      #printSheet{
+        position:fixed;inset:0;
+        width:100%;height:auto;
+        padding:20mm 22mm;
+        border-radius:0;
+        box-shadow:none;
+        font-size:11pt;
+        margin:0;
+      }
+      .surat-ribbon{display:block!important}
+      .print-modal-overlay,.print-modal-toolbar,.overlay-modal,.toast-stack{display:none!important}
     }
   </style>
 </head>
 <body data-page="approval">
   <div id="sb-root"></div>
-
   <div class="main">
     <div class="topbar">
-      <div class="breadcrumb">
-        Sistem Anggaran <span>›</span> Proses <span>›</span> <b>Approval</b>
-      </div>
+      <div class="breadcrumb">Sistem Anggaran <span>›</span> Proses <span>›</span> <b>Approval Anggaran Cost</b></div>
       <div class="topbar-right">
-        <div class="chip-info"><i class="fa-solid fa-check-double"></i> Proses persetujuan anggaran</div>
+        <div class="chip-info"><i class="fa-solid fa-file-signature"></i> Surat approval anggaran cost</div>
         <div class="topbar-date" id="topbarDate">—</div>
       </div>
     </div>
@@ -261,122 +283,59 @@
     <div class="content">
       <div class="page-header">
         <div>
-          <div class="page-title">Halaman <em>Approval</em></div>
+          <div class="page-title">Halaman <em>Approval Cost</em></div>
+          <div class="page-sub">Halaman ini menampilkan <b>Nomor Anggaran Cost</b> sebagai satu surat. Di dalam satu surat, detail <b>Sumber Dana</b> dan <b>Pengeluaran</b> ditampilkan lengkap dalam satu tampilan approval. Setelah disetujui, surat resmi siap dicetak.</div>
         </div>
         <div class="page-actions">
-          <button class="btn btn-ghost" onclick="seedRequests()"><i class="fa-solid fa-database"></i> Reset Sample</button>
+          <button class="btn btn-ghost" onclick="resetApprovalRequests()"><i class="fa-solid fa-database"></i> Reset Sample</button>
         </div>
       </div>
 
       <section class="hero">
         <div class="hero-left">
-          <div class="hero-title">Sample Data Approval</div>
-          <div class="hero-sub">
-            Banner Dummy For Sample Data
-          </div>
+          <div class="hero-title">Approval menampilkan satu <em>surat anggaran cost</em> per nomor anggaran</div>
+          <div class="hero-sub">Setiap surat merangkum <b>UPK</b>, <b>UPT</b>, <b>Program</b>, <b>Kegiatan</b>, periode, output, penanggung jawab, lalu memisahkan rincian <b>Sumber Dana</b> dan <b>Pengeluaran</b> agar lebih mudah ditelaah sebelum diputuskan.</div>
         </div>
         <div class="hero-right">
-          <div class="hero-mini">
-            <div class="hero-mini-label">Draft</div>
-            <div class="hero-mini-value" id="heroDraft">0</div>
-            <div class="hero-mini-sub">Baru dibuat, belum diajukan</div>
-          </div>
-          <div class="hero-mini">
-            <div class="hero-mini-label">Diajukan</div>
-            <div class="hero-mini-value" id="heroSubmitted">0</div>
-            <div class="hero-mini-sub">Menunggu keputusan approver</div>
-          </div>
-          <div class="hero-mini">
-            <div class="hero-mini-label">Perlu Revisi</div>
-            <div class="hero-mini-value" id="heroRevision">0</div>
-            <div class="hero-mini-sub">Harus diperbaiki lalu diajukan ulang</div>
-          </div>
-          <div class="hero-mini">
-            <div class="hero-mini-label">Anggaran Aktif</div>
-            <div class="hero-mini-value" id="heroActive">0</div>
-            <div class="hero-mini-sub">Sudah final dan aktif</div>
-          </div>
+          <div class="hero-mini"><div class="hero-mini-label">Draft</div><div class="hero-mini-value" id="heroDraft">0</div><div class="hero-mini-sub">Belum diajukan</div></div>
+          <div class="hero-mini"><div class="hero-mini-label">Diajukan</div><div class="hero-mini-value" id="heroSubmitted">0</div><div class="hero-mini-sub">Menunggu approver</div></div>
+          <div class="hero-mini"><div class="hero-mini-label">Perlu Revisi</div><div class="hero-mini-value" id="heroRevision">0</div><div class="hero-mini-sub">Perlu diperbaiki</div></div>
+          <div class="hero-mini"><div class="hero-mini-label">Anggaran Aktif</div><div class="hero-mini-value" id="heroActive">0</div><div class="hero-mini-sub">Sudah final</div></div>
         </div>
       </section>
 
       <div class="stats-row">
-        <div class="stat-card c-primary">
-          <div class="stat-icon"><i class="fa-solid fa-file-signature"></i></div>
-          <div class="stat-label">Total Request</div>
-          <div class="stat-value" id="statTotal">0</div>
-          <div class="stat-sub">Semua transaksi approval</div>
-        </div>
-        <div class="stat-card c-accent">
-          <div class="stat-icon"><i class="fa-solid fa-user-check"></i></div>
-          <div class="stat-label">Akun Simulasi</div>
-          <div class="stat-value" id="statUser">—</div>
-          <div class="stat-sub">Approver aktif</div>
-        </div>
-        <div class="stat-card c-success">
-          <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
-          <div class="stat-label">Bisa Approve</div>
-          <div class="stat-value" id="statAllowed">0</div>
-          <div class="stat-sub">Request yang sesuai mapping</div>
-        </div>
-        <div class="stat-card c-warning">
-          <div class="stat-icon"><i class="fa-solid fa-ban"></i></div>
-          <div class="stat-label">Ditolak</div>
-          <div class="stat-value" id="statDenied">0</div>
-          <div class="stat-sub">Request yang ditolak</div>
-        </div>
+        <div class="stat-card c-primary"><div class="stat-icon"><i class="fa-solid fa-file-lines"></i></div><div class="stat-label">Total Surat</div><div class="stat-value" id="statTotal">0</div><div class="stat-sub">Nomor anggaran cost</div></div>
+        <div class="stat-card c-accent"><div class="stat-icon"><i class="fa-solid fa-hand-holding-dollar"></i></div><div class="stat-label">Total Sumber Dana</div><div class="stat-value" id="statSource">Rp 0</div><div class="stat-sub">Akumulasi pendanaan</div></div>
+        <div class="stat-card c-success"><div class="stat-icon"><i class="fa-solid fa-wallet"></i></div><div class="stat-label">Total Pengeluaran</div><div class="stat-value" id="statExpense">Rp 0</div><div class="stat-sub">Akumulasi belanja</div></div>
+        <div class="stat-card c-warning"><div class="stat-icon"><i class="fa-solid fa-user-check"></i></div><div class="stat-label">Bisa Diproses</div><div class="stat-value" id="statAllowed">0</div><div class="stat-sub">Sesuai hak approver</div></div>
       </div>
 
       <div class="toolbar">
         <select class="filter-select" id="currentApprover" onchange="renderAll()"></select>
-
-        <div class="search-wrap">
-          <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-          <input class="search-input" id="searchInput" type="text" placeholder="Cari nomor request, entitas, atau requester..." oninput="renderAll()">
-        </div>
-
-        <select class="filter-select" id="filterType" onchange="renderAll()">
-          <option value="">Semua Jenis Approval</option>
-          <option value="Buat Anggaran">Buat Anggaran</option>
-          <option value="Perubahan Anggaran">Perubahan Anggaran</option>
-          <option value="Pindah Anggaran">Pindah Anggaran</option>
-          <option value="Hapus Anggaran">Hapus Anggaran</option>
-        </select>
-
-        <select class="filter-select" id="filterEntity" onchange="renderAll()">
-          <option value="">Semua Entitas</option>
-          <option value="Klinik">Klinik</option>
-          <option value="Yayasan">Yayasan</option>
-          <option value="Universitas">Universitas</option>
-        </select>
-
-        <select class="filter-select" id="filterStatus" onchange="renderAll()">
-          <option value="">Semua Status</option>
-          <option value="Draft">Draft</option>
-          <option value="Diajukan">Diajukan</option>
-          <option value="Perlu Revisi">Perlu Revisi</option>
-          <option value="Ditolak">Ditolak</option>
-          <option value="Disetujui">Disetujui</option>
-          <option value="Anggaran Aktif">Anggaran Aktif</option>
-        </select>
+        <div class="search-wrap"><span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span><input class="search-input" id="searchInput" type="text" placeholder="Cari nomor anggaran, UPK, UPT, program, kegiatan, atau requester..." oninput="renderAll()"></div>
+        <select class="filter-select" id="filterEntity" onchange="renderAll()"><option value="">Semua Entitas</option><option value="Klinik">Klinik</option><option value="Yayasan">Yayasan</option><option value="Universitas">Universitas</option></select>
+        <select class="filter-select" id="filterStatus" onchange="renderAll()"><option value="">Semua Status</option><option value="Draft">Draft</option><option value="Diajukan">Diajukan</option><option value="Perlu Revisi">Perlu Revisi</option><option value="Ditolak">Ditolak</option><option value="Disetujui">Disetujui</option><option value="Anggaran Aktif">Anggaran Aktif</option></select>
       </div>
 
       <div class="panel">
         <div class="panel-head">
           <div>
-            <div class="panel-title"><i class="fa-solid fa-list-check" style="color:var(--primary)"></i> Daftar Request Approval</div>
+            <div class="panel-title"><i class="fa-solid fa-list-check" style="color:var(--primary)"></i> Daftar Surat Approval Anggaran Cost</div>
             <div class="panel-sub" id="tableSubtitle">Memuat data...</div>
           </div>
+          <div class="toolbar-note">Setiap baris mewakili satu surat / satu nomor anggaran cost.</div>
         </div>
-
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>No. Request</th>
-                <th>Entitas</th>
-                <th>Jenis Approval</th>
-                <th>Requester</th>
-                <th>Nilai</th>
+                <th>No. Anggaran Cost</th>
+                <th>UPK / UPT</th>
+                <th>Program / Kegiatan</th>
+                <th>Periode</th>
+                <th>Sumber Dana</th>
+                <th>Pengeluaran</th>
                 <th>Status</th>
                 <th>Akses Akun</th>
                 <th style="text-align:right;">Aksi</th>
@@ -385,37 +344,50 @@
             <tbody id="requestTableBody"></tbody>
           </table>
         </div>
+        <div class="empty-state" id="emptyState" style="display:none;">
+          <i class="fa-solid fa-inbox"></i>
+          <div class="empty-title">Belum ada surat approval cost</div>
+          <div class="empty-sub">Tambahkan anggaran cost terlebih dahulu atau reset sample data.</div>
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- Detail Modal -->
   <div class="overlay-modal" id="modalDetail" onclick="closeModalIfBg(event,'modalDetail')">
     <div class="modal">
       <div class="modal-head">
         <div>
-          <div class="modal-title" id="modalTitle">Detail Approval</div>
+          <div class="modal-title" id="modalTitle">Surat Approval</div>
           <div class="modal-sub" id="modalSub">—</div>
         </div>
         <button class="modal-close" onclick="closeModal('modalDetail')"><i class="fa-solid fa-xmark"></i></button>
       </div>
-
       <div class="modal-body">
-        <div class="detail-grid" id="detailGrid"></div>
+        <div class="letter-box" id="letterBox"></div>
+        <div class="section-title">Riwayat Approval</div>
+        <div class="history-list" id="historyList"></div>
+      </div>
+      <div class="modal-footer" id="modalFooter"></div>
+    </div>
+  </div>
 
-        <div class="panel" style="box-shadow:none;">
-          <div class="panel-head">
-            <div>
-              <div class="panel-title"><i class="fa-solid fa-clock-rotate-left" style="color:var(--primary)"></i> Riwayat Approval</div>
-              <div class="panel-sub">Jejak audit keputusan request.</div>
-            </div>
-          </div>
-          <div class="panel-body">
-            <div class="history-list" id="historyList"></div>
-          </div>
+  <!-- Print Preview Modal -->
+  <div class="print-modal-overlay" id="printModal" onclick="closePrintIfBg(event)">
+    <div class="print-modal-container">
+      <div class="print-modal-toolbar">
+        <div class="print-modal-info">
+          <i class="fa-solid fa-circle-check"></i>
+          <span>Pratinjau Surat Resmi — <b id="printModalLabel">—</b></span>
+        </div>
+        <div class="print-modal-actions">
+          <button class="btn btn-ghost btn-sm" onclick="closePrintModal()"><i class="fa-solid fa-xmark"></i> Tutup</button>
+          <button class="btn btn-print btn-sm" onclick="window.print()"><i class="fa-solid fa-print"></i> Cetak / Simpan PDF</button>
         </div>
       </div>
-
-      <div class="modal-footer" id="modalFooter"></div>
+      <div class="surat-wrapper">
+        <div id="printSheet"><!-- diisi JS --></div>
+      </div>
     </div>
   </div>
 
@@ -423,238 +395,39 @@
 
   <script>
     const MASTER_KEY = 'APP_APPROVAL_MASTER_V2';
-    const REQUEST_KEY = 'APP_APPROVAL_REQUESTS_V1';
+    const REQUEST_KEY = 'APP_APPROVAL_COST_REQUESTS_V2';
+    const COST_KEY = 'APP_COST_BUDGETS_V1';
+    const MATA_KEY = 'APP_MASTER_MATA_ANGGARAN_V1';
 
     const fallbackMaster = [
-      {
-        id: 1, code:'APR-001', name:'Muhammad Iqbal', role:'Administrator Keuangan', entity:'Semua', level:'Keuangan', status:'Aktif',
-        permissions:{ create:true, update:true, move:true, delete:false }, note:''
-      },
-      {
-        id: 2, code:'APR-002', name:'Kepala Klinik', role:'Pimpinan Unit Klinik', entity:'Klinik', level:'Unit', status:'Aktif',
-        permissions:{ create:true, update:true, move:false, delete:false }, note:''
-      },
-      {
-        id: 3, code:'APR-003', name:'Direktur Yayasan', role:'Pimpinan Yayasan', entity:'Yayasan', level:'Pimpinan', status:'Aktif',
-        permissions:{ create:true, update:true, move:true, delete:true }, note:''
-      },
-      {
-        id: 4, code:'APR-004', name:'Rektor UBTH', role:'Pimpinan Universitas', entity:'Universitas', level:'Pimpinan', status:'Aktif',
-        permissions:{ create:true, update:true, move:true, delete:true }, note:''
-      }
+      {id:1, code:'APR-001', name:'Muhammad Iqbal', role:'Administrator Keuangan', entity:'Semua', level:'Keuangan', status:'Aktif', permissions:{create:true, update:true, move:true, delete:false}},
+      {id:2, code:'APR-002', name:'Kepala Klinik', role:'Pimpinan Unit Klinik', entity:'Klinik', level:'Unit', status:'Aktif', permissions:{create:true, update:true, move:false, delete:false}},
+      {id:3, code:'APR-003', name:'Direktur Yayasan', role:'Pimpinan Yayasan', entity:'Yayasan', level:'Pimpinan', status:'Aktif', permissions:{create:true, update:true, move:true, delete:true}},
+      {id:4, code:'APR-004', name:'Rektor UBTH', role:'Pimpinan Universitas', entity:'Universitas', level:'Pimpinan', status:'Aktif', permissions:{create:true, update:true, move:true, delete:true}}
     ];
 
+    const sampleMata = [
+      {id:11,kodeAnggaran:'MA-SD-001',namaMataAnggaran:'Dana Sponsor',tipe:'Pendapatan'},
+      {id:12,kodeAnggaran:'MA-SD-002',namaMataAnggaran:'Dana Internal Unit',tipe:'Pendapatan'},
+      {id:21,kodeAnggaran:'MA-PG-001',namaMataAnggaran:'Publikasi & Promosi',tipe:'Pengeluaran'},
+      {id:22,kodeAnggaran:'MA-PG-002',namaMataAnggaran:'Konsumsi Kegiatan',tipe:'Pengeluaran'}
+    ];
 
-    const seedApprovalRequests = [
-      {
-        id: 1,
-        number: 'REQ-APR-0001',
-        date: '2026-04-12',
-        entity: 'Klinik',
-        unit: 'Klinik BTH',
-        type: 'Buat Anggaran',
-        requester: 'Staff Klinik',
-        amount: 80000000,
-        oldAmount: 0,
-        newAmount: 80000000,
-        lineFrom: '-',
-        lineTo: 'Belanja Stok Obat',
-        note: 'Anggaran baru dibuat dan masih menunggu diajukan.',
-        status: 'Draft',
-        history: [
-          {
-            action: 'Draft dibuat',
-            by: 'Staff Klinik',
-            time: '12/04/2026, 09.15.00',
-            note: 'Request awal tersimpan sebagai draft.'
-          }
-        ]
-      },
-      {
-        id: 2,
-        number: 'REQ-APR-0002',
-        date: '2026-04-13',
-        entity: 'Yayasan',
-        unit: 'YBTH',
-        type: 'Perubahan Anggaran',
-        requester: 'Admin Yayasan',
-        amount: 15000000,
-        oldAmount: 35000000,
-        newAmount: 50000000,
-        lineFrom: 'Belanja Publikasi',
-        lineTo: 'Belanja Publikasi',
-        note: 'Request sudah diajukan dan menunggu keputusan approver.',
-        status: 'Diajukan',
-        history: [
-          {
-            action: 'Draft dibuat',
-            by: 'Admin Yayasan',
-            time: '13/04/2026, 08.10.00',
-            note: 'Draft perubahan anggaran dibuat.'
-          },
-          {
-            action: 'Diajukan',
-            by: 'Admin Yayasan',
-            time: '13/04/2026, 09.30.00',
-            note: 'Request diajukan ke approver.'
-          }
-        ]
-      },
-      {
-        id: 3,
-        number: 'REQ-APR-0003',
-        date: '2026-04-14',
-        entity: 'Universitas',
-        unit: 'UBTH',
-        type: 'Pindah Anggaran',
-        requester: 'Staff Fakultas',
-        amount: 25000000,
-        oldAmount: 25000000,
-        newAmount: 25000000,
-        lineFrom: 'Belanja Seminar',
-        lineTo: 'Belanja Praktikum',
-        note: 'Request perlu revisi dan harus diajukan ulang setelah diperbaiki.',
-        status: 'Perlu Revisi',
-        history: [
-          {
-            action: 'Draft dibuat',
-            by: 'Staff Fakultas',
-            time: '14/04/2026, 08.00.00',
-            note: 'Draft pindah anggaran dibuat.'
-          },
-          {
-            action: 'Diajukan',
-            by: 'Staff Fakultas',
-            time: '14/04/2026, 08.45.00',
-            note: 'Request diajukan ke approver.'
-          },
-          {
-            action: 'Perlu Revisi',
-            by: 'Rektor UBTH',
-            time: '14/04/2026, 10.15.00',
-            note: 'Lengkapi justifikasi perpindahan anggaran.'
-          }
-        ]
-      },
-      {
-        id: 4,
-        number: 'REQ-APR-0004',
-        date: '2026-04-15',
-        entity: 'Yayasan',
-        unit: 'YBTH',
-        type: 'Hapus Anggaran',
-        requester: 'Admin Yayasan',
-        amount: 12000000,
-        oldAmount: 12000000,
-        newAmount: 0,
-        lineFrom: 'Belanja Event Internal',
-        lineTo: '-',
-        note: 'Request sudah disetujui dan tinggal diaktifkan.',
-        status: 'Disetujui',
-        history: [
-          {
-            action: 'Draft dibuat',
-            by: 'Admin Yayasan',
-            time: '15/04/2026, 08.00.00',
-            note: 'Draft penghapusan anggaran dibuat.'
-          },
-          {
-            action: 'Diajukan',
-            by: 'Admin Yayasan',
-            time: '15/04/2026, 08.20.00',
-            note: 'Request diajukan ke approver.'
-          },
-          {
-            action: 'Disetujui',
-            by: 'Direktur Yayasan',
-            time: '15/04/2026, 09.00.00',
-            note: 'Menunggu aktivasi anggaran.'
-          }
-        ]
-      },
-      {
-        id: 5,
-        number: 'REQ-APR-0005',
-        date: '2026-04-16',
-        entity: 'Universitas',
-        unit: 'UBTH',
-        type: 'Buat Anggaran',
-        requester: 'Staff Akademik',
-        amount: 45000000,
-        oldAmount: 0,
-        newAmount: 45000000,
-        lineFrom: '-',
-        lineTo: 'Belanja Workshop Kurikulum',
-        note: 'Request sudah final dan anggaran aktif.',
-        status: 'Anggaran Aktif',
-        history: [
-          {
-            action: 'Draft dibuat',
-            by: 'Staff Akademik',
-            time: '16/04/2026, 08.00.00',
-            note: 'Draft anggaran dibuat.'
-          },
-          {
-            action: 'Diajukan',
-            by: 'Staff Akademik',
-            time: '16/04/2026, 08.40.00',
-            note: 'Request diajukan ke approver.'
-          },
-          {
-            action: 'Disetujui',
-            by: 'Rektor UBTH',
-            time: '16/04/2026, 09.15.00',
-            note: 'Request disetujui.'
-          },
-          {
-            action: 'Anggaran Aktif',
-            by: 'Administrator Keuangan',
-            time: '16/04/2026, 09.30.00',
-            note: 'Anggaran sudah aktif.'
-          }
-        ]
-      },
-      {
-        id: 6,
-        number: 'REQ-APR-0006',
-        date: '2026-04-16',
-        entity: 'Klinik',
-        unit: 'Klinik BTH',
-        type: 'Perubahan Anggaran',
-        requester: 'Admin Klinik',
-        amount: 18000000,
-        oldAmount: 22000000,
-        newAmount: 40000000,
-        lineFrom: 'Belanja Promosi',
-        lineTo: 'Belanja Promosi',
-        note: 'Request ditolak karena dokumen pendukung belum lengkap.',
-        status: 'Ditolak',
-        history: [
-          {
-            action: 'Draft dibuat',
-            by: 'Admin Klinik',
-            time: '16/04/2026, 10.00.00',
-            note: 'Draft perubahan anggaran dibuat.'
-          },
-          {
-            action: 'Diajukan',
-            by: 'Admin Klinik',
-            time: '16/04/2026, 10.20.00',
-            note: 'Request diajukan ke approver.'
-          },
-          {
-            action: 'Ditolak',
-            by: 'Kepala Klinik',
-            time: '16/04/2026, 11.00.00',
-            note: 'Dokumen pendukung tidak lengkap.'
-          }
-        ]
-      }
+    const sampleBudgets = [
+      {id:1, nomorAnggaranCost:'AC-2026-0001', upkId:'2', upkNama:'Universitas Bakti Tunas Husada', uptId:'5', uptNama:'Wakil Rektor Bidang SDM, Humas dan Kerjasama / Bagian Pusat Karir', programId:'2', programNama:'Program Akademik dan Kemahasiswaan', kegiatanId:'2', kegiatanNama:'Pelaksanaan Career Day', waktuAwalBulan:'April', waktuAwalTahun:'2026', waktuAkhirBulan:'Mei', waktuAkhirTahun:'2026', output:'Laporan Kegiatan', penanggungJawab:'Kepala Pusat Karir', targetKegiatan:'1 event dan 20 mitra', resiko:'Partisipasi mitra industri tidak sesuai target', tingkatResiko:'4', manfaat:'Meningkatkan jejaring kerja mahasiswa dan alumni', detailKategori:'Sumber Dana', tipeMataAnggaran:'Pendapatan', mataAnggaranId:'11', mataAnggaranKode:'MA-SD-001', mataAnggaranNama:'Dana Sponsor', qty:1, satuan:'paket', hargaSatuan:20000000, nominal:20000000, status:'Draft', catatan:'Kontribusi sponsor utama'},
+      {id:2, nomorAnggaranCost:'AC-2026-0001', upkId:'2', upkNama:'Universitas Bakti Tunas Husada', uptId:'5', uptNama:'Wakil Rektor Bidang SDM, Humas dan Kerjasama / Bagian Pusat Karir', programId:'2', programNama:'Program Akademik dan Kemahasiswaan', kegiatanId:'2', kegiatanNama:'Pelaksanaan Career Day', waktuAwalBulan:'April', waktuAwalTahun:'2026', waktuAkhirBulan:'Mei', waktuAkhirTahun:'2026', output:'Laporan Kegiatan', penanggungJawab:'Kepala Pusat Karir', targetKegiatan:'1 event dan 20 mitra', resiko:'Partisipasi mitra industri tidak sesuai target', tingkatResiko:'4', manfaat:'Meningkatkan jejaring kerja mahasiswa dan alumni', detailKategori:'Sumber Dana', tipeMataAnggaran:'Pendapatan', mataAnggaranId:'12', mataAnggaranKode:'MA-SD-002', mataAnggaranNama:'Dana Internal Unit', qty:1, satuan:'paket', hargaSatuan:5000000, nominal:5000000, status:'Draft', catatan:'Matching fund unit'},
+      {id:3, nomorAnggaranCost:'AC-2026-0001', upkId:'2', upkNama:'Universitas Bakti Tunas Husada', uptId:'5', uptNama:'Wakil Rektor Bidang SDM, Humas dan Kerjasama / Bagian Pusat Karir', programId:'2', programNama:'Program Akademik dan Kemahasiswaan', kegiatanId:'2', kegiatanNama:'Pelaksanaan Career Day', waktuAwalBulan:'April', waktuAwalTahun:'2026', waktuAkhirBulan:'Mei', waktuAkhirTahun:'2026', output:'Laporan Kegiatan', penanggungJawab:'Kepala Pusat Karir', targetKegiatan:'1 event dan 20 mitra', resiko:'Partisipasi mitra industri tidak sesuai target', tingkatResiko:'4', manfaat:'Meningkatkan jejaring kerja mahasiswa dan alumni', detailKategori:'Pengeluaran', tipeMataAnggaran:'Pengeluaran', mataAnggaranId:'21', mataAnggaranKode:'MA-PG-001', mataAnggaranNama:'Publikasi & Promosi', qty:3, satuan:'kegiatan', hargaSatuan:5000000, nominal:15000000, status:'Draft', catatan:'Promosi event'},
+      {id:4, nomorAnggaranCost:'AC-2026-0001', upkId:'2', upkNama:'Universitas Bakti Tunas Husada', uptId:'5', uptNama:'Wakil Rektor Bidang SDM, Humas dan Kerjasama / Bagian Pusat Karir', programId:'2', programNama:'Program Akademik dan Kemahasiswaan', kegiatanId:'2', kegiatanNama:'Pelaksanaan Career Day', waktuAwalBulan:'April', waktuAwalTahun:'2026', waktuAkhirBulan:'Mei', waktuAkhirTahun:'2026', output:'Laporan Kegiatan', penanggungJawab:'Kepala Pusat Karir', targetKegiatan:'1 event dan 20 mitra', resiko:'Partisipasi mitra industri tidak sesuai target', tingkatResiko:'4', manfaat:'Meningkatkan jejaring kerja mahasiswa dan alumni', detailKategori:'Pengeluaran', tipeMataAnggaran:'Pengeluaran', mataAnggaranId:'22', mataAnggaranKode:'MA-PG-002', mataAnggaranNama:'Konsumsi Kegiatan', qty:2, satuan:'paket', hargaSatuan:1800000, nominal:3600000, status:'Draft', catatan:'Konsumsi panitia dan peserta'},
+      {id:5, nomorAnggaranCost:'AC-2026-0002', upkId:'3', upkNama:'Klinik Bakti Tunas Husada', uptId:'6', uptNama:'Administrasi Klinik', programId:'3', programNama:'Program Pelayanan Klinik', kegiatanId:'3', kegiatanNama:'Pengadaan Lemari Arsip Pasien', waktuAwalBulan:'Februari', waktuAwalTahun:'2026', waktuAkhirBulan:'Februari', waktuAkhirTahun:'2026', output:'Barang', penanggungJawab:'Kepala Administrasi Klinik', targetKegiatan:'2 unit lemari arsip', resiko:'Barang datang tidak sesuai spesifikasi', tingkatResiko:'2', manfaat:'Penyimpanan dokumen pasien lebih aman dan rapi', detailKategori:'Sumber Dana', tipeMataAnggaran:'Pendapatan', mataAnggaranId:'12', mataAnggaranKode:'MA-SD-002', mataAnggaranNama:'Dana Internal Unit', qty:1, satuan:'paket', hargaSatuan:6000000, nominal:6000000, status:'Diajukan', catatan:'Pendanaan internal'},
+      {id:6, nomorAnggaranCost:'AC-2026-0002', upkId:'3', upkNama:'Klinik Bakti Tunas Husada', uptId:'6', uptNama:'Administrasi Klinik', programId:'3', programNama:'Program Pelayanan Klinik', kegiatanId:'3', kegiatanNama:'Pengadaan Lemari Arsip Pasien', waktuAwalBulan:'Februari', waktuAwalTahun:'2026', waktuAkhirBulan:'Februari', waktuAkhirTahun:'2026', output:'Barang', penanggungJawab:'Kepala Administrasi Klinik', targetKegiatan:'2 unit lemari arsip', resiko:'Barang datang tidak sesuai spesifikasi', tingkatResiko:'2', manfaat:'Penyimpanan dokumen pasien lebih aman dan rapi', detailKategori:'Pengeluaran', tipeMataAnggaran:'Pengeluaran', mataAnggaranId:'21', mataAnggaranKode:'MA-PG-001', mataAnggaranNama:'Pengadaan Lemari Arsip', qty:2, satuan:'unit', hargaSatuan:2750000, nominal:5500000, status:'Diajukan', catatan:'Pengadaan utama'}
     ];
 
     let master = [];
-    let requests = [];
-    let selectedRequestId = null;
+    let requestsMeta = [];
+    let costRows = [];
+    let mataRows = [];
+    let approvalGroups = [];
+    let selectedNomor = '';
 
     const workflowLabels = {
       'Draft': { badge: 'badge-primary', text: 'Draft' },
@@ -665,113 +438,179 @@
       'Anggaran Aktif': { badge: 'badge-success', text: 'Anggaran Aktif' }
     };
 
-    function readJson(key){
-      try { return JSON.parse(localStorage.getItem(key)) || []; }
-      catch { return []; }
+    function readJson(key){ try { return JSON.parse(localStorage.getItem(key)) || []; } catch { return []; } }
+    function writeJson(key, data){ localStorage.setItem(key, JSON.stringify(data)); }
+    function escapeHtml(str){ return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+    function fmtCurrency(n){ return 'Rp ' + Number(n || 0).toLocaleString('id-ID'); }
+    function fmtShortCurrency(n){ const num = Number(n||0); if(num >= 1000000000) return 'Rp ' + (num/1000000000).toFixed(num%1000000000===0?0:1) + ' M'; if(num >= 1000000) return 'Rp ' + (num/1000000).toFixed(num%1000000===0?0:1) + ' jt'; return fmtCurrency(num); }
+    function normalizeText(v){ return String(v || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim(); }
+    function showToast(type, icon, message){ const stack=document.getElementById('toastStack'); const el=document.createElement('div'); el.className=`toast ${type}`; el.innerHTML=`<i class="fa-solid ${icon}"></i><span>${escapeHtml(message)}</span>`; stack.appendChild(el); setTimeout(()=>{el.style.opacity='0'; el.style.transform='translateX(18px)'; el.style.transition='all .24s ease'; setTimeout(()=>el.remove(),240);},3200); }
+    function openModal(id){ document.getElementById(id).classList.add('open'); }
+    function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+    function closeModalIfBg(event,id){ if(event.target === document.getElementById(id)) closeModal(id); }
+    function mapWorkflowStatus(raw){ const v = String(raw || '').trim(); if(v === 'Aktif') return 'Anggaran Aktif'; if(v === 'Tutup') return 'Ditolak'; return ['Draft','Diajukan','Perlu Revisi','Ditolak','Disetujui','Anggaran Aktif'].includes(v) ? v : 'Draft'; }
+    function normalizeEntityName(name){ const v = normalizeText(name); if(v.includes('klinik')) return 'Klinik'; if(v.includes('yayasan')) return 'Yayasan'; if(v.includes('universitas')) return 'Universitas'; return name || 'Lainnya'; }
+    function formatPeriod(item){ const start = [item.waktuAwalBulan, item.waktuAwalTahun].filter(Boolean).join(' '); const end = [item.waktuAkhirBulan, item.waktuAkhirTahun].filter(Boolean).join(' '); return `${start || '-'} s.d. ${end || '-'}`; }
+    function nextRequestId(){ return Math.max(0, ...requestsMeta.map(x => Number(x.id || 0))) + 1; }
+
+    function normalizeMata(item, idx){
+      return {
+        id: String(item.id ?? idx+1),
+        kodeAnggaran: item.kodeAnggaran || item.kode || '',
+        namaMataAnggaran: item.namaMataAnggaran || item.nama || '',
+        tipe: item.tipe || item.type || ''
+      };
     }
 
-    function writeJson(key, data){
-      localStorage.setItem(key, JSON.stringify(data));
+    function inferDetailCategory(item, mataMap){
+      const rawDetail = normalizeText(item.detailKategori || item.jenisDetail || item.kategoriDetail || item.detail || '');
+      const rawType = normalizeText(item.tipeMataAnggaran || item.tipe || '');
+      const mata = mataMap.get(String(item.mataAnggaranId || ''));
+      const mataType = normalizeText(mata?.tipe || '');
+      if(rawDetail.includes('sumber') || rawDetail.includes('pendapatan')) return {detailKategori:'Sumber Dana', tipeMataAnggaran:'Pendapatan'};
+      if(rawDetail.includes('pengeluaran') || rawDetail.includes('belanja')) return {detailKategori:'Pengeluaran', tipeMataAnggaran:'Pengeluaran'};
+      if(rawType.includes('pendapatan') || mataType.includes('pendapatan')) return {detailKategori:'Sumber Dana', tipeMataAnggaran:'Pendapatan'};
+      return {detailKategori:'Pengeluaran', tipeMataAnggaran:'Pengeluaran'};
+    }
+
+    function normalizeCost(item, idx, mataMap){
+      const inferred = inferDetailCategory(item, mataMap);
+      return {
+        id: Number(item.id ?? idx+1),
+        nomorAnggaranCost: String(item.nomorAnggaranCost || item.nomor || item.number || `AC-${new Date().getFullYear()}-${String(idx+1).padStart(4,'0')}`),
+        upkNama: item.upkNama || item.entitas || '-',
+        uptNama: item.uptNama || item.unit || '',
+        programNama: item.programNama || '',
+        kegiatanNama: item.kegiatanNama || '',
+        waktuAwalBulan: item.waktuAwalBulan || '',
+        waktuAwalTahun: String(item.waktuAwalTahun || ''),
+        waktuAkhirBulan: item.waktuAkhirBulan || '',
+        waktuAkhirTahun: String(item.waktuAkhirTahun || ''),
+        output: item.output || '',
+        penanggungJawab: item.penanggungJawab || '',
+        targetKegiatan: item.targetKegiatan || '',
+        resiko: item.resiko || '',
+        tingkatResiko: String(item.tingkatResiko || ''),
+        manfaat: item.manfaat || '',
+        mataAnggaranId: String(item.mataAnggaranId || ''),
+        mataAnggaranKode: item.mataAnggaranKode || item.kodeAnggaran || item.kode || '',
+        mataAnggaranNama: item.mataAnggaranNama || item.namaMataAnggaran || '',
+        qty: Number(item.qty || 0),
+        satuan: item.satuan || '',
+        hargaSatuan: Number(item.hargaSatuan || 0),
+        nominal: Number(item.nominal || (Number(item.qty || 0) * Number(item.hargaSatuan || 0))),
+        status: mapWorkflowStatus(item.approvalStatus || item.status),
+        catatan: item.catatan || '',
+        detailKategori: inferred.detailKategori,
+        tipeMataAnggaran: inferred.tipeMataAnggaran
+      };
     }
 
     function ensureSeed(){
-      if(!localStorage.getItem(MASTER_KEY)){
-        writeJson(MASTER_KEY, fallbackMaster);
-      }
-      if(!localStorage.getItem(REQUEST_KEY)){
-        writeJson(REQUEST_KEY, seedApprovalRequests);
-      }
+      if(!localStorage.getItem(MASTER_KEY)) writeJson(MASTER_KEY, fallbackMaster);
+      if(!localStorage.getItem(MATA_KEY)) writeJson(MATA_KEY, sampleMata);
+      if(!localStorage.getItem(COST_KEY)) writeJson(COST_KEY, sampleBudgets);
+      if(!localStorage.getItem(REQUEST_KEY)) writeJson(REQUEST_KEY, []);
     }
 
-    function seedRequests(){
-      if(!confirm('Reset sample request approval?')) return;
-      writeJson(REQUEST_KEY, seedApprovalRequests);
-      requests = readJson(REQUEST_KEY);
-      renderAll();
-      showToast('success', 'fa-database', 'Sample request approval berhasil direset.');
-    }
-
-    function fmtCurrency(n){
-      return 'Rp ' + (Number(n || 0)).toLocaleString('id-ID');
-    }
-
-    function escapeHtml(str){
-      return String(str ?? '')
-        .replace(/&/g,'&amp;')
-        .replace(/</g,'&lt;')
-        .replace(/>/g,'&gt;')
-        .replace(/"/g,'&quot;')
-        .replace(/'/g,'&#39;');
-    }
-
-    function showToast(type, icon, message){
-      const stack = document.getElementById('toastStack');
-      const el = document.createElement('div');
-      el.className = `toast ${type}`;
-      el.innerHTML = `<i class="fa-solid ${icon}"></i><span>${message}</span>`;
-      stack.appendChild(el);
-      setTimeout(() => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateX(18px)';
-        el.style.transition = 'all .24s ease';
-        setTimeout(() => el.remove(), 240);
-      }, 3200);
+    function loadSources(){
+      master = readJson(MASTER_KEY);
+      mataRows = readJson(MATA_KEY).map(normalizeMata);
+      const mataMap = new Map(mataRows.map(x => [String(x.id), x]));
+      costRows = readJson(COST_KEY).map((item, idx) => normalizeCost(item, idx, mataMap));
+      requestsMeta = readJson(REQUEST_KEY);
     }
 
     function populateApproverSelect(){
       const select = document.getElementById('currentApprover');
-      const activeMaster = master.filter(item => item.status === 'Aktif');
-
-      select.innerHTML = activeMaster.map(item =>
-        `<option value="${item.id}">${escapeHtml(item.name)} · ${escapeHtml(item.entity)} · ${escapeHtml(item.level)}</option>`
-      ).join('');
-
-      if(activeMaster.length && !select.value){
-        select.value = String(activeMaster[0].id);
-      }
+      const active = master.filter(item => item.status === 'Aktif');
+      select.innerHTML = active.map(item => `<option value="${item.id}">${escapeHtml(item.name)} · ${escapeHtml(item.entity)} · ${escapeHtml(item.level)}</option>`).join('');
+      if(active.length && !select.value) select.value = String(active[0].id);
     }
 
-    function getCurrentApprover(){
-      const id = Number(document.getElementById('currentApprover').value || 0);
-      return master.find(item => Number(item.id) === id) || null;
+    function getCurrentApprover(){ const id = Number(document.getElementById('currentApprover').value || 0); return master.find(item => Number(item.id) === id) || null; }
+    function typeToPermissionKey(type){ if(type === 'Buat Anggaran Cost') return 'create'; if(type === 'Perubahan Anggaran') return 'update'; if(type === 'Pindah Anggaran') return 'move'; if(type === 'Hapus Anggaran') return 'delete'; return 'create'; }
+    function canCurrentApproverApprove(item, approver){ if(!approver || approver.status !== 'Aktif' || item.status !== 'Diajukan') return false; const permissionKey = typeToPermissionKey(item.type || 'Buat Anggaran Cost'); if(!approver.permissions?.[permissionKey]) return false; return approver.entity === 'Semua' || approver.entity === item.entity; }
+
+    function buildDefaultRequest(group){
+      const first = group.rows[0];
+      return {
+        id: nextRequestId(),
+        nomorAnggaranCost: group.nomorAnggaranCost,
+        number: group.nomorAnggaranCost,
+        date: new Date().toISOString().slice(0,10),
+        entity: group.entity,
+        type: 'Buat Anggaran Cost',
+        requester: first.penanggungJawab || 'Admin Unit',
+        status: first.status || 'Draft',
+        note: first.catatan || '',
+        history: [{action: first.status || 'Draft', by: first.penanggungJawab || 'Admin Unit', time: new Date().toLocaleString('id-ID'), note: 'Surat approval dibuat dari anggaran cost.'}]
+      };
     }
 
-    function typeToPermissionKey(type){
-      if(type === 'Buat Anggaran') return 'create';
-      if(type === 'Perubahan Anggaran') return 'update';
-      if(type === 'Pindah Anggaran') return 'move';
-      if(type === 'Hapus Anggaran') return 'delete';
-      return '';
+    function buildApprovalGroups(){
+      const grouped = new Map();
+      costRows.forEach(row => {
+        const no = String(row.nomorAnggaranCost || '');
+        if(!no) return;
+        if(!grouped.has(no)) grouped.set(no, []);
+        grouped.get(no).push(row);
+      });
+      const built = [];
+      grouped.forEach((rows, no) => {
+        const first = rows[0];
+        const meta = requestsMeta.find(x => String(x.nomorAnggaranCost || x.number || '') === no) || buildDefaultRequest({nomorAnggaranCost:no, rows, entity:normalizeEntityName(first.upkNama)});
+        const sourceRows = rows.filter(r => r.detailKategori === 'Sumber Dana');
+        const expenseRows = rows.filter(r => r.detailKategori !== 'Sumber Dana');
+        const totalSource = sourceRows.reduce((sum, r) => sum + Number(r.nominal || 0), 0);
+        const totalExpense = expenseRows.reduce((sum, r) => sum + Number(r.nominal || 0), 0);
+        built.push({
+          nomorAnggaranCost: no,
+          entity: meta.entity || normalizeEntityName(first.upkNama),
+          unit: first.uptNama || 'Level UPK',
+          upkNama: first.upkNama || '-',
+          uptNama: first.uptNama || 'Level UPK',
+          programNama: first.programNama || '-',
+          kegiatanNama: first.kegiatanNama || '-',
+          periode: formatPeriod(first),
+          waktuAwalBulan: first.waktuAwalBulan,
+          waktuAwalTahun: first.waktuAwalTahun,
+          waktuAkhirBulan: first.waktuAkhirBulan,
+          waktuAkhirTahun: first.waktuAkhirTahun,
+          output: first.output || '-',
+          penanggungJawab: first.penanggungJawab || '-',
+          targetKegiatan: first.targetKegiatan || '-',
+          resiko: first.resiko || '-',
+          tingkatResiko: first.tingkatResiko || '',
+          manfaat: first.manfaat || '-',
+          requester: meta.requester || first.penanggungJawab || 'Admin Unit',
+          type: meta.type || 'Buat Anggaran Cost',
+          date: meta.date || new Date().toISOString().slice(0,10),
+          status: mapWorkflowStatus(meta.status || first.status),
+          note: meta.note || first.catatan || '',
+          history: meta.history || [],
+          totalSource,
+          totalExpense,
+          gap: totalSource - totalExpense,
+          sourceRows,
+          expenseRows,
+          rows,
+          approvedBy: meta.approvedBy || '',
+          approvedAt: meta.approvedAt || ''
+        });
+      });
+      return built.sort((a,b) => String(b.nomorAnggaranCost).localeCompare(String(a.nomorAnggaranCost)));
     }
 
-    function canCurrentApproverApprove(request, approver){
-      if(!approver) return false;
-      if(approver.status !== 'Aktif') return false;
-      if(request.status !== 'Diajukan') return false;
-
-      const permissionKey = typeToPermissionKey(request.type);
-      if(!permissionKey) return false;
-      if(!approver.permissions[permissionKey]) return false;
-
-      const entityMatch = approver.entity === 'Semua' || approver.entity === request.entity;
-      if(!entityMatch) return false;
-
-      return true;
-    }
-
-    function getFilteredRequests(){
-      const q = document.getElementById('searchInput').value.trim().toLowerCase();
-      const type = document.getElementById('filterType').value;
+    function getFilteredGroups(){
+      const q = normalizeText(document.getElementById('searchInput').value);
       const entity = document.getElementById('filterEntity').value;
       const status = document.getElementById('filterStatus').value;
-
-      return requests.filter(item => {
-        if(type && item.type !== type) return false;
+      return approvalGroups.filter(item => {
         if(entity && item.entity !== entity) return false;
         if(status && item.status !== status) return false;
-
         if(q){
-          const hay = [item.number, item.entity, item.unit, item.type, item.requester, item.note, item.status].join(' ').toLowerCase();
+          const hay = normalizeText([item.nomorAnggaranCost,item.upkNama,item.uptNama,item.programNama,item.kegiatanNama,item.requester,item.note].join(' '));
           if(!hay.includes(q)) return false;
         }
         return true;
@@ -780,285 +619,413 @@
 
     function updateStats(data){
       const current = getCurrentApprover();
-      const draft = data.filter(x => x.status === 'Draft').length;
-      const submitted = data.filter(x => x.status === 'Diajukan').length;
-      const revision = data.filter(x => x.status === 'Perlu Revisi').length;
-      const active = data.filter(x => x.status === 'Anggaran Aktif').length;
-      const allowed = data.filter(x => canCurrentApproverApprove(x, current)).length;
-      const rejected = data.filter(x => x.status === 'Ditolak').length;
-
-      document.getElementById('heroDraft').textContent = draft;
-      document.getElementById('heroSubmitted').textContent = submitted;
-      document.getElementById('heroRevision').textContent = revision;
-      document.getElementById('heroActive').textContent = active;
-
+      document.getElementById('heroDraft').textContent = data.filter(x => x.status === 'Draft').length;
+      document.getElementById('heroSubmitted').textContent = data.filter(x => x.status === 'Diajukan').length;
+      document.getElementById('heroRevision').textContent = data.filter(x => x.status === 'Perlu Revisi').length;
+      document.getElementById('heroActive').textContent = data.filter(x => x.status === 'Anggaran Aktif').length;
       document.getElementById('statTotal').textContent = data.length;
-      document.getElementById('statUser').textContent = current ? current.name.split(' ')[0] : '—';
-      document.getElementById('statAllowed').textContent = allowed;
-      document.getElementById('statDenied').textContent = rejected;
+      document.getElementById('statSource').textContent = fmtShortCurrency(data.reduce((s,x) => s + x.totalSource, 0));
+      document.getElementById('statExpense').textContent = fmtShortCurrency(data.reduce((s,x) => s + x.totalExpense, 0));
+      document.getElementById('statAllowed').textContent = data.filter(x => canCurrentApproverApprove(x, current)).length;
     }
 
-    function renderStatusBadge(status){
-      const cfg = workflowLabels[status] || workflowLabels['Draft'];
-      return `<span class="badge ${cfg.badge}">${escapeHtml(cfg.text)}</span>`;
-    }
+    function renderStatusBadge(status){ const cfg = workflowLabels[status] || workflowLabels['Draft']; return `<span class="badge ${cfg.badge}">${escapeHtml(cfg.text)}</span>`; }
+    function renderAccessBadge(item, approver){ if(item.status === 'Draft') return '<span class="badge badge-primary">Siap Diajukan</span>'; if(item.status === 'Perlu Revisi') return '<span class="badge badge-accent">Ajukan Ulang</span>'; if(item.status === 'Disetujui') return '<span class="badge badge-success">Siap Aktivasi</span>'; if(item.status === 'Anggaran Aktif' || item.status === 'Ditolak') return '<span class="badge badge-primary">Read Only</span>'; return canCurrentApproverApprove(item, approver) ? '<span class="badge badge-success">Bisa Proses</span>' : '<span class="badge badge-danger">Tidak Bisa</span>'; }
 
-    function renderAccessBadge(item, approver){
-      if(item.status === 'Draft') return '<span class="badge badge-primary">Siap Diajukan</span>';
-      if(item.status === 'Perlu Revisi') return '<span class="badge badge-accent">Ajukan Ulang</span>';
-      if(item.status === 'Disetujui') return '<span class="badge badge-success">Siap Aktivasi</span>';
-      if(item.status === 'Anggaran Aktif' || item.status === 'Ditolak') return '<span class="badge badge-primary">Read Only</span>';
-      return canCurrentApproverApprove(item, approver)
-        ? '<span class="badge badge-success">Bisa Proses</span>'
-        : '<span class="badge badge-danger">Tidak Bisa</span>';
-    }
-
-    function nextStepLabel(status){
-      if(status === 'Draft') return 'Ajukan';
-      if(status === 'Diajukan') return 'Tolak / Revisi / Setujui';
-      if(status === 'Perlu Revisi') return 'Ajukan Ulang';
-      if(status === 'Disetujui') return 'Aktifkan Anggaran';
-      if(status === 'Anggaran Aktif') return 'Selesai';
-      if(status === 'Ditolak') return 'Selesai';
-      return '-';
-    }
+    function isPrintable(item){ return ['Disetujui','Anggaran Aktif'].includes(item.status); }
 
     function renderTable(data){
       const tbody = document.getElementById('requestTableBody');
+      const empty = document.getElementById('emptyState');
       const current = getCurrentApprover();
-
-      document.getElementById('tableSubtitle').textContent = `Menampilkan ${data.length} request approval`;
-
-      if(!data.length){
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="8">
-              <div style="padding:50px 16px;text-align:center;">
-                <div style="font-size:36px;color:#cad7e8;margin-bottom:12px;"><i class="fa-solid fa-inbox"></i></div>
-                <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:5px;">Tidak ada request</div>
-                <div style="font-size:13px;color:var(--text-muted);">Coba ubah filter atau reset sample data.</div>
-              </div>
-            </td>
-          </tr>
-        `;
-        return;
-      }
-
+      document.getElementById('tableSubtitle').textContent = `Menampilkan ${data.length} surat approval cost`;
+      if(!data.length){ tbody.innerHTML=''; empty.style.display='block'; return; }
+      empty.style.display='none';
       tbody.innerHTML = data.map(item => `
         <tr>
-          <td>
-            <div class="title-cell">${escapeHtml(item.number)}</div>
-            <div class="title-sub">${escapeHtml(item.date)}</div>
-          </td>
-          <td>
-            <div class="title-cell">${escapeHtml(item.entity)}</div>
-            <div class="title-sub">${escapeHtml(item.unit)}</div>
-          </td>
-          <td>
-            <span class="badge badge-accent">${escapeHtml(item.type)}</span>
-            <div class="title-sub" style="margin-top:6px;">Next: ${escapeHtml(nextStepLabel(item.status))}</div>
-          </td>
-          <td>
-            <div class="title-cell">${escapeHtml(item.requester)}</div>
-            <div class="title-sub">${escapeHtml(item.note || '-')}</div>
-          </td>
-          <td class="mono">${fmtCurrency(item.amount)}</td>
+          <td><div class="title-cell">${escapeHtml(item.nomorAnggaranCost)}</div><div class="title-sub">Requester: ${escapeHtml(item.requester || '-')}</div></td>
+          <td><div class="title-cell">${escapeHtml(item.upkNama)}</div><div class="title-sub">${escapeHtml(item.uptNama || 'Level UPK')}</div></td>
+          <td><div class="title-cell">${escapeHtml(item.programNama || '-')}</div><div class="title-sub">${escapeHtml(item.kegiatanNama || '-')}</div></td>
+          <td><div class="title-cell">${escapeHtml(item.periode)}</div><div class="title-sub">Output: ${escapeHtml(item.output || '-')}</div></td>
+          <td><div class="mono">${fmtCurrency(item.totalSource)}</div><div class="title-sub">${item.sourceRows.length} baris sumber dana</div></td>
+          <td><div class="mono">${fmtCurrency(item.totalExpense)}</div><div class="title-sub">${item.expenseRows.length} baris pengeluaran</div></td>
           <td>${renderStatusBadge(item.status)}</td>
           <td>${renderAccessBadge(item, current)}</td>
-          <td style="text-align:right;">
-            <div class="actions-inline">
-              <button class="act-btn primary" onclick="openDetail(${item.id})" title="Detail">
-                <i class="fa-solid fa-eye"></i>
-              </button>
-            </div>
-          </td>
+          <td style="text-align:right;"><div class="actions-inline">
+            <button class="act-btn primary" onclick="openDetail('${escapeHtml(item.nomorAnggaranCost)}')" title="Lihat surat"><i class="fa-solid fa-eye"></i></button>
+            ${isPrintable(item) ? `<button class="act-btn success" onclick="openPrintPreview('${escapeHtml(item.nomorAnggaranCost)}')" title="Cetak surat resmi"><i class="fa-solid fa-print"></i></button>` : ''}
+          </div></td>
         </tr>
       `).join('');
     }
 
-    function openDetail(id){
-      selectedRequestId = id;
-      const item = requests.find(x => x.id === id);
-      const current = getCurrentApprover();
+    function renderDetailTable(rows, emptyText){
+      if(!rows.length) return `<div class="letter-empty">${escapeHtml(emptyText)}</div>`;
+      return `
+        <div class="detail-table-wrap">
+          <table class="detail-table">
+            <thead>
+              <tr>
+                <th>Kode</th>
+                <th>Nama Mata Anggaran</th>
+                <th>Qty</th>
+                <th>Satuan</th>
+                <th>Harga Satuan</th>
+                <th>Subtotal</th>
+                <th>Catatan</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows.map(item => `
+                <tr>
+                  <td class="mono">${escapeHtml(item.mataAnggaranKode || '-')}</td>
+                  <td><div class="title-cell">${escapeHtml(item.mataAnggaranNama || '-')}</div><div class="title-sub">${escapeHtml(item.tipeMataAnggaran || '-')}</div></td>
+                  <td class="mono">${Number(item.qty || 0).toLocaleString('id-ID')}</td>
+                  <td>${escapeHtml(item.satuan || '-')}</td>
+                  <td class="mono">${fmtCurrency(item.hargaSatuan || 0)}</td>
+                  <td class="mono">${fmtCurrency(item.nominal || 0)}</td>
+                  <td>${escapeHtml(item.catatan || '-')}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="5">Total</td>
+                <td class="mono">${fmtCurrency(rows.reduce((s,x) => s + Number(x.nominal || 0), 0))}</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>`;
+    }
+
+    function openDetail(nomor){
+      selectedNomor = nomor;
+      const item = approvalGroups.find(x => x.nomorAnggaranCost === nomor);
       if(!item) return;
+      const current = getCurrentApprover();
+      document.getElementById('modalTitle').textContent = `Surat Approval ${item.nomorAnggaranCost}`;
+      document.getElementById('modalSub').textContent = `${item.type} · ${item.entity} · ${item.programNama || '-'} · ${item.kegiatanNama || '-'}`;
 
-      document.getElementById('modalTitle').textContent = item.number;
-      document.getElementById('modalSub').textContent = `${item.type} · ${item.entity} · ${item.unit}`;
+      document.getElementById('letterBox').innerHTML = `
+        <div class="letter-head">
+          <div>
+            <div class="letter-title">Surat Pengajuan Anggaran Cost</div>
+            <div class="letter-sub">Dokumen ini merangkum satu nomor anggaran cost lengkap dengan detail <b>sumber dana</b> dan <b>pengeluaran</b> dalam satu surat approval, agar approver dapat menilai kelayakan pendanaan, kebutuhan belanja, serta konteks kegiatan secara utuh.</div>
+          </div>
+          <div class="letter-no">
+            <div class="letter-no-label">Nomor Anggaran Cost</div>
+            <div class="letter-no-value">${escapeHtml(item.nomorAnggaranCost)}</div>
+            <div class="tiny-note">Tanggal pengajuan: ${escapeHtml(item.date || '-')}</div>
+          </div>
+        </div>
 
-      document.getElementById('detailGrid').innerHTML = `
-        <div class="detail-box">
-          <div class="detail-label">Requester</div>
-          <div class="detail-value">${escapeHtml(item.requester)}</div>
+        <div class="detail-grid">
+          <div class="detail-box"><div class="detail-label">UPK</div><div class="detail-value">${escapeHtml(item.upkNama)}</div></div>
+          <div class="detail-box"><div class="detail-label">UPT</div><div class="detail-value">${escapeHtml(item.uptNama || 'Level UPK')}</div></div>
+          <div class="detail-box"><div class="detail-label">Program</div><div class="detail-value">${escapeHtml(item.programNama || '-')}</div></div>
+          <div class="detail-box"><div class="detail-label">Kegiatan</div><div class="detail-value">${escapeHtml(item.kegiatanNama || '-')}</div></div>
+          <div class="detail-box"><div class="detail-label">Periode</div><div class="detail-value">${escapeHtml(item.periode)}</div></div>
+          <div class="detail-box"><div class="detail-label">Output</div><div class="detail-value">${escapeHtml(item.output || '-')}</div></div>
+          <div class="detail-box"><div class="detail-label">Penanggung Jawab</div><div class="detail-value">${escapeHtml(item.penanggungJawab || '-')}</div></div>
+          <div class="detail-box"><div class="detail-label">Requester</div><div class="detail-value">${escapeHtml(item.requester || '-')}</div></div>
+          <div class="detail-box"><div class="detail-label">Target Kegiatan</div><div class="detail-value">${escapeHtml(item.targetKegiatan || '-')}</div></div>
+          <div class="detail-box"><div class="detail-label">Resiko</div><div class="detail-value">${escapeHtml(item.resiko || '-')}</div></div>
+          <div class="detail-box"><div class="detail-label">Tingkat Resiko</div><div class="detail-value">${escapeHtml(item.tingkatResiko || '-')}</div></div>
+          <div class="detail-box"><div class="detail-label">Manfaat</div><div class="detail-value">${escapeHtml(item.manfaat || '-')}</div></div>
         </div>
-        <div class="detail-box">
-          <div class="detail-label">Tanggal</div>
-          <div class="detail-value">${escapeHtml(item.date)}</div>
+
+        <div class="summary-row">
+          <div class="summary-card"><div class="summary-label">Total Sumber Dana</div><div class="summary-value">${fmtCurrency(item.totalSource)}</div><div class="summary-sub">${item.sourceRows.length} detail pendanaan</div></div>
+          <div class="summary-card"><div class="summary-label">Total Pengeluaran</div><div class="summary-value">${fmtCurrency(item.totalExpense)}</div><div class="summary-sub">${item.expenseRows.length} detail belanja</div></div>
+          <div class="summary-card"><div class="summary-label">Selisih</div><div class="summary-value">${fmtCurrency(item.gap)}</div><div class="summary-sub">${item.gap >= 0 ? 'Sumber dana mencukupi pengeluaran' : 'Pengeluaran melebihi sumber dana'}</div></div>
         </div>
-        <div class="detail-box">
-          <div class="detail-label">Line Asal</div>
-          <div class="detail-value">${escapeHtml(item.lineFrom || '-')}</div>
-        </div>
-        <div class="detail-box">
-          <div class="detail-label">Line Tujuan</div>
-          <div class="detail-value">${escapeHtml(item.lineTo || '-')}</div>
-        </div>
-        <div class="detail-box">
-          <div class="detail-label">Nilai Lama</div>
-          <div class="detail-value">${fmtCurrency(item.oldAmount || 0)}</div>
-        </div>
-        <div class="detail-box">
-          <div class="detail-label">Nilai Baru</div>
-          <div class="detail-value">${fmtCurrency(item.newAmount || 0)}</div>
-        </div>
-        <div class="detail-box">
-          <div class="detail-label">Nominal Request</div>
-          <div class="detail-value">${fmtCurrency(item.amount || 0)}</div>
-        </div>
-        <div class="detail-box">
-          <div class="detail-label">Status Workflow</div>
-          <div class="detail-value">${escapeHtml(item.status)}<br><span style="font-size:12px;color:var(--text-muted);font-weight:600;">Tahap berikutnya: ${escapeHtml(nextStepLabel(item.status))}</span></div>
-        </div>
+
+        <div class="section-title">Detail Mata Anggaran Sumber Dana</div>
+        ${renderDetailTable(item.sourceRows, 'Belum ada detail sumber dana.')}
+
+        <div class="section-title">Detail Mata Anggaran Pengeluaran</div>
+        ${renderDetailTable(item.expenseRows, 'Belum ada detail pengeluaran.')}
+
+        <div class="section-title">Catatan Surat</div>
+        <div class="detail-box"><div class="detail-value">${escapeHtml(item.note || 'Tidak ada catatan tambahan.')}</div></div>
       `;
 
       const history = item.history || [];
-      document.getElementById('historyList').innerHTML = history.length
-        ? history.map(h => `
-            <div class="history-item">
-              <div class="history-title">${escapeHtml(h.action)} oleh ${escapeHtml(h.by)}</div>
-              <div class="history-sub">${escapeHtml(h.time)}${h.note ? ' · ' + escapeHtml(h.note) : ''}</div>
-            </div>
-          `).join('')
-        : `
-            <div class="history-item">
-              <div class="history-title">Belum ada riwayat</div>
-              <div class="history-sub">Request ini belum pernah diproses.</div>
-            </div>
-          `;
+      document.getElementById('historyList').innerHTML = history.length ? history.map(h => `
+        <div class="history-item">
+          <div class="history-title">${escapeHtml(h.action)} oleh ${escapeHtml(h.by)}</div>
+          <div class="history-sub">${escapeHtml(h.time || '-')} ${h.note ? '· ' + escapeHtml(h.note) : ''}</div>
+        </div>
+      `).join('') : '<div class="history-item"><div class="history-title">Belum ada riwayat</div><div class="history-sub">Request ini belum pernah diproses.</div></div>';
 
-      const can = canCurrentApproverApprove(item, current);
       let footer = `<button class="btn btn-ghost" onclick="closeModal('modalDetail')">Tutup</button>`;
-
+      if(isPrintable(item)){
+        footer += `<button class="btn btn-print" onclick="closeModal('modalDetail'); openPrintPreview('${escapeHtml(item.nomorAnggaranCost)}')"><i class="fa-solid fa-print"></i> Cetak Surat Resmi</button>`;
+      }
       if(item.status === 'Draft'){
         footer += `<button class="btn btn-primary" onclick="processRequest('Diajukan')"><i class="fa-solid fa-paper-plane"></i> Ajukan</button>`;
       } else if(item.status === 'Perlu Revisi'){
         footer += `<button class="btn btn-primary" onclick="processRequest('Diajukan')"><i class="fa-solid fa-paper-plane"></i> Ajukan Ulang</button>`;
       } else if(item.status === 'Diajukan'){
-        if(can){
-          footer += `
-            <button class="btn btn-danger" onclick="processRequest('Ditolak')"><i class="fa-solid fa-xmark"></i> Tolak</button>
-            <button class="btn btn-ghost" onclick="processRequest('Perlu Revisi')"><i class="fa-solid fa-rotate-left"></i> Revisi</button>
-            <button class="btn btn-success" onclick="processRequest('Disetujui')"><i class="fa-solid fa-check"></i> Setujui</button>
-          `;
+        if(canCurrentApproverApprove(item, current)){
+          footer += `<button class="btn btn-danger" onclick="processRequest('Ditolak')"><i class="fa-solid fa-xmark"></i> Tolak</button>`;
+          footer += `<button class="btn btn-ghost" onclick="processRequest('Perlu Revisi')"><i class="fa-solid fa-rotate-left"></i> Revisi</button>`;
+          footer += `<button class="btn btn-success" onclick="processRequest('Disetujui')"><i class="fa-solid fa-check"></i> Setujui</button>`;
         } else {
-          footer += `
-            <button class="btn btn-ghost" disabled style="opacity:.6;cursor:not-allowed;">
-              <i class="fa-solid fa-lock"></i> Akun ini tidak memiliki hak approval
-            </button>
-          `;
+          footer += `<button class="btn btn-ghost" disabled style="opacity:.6;cursor:not-allowed;"><i class="fa-solid fa-lock"></i> Akun ini tidak memiliki hak approval</button>`;
         }
       } else if(item.status === 'Disetujui'){
         footer += `<button class="btn btn-success" onclick="processRequest('Anggaran Aktif')"><i class="fa-solid fa-bolt"></i> Aktifkan Anggaran</button>`;
       }
-
       document.getElementById('modalFooter').innerHTML = footer;
       openModal('modalDetail');
     }
 
-    function processRequest(decision){
-      const current = getCurrentApprover();
-      const item = requests.find(x => x.id === selectedRequestId);
-      if(!item) return;
-
-      const submitFlow = ['Draft', 'Perlu Revisi'].includes(item.status) && decision === 'Diajukan';
-      const activateFlow = item.status === 'Disetujui' && decision === 'Anggaran Aktif';
-
-      if(!submitFlow && !activateFlow){
-        if(!current){
-          showToast('danger', 'fa-ban', 'Akun approver tidak ditemukan.');
-          return;
-        }
-        if(!canCurrentApproverApprove(item, current)){
-          showToast('danger', 'fa-ban', 'Akun ini tidak berhak melakukan approval pada request ini.');
-          return;
-        }
-      }
-
-      item.status = decision;
-      item.history = item.history || [];
-
-      const actor = submitFlow
-        ? item.requester
-        : activateFlow
-          ? 'Administrator Keuangan'
-          : current.name;
-
-      const actorNote = submitFlow
-        ? 'Requester mengajukan request.'
-        : activateFlow
-          ? 'Anggaran diaktifkan setelah disetujui.'
-          : `${current.role} · ${current.entity}`;
-
-      item.history.push({
-        action: decision,
-        by: actor,
-        time: new Date().toLocaleString('id-ID'),
-        note: actorNote
-      });
-
-      writeJson(REQUEST_KEY, requests);
-      closeModal('modalDetail');
-      renderAll();
-
-      const iconMap = {
-        'Diajukan': 'fa-paper-plane',
-        'Perlu Revisi': 'fa-rotate-left',
-        'Ditolak': 'fa-circle-xmark',
-        'Disetujui': 'fa-circle-check',
-        'Anggaran Aktif': 'fa-bolt'
-      };
-      const toneMap = {
-        'Diajukan': 'success',
-        'Perlu Revisi': 'warning',
-        'Ditolak': 'danger',
-        'Disetujui': 'success',
-        'Anggaran Aktif': 'success'
-      };
-
-      showToast(toneMap[decision] || 'success', iconMap[decision] || 'fa-circle-check',
-        `Request ${item.number} berhasil diubah menjadi ${decision}.`);
+    /* ====== PRINT PREVIEW ====== */
+    function buildPrintNomorSurat(item){
+      // Contoh format: K-067/UBTH/2026 → ambil dari nomor anggaran cost
+      const parts = item.nomorAnggaranCost.split('-');
+      return item.nomorAnggaranCost + '/UBTH/' + (item.waktuAwalTahun || new Date().getFullYear());
     }
 
-    function openModal(id){ document.getElementById(id).classList.add('open'); }
-    function closeModal(id){ document.getElementById(id).classList.remove('open'); }
-    function closeModalIfBg(event,id){ if(event.target === document.getElementById(id)) closeModal(id); }
+    function renderPrintDetailTable(rows, label, startNo){
+      if(!rows.length) return `<tr><td colspan="8" style="text-align:center;font-style:italic;padding:10px;">Tidak ada data ${label}.</td></tr>`;
+      return rows.map((r, i) => `
+        <tr>
+          <td class="td-center">${startNo + i}</td>
+          <td>${escapeHtml(r.mataAnggaranKode || '-')}</td>
+          <td>${escapeHtml(r.mataAnggaranNama || '-')}</td>
+          <td class="td-center">${Number(r.qty || 0).toLocaleString('id-ID')}</td>
+          <td class="td-center">${escapeHtml(r.satuan || '-')}</td>
+          <td class="td-right">${fmtCurrency(r.hargaSatuan || 0)}</td>
+          <td class="td-right">${fmtCurrency(r.nominal || 0)}</td>
+          <td>${escapeHtml(r.catatan || '-')}</td>
+        </tr>
+      `).join('');
+    }
+
+    function openPrintPreview(nomor){
+      const item = approvalGroups.find(x => x.nomorAnggaranCost === nomor);
+      if(!item) return;
+
+      document.getElementById('printModalLabel').textContent = nomor;
+
+      const approvedEntry = [...(item.history || [])].reverse().find(h => h.action === 'Disetujui' || h.action === 'Anggaran Aktif');
+      const approvedBy = approvedEntry?.by || '-';
+      const approvedAt = approvedEntry?.time || '-';
+
+      // Infer entity header
+      const upkLower = normalizeText(item.upkNama);
+      let entityLine = item.upkNama;
+      let unitLine = item.uptNama || '';
+
+      const nomorSurat = buildPrintNomorSurat(item);
+      const tanggalCetak = new Date().toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
+
+      const allRows = [...item.sourceRows, ...item.expenseRows];
+      const grandTotal = allRows.reduce((s,r) => s + Number(r.nominal||0), 0);
+
+      document.getElementById('printSheet').innerHTML = `
+        <div class="surat-ribbon">DISETUJUI</div>
+
+        <div class="surat-header">
+          <div class="surat-logo-row">
+            <div class="surat-logo-circle">BTH</div>
+            <div class="surat-org-info">
+              <div class="surat-instansi">Yayasan Bakti Tunas Husada</div>
+              <div class="surat-fakultas">${escapeHtml(unitLine || 'Sistem Anggaran')}</div>
+              <div class="surat-universitas">${escapeHtml(entityLine)}</div>
+              <div class="surat-address">Jl. Sudirman No. 1, Tasikmalaya, Jawa Barat &nbsp;|&nbsp; Telp. (0265) 000-0000</div>
+            </div>
+          </div>
+          <div class="surat-doc-title">
+            <h1>Rencana Kerja dan Anggaran</h1>
+            <h2>${escapeHtml(item.kegiatanNama || item.programNama || '-')}</h2>
+            <div class="surat-nomor">NOMOR : ${escapeHtml(nomorSurat)}</div>
+          </div>
+        </div>
+
+        <table class="surat-info-table">
+          <tr><td class="col-no">1</td><td class="col-label">Program</td><td class="col-sep">:</td><td class="col-val">${escapeHtml(item.programNama || '-')}</td></tr>
+          <tr><td class="col-no">2</td><td class="col-label">Target Kegiatan</td><td class="col-sep">:</td><td class="col-val">${escapeHtml(item.targetKegiatan || '-')}</td></tr>
+          <tr><td class="col-no">3</td><td class="col-label">Manfaat</td><td class="col-sep">:</td><td class="col-val">${escapeHtml(item.manfaat || '-')}</td></tr>
+          <tr><td class="col-no">4</td><td class="col-label">Risiko</td><td class="col-sep">:</td><td class="col-val">${escapeHtml(item.resiko || '-')}${item.tingkatResiko ? ' (Tingkat ' + escapeHtml(item.tingkatResiko) + ')' : ''}</td></tr>
+          <tr><td class="col-no">5</td><td class="col-label">Waktu Pelaksanaan</td><td class="col-sep">:</td><td class="col-val">${escapeHtml(item.periode)}</td></tr>
+          <tr><td class="col-no">6</td><td class="col-label">Jumlah Anggaran</td><td class="col-sep">:</td><td class="col-val" style="font-weight:700;">${fmtCurrency(grandTotal)}</td></tr>
+          <tr><td class="col-no">7</td><td class="col-label">Penanggung Jawab</td><td class="col-sep">:</td><td class="col-val">${escapeHtml(item.penanggungJawab || '-')}</td></tr>
+          <tr><td class="col-no">8</td><td class="col-label">Output</td><td class="col-sep">:</td><td class="col-val">${escapeHtml(item.output || '-')}</td></tr>
+        </table>
+
+        <div class="surat-section-head">Rincian Anggaran Sumber Dana</div>
+        <table class="surat-tabel" style="margin-top:0;">
+          <thead>
+            <tr>
+              <th style="width:32px">No.</th>
+              <th style="width:110px">Kode</th>
+              <th>Uraian / Mata Anggaran</th>
+              <th style="width:48px">Qty</th>
+              <th style="width:60px">Satuan</th>
+              <th style="width:130px">Harga Satuan</th>
+              <th style="width:140px">Jumlah</th>
+              <th>Catatan</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${renderPrintDetailTable(item.sourceRows, 'sumber dana', 1)}
+          </tbody>
+          <tfoot>
+            <tr class="tfoot-row">
+              <td colspan="6" style="text-align:right;font-weight:700;">Total Sumber Dana</td>
+              <td class="td-right">${fmtCurrency(item.totalSource)}</td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <div class="surat-section-head" style="margin-top:16px;">Rincian Anggaran Belanja / Pengeluaran</div>
+        <table class="surat-tabel" style="margin-top:0;">
+          <thead>
+            <tr>
+              <th style="width:32px">No.</th>
+              <th style="width:110px">Kode</th>
+              <th>Uraian / Mata Anggaran</th>
+              <th style="width:48px">Qty</th>
+              <th style="width:60px">Satuan</th>
+              <th style="width:130px">Harga Satuan</th>
+              <th style="width:140px">Jumlah</th>
+              <th>Catatan</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${renderPrintDetailTable(item.expenseRows, 'pengeluaran', 1)}
+          </tbody>
+          <tfoot>
+            <tr class="tfoot-row">
+              <td colspan="6" style="text-align:right;font-weight:700;">Total Pengeluaran</td>
+              <td class="td-right">${fmtCurrency(item.totalExpense)}</td>
+              <td></td>
+            </tr>
+            <tr class="grand-total-row">
+              <td colspan="6" style="text-align:right;">Selisih (Sumber Dana – Pengeluaran)</td>
+              <td class="td-right">${fmtCurrency(item.gap)}</td>
+              <td style="font-size:9pt;">${item.gap >= 0 ? 'Mencukupi' : 'KURANG'}</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <div class="surat-summary-box" style="margin-top:10px;">
+          <table>
+            <tr><td class="s-label">Total Sumber Dana</td><td class="s-sep">:</td><td class="s-val">${fmtCurrency(item.totalSource)}</td></tr>
+            <tr><td class="s-label">Total Pengeluaran</td><td class="s-sep">:</td><td class="s-val">${fmtCurrency(item.totalExpense)}</td></tr>
+            <tr class="s-total"><td class="s-label">Selisih Anggaran</td><td class="s-sep">:</td><td class="s-val" style="${item.gap < 0 ? 'color:#a00;' : ''}">${fmtCurrency(item.gap)}</td></tr>
+          </table>
+        </div>
+
+        ${item.note ? `<p style="font-size:10pt;margin:8px 0 0;"><b>Catatan:</b> ${escapeHtml(item.note)}</p>` : ''}
+
+        <div class="surat-ttd-section">
+          <div class="surat-ttd-col">
+            <div class="surat-ttd-label">Dibuat oleh,</div>
+            <div class="surat-ttd-space"></div>
+            <div class="surat-ttd-name">${escapeHtml(item.requester || 'Penanggung Jawab')}</div>
+            <div class="surat-ttd-jabatan">${escapeHtml(item.penanggungJawab || '-')}</div>
+          </div>
+          <div class="surat-ttd-col">
+            <div class="surat-ttd-label">Disetujui oleh,</div>
+            <div style="margin:10px auto;">
+              <div class="surat-stamp">
+                DISETUJUI<span>${escapeHtml(approvedAt.split(',')[0] || tanggalCetak)}</span>
+              </div>
+            </div>
+            <div class="surat-ttd-name">${escapeHtml(approvedBy || '-')}</div>
+            <div class="surat-ttd-jabatan">Pejabat yang Berwenang</div>
+            <div class="surat-ttd-jabatan" style="margin-top:3px;font-size:9pt;color:#555;">Disetujui: ${escapeHtml(approvedAt || tanggalCetak)}</div>
+          </div>
+        </div>
+
+        <p style="font-size:8.5pt;color:#666;margin-top:18px;border-top:1px solid #ccc;padding-top:8px;">
+          Dokumen ini dicetak secara digital melalui Sistem Anggaran Bakti Tunas Husada pada ${tanggalCetak}. 
+          Nomor Anggaran Cost: <b>${escapeHtml(item.nomorAnggaranCost)}</b> | 
+          Status: <b>${escapeHtml(item.status)}</b>
+        </p>
+      `;
+
+      document.getElementById('printModal').classList.add('open');
+    }
+
+    function closePrintModal(){
+      document.getElementById('printModal').classList.remove('open');
+    }
+
+    function closePrintIfBg(event){
+      if(event.target === document.getElementById('printModal')) closePrintModal();
+    }
+
+    function upsertRequestMeta(nomor, patch){
+      let item = requestsMeta.find(x => String(x.nomorAnggaranCost || x.number || '') === nomor);
+      if(!item){ item = {id: nextRequestId(), nomorAnggaranCost: nomor, number: nomor, date: new Date().toISOString().slice(0,10), type:'Buat Anggaran Cost', history:[]}; requestsMeta.unshift(item); }
+      Object.assign(item, patch);
+      writeJson(REQUEST_KEY, requestsMeta);
+    }
+
+    function processRequest(decision){
+      const group = approvalGroups.find(x => x.nomorAnggaranCost === selectedNomor);
+      if(!group) return;
+      const current = getCurrentApprover();
+      const submitFlow = ['Draft','Perlu Revisi'].includes(group.status) && decision === 'Diajukan';
+      const activateFlow = group.status === 'Disetujui' && decision === 'Anggaran Aktif';
+      if(!submitFlow && !activateFlow && !canCurrentApproverApprove(group, current)){
+        showToast('danger','fa-ban','Akun ini tidak berhak memproses surat ini.');
+        return;
+      }
+      const actor = submitFlow ? (group.requester || 'Requester') : (activateFlow ? 'Administrator Keuangan' : current.name);
+      const note = submitFlow ? 'Surat diajukan untuk approval.' : (activateFlow ? 'Anggaran diaktifkan setelah disetujui.' : `${current.role} · ${current.entity}`);
+      const history = [...(group.history || []), {action: decision, by: actor, time: new Date().toLocaleString('id-ID'), note}];
+      const patch = {status: decision, requester: group.requester, entity: group.entity, type: group.type, date: group.date, note: group.note, history};
+      if(decision === 'Disetujui') { patch.approvedBy = actor; patch.approvedAt = new Date().toLocaleString('id-ID'); }
+      upsertRequestMeta(group.nomorAnggaranCost, patch);
+      closeModal('modalDetail');
+      renderAll();
+      const iconMap = {'Diajukan':'fa-paper-plane','Perlu Revisi':'fa-rotate-left','Ditolak':'fa-circle-xmark','Disetujui':'fa-circle-check','Anggaran Aktif':'fa-bolt'};
+      const toneMap = {'Diajukan':'success','Perlu Revisi':'warning','Ditolak':'danger','Disetujui':'success','Anggaran Aktif':'success'};
+      showToast(toneMap[decision] || 'success', iconMap[decision] || 'fa-circle-check', `Surat ${group.nomorAnggaranCost} berhasil diubah menjadi ${decision}.`);
+      if(decision === 'Disetujui'){
+        setTimeout(() => {
+          if(confirm('Surat berhasil disetujui! Buka pratinjau cetak surat resmi sekarang?')){
+            openPrintPreview(group.nomorAnggaranCost);
+          }
+        }, 600);
+      }
+    }
+
+    function resetApprovalRequests(){
+      if(!confirm('Reset sample approval cost dan data pendukung?')) return;
+      writeJson(MASTER_KEY, fallbackMaster);
+      writeJson(MATA_KEY, sampleMata);
+      writeJson(COST_KEY, sampleBudgets);
+      writeJson(REQUEST_KEY, [
+        {id:1, nomorAnggaranCost:'AC-2026-0001', number:'AC-2026-0001', date:'2026-04-16', entity:'Universitas', type:'Buat Anggaran Cost', requester:'Kepala Pusat Karir', status:'Draft', note:'Surat masih draft.', history:[{action:'Draft', by:'Kepala Pusat Karir', time:'16/04/2026, 08.00.00', note:'Surat approval dibuat.'}]},
+        {id:2, nomorAnggaranCost:'AC-2026-0002', number:'AC-2026-0002', date:'2026-04-16', entity:'Klinik', type:'Buat Anggaran Cost', requester:'Kepala Administrasi Klinik', status:'Disetujui', note:'Sudah disetujui.', approvedBy:'Rektor UBTH', approvedAt:'17/04/2026, 09.45.00', history:[{action:'Draft', by:'Kepala Administrasi Klinik', time:'16/04/2026, 09.00.00', note:'Surat dibuat.'},{action:'Diajukan', by:'Kepala Administrasi Klinik', time:'16/04/2026, 09.20.00', note:'Diajukan ke approver.'},{action:'Disetujui', by:'Rektor UBTH', time:'17/04/2026, 09.45.00', note:'Disetujui oleh pimpinan.'}]}
+      ]);
+      renderAll();
+      showToast('success','fa-database','Sample approval cost berhasil direset. AC-2026-0002 sudah berstatus Disetujui — klik ikon print untuk mencoba!');
+    }
 
     function renderAll(){
-      master = readJson(MASTER_KEY);
-      requests = readJson(REQUEST_KEY);
-
+      loadSources();
       populateApproverSelect();
-      const data = getFilteredRequests();
-      updateStats(data);
-      renderTable(data);
+      approvalGroups = buildApprovalGroups();
+      const filtered = getFilteredGroups();
+      updateStats(filtered);
+      renderTable(filtered);
     }
 
     ensureSeed();
-    master = readJson(MASTER_KEY);
-    requests = readJson(REQUEST_KEY);
-
-    document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('id-ID', {
-      weekday:'short', day:'numeric', month:'long', year:'numeric'
-    });
-
+    document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('id-ID', {weekday:'short', day:'numeric', month:'long', year:'numeric'});
     renderAll();
-
-    window.addEventListener('storage', (event) => {
-      if(event.key === MASTER_KEY || event.key === REQUEST_KEY){
-        renderAll();
-      }
-    });
+    window.addEventListener('storage', event => { if([MASTER_KEY, REQUEST_KEY, COST_KEY, MATA_KEY].includes(event.key)) renderAll(); });
   </script>
-
-  <script src="/sidebar.js" defer></script>
+  <script src="./sidebar.js" defer></script>
 </body>
 </html>
