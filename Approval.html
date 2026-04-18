@@ -179,64 +179,51 @@
       background:#fff;
       border-radius:4px;
       box-shadow:0 20px 60px rgba(0,0,0,.38);
-      padding:60px 72px;
+      padding:48px 56px;
       font-family:'Times New Roman','Times',Georgia,serif;
       color:#000;
-      font-size:13pt;
-      line-height:1.55;
+      font-size:11pt;
+      line-height:1.5;
       width:100%;
     }
 
-    /* ─── Header Surat ─── */
-    .surat-header{text-align:center;padding-bottom:14px;border-bottom:3px double #000;margin-bottom:20px}
-    .surat-logo-row{display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:10px}
-    .surat-logo-circle{width:68px;height:68px;border:3px solid #000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;letter-spacing:-1px;font-family:'Times New Roman',serif;flex-shrink:0}
-    .surat-org-info{text-align:left}
-    .surat-instansi{font-size:10pt;font-weight:400;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:2px}
-    .surat-fakultas{font-size:14pt;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:2px}
-    .surat-universitas{font-size:17pt;font-weight:900;letter-spacing:0.5px;text-transform:uppercase}
-    .surat-address{font-size:8.5pt;color:#444;margin-top:3px}
-    .surat-doc-title{margin-top:14px}
-    .surat-doc-title h1{font-size:15pt;font-weight:900;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:2px}
-    .surat-doc-title h2{font-size:12pt;font-weight:700;font-style:italic;margin-bottom:2px}
-    .surat-nomor{font-size:10pt;font-weight:400;margin-top:4px}
+    /* ─── Header RKA ─── */
+    .surat-header{text-align:center;margin-bottom:18px}
+    .surat-doc-title h1{font-size:18pt;font-weight:900;text-transform:uppercase;letter-spacing:2px;margin-bottom:6px}
+    .surat-doc-title h2{font-size:11pt;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px}
+    .surat-doc-title h3{font-size:11pt;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px}
+    .surat-nomor{font-size:10.5pt;font-weight:400;margin-top:4px}
 
     /* ─── Info rows ─── */
-    .surat-info-table{width:100%;border-collapse:collapse;margin:18px 0}
-    .surat-info-table td{padding:3px 0;font-size:11pt;vertical-align:top}
-    .surat-info-table .col-no{width:28px;font-weight:700;color:#000}
-    .surat-info-table .col-label{width:180px;font-weight:700}
-    .surat-info-table .col-sep{width:18px;text-align:center}
+    .surat-info-table{width:100%;border-collapse:collapse;margin:12px 0;border:1.5px solid #333}
+    .surat-info-table tr{border-bottom:1px solid #aaa}
+    .surat-info-table tr:last-child{border-bottom:none}
+    .surat-info-table td{padding:4px 8px;font-size:10.5pt;vertical-align:top}
+    .surat-info-table .col-no{width:32px;font-weight:400;color:#000;border-right:1px solid #aaa}
+    .surat-info-table .col-label{width:210px;font-weight:400;border-right:1px solid #aaa}
+    .surat-info-table .col-sep{width:16px;text-align:center;border-right:1px solid #aaa}
     .surat-info-table .col-val{color:#111}
 
     /* ─── Section heading ─── */
-    .surat-section-head{background:#000;color:#fff;text-align:center;font-size:10.5pt;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:5px 10px;margin:20px 0 0}
+    .surat-section-head{background:#fff;color:#000;text-align:center;font-size:11pt;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:6px 10px;border:1.5px solid #333;margin:0}
 
     /* ─── Rincian table ─── */
-    .surat-tabel{width:100%;border-collapse:collapse;margin:0 0 18px;font-size:10pt}
-    .surat-tabel th{background:#e8e8e8;border:1.5px solid #555;padding:6px 8px;text-align:center;font-weight:700;font-size:9.5pt;text-transform:uppercase}
-    .surat-tabel td{border:1.5px solid #555;padding:5px 8px;vertical-align:top}
+    .surat-tabel{width:100%;border-collapse:collapse;margin:0 0 0;font-size:10pt}
+    .surat-tabel th{background:#fff;border:1.5px solid #333;padding:5px 8px;text-align:center;font-weight:700;font-size:9.5pt;vertical-align:middle}
+    .surat-tabel td{border:1.5px solid #333;padding:4px 8px;vertical-align:top}
     .surat-tabel .td-center{text-align:center}
     .surat-tabel .td-right{text-align:right}
-    .surat-tabel .tfoot-row td{background:#f0f0f0;font-weight:700;font-size:10pt}
-    .surat-tabel .grand-total-row td{background:#d4d4d4;font-weight:900;font-size:11pt}
-
-    /* ─── Summary info ─── */
-    .surat-summary-box{border:1.5px solid #000;padding:10px 14px;margin:14px 0;font-size:10.5pt}
-    .surat-summary-box table{width:100%;border-collapse:collapse}
-    .surat-summary-box td{padding:2px 4px;vertical-align:top}
-    .surat-summary-box .s-label{font-weight:700;width:220px}
-    .surat-summary-box .s-sep{width:14px;text-align:center}
-    .surat-summary-box .s-val{text-align:right;font-family:'Courier New',monospace}
-    .surat-summary-box .s-total td{border-top:1.5px solid #000;font-weight:900;font-size:11.5pt;padding-top:6px}
+    .surat-tabel .td-subhead td{font-weight:700;background:#fff;font-size:10pt}
+    .surat-tabel .tfoot-row td{background:#fff;font-weight:700;font-size:10pt}
+    .surat-tabel .grand-total-row td{background:#fff;font-weight:900;font-size:10.5pt}
 
     /* ─── TTD area ─── */
-    .surat-ttd-section{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:30px;font-size:10.5pt}
-    .surat-ttd-col{text-align:center}
-    .surat-ttd-label{font-weight:700;margin-bottom:4px}
-    .surat-ttd-space{height:64px;border-bottom:1.5px solid #000;margin:10px auto;width:180px}
-    .surat-ttd-name{font-weight:700;font-size:11.5pt;text-decoration:underline}
-    .surat-ttd-jabatan{font-size:9.5pt;color:#333}
+    .surat-ttd-section{display:flex;justify-content:flex-end;margin-top:24px;font-size:10.5pt}
+    .surat-ttd-col{text-align:center;min-width:220px}
+    .surat-ttd-label{font-weight:400;margin-bottom:2px}
+    .surat-ttd-space{height:72px}
+    .surat-ttd-name{font-weight:700;font-size:11pt;text-decoration:underline}
+    .surat-ttd-jabatan{font-size:9.5pt;color:#222}
 
     /* ─── Stamp / watermark ─── */
     .surat-stamp{display:inline-block;border:4px double #1a5c2e;border-radius:50%;padding:10px 16px;color:#1a5c2e;font-weight:900;font-size:11pt;text-align:center;transform:rotate(-12deg);margin-top:6px;letter-spacing:1px}
@@ -790,17 +777,15 @@
     }
 
     function renderPrintDetailTable(rows, label, startNo){
-      if(!rows.length) return `<tr><td colspan="8" style="text-align:center;font-style:italic;padding:10px;">Tidak ada data ${label}.</td></tr>`;
+      if(!rows.length) return `<tr><td colspan="6" style="text-align:center;font-style:italic;padding:10px;">Tidak ada data ${label}.</td></tr>`;
       return rows.map((r, i) => `
         <tr>
-          <td class="td-center">${startNo + i}</td>
           <td>${escapeHtml(r.mataAnggaranKode || '-')}</td>
           <td>${escapeHtml(r.mataAnggaranNama || '-')}</td>
           <td class="td-center">${Number(r.qty || 0).toLocaleString('id-ID')}</td>
           <td class="td-center">${escapeHtml(r.satuan || '-')}</td>
-          <td class="td-right">${fmtCurrency(r.hargaSatuan || 0)}</td>
-          <td class="td-right">${fmtCurrency(r.nominal || 0)}</td>
-          <td>${escapeHtml(r.catatan || '-')}</td>
+          <td class="td-right">${Number(r.hargaSatuan || 0).toLocaleString('id-ID')}</td>
+          <td class="td-right">${Number(r.nominal || 0).toLocaleString('id-ID')}</td>
         </tr>
       `).join('');
     }
@@ -826,128 +811,82 @@
       const allRows = [...item.sourceRows, ...item.expenseRows];
       const grandTotal = allRows.reduce((s,r) => s + Number(r.nominal||0), 0);
 
+      // Derive location/date for TTD
+      const ttdCity = 'Tasikmalaya';
+      const ttdDate = new Date().toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
+
       document.getElementById('printSheet').innerHTML = `
         <div class="surat-ribbon">DISETUJUI</div>
 
         <div class="surat-header">
-          <div class="surat-logo-row">
-            <div class="surat-logo-circle">BTH</div>
-            <div class="surat-org-info">
-              <div class="surat-instansi">Yayasan Bakti Tunas Husada</div>
-              <div class="surat-fakultas">${escapeHtml(unitLine || 'Sistem Anggaran')}</div>
-              <div class="surat-universitas">${escapeHtml(entityLine)}</div>
-              <div class="surat-address">Jl. Sudirman No. 1, Tasikmalaya, Jawa Barat &nbsp;|&nbsp; Telp. (0265) 000-0000</div>
-            </div>
-          </div>
           <div class="surat-doc-title">
             <h1>Rencana Kerja dan Anggaran</h1>
             <h2>${escapeHtml(item.kegiatanNama || item.programNama || '-')}</h2>
-            <div class="surat-nomor">NOMOR : ${escapeHtml(nomorSurat)}</div>
+            <h3>${escapeHtml(entityLine)}</h3>
+            <div class="surat-nomor">${escapeHtml(nomorSurat)}</div>
           </div>
         </div>
 
         <table class="surat-info-table">
-          <tr><td class="col-no">1</td><td class="col-label">Program</td><td class="col-sep">:</td><td class="col-val">${escapeHtml(item.programNama || '-')}</td></tr>
-          <tr><td class="col-no">2</td><td class="col-label">Target Kegiatan</td><td class="col-sep">:</td><td class="col-val">${escapeHtml(item.targetKegiatan || '-')}</td></tr>
-          <tr><td class="col-no">3</td><td class="col-label">Manfaat</td><td class="col-sep">:</td><td class="col-val">${escapeHtml(item.manfaat || '-')}</td></tr>
-          <tr><td class="col-no">4</td><td class="col-label">Risiko</td><td class="col-sep">:</td><td class="col-val">${escapeHtml(item.resiko || '-')}${item.tingkatResiko ? ' (Tingkat ' + escapeHtml(item.tingkatResiko) + ')' : ''}</td></tr>
-          <tr><td class="col-no">5</td><td class="col-label">Waktu Pelaksanaan</td><td class="col-sep">:</td><td class="col-val">${escapeHtml(item.periode)}</td></tr>
-          <tr><td class="col-no">6</td><td class="col-label">Jumlah Anggaran</td><td class="col-sep">:</td><td class="col-val" style="font-weight:700;">${fmtCurrency(grandTotal)}</td></tr>
-          <tr><td class="col-no">7</td><td class="col-label">Penanggung Jawab</td><td class="col-sep">:</td><td class="col-val">${escapeHtml(item.penanggungJawab || '-')}</td></tr>
-          <tr><td class="col-no">8</td><td class="col-label">Output</td><td class="col-sep">:</td><td class="col-val">${escapeHtml(item.output || '-')}</td></tr>
+          <tr><td class="col-no">1.</td><td class="col-label">PROGRAM</td><td class="col-sep">:</td><td class="col-val">${escapeHtml(item.programNama || '-')}</td></tr>
+          <tr><td class="col-no">2.</td><td class="col-label">TARGET KEGIATAN</td><td class="col-sep">:</td><td class="col-val">${escapeHtml(item.targetKegiatan || '-')}</td></tr>
+          <tr><td class="col-no">3.</td><td class="col-label">MANFAAT</td><td class="col-sep">:</td><td class="col-val">${escapeHtml(item.manfaat || '-')}</td></tr>
+          <tr><td class="col-no">4.</td><td class="col-label">RISIKO</td><td class="col-sep">:</td><td class="col-val">${escapeHtml(item.resiko || '-')}${item.tingkatResiko ? ' (Tingkat ' + escapeHtml(item.tingkatResiko) + ')' : ''}</td></tr>
+          <tr><td class="col-no">5.</td><td class="col-label">NILAI</td><td class="col-sep">:</td><td class="col-val" style="font-weight:700;">Rp${Number(grandTotal).toLocaleString('id-ID')}</td></tr>
+          <tr><td class="col-no">6.</td><td class="col-label">PENANGGUNGJAWAB</td><td class="col-sep">:</td><td class="col-val">${escapeHtml(item.penanggungJawab || '-')}</td></tr>
+          <tr><td class="col-no">7.</td><td class="col-label">WAKTU KEGIATAN</td><td class="col-sep">:</td><td class="col-val">${escapeHtml(item.periode)}</td></tr>
         </table>
 
-        <div class="surat-section-head">Rincian Anggaran Sumber Dana</div>
-        <table class="surat-tabel" style="margin-top:0;">
+        <div class="surat-section-head">Rincian Anggaran Belanja</div>
+        <table class="surat-tabel">
           <thead>
             <tr>
-              <th style="width:32px">No.</th>
-              <th style="width:110px">Kode</th>
-              <th>Uraian / Mata Anggaran</th>
-              <th style="width:48px">Qty</th>
-              <th style="width:60px">Satuan</th>
-              <th style="width:130px">Harga Satuan</th>
-              <th style="width:140px">Jumlah</th>
-              <th>Catatan</th>
+              <th rowspan="2" style="width:90px;">KODE MATA<br>ANGGARAN</th>
+              <th rowspan="2">URAIAN</th>
+              <th colspan="4">RINCIAN PERHITUNGAN</th>
+            </tr>
+            <tr>
+              <th style="width:52px;">Volume</th>
+              <th style="width:60px;">Satuan</th>
+              <th style="width:140px;">Harga Satuan (Rp)</th>
+              <th style="width:130px;">Jumlah (Rp)</th>
             </tr>
           </thead>
           <tbody>
-            ${renderPrintDetailTable(item.sourceRows, 'sumber dana', 1)}
-          </tbody>
-          <tfoot>
-            <tr class="tfoot-row">
-              <td colspan="6" style="text-align:right;font-weight:700;">Total Sumber Dana</td>
-              <td class="td-right">${fmtCurrency(item.totalSource)}</td>
+            <!-- SUMBER DANA -->
+            <tr class="td-subhead">
               <td></td>
+              <td><b>1. SUMBER DANA</b></td>
+              <td></td><td></td><td></td>
+              <td class="td-right"><b>${Number(item.totalSource).toLocaleString('id-ID')}</b></td>
             </tr>
-          </tfoot>
-        </table>
-
-        <div class="surat-section-head" style="margin-top:16px;">Rincian Anggaran Belanja / Pengeluaran</div>
-        <table class="surat-tabel" style="margin-top:0;">
-          <thead>
-            <tr>
-              <th style="width:32px">No.</th>
-              <th style="width:110px">Kode</th>
-              <th>Uraian / Mata Anggaran</th>
-              <th style="width:48px">Qty</th>
-              <th style="width:60px">Satuan</th>
-              <th style="width:130px">Harga Satuan</th>
-              <th style="width:140px">Jumlah</th>
-              <th>Catatan</th>
+            ${renderPrintDetailTable(item.sourceRows, 'sumber dana', 1)}
+            <!-- PENGELUARAN -->
+            <tr class="td-subhead">
+              <td></td>
+              <td><b>2. PENGELUARAN</b></td>
+              <td></td><td></td><td></td>
+              <td class="td-right"><b>${Number(item.totalExpense).toLocaleString('id-ID')}</b></td>
             </tr>
-          </thead>
-          <tbody>
             ${renderPrintDetailTable(item.expenseRows, 'pengeluaran', 1)}
           </tbody>
-          <tfoot>
-            <tr class="tfoot-row">
-              <td colspan="6" style="text-align:right;font-weight:700;">Total Pengeluaran</td>
-              <td class="td-right">${fmtCurrency(item.totalExpense)}</td>
-              <td></td>
-            </tr>
-            <tr class="grand-total-row">
-              <td colspan="6" style="text-align:right;">Selisih (Sumber Dana – Pengeluaran)</td>
-              <td class="td-right">${fmtCurrency(item.gap)}</td>
-              <td style="font-size:9pt;">${item.gap >= 0 ? 'Mencukupi' : 'KURANG'}</td>
-            </tr>
-          </tfoot>
         </table>
 
-        <div class="surat-summary-box" style="margin-top:10px;">
-          <table>
-            <tr><td class="s-label">Total Sumber Dana</td><td class="s-sep">:</td><td class="s-val">${fmtCurrency(item.totalSource)}</td></tr>
-            <tr><td class="s-label">Total Pengeluaran</td><td class="s-sep">:</td><td class="s-val">${fmtCurrency(item.totalExpense)}</td></tr>
-            <tr class="s-total"><td class="s-label">Selisih Anggaran</td><td class="s-sep">:</td><td class="s-val" style="${item.gap < 0 ? 'color:#a00;' : ''}">${fmtCurrency(item.gap)}</td></tr>
-          </table>
-        </div>
-
-        ${item.note ? `<p style="font-size:10pt;margin:8px 0 0;"><b>Catatan:</b> ${escapeHtml(item.note)}</p>` : ''}
+        ${item.note ? `<p style="font-size:9.5pt;margin:10px 0 0;"><b>Catatan:</b> ${escapeHtml(item.note)}</p>` : ''}
 
         <div class="surat-ttd-section">
           <div class="surat-ttd-col">
-            <div class="surat-ttd-label">Dibuat oleh,</div>
+            <div class="surat-ttd-label">${escapeHtml(ttdCity)}, ${escapeHtml(ttdDate)}</div>
+            <div class="surat-ttd-label" style="margin-top:4px;">Penanggungjawab Kegiatan</div>
+            <div class="surat-ttd-label">${escapeHtml(unitLine ? unitLine.split('/')[0].trim() : entityLine)}</div>
             <div class="surat-ttd-space"></div>
-            <div class="surat-ttd-name">${escapeHtml(item.requester || 'Penanggung Jawab')}</div>
-            <div class="surat-ttd-jabatan">${escapeHtml(item.penanggungJawab || '-')}</div>
-          </div>
-          <div class="surat-ttd-col">
-            <div class="surat-ttd-label">Disetujui oleh,</div>
-            <div style="margin:10px auto;">
-              <div class="surat-stamp">
-                DISETUJUI<span>${escapeHtml(approvedAt.split(',')[0] || tanggalCetak)}</span>
-              </div>
-            </div>
-            <div class="surat-ttd-name">${escapeHtml(approvedBy || '-')}</div>
-            <div class="surat-ttd-jabatan">Pejabat yang Berwenang</div>
-            <div class="surat-ttd-jabatan" style="margin-top:3px;font-size:9pt;color:#555;">Disetujui: ${escapeHtml(approvedAt || tanggalCetak)}</div>
+            <div class="surat-ttd-name">${escapeHtml(item.penanggungJawab || item.requester || '-')}</div>
           </div>
         </div>
 
-        <p style="font-size:8.5pt;color:#666;margin-top:18px;border-top:1px solid #ccc;padding-top:8px;">
-          Dokumen ini dicetak secara digital melalui Sistem Anggaran Bakti Tunas Husada pada ${tanggalCetak}. 
-          Nomor Anggaran Cost: <b>${escapeHtml(item.nomorAnggaranCost)}</b> | 
-          Status: <b>${escapeHtml(item.status)}</b>
+        <p style="font-size:8pt;color:#666;margin-top:16px;border-top:1px solid #ccc;padding-top:6px;">
+          Dicetak melalui Sistem Anggaran Bakti Tunas Husada &nbsp;|&nbsp; ${tanggalCetak} &nbsp;|&nbsp; 
+          No: <b>${escapeHtml(item.nomorAnggaranCost)}</b> &nbsp;|&nbsp; Status: <b>${escapeHtml(item.status)}</b>
         </p>
       `;
 

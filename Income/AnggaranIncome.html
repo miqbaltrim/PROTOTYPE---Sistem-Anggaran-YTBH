@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Anggaran Income — Sistem Anggaran</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../sidebar.css">
   <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-
   <style>
     :root{
       --bg:#f4f7fc;
@@ -14,7 +14,6 @@
       --line:#d7e2f1;
       --line-soft:#e7eef7;
       --primary:#3972B8;
-      --primary-2:#2a5d9a;
       --primary-soft:rgba(57,114,184,.10);
       --accent:#F68B21;
       --accent-soft:rgba(246,139,33,.12);
@@ -38,12 +37,11 @@
     .breadcrumb{display:flex;gap:6px;flex-wrap:wrap;font-size:13px;color:var(--text-muted)}
     .breadcrumb b{color:var(--text);font-weight:700}
     .topbar-right{display:flex;align-items:center;gap:10px}
-    .chip-info,.topbar-date{padding:7px 12px;border-radius:999px;background:var(--bg-soft);border:1px solid var(--line);font-size:12px;color:var(--text-soft);white-space:nowrap}
+    .chip-info,.topbar-date{padding:7px 12px;border-radius:999px;background:var(--bg-soft);border:1px solid var(--line);font-size:12px;color:var(--text-soft)}
     .content{padding:30px 34px 42px;display:flex;flex-direction:column;gap:22px}
     .page-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
     .page-title{font-family:'Lora',serif;font-size:28px;line-height:1.25}
     .page-title em{color:var(--primary);font-style:italic}
-    .page-sub{margin-top:8px;max-width:860px;font-size:13.5px;line-height:1.7;color:var(--text-soft)}
     .page-actions{display:flex;gap:10px;flex-wrap:wrap}
     .btn{border:none;border-radius:11px;padding:10px 16px;display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:.18s;font-family:'Plus Jakarta Sans',sans-serif}
     .btn i{font-size:12px}
@@ -54,18 +52,20 @@
     .btn-accent{background:var(--accent);color:#fff;box-shadow:0 6px 18px rgba(246,139,33,.24)}
     .btn-accent:hover{transform:translateY(-1px);background:#ff9d3a}
     .btn-sm{padding:7px 12px;font-size:12px}
-    .hero{background:linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);color:#fff;border-radius:22px;padding:24px 26px;box-shadow:0 16px 36px rgba(57,114,184,.22);display:grid;grid-template-columns:1.2fr .9fr;gap:18px;position:relative;overflow:hidden}
+
+    .hero{background:linear-gradient(135deg, var(--primary) 0%, #2a5d9a 100%);color:#fff;border-radius:22px;padding:24px 26px;box-shadow:0 16px 36px rgba(57,114,184,.22);display:grid;grid-template-columns:1.2fr .9fr;gap:18px;overflow:hidden;position:relative}
     .hero::before,.hero::after{content:'';position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.12)}
     .hero::before{width:180px;height:180px;top:-50px;right:-20px}
     .hero::after{width:120px;height:120px;bottom:-45px;right:90px}
     .hero-left,.hero-right{position:relative;z-index:1}
     .hero-title{font-family:'Lora',serif;font-size:28px;line-height:1.25}
-    .hero-sub{margin-top:10px;font-size:13px;line-height:1.7;color:rgba(255,255,255,.78);max-width:720px}
+    .hero-sub{margin-top:10px;font-size:13px;line-height:1.7;color:rgba(255,255,255,.78);max-width:700px}
     .hero-right{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
     .hero-mini{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:15px 16px}
     .hero-mini-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.62);margin-bottom:7px}
     .hero-mini-value{font-family:'DM Mono',monospace;font-size:20px;font-weight:500}
     .hero-mini-sub{margin-top:6px;font-size:12px;color:rgba(255,255,255,.66)}
+
     .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
     .stat-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px 18px 16px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden;transition:.18s}
     .stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
@@ -82,18 +82,19 @@
     .stat-label{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);font-weight:700;margin-bottom:5px}
     .stat-value{font-family:'DM Mono',monospace;font-size:23px;line-height:1}
     .stat-sub{margin-top:6px;font-size:12px;color:var(--text-muted)}
+
     .toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
     .search-wrap{position:relative;flex:1;min-width:240px}
     .search-icon{position:absolute;top:50%;left:13px;transform:translateY(-50%);color:var(--text-muted);font-size:13px}
     .search-input,.filter-select,.form-input,.form-select,.form-textarea{width:100%;border:1.5px solid var(--line);background:#fff;border-radius:11px;padding:10px 12px;font-size:13px;color:var(--text);outline:none;transition:.18s;font-family:'Plus Jakarta Sans',sans-serif}
     .search-input{padding-left:36px}
     .search-input:focus,.filter-select:focus,.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(57,114,184,.16)}
-    .toolbar-right{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+    .toolbar-right{margin-left:auto;display:flex;gap:8px}
+
     .panel{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-sm)}
     .panel-head{padding:16px 20px;border-bottom:1px solid var(--line-soft);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
     .panel-title{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
     .panel-sub{font-size:12px;color:var(--text-muted);margin-top:2px}
-    .panel-body{padding:18px}
     .table-wrap{overflow-x:auto}
     table{width:100%;border-collapse:collapse}
     thead th{text-align:left;padding:11px 16px;background:var(--bg);border-bottom:1px solid var(--line);font-size:10.5px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);white-space:nowrap}
@@ -104,37 +105,38 @@
     tbody td{padding:14px 16px;font-size:13px;color:var(--text-soft);vertical-align:top}
     .mono{font-family:'DM Mono',monospace;color:var(--text)}
     .title-cell{color:var(--text);font-weight:700}
-    .title-sub{margin-top:3px;font-size:11.5px;color:var(--text-muted);line-height:1.5}
+    .title-sub{margin-top:3px;font-size:11.5px;color:var(--text-muted)}
     .badge{display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:700;white-space:nowrap}
     .badge-primary{background:var(--primary-soft);color:var(--primary)}
     .badge-accent{background:var(--accent-soft);color:#a05a00}
     .badge-success{background:var(--success-soft);color:var(--success)}
     .badge-warning{background:var(--warning-soft);color:var(--warning)}
     .badge-danger{background:var(--danger-soft);color:var(--danger)}
-    .progress-wrap{display:flex;align-items:center;gap:10px}
-    .progress-track{flex:1;min-width:110px;height:8px;border-radius:999px;background:var(--bg-soft);overflow:hidden}
-    .progress-fill{height:100%;border-radius:999px;background:var(--primary)}
-    .progress-label{width:48px;text-align:right;font-size:11px;font-weight:700;color:var(--text-soft)}
     .actions-inline{display:inline-flex;gap:5px;white-space:nowrap}
     .act-btn{width:31px;height:31px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--text-soft);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:.16s;font-size:12px}
     .act-btn:hover{background:var(--bg);color:var(--text)}
     .act-btn.primary:hover{background:var(--primary-soft);color:var(--primary)}
-    .act-btn.accent:hover{background:var(--accent-soft);color:var(--accent)}
     .act-btn.danger:hover{background:var(--danger-soft);color:var(--danger)}
-    .act-btn.success:hover{background:var(--success-soft);color:var(--success)}
+    .progress-wrap{display:flex;align-items:center;gap:10px}
+    .progress-track{flex:1;min-width:110px;height:8px;border-radius:999px;background:var(--bg-soft);overflow:hidden}
+    .progress-fill{height:100%;border-radius:999px;background:var(--success)}
+    .progress-label{width:48px;text-align:right;font-size:11px;font-weight:700;color:var(--text-soft)}
+
     .pagination{padding:14px 20px;border-top:1px solid var(--line-soft);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
     .pagination-info{font-size:12.5px;color:var(--text-muted)}
     .pagination-btns{display:flex;gap:4px}
     .pg-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--text-soft);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;font-weight:700}
     .pg-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
     .pg-btn:disabled{opacity:.45;cursor:default}
+
     .empty-state{padding:60px 16px;text-align:center}
     .empty-state i{font-size:36px;color:#c9d8ea;margin-bottom:12px}
     .empty-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:5px}
     .empty-sub{font-size:13px;color:var(--text-muted)}
+
     .overlay-modal{position:fixed;inset:0;background:rgba(26,35,51,.42);backdrop-filter:blur(4px);z-index:300;display:none;align-items:center;justify-content:center;padding:16px}
     .overlay-modal.open{display:flex}
-    .modal{width:760px;max-width:100%;max-height:calc(100vh - 32px);overflow:auto;background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 24px 48px rgba(16,24,40,.18)}
+    .modal{width:1120px;max-width:100%;max-height:calc(100vh - 32px);overflow:auto;background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 24px 48px rgba(16,24,40,.18)}
     .modal-head{padding:20px 22px 16px;border-bottom:1px solid var(--line-soft);display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
     .modal-title{font-family:'Lora',serif;font-size:20px;line-height:1.3}
     .modal-sub{margin-top:3px;font-size:12.5px;color:var(--text-muted)}
@@ -148,123 +150,126 @@
     .form-label{font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--text)}
     .req{color:var(--danger)}
     .form-textarea{resize:vertical;min-height:90px}
-    .helper-box{background:var(--bg);border:1px solid var(--line-soft);border-radius:14px;padding:12px 14px;font-size:12px;color:var(--text-soft);line-height:1.7;margin-bottom:14px}
+    .helper-box{background:var(--bg);border:1px solid var(--line-soft);border-radius:14px;padding:12px 14px;margin-bottom:14px;font-size:12px;color:var(--text-soft);line-height:1.7}
     .budget-box{background:var(--bg);border:1px solid var(--line-soft);border-radius:14px;padding:12px 14px;margin-bottom:14px}
     .budget-box-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);font-weight:800;margin-bottom:6px}
     .budget-box-value{font-family:'DM Mono',monospace;font-size:14px;color:var(--text);line-height:1.7}
-    .notice-banner{background:linear-gradient(135deg, #eef9f1 0%, #e8f7ee 100%);border:1px solid rgba(33,122,74,.20);border-radius:18px;padding:16px 18px;display:flex;align-items:flex-start;gap:12px}
-    .notice-banner i{color:var(--success);font-size:18px;margin-top:2px}
-    .notice-banner-title{font-weight:800;color:var(--text)}
-    .notice-banner-sub{font-size:13px;line-height:1.7;color:var(--text-soft);margin-top:3px}
-    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-    .bar-list{display:grid;gap:12px}
-    .bar-item{display:grid;gap:6px}
-    .bar-row{display:flex;justify-content:space-between;gap:10px;align-items:center}
-    .bar-label{font-size:13px;font-weight:700;color:var(--text)}
-    .bar-value{font-size:12px;color:var(--text-soft);font-family:'DM Mono',monospace}
-    .bar-track{width:100%;height:10px;background:var(--bg-soft);border-radius:999px;overflow:hidden}
-    .bar-fill{height:100%;border-radius:999px;background:var(--success)}
+    .form-note{font-size:11.5px;color:var(--text-muted);line-height:1.6}
+    .small-select-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:14px}
+
+    .line-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+    .line-table-wrap{border:1px solid var(--line);border-radius:16px;overflow:auto}
+    .line-table{width:100%;border-collapse:collapse}
+    .line-table thead th{background:var(--bg);padding:11px 12px;border-bottom:1px solid var(--line);font-size:10.5px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);white-space:nowrap}
+    .line-table tbody td{padding:12px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+    .line-table tbody tr:last-child td{border-bottom:none}
+    .line-remove{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--text-soft);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.16s}
+    .line-remove:hover{background:var(--danger-soft);color:var(--danger)}
+    .line-cell-stack{display:flex;flex-direction:column;gap:8px}
+    .line-meta{font-size:11.5px;color:var(--text-muted);line-height:1.5}
+    .lookup-input{width:100%;border:1.5px solid var(--line);background:#fff;border-radius:11px;padding:10px 12px;font-size:13px;color:var(--text);outline:none;transition:.18s;font-family:'Plus Jakarta Sans',sans-serif}
+    .lookup-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(57,114,184,.16)}
+    .lookup-shell{position:relative}
+    .lookup-results-inline{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:25;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);max-height:240px;overflow:auto;padding:8px;display:none}
+    .lookup-results-inline.open{display:block}
+    .lookup-result-btn{width:100%;border:none;background:#fff;border-radius:12px;padding:10px 12px;text-align:left;display:flex;flex-direction:column;gap:4px;cursor:pointer;transition:.16s;font-family:'Plus Jakarta Sans',sans-serif}
+    .lookup-result-btn:hover{background:var(--bg)}
+    .lookup-result-code{font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:var(--primary)}
+    .lookup-result-name{font-size:13px;font-weight:700;color:var(--text)}
+    .lookup-result-sub{font-size:11.5px;color:var(--text-soft);line-height:1.45}
+    .lookup-result-empty{padding:10px 12px;font-size:12px;color:var(--text-muted)}
+    .lookup-picked{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:3px}
+    .lookup-picked strong{font-size:13px;color:var(--text)}
+    .lookup-picked span{font-size:11.5px;color:var(--text-soft);line-height:1.5}
+
     .toast-stack{position:fixed;right:22px;bottom:22px;z-index:500;display:flex;flex-direction:column;gap:8px}
-    .toast{background:var(--text);color:#fff;padding:12px 16px;border-radius:12px;display:flex;align-items:center;gap:9px;box-shadow:0 10px 22px rgba(0,0,0,.2);font-size:13px;max-width:340px}
+    .toast{background:var(--text);color:#fff;padding:12px 16px;border-radius:12px;display:flex;align-items:center;gap:9px;box-shadow:0 10px 22px rgba(0,0,0,.2);font-size:13px;max-width:320px}
     .toast.success{background:#1b6b41}
     .toast.warning{background:#8d5807}
     .toast.danger{background:#8a2d2d}
-    @media (max-width:1200px){.hero{grid-template-columns:1fr}.stats-row{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}}
-    @media (max-width:900px){.main{margin-left:0}}
-    @media (max-width:720px){.content{padding:20px 16px 34px}.topbar{padding:12px 16px}.stats-row,.form-row,.hero-right{grid-template-columns:1fr}.page-header{flex-direction:column}.toolbar-right{width:100%;margin-left:0;justify-content:space-between}}
-  </style>
 
+    @media (max-width:1200px){.hero{grid-template-columns:1fr}.stats-row{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:900px){.main{margin-left:0}}
+    @media (max-width:720px){
+      .content{padding:20px 16px 34px}
+      .topbar{padding:12px 16px}
+      .stats-row,.form-row,.hero-right,.small-select-grid{grid-template-columns:1fr}
+      .page-header{flex-direction:column}
+      .toolbar-right{width:100%;margin-left:0;justify-content:space-between}
+      .line-toolbar{align-items:flex-start}
+      .line-table thead{display:none}
+      .line-table,.line-table tbody,.line-table tr,.line-table td{display:block;width:100%}
+      .line-table tbody tr{border-bottom:1px solid var(--line-soft)}
+      .line-table tbody td{border-bottom:none;padding:10px 12px}
+      .line-remove{width:100%}
+    }
+  </style>
 </head>
 <body data-page="anggaranincome">
   <div id="sb-root"></div>
   <div class="main">
     <div class="topbar">
       <div class="breadcrumb">Sistem Anggaran <span>›</span> Perencanaan <span>›</span> Income <span>›</span> <b>Anggaran Income</b></div>
-      <div class="topbar-right">
-        <div class="chip-info"><i class="fa-solid fa-sack-dollar"></i> Anggaran uang masuk per UPK &amp; UPT</div>
-        <div class="topbar-date" id="topbarDate">—</div>
-      </div>
+      <div class="topbar-right"><div class="chip-info"><i class="fa-solid fa-layer-group"></i> Head / Target Income</div><div class="topbar-date" id="topbarDate">—</div></div>
     </div>
     <div class="content">
       <div class="page-header">
-        <div>
-          <div class="page-title">Anggaran <em>Income</em></div>
-        </div>
-        <div class="page-actions">
-          <button class="btn btn-ghost" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Export</button>
-          <button class="btn btn-primary" onclick="openAddModal()"><i class="fa-solid fa-plus"></i> Tambah Anggaran Income</button>
-        </div>
+        <div><div class="page-title">Anggaran <em>Income</em></div></div>
+        <div class="page-actions"><button class="btn btn-ghost" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Export</button><button class="btn btn-primary" onclick="openAddModal()"><i class="fa-solid fa-plus"></i> Tambah Anggaran</button></div>
       </div>
 
       <section class="hero">
         <div class="hero-left">
-          <div class="hero-title">Dummy Data</div>
+          <div class="hero-title">DATA DUMMY</div>
         </div>
         <div class="hero-right">
-          <div class="hero-mini"><div class="hero-mini-label">Total Head</div><div class="hero-mini-value" id="heroHead">0</div><div class="hero-mini-sub">Head income terdaftar</div></div>
-          <div class="hero-mini"><div class="hero-mini-label">Target Income</div><div class="hero-mini-value" id="heroTarget">Rp 0</div><div class="hero-mini-sub">Akumulasi target</div></div>
-          <div class="hero-mini"><div class="hero-mini-label">Realisasi Masuk</div><div class="hero-mini-value" id="heroActual">Rp 0</div><div class="hero-mini-sub">Dari realisasi income</div></div>
+          <div class="hero-mini"><div class="hero-mini-label">Total Head</div><div class="hero-mini-value" id="heroHead">0</div><div class="hero-mini-sub">Head anggaran income</div></div>
+          <div class="hero-mini"><div class="hero-mini-label">Target Income</div><div class="hero-mini-value" id="heroTarget">Rp 0</div><div class="hero-mini-sub">Akumulasi target income</div></div>
+          <div class="hero-mini"><div class="hero-mini-label">Sudah Masuk</div><div class="hero-mini-value" id="heroActual">Rp 0</div><div class="hero-mini-sub">Total realisasi income</div></div>
           <div class="hero-mini"><div class="hero-mini-label">Gap Target</div><div class="hero-mini-value" id="heroGap">Rp 0</div><div class="hero-mini-sub">Selisih target vs realisasi</div></div>
         </div>
       </section>
 
       <div class="stats-row">
         <div class="stat-card c-primary"><div class="stat-icon"><i class="fa-solid fa-folder-tree"></i></div><div class="stat-label">Total Anggaran</div><div class="stat-value" id="statHead">0</div><div class="stat-sub">Head income aktif</div></div>
-        <div class="stat-card c-accent"><div class="stat-icon"><i class="fa-solid fa-bullseye"></i></div><div class="stat-label">Nilai Target</div><div class="stat-value" id="statTarget">Rp 0</div><div class="stat-sub">Perkiraan uang masuk</div></div>
-        <div class="stat-card c-success"><div class="stat-icon"><i class="fa-solid fa-cash-register"></i></div><div class="stat-label">Sudah Masuk</div><div class="stat-value" id="statActual">Rp 0</div><div class="stat-sub">Akumulasi realisasi</div></div>
+        <div class="stat-card c-accent"><div class="stat-icon"><i class="fa-solid fa-bullseye"></i></div><div class="stat-label">Nilai Target</div><div class="stat-value" id="statTarget">Rp 0</div><div class="stat-sub">Batas target uang masuk</div></div>
+        <div class="stat-card c-success"><div class="stat-icon"><i class="fa-solid fa-cash-register"></i></div><div class="stat-label">Sudah Masuk</div><div class="stat-value" id="statActual">Rp 0</div><div class="stat-sub">Akumulasi realisasi income</div></div>
         <div class="stat-card c-warning"><div class="stat-icon"><i class="fa-solid fa-chart-line"></i></div><div class="stat-label">Capaian</div><div class="stat-value" id="statAchievement">0%</div><div class="stat-sub">Realisasi terhadap target</div></div>
       </div>
 
       <div class="toolbar">
-        <div class="search-wrap">
-          <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-          <input class="search-input" id="searchInput" type="text" placeholder="Cari kode, UPK, UPT, nama income, atau risiko..." oninput="applyFilters()">
-        </div>
-        <select class="filter-select" id="filterUpk" onchange="onFilterUpkChange()"></select>
-        <select class="filter-select" id="filterUpt" onchange="applyFilters()"></select>
-        <select class="filter-select" id="filterStatus" onchange="applyFilters()">
-          <option value="">Semua Status</option>
-          <option value="Aktif">Aktif</option>
-          <option value="Draft">Draft</option>
-          <option value="Tutup">Tutup</option>
-        </select>
-        <div class="toolbar-right">
-          <button class="btn btn-accent btn-sm" onclick="seedDefaultData()"><i class="fa-solid fa-database"></i> Reset Sample</button>
-        </div>
+        <div class="search-wrap"><span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span><input class="search-input" id="searchInput" type="text" placeholder="Cari UPK, UPT, Program, Kegiatan, atau Mata Anggaran Pendapatan..." oninput="applyFilters()"></div>
+        <select class="filter-select" id="filterUpk" onchange="applyFilters()"><option value="">Semua UPK</option></select>
+        <select class="filter-select" id="filterStatus" onchange="applyFilters()"><option value="">Semua Status</option><option value="Aktif">Aktif</option><option value="Draft">Draft</option><option value="Tutup">Tutup</option></select>
+        <div class="toolbar-right"><button class="btn btn-accent btn-sm" onclick="seedDefaultData()"><i class="fa-solid fa-database"></i> Reset Sample</button></div>
       </div>
 
       <div class="panel">
-        <div class="panel-head">
-          <div>
-            <div class="panel-title"><i class="fa-solid fa-sack-dollar" style="color:var(--primary)"></i> Daftar Head Anggaran Income</div>
-            <div class="panel-sub" id="tableSubtitle">Memuat data...</div>
-          </div>
-        </div>
+        <div class="panel-head"><div><div class="panel-title"><i class="fa-solid fa-sack-dollar" style="color:var(--primary)"></i> Daftar Head Anggaran Income</div><div class="panel-sub" id="tableSubtitle">Memuat data...</div></div></div>
         <div class="table-wrap">
           <table>
-            <thead>
-              <tr>
-                <th class="sortable" onclick="sortBy('kode')">Kode</th>
-                <th class="sortable" onclick="sortBy('upkNama')">UPK</th>
-                <th class="sortable" onclick="sortBy('uptDisplay')">UPT</th>
-                <th class="sortable" onclick="sortBy('nama')">Nama Income</th>
-                <th>Risiko</th>
-                <th class="sortable" onclick="sortBy('tahun')">Tahun</th>
-                <th class="sortable" onclick="sortBy('nominal')">Target</th>
-                <th>Realisasi</th>
-                <th>Gap</th>
-                <th>Status</th>
-                <th style="text-align:right;">Aksi</th>
-              </tr>
-            </thead>
+            <thead><tr>
+              <th class="sortable" onclick="sortBy('nomorAnggaranIncome')">No. Anggaran</th>
+              <th class="sortable" onclick="sortBy('upkNama')">UPK</th>
+              <th class="sortable" onclick="sortBy('uptNama')">UPT</th>
+              <th class="sortable" onclick="sortBy('programNama')">Program</th>
+              <th class="sortable" onclick="sortBy('kegiatanNama')">Kegiatan</th>
+              <th>Periode</th>
+              <th class="sortable" onclick="sortBy('mataAnggaranNama')">Mata Anggaran Pendapatan</th>
+              <th>Output / PJ</th>
+              <th>Qty</th>
+              <th>Satuan</th>
+              <th class="sortable" onclick="sortBy('hargaSatuan')">Harga Satuan</th>
+              <th class="sortable" onclick="sortBy('nominal')">Target</th>
+              <th>Realisasi</th>
+              <th>Gap</th>
+              <th>Status</th>
+              <th style="text-align:right;">Aksi</th>
+            </tr></thead>
             <tbody id="budgetTbody"></tbody>
           </table>
         </div>
-        <div class="empty-state" id="emptyState" style="display:none;">
-          <i class="fa-solid fa-folder-open"></i>
-          <div class="empty-title">Anggaran income tidak ditemukan</div>
-          <div class="empty-sub">Coba ubah pencarian atau filter.</div>
-        </div>
+        <div class="empty-state" id="emptyState" style="display:none;"><i class="fa-solid fa-folder-open"></i><div class="empty-title">Anggaran income tidak ditemukan</div><div class="empty-sub">Coba ubah pencarian atau filter.</div></div>
         <div class="pagination" id="pagination"></div>
       </div>
     </div>
@@ -275,70 +280,179 @@
       <div class="modal-head">
         <div>
           <div class="modal-title" id="modalTitle">Tambah Anggaran Income</div>
-          <div class="modal-sub" id="modalSub">Buat head target income berdasarkan UPK dan UPT.</div>
+          <div class="modal-sub" id="modalSub">Isi head anggaran income lalu tambahkan beberapa detail mata anggaran pendapatan sekaligus.</div>
         </div>
         <button class="modal-close" onclick="closeModal('modalForm')"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="modal-body">
-        <div class="section-title">Relasi Organisasi</div>
-        <div class="helper-box">Pilih <b>UPK</b> terlebih dahulu. Setelah itu dropdown <b>UPT</b> akan menampilkan unit yang sesuai dengan UPK tersebut, termasuk sub UPT jika ada.</div>
+        <div class="helper-box"><b>Catatan:</b> <b>Nomor Anggaran Income</b> dibuat otomatis di level <b>Head Anggaran</b>. Head berisi <b>UPK</b>, <b>UPT</b>, <b>Program</b>, <b>Kegiatan</b>, serta <b>Waktu Awal</b> dan <b>Waktu Akhir</b>. Di bawahnya kamu bisa menambahkan banyak <b>Mata Anggaran Pendapatan</b> sekaligus. Informasi seperti <b>Output</b>, <b>Penanggung Jawab</b>, <b>Target</b>, <b>Resiko</b>, <b>Tingkat Resiko</b>, <b>Manfaat</b>, dan <b>Status</b> berlaku untuk seluruh detail pada nomor anggaran income yang sama.</div>
+
+        <div class="section-title">Head Anggaran</div>
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">UPK <span class="req">*</span></label>
-            <select class="form-select" id="fUpk" onchange="onFormUpkChange()"></select>
+            <label class="form-label">Nomor Anggaran Income</label>
+            <input class="form-input" id="fNomorAnggaran" type="text" readonly style="background:var(--bg)">
           </div>
           <div class="form-group">
-            <label class="form-label">UPT <span class="req">*</span></label>
-            <select class="form-select" id="fUpt"></select>
+            <label class="form-label">Nama UPK <span class="req">*</span></label>
+            <select class="form-select" id="fUpk" onchange="handleUpkChange()"></select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Nama UPT</label>
+            <select class="form-select" id="fUpt" onchange="handleUptChange()"></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nama Program</label>
+            <select class="form-select" id="fProgram" onchange="handleProgramChange()"></select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Nama Kegiatan</label>
+            <select class="form-select" id="fKegiatan" onchange="handleKegiatanChange()"></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Waktu Awal <span class="req">*</span></label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <select class="form-select" id="fStartMonth" onchange="syncNomorAnggaranIncome()"></select>
+              <select class="form-select" id="fStartYear" onchange="syncNomorAnggaranIncome()"></select>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Waktu Akhir <span class="req">*</span></label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <select class="form-select" id="fEndMonth"></select>
+              <select class="form-select" id="fEndYear"></select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Catatan Head</label>
+            <textarea class="form-textarea" id="fCatatan" placeholder="Catatan umum untuk nomor anggaran income ini"></textarea>
           </div>
         </div>
 
-        <div class="section-title">Identitas Head Income</div>
+        <div class="section-title">Detail Mata Anggaran Sumber Dana</div>
+        <div class="line-toolbar">
+          <div class="form-note">Bagian ini digunakan untuk mencatat <b>asal sumber dana</b> atau sumber penerimaan. Hanya menampilkan <b>Mata Anggaran bertipe Pendapatan</b>.</div>
+          <button class="btn btn-accent btn-sm" type="button" onclick="addBudgetLine('sumber')"><i class="fa-solid fa-plus"></i> Tambah Sumber Dana</button>
+        </div>
+        <div class="line-table-wrap">
+          <table class="line-table">
+            <thead>
+              <tr>
+                <th style="width:38%;">Mata Anggaran Sumber Dana</th>
+                <th style="width:10%;">Qty</th>
+                <th style="width:12%;">Satuan</th>
+                <th style="width:14%;">Harga Satuan</th>
+                <th style="width:14%;">Subtotal</th>
+                <th style="width:12%;">Catatan Baris</th>
+                <th style="width:56px;"></th>
+              </tr>
+            </thead>
+            <tbody id="sourceLineItemsBody"></tbody>
+          </table>
+        </div>
+        <div class="budget-box" style="margin-top:14px;">
+          <div class="budget-box-title">Total Sumber Dana</div>
+          <div class="budget-box-value" id="formSourceTotal">Rp 0</div>
+        </div>
+
+        <div class="section-title">Detail Mata Anggaran Pendapatan</div>
+        <div class="line-toolbar">
+          <div class="form-note">Bagian ini digunakan untuk target <b>pendapatan / uang masuk</b>. Hanya menampilkan <b>Mata Anggaran bertipe Pendapatan</b>.</div>
+          <button class="btn btn-accent btn-sm" type="button" onclick="addBudgetLine('income')"><i class="fa-solid fa-plus"></i> Tambah Pendapatan</button>
+        </div>
+        <div class="line-table-wrap">
+          <table class="line-table">
+            <thead>
+              <tr>
+                <th style="width:38%;">Mata Anggaran Pendapatan</th>
+                <th style="width:10%;">Qty</th>
+                <th style="width:12%;">Satuan</th>
+                <th style="width:14%;">Harga Satuan</th>
+                <th style="width:14%;">Subtotal</th>
+                <th style="width:12%;">Catatan Baris</th>
+                <th style="width:56px;"></th>
+              </tr>
+            </thead>
+            <tbody id="incomeLineItemsBody"></tbody>
+          </table>
+        </div>
+        <div class="budget-box" style="margin-top:14px;">
+          <div class="budget-box-title">Total Target Income</div>
+          <div class="budget-box-value" id="formIncomeTotal">Rp 0</div>
+        </div>
+
+        <div class="small-select-grid" style="margin-top:14px;">
+          <div class="budget-box" style="margin-bottom:0;">
+            <div class="budget-box-title">Total Seluruh Detail</div>
+            <div class="budget-box-value" id="formGrandTotal">Rp 0</div>
+          </div>
+          <div class="budget-box" style="margin-bottom:0;">
+            <div class="budget-box-title">Selisih Sumber Dana - Target Income</div>
+            <div class="budget-box-value" id="formBalanceTotal">Rp 0</div>
+          </div>
+        </div>
+
+        <div class="section-title">Informasi Kegiatan pada Head</div>
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">Kode Income <span class="req">*</span></label>
-            <input class="form-input" id="fKode" type="text" placeholder="mis. AI-UBTH-001">
+            <label class="form-label">Output <span class="req">*</span></label>
+            <select class="form-select" id="fOutput">
+              <option value="">— Pilih Output —</option>
+              <option value="Laporan Kegiatan">Laporan Kegiatan</option>
+              <option value="Barang">Barang</option>
+            </select>
           </div>
           <div class="form-group">
-            <label class="form-label">Tahun Anggaran <span class="req">*</span></label>
-            <select class="form-select" id="fTahun">
-              <option value="2026">2026</option>
-              <option value="2027">2027</option>
-              <option value="2028">2028</option>
+            <label class="form-label">Penanggung Jawab <span class="req">*</span></label>
+            <input class="form-input" id="fPenanggungJawab" type="text" placeholder="Nama penanggung jawab">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Target Kegiatan</label>
+            <input class="form-input" id="fTargetKegiatan" type="text" placeholder="Mis. 20 mitra, 500 peserta, 300 pelanggan">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tingkat Resiko <span class="req">*</span></label>
+            <select class="form-select" id="fTingkatResiko">
+              <option value="">— Pilih Tingkat —</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
             </select>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">Nama Income <span class="req">*</span></label>
-            <input class="form-input" id="fNama" type="text" placeholder="mis. Target Kerjasama & Promosi Institusi 2026">
+            <label class="form-label">Resiko</label>
+            <textarea class="form-textarea" id="fResiko" placeholder="Tuliskan resiko target income"></textarea>
           </div>
           <div class="form-group">
-            <label class="form-label">Risiko</label>
-            <select class="form-select" id="fRisk"></select>
+            <label class="form-label">Manfaat</label>
+            <textarea class="form-textarea" id="fManfaat" placeholder="Tuliskan manfaat target income"></textarea>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">Target Income (Rp) <span class="req">*</span></label>
-            <input class="form-input" id="fNominal" type="number" min="0" placeholder="0" oninput="updateNominalPreview()">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Status</label>
+            <label class="form-label">Status <span class="req">*</span></label>
             <select class="form-select" id="fStatus">
-              <option value="Aktif">Aktif</option>
               <option value="Draft">Draft</option>
+              <option value="Aktif">Aktif</option>
               <option value="Tutup">Tutup</option>
             </select>
           </div>
-        </div>
-        <div class="form-group" style="margin-bottom:14px;">
-          <label class="form-label">Preview Nilai</label>
-          <div class="form-input" id="nominalPreview" style="background:var(--bg);font-family:'DM Mono',monospace;">Rp 0</div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Catatan</label>
-          <textarea class="form-textarea" id="fCatatan" placeholder="Contoh: Target uang masuk dari kerja sama, layanan, donasi, atau event unit terkait."></textarea>
+          <div class="form-group">
+            <label class="form-label">Ringkasan Head</label>
+            <div class="form-input" id="headSummaryBox" style="background:var(--bg);min-height:92px;line-height:1.7;"></div>
+          </div>
         </div>
       </div>
       <div class="modal-footer">
@@ -351,606 +465,991 @@
   <div class="toast-stack" id="toastStack"></div>
 
   <script>
+const STORAGE_BUDGETS = 'APP_INCOME_BUDGETS_V1';
+const STORAGE_REALIZATIONS = 'APP_INCOME_REALIZATIONS_V1';
+const STORAGE_UPK = 'APP_MASTER_UPK_V1';
+const STORAGE_UPT = 'APP_MASTER_UPT_V1';
+const STORAGE_PROGRAM = 'APP_MASTER_PROGRAM_V1';
+const STORAGE_KEGIATAN = 'APP_MASTER_KEGIATAN_V1';
+const STORAGE_MATA = 'APP_MASTER_MATA_ANGGARAN_V1';
+const LEGACY_UPK = 'APP_ORG_UPK_DIVISIONS_V2';
+const LEGACY_UPT = 'APP_ORG_UPT_BRANCHES_V2';
 
-    const STORAGE_BUDGETS = 'APP_INCOME_BUDGETS_V1';
-    const STORAGE_REALIZATIONS = 'APP_INCOME_REALIZATIONS_V1';
-    const STORAGE_RISKS = 'APP_MASTER_RISIKO_V1';
-    const STORAGE_UPK = 'APP_MASTER_UPK_V1';
-    const STORAGE_UPT = 'APP_MASTER_UPT_V1';
+const MONTHS = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const CURRENT_YEAR = new Date().getFullYear();
 
-    const fallbackUPK = [
-      { id:'UPK-001', kode:'UPK-001', nama:'Yayasan', status:'Aktif' },
-      { id:'UPK-002', kode:'UPK-002', nama:'Universitas', status:'Aktif' },
-      { id:'UPK-003', kode:'UPK-003', nama:'Klinik', status:'Aktif' },
-      { id:'UPK-004', kode:'UPK-004', nama:'BTH Student House', status:'Aktif' }
-    ];
+const fallbackUPK = [
+  {id:1,kode:'UPK-001',nama:'Yayasan Bakti Tunas Husada',status:'Aktif'},
+  {id:2,kode:'UPK-002',nama:'Universitas Bakti Tunas Husada',status:'Aktif'},
+  {id:3,kode:'UPK-003',nama:'Klinik Bakti Tunas Husada',status:'Aktif'}
+];
+const fallbackUPT = [
+  {id:1,kode:'UPT.1',nama:'Sekretariat Yayasan',upkId:1,parentId:null,status:'Aktif'},
+  {id:2,kode:'UPT.2',nama:'Wakil Rektor Bidang SDM, Humas dan Kerjasama',upkId:2,parentId:null,status:'Aktif'},
+  {id:3,kode:'UPT.2.1',nama:'Bagian SDM',upkId:2,parentId:2,status:'Aktif'},
+  {id:4,kode:'UPT.2.2',nama:'Bagian Humas dan Kerjasama',upkId:2,parentId:2,status:'Aktif'},
+  {id:5,kode:'UPT.2.3',nama:'Bagian Pusat Karir',upkId:2,parentId:2,status:'Aktif'},
+  {id:6,kode:'UPT.3',nama:'Administrasi Klinik',upkId:3,parentId:null,status:'Aktif'}
+];
+const fallbackPrograms = [
+  {id:1,kode:'PRG-001-001',nama:'Program Tata Kelola Yayasan',upkId:'1',upkKode:'UPK-001',upkNama:'Yayasan Bakti Tunas Husada',uptId:'',uptKode:'',uptNama:'',status:'Aktif',catatan:'Level UPK'},
+  {id:2,kode:'PRG-002-001',nama:'Program Akademik dan Kemahasiswaan',upkId:'2',upkKode:'UPK-002',upkNama:'Universitas Bakti Tunas Husada',uptId:'2',uptKode:'UPT.2',uptNama:'Wakil Rektor Bidang SDM, Humas dan Kerjasama',status:'Aktif',catatan:'Level UPT'},
+  {id:3,kode:'PRG-003-001',nama:'Program Pelayanan Klinik',upkId:'3',upkKode:'UPK-003',upkNama:'Klinik Bakti Tunas Husada',uptId:'6',uptKode:'UPT.3',uptNama:'Administrasi Klinik',status:'Aktif',catatan:'Level UPT'}
+];
+const fallbackKegiatan = [
+  {id:1,upkId:'1',upkKode:'UPK-001',upkNama:'Yayasan Bakti Tunas Husada',uptId:'',uptKode:'',uptNama:'',programId:'1',programKode:'PRG-001-001',programNama:'Program Tata Kelola Yayasan',kode:'KGT-001-001',nama:'Penggalangan Donasi Tahunan',status:'Aktif',output:'Laporan Kegiatan',waktuAwalBulan:'Januari',waktuAwalTahun:'2026',waktuAkhirBulan:'Maret',waktuAkhirTahun:'2026',penanggungJawab:'Sekretaris Yayasan',targetKegiatan:'Pengumpulan 3 kanal donasi',resiko:'Target donatur tidak tercapai',tingkatResiko:'3',manfaat:'Pendanaan program sosial lebih terjamin'},
+  {id:2,upkId:'2',upkKode:'UPK-002',upkNama:'Universitas Bakti Tunas Husada',uptId:'5',uptKode:'UPT.2.3',uptNama:'Bagian Pusat Karir',programId:'2',programKode:'PRG-002-001',programNama:'Program Akademik dan Kemahasiswaan',kode:'KGT-002-001',nama:'Pelaksanaan Career Day',status:'Aktif',output:'Laporan Kegiatan',waktuAwalBulan:'April',waktuAwalTahun:'2026',waktuAkhirBulan:'Mei',waktuAkhirTahun:'2026',penanggungJawab:'Kepala Pusat Karir',targetKegiatan:'1 event dan 20 mitra',resiko:'Mitra tidak memenuhi target sponsorship',tingkatResiko:'4',manfaat:'Menambah pendapatan event dan jejaring industri'},
+  {id:3,upkId:'3',upkKode:'UPK-003',upkNama:'Klinik Bakti Tunas Husada',uptId:'6',uptKode:'UPT.3',uptNama:'Administrasi Klinik',programId:'3',programKode:'PRG-003-001',programNama:'Program Pelayanan Klinik',kode:'KGT-003-001',nama:'Peningkatan Pendapatan Layanan Klinik',status:'Aktif',output:'Barang',waktuAwalBulan:'Februari',waktuAwalTahun:'2026',waktuAkhirBulan:'Desember',waktuAkhirTahun:'2026',penanggungJawab:'Kepala Administrasi Klinik',targetKegiatan:'Kenaikan kunjungan pasien 15%',resiko:'Kunjungan pasien turun',tingkatResiko:'2',manfaat:'Pendapatan layanan klinik meningkat'}
+];
+const fallbackMata = [
+  {id:5,kodeAnggaran:'MA-005',namaMataAnggaran:'Pendapatan Sponsorship Event',idUpk:'2',namaUpk:'Universitas Bakti Tunas Husada',idUpt:'5',namaUpt:'Bagian Pusat Karir',satuan:'paket',hargaSatuan:12000000,tipe:'Pendapatan',catatan:'Sumber income sponsorship kegiatan',status:'Aktif'},
+  {id:6,kodeAnggaran:'MA-006',namaMataAnggaran:'Pendapatan Layanan Klinik',idUpk:'3',namaUpk:'Klinik Bakti Tunas Husada',idUpt:'6',namaUpt:'Administrasi Klinik',satuan:'paket',hargaSatuan:8000000,tipe:'Pendapatan',catatan:'Estimasi pendapatan layanan klinik',status:'Aktif'},
+  {id:7,kodeAnggaran:'MA-007',namaMataAnggaran:'Pendapatan Donasi Yayasan',idUpk:'1',namaUpk:'Yayasan Bakti Tunas Husada',idUpt:'',namaUpt:'',satuan:'paket',hargaSatuan:25000000,tipe:'Pendapatan',catatan:'Target pengumpulan donasi',status:'Aktif'},
+  {id:8,kodeAnggaran:'MA-008',namaMataAnggaran:'Pendapatan Booth Career Day',idUpk:'2',namaUpk:'Universitas Bakti Tunas Husada',idUpt:'5',namaUpt:'Bagian Pusat Karir',satuan:'booth',hargaSatuan:3500000,tipe:'Pendapatan',catatan:'Pendapatan dari peserta booth',status:'Aktif'}
+];
+const seedBudgets = [
+  {id:1,nomorAnggaranIncome:'AI-2026-0001',upkId:'2',upkKode:'UPK-002',upkNama:'Universitas Bakti Tunas Husada',uptId:'5',uptKode:'UPT.2.3',uptNama:'Wakil Rektor Bidang SDM, Humas dan Kerjasama / Bagian Pusat Karir',programId:'2',programKode:'PRG-002-001',programNama:'Program Akademik dan Kemahasiswaan',kegiatanId:'2',kegiatanKode:'KGT-002-001',kegiatanNama:'Pelaksanaan Career Day',waktuAwalBulan:'April',waktuAwalTahun:'2026',waktuAkhirBulan:'Mei',waktuAkhirTahun:'2026',output:'Laporan Kegiatan',penanggungJawab:'Kepala Pusat Karir',targetKegiatan:'1 event dan 20 mitra',resiko:'Mitra tidak memenuhi target sponsorship',tingkatResiko:'4',manfaat:'Menambah pendapatan event dan jejaring industri',detailKategori:'Sumber Dana',tipeMataAnggaran:'Pendapatan',mataAnggaranId:'5',mataAnggaranKode:'MA-005',mataAnggaranNama:'Pendapatan Sponsorship Event',qty:1,satuan:'paket',hargaSatuan:12000000,nominal:12000000,status:'Aktif',catatanHead:'Head Career Day 2026',catatanDetail:'Sponsorship utama'},
+  {id:2,nomorAnggaranIncome:'AI-2026-0001',upkId:'2',upkKode:'UPK-002',upkNama:'Universitas Bakti Tunas Husada',uptId:'5',uptKode:'UPT.2.3',uptNama:'Wakil Rektor Bidang SDM, Humas dan Kerjasama / Bagian Pusat Karir',programId:'2',programKode:'PRG-002-001',programNama:'Program Akademik dan Kemahasiswaan',kegiatanId:'2',kegiatanKode:'KGT-002-001',kegiatanNama:'Pelaksanaan Career Day',waktuAwalBulan:'April',waktuAwalTahun:'2026',waktuAkhirBulan:'Mei',waktuAkhirTahun:'2026',output:'Laporan Kegiatan',penanggungJawab:'Kepala Pusat Karir',targetKegiatan:'1 event dan 20 mitra',resiko:'Mitra tidak memenuhi target sponsorship',tingkatResiko:'4',manfaat:'Menambah pendapatan event dan jejaring industri',detailKategori:'Pendapatan',tipeMataAnggaran:'Pendapatan',mataAnggaranId:'8',mataAnggaranKode:'MA-008',mataAnggaranNama:'Pendapatan Booth Career Day',qty:20,satuan:'booth',hargaSatuan:3500000,nominal:70000000,status:'Aktif',catatanHead:'Head Career Day 2026',catatanDetail:'Target booth Career Day'},
+  {id:3,nomorAnggaranIncome:'AI-2026-0002',upkId:'3',upkKode:'UPK-003',upkNama:'Klinik Bakti Tunas Husada',uptId:'6',uptKode:'UPT.3',uptNama:'Administrasi Klinik',programId:'3',programKode:'PRG-003-001',programNama:'Program Pelayanan Klinik',kegiatanId:'3',kegiatanKode:'KGT-003-001',kegiatanNama:'Peningkatan Pendapatan Layanan Klinik',waktuAwalBulan:'Februari',waktuAwalTahun:'2026',waktuAkhirBulan:'Desember',waktuAkhirTahun:'2026',output:'Barang',penanggungJawab:'Kepala Administrasi Klinik',targetKegiatan:'Kenaikan kunjungan pasien 15%',resiko:'Kunjungan pasien turun',tingkatResiko:'2',manfaat:'Pendapatan layanan klinik meningkat',detailKategori:'Sumber Dana',tipeMataAnggaran:'Pendapatan',mataAnggaranId:'6',mataAnggaranKode:'MA-006',mataAnggaranNama:'Pendapatan Layanan Klinik',qty:6,satuan:'paket',hargaSatuan:8000000,nominal:48000000,status:'Draft',catatanHead:'Head layanan klinik 2026',catatanDetail:'Baseline sumber penerimaan'},
+  {id:4,nomorAnggaranIncome:'AI-2026-0002',upkId:'3',upkKode:'UPK-003',upkNama:'Klinik Bakti Tunas Husada',uptId:'6',uptKode:'UPT.3',uptNama:'Administrasi Klinik',programId:'3',programKode:'PRG-003-001',programNama:'Program Pelayanan Klinik',kegiatanId:'3',kegiatanKode:'KGT-003-001',kegiatanNama:'Peningkatan Pendapatan Layanan Klinik',waktuAwalBulan:'Februari',waktuAwalTahun:'2026',waktuAkhirBulan:'Desember',waktuAkhirTahun:'2026',output:'Barang',penanggungJawab:'Kepala Administrasi Klinik',targetKegiatan:'Kenaikan kunjungan pasien 15%',resiko:'Kunjungan pasien turun',tingkatResiko:'2',manfaat:'Pendapatan layanan klinik meningkat',detailKategori:'Pendapatan',tipeMataAnggaran:'Pendapatan',mataAnggaranId:'6',mataAnggaranKode:'MA-006',mataAnggaranNama:'Pendapatan Layanan Klinik',qty:12,satuan:'paket',hargaSatuan:8000000,nominal:96000000,status:'Draft',catatanHead:'Head layanan klinik 2026',catatanDetail:'Target pendapatan tahunan'}
+];
+const seedRealizations = [
+  {id:1,budgetId:1,tanggal:'2026-04-18',kategori:'Sponsorship',detail:'Sponsorship utama event',qty:1,unitPrice:10000000,total:10000000,accurateStatus:'Pending',overTarget:false,catatan:'Tahap awal'},
+  {id:2,budgetId:2,tanggal:'2026-05-10',kategori:'Booth',detail:'Penerimaan booth peserta',qty:12,unitPrice:3500000,total:42000000,accurateStatus:'Sudah Push',overTarget:false,catatan:'Gelombang 1'},
+  {id:3,budgetId:3,tanggal:'2026-03-10',kategori:'Layanan',detail:'Penerimaan pasien bulan Maret',qty:1,unitPrice:9000000,total:9000000,accurateStatus:'Pending',overTarget:false,catatan:'Maret'}
+];
 
-    const fallbackUPT = [
-      { id:'UPT-UNI-WR', kode:'UPT.1', nama:'Wakil Rektor Bidang SDM, Humas dan Kerjasama', upkId:'UPK-002', parentId:'', status:'Aktif' },
-      { id:'UPT-UNI-SDM', kode:'UPT.1.1', nama:'Bagian SDM', upkId:'UPK-002', parentId:'UPT-UNI-WR', status:'Aktif' },
-      { id:'UPT-UNI-HUMAS', kode:'UPT.1.2', nama:'Bagian Humas dan Kerjasama', upkId:'UPK-002', parentId:'UPT-UNI-WR', status:'Aktif' },
-      { id:'UPT-UNI-KARIR', kode:'UPT.1.3', nama:'Bagian Pusat Karir', upkId:'UPK-002', parentId:'UPT-UNI-WR', status:'Aktif' },
-      { id:'UPT-UNI-FIK', kode:'UPT.2', nama:'Fakultas Ilmu Kesehatan', upkId:'UPK-002', parentId:'', status:'Aktif' },
-      { id:'UPT-YYS-SEK', kode:'UPT.3', nama:'Sekretariat Yayasan', upkId:'UPK-001', parentId:'', status:'Aktif' },
-      { id:'UPT-YYS-KEU', kode:'UPT.3.1', nama:'Bagian Keuangan dan Akuntansi', upkId:'UPK-001', parentId:'UPT-YYS-SEK', status:'Aktif' },
-      { id:'UPT-KLN-MEDIS', kode:'UPT.4', nama:'Unit Pelayanan Medis', upkId:'UPK-003', parentId:'', status:'Aktif' },
-      { id:'UPT-KLN-PENUNJANG', kode:'UPT.4.1', nama:'Unit Penunjang Medis', upkId:'UPK-003', parentId:'UPT-KLN-MEDIS', status:'Aktif' },
-      { id:'UPT-BSH-OPS', kode:'UPT.5', nama:'Operasional Student House', upkId:'UPK-004', parentId:'', status:'Aktif' }
-    ];
+function readJson(key){ try { return JSON.parse(localStorage.getItem(key)) || []; } catch { return []; } }
+function writeJson(key,data){ localStorage.setItem(key, JSON.stringify(data)); }
+function ensureSeed(){
+  if(!localStorage.getItem(STORAGE_BUDGETS)) writeJson(STORAGE_BUDGETS, seedBudgets);
+  if(!localStorage.getItem(STORAGE_REALIZATIONS)) writeJson(STORAGE_REALIZATIONS, seedRealizations);
+}
+function escapeHtml(str){ return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function normalizeText(v){ return String(v || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim(); }
+function fmtCurrency(n){ return 'Rp ' + Number(n || 0).toLocaleString('id-ID'); }
+function fmtShortCurrency(n){
+  const num=Number(n||0);
+  if(num>=1000000000) return 'Rp ' + (num/1000000000).toFixed(num%1000000000===0?0:1) + ' M';
+  if(num>=1000000) return 'Rp ' + (num/1000000).toFixed(num%1000000===0?0:1) + ' jt';
+  return fmtCurrency(num);
+}
+function showToast(type, icon, message){
+  const stack=document.getElementById('toastStack');
+  if(!stack) return;
+  const el=document.createElement('div');
+  el.className=`toast ${type}`;
+  el.innerHTML=`<i class="fa-solid ${icon}"></i><span>${escapeHtml(message)}</span>`;
+  stack.appendChild(el);
+  setTimeout(()=>{el.style.opacity='0'; el.style.transform='translateX(18px)'; el.style.transition='all .24s ease'; setTimeout(()=>el.remove(),240);},3200);
+}
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+function closeModalIfBg(event,id){ if(event.target===document.getElementById(id)) closeModal(id); }
 
-    const fallbackRisks = [
-      { id:'R-IN-001', nama:'Risiko penurunan kunjungan pasien', skala:'Sedang' },
-      { id:'R-IN-002', nama:'Risiko fluktuasi donasi', skala:'Tinggi' },
-      { id:'R-IN-003', nama:'Risiko keterlambatan pembayaran UKT', skala:'Tinggi' },
-      { id:'R-IN-004', nama:'Risiko mismatch data penerimaan', skala:'Sedang' }
-    ];
+function normalizeUPK(item, idx){
+  return {id:String(item.id ?? idx+1), kode:item.kode || `UPK-${String(idx+1).padStart(3,'0')}`, nama:item.nama || item.name || '', status:item.status || 'Aktif'};
+}
+function normalizeUPT(item, idx){
+  return {id:String(item.id ?? idx+1), kode:item.kode || `UPT.${idx+1}`, nama:item.nama || item.name || '', upkId:String(item.upkId ?? item.id_upk ?? ''), parentId:String(item.parentId ?? item.id_parent_upt ?? ''), status:item.status || 'Aktif'};
+}
+function normalizeProgram(item, idx){
+  return {id:String(item.id ?? idx+1), kode:item.kode || `PRG-${String(idx+1).padStart(3,'0')}`, nama:item.nama || item.name || '', upkId:String(item.upkId || item.id_upk || ''), upkKode:item.upkKode || '', upkNama:item.upkNama || '', uptId:String(item.uptId || item.id_upt || ''), uptKode:item.uptKode || '', uptNama:item.uptNama || '', status:item.status || 'Aktif', catatan:item.catatan || item.keterangan || ''};
+}
+function normalizeKegiatan(item, idx){
+  return {
+    id:String(item.id ?? idx+1),
+    upkId:String(item.upkId || ''),
+    upkKode:item.upkKode || '',
+    upkNama:item.upkNama || '',
+    uptId:String(item.uptId || ''),
+    uptKode:item.uptKode || '',
+    uptNama:item.uptNama || '',
+    programId:String(item.programId || ''),
+    programKode:item.programKode || '',
+    programNama:item.programNama || '',
+    kode:item.kode || `KGT-${String(idx+1).padStart(4,'0')}`,
+    nama:item.nama || '',
+    status:item.status || 'Aktif',
+    output:item.output || '',
+    waktuAwalBulan:item.waktuAwalBulan || '',
+    waktuAwalTahun:String(item.waktuAwalTahun || ''),
+    waktuAkhirBulan:item.waktuAkhirBulan || '',
+    waktuAkhirTahun:String(item.waktuAkhirTahun || ''),
+    penanggungJawab:item.penanggungJawab || '',
+    targetKegiatan:item.targetKegiatan || '',
+    resiko:item.resiko || '',
+    tingkatResiko:String(item.tingkatResiko || ''),
+    manfaat:item.manfaat || ''
+  };
+}
+function normalizeMata(item, idx){
+  const rawTipe = String(item.tipe ?? item.type ?? item.jenis ?? item.kategori ?? '').toLowerCase();
+  const tipe = rawTipe.includes('pendapatan') ? 'Pendapatan' : (rawTipe.includes('pengeluaran') ? 'Pengeluaran' : 'Pendapatan');
+  return {
+    id:String(item.id ?? idx+1),
+    kodeAnggaran:item.kodeAnggaran || item.kode || `MA-${String(idx+1).padStart(3,'0')}`,
+    namaMataAnggaran:item.namaMataAnggaran || item.nama || '',
+    idUpk:String(item.idUpk || item.upkId || item.id_upk || ''),
+    namaUpk:item.namaUpk || item.upkNama || '',
+    idUpt:String(item.idUpt || item.uptId || item.id_upt || ''),
+    namaUpt:item.namaUpt || item.uptNama || '',
+    satuan:item.satuan || '',
+    hargaSatuan:Number(item.hargaSatuan || 0),
+    tipe,
+    catatan:item.catatan || '',
+    status:item.status || 'Aktif'
+  };
+}
+function defaultNomorAnggaran(year, idx){
+  return `AI-${String(year || CURRENT_YEAR)}-${String(idx + 1).padStart(4,'0')}`;
+}
+function normalizeBudget(item, idx){
+  const linkedKegiatan = (item.kegiatanId || item.kegiatan_id) ? getKegiatan(String(item.kegiatanId || item.kegiatan_id)) : null;
+  const startYear = item.waktuAwalTahun || linkedKegiatan?.waktuAwalTahun || item.tahun || CURRENT_YEAR;
+  const nomor = item.nomorAnggaranIncome || item.nomor || item.nomorTransaksi || defaultNomorAnggaran(startYear, idx);
+  const rawDetail = String(item.detailKategori || item.jenisDetail || item.kategoriDetail || item.detail || '').toLowerCase();
+  const detailKategori = rawDetail.includes('sumber') ? 'Sumber Dana' : 'Pendapatan';
+  return {
+    id:Number(item.id ?? idx+1),
+    nomorAnggaranIncome:String(nomor),
+    upkId:String(item.upkId || ''),
+    upkKode:item.upkKode || '',
+    upkNama:item.upkNama || item.entitas || '',
+    uptId:String(item.uptId || ''),
+    uptKode:item.uptKode || '',
+    uptNama:item.uptNama || '',
+    programId:String(item.programId || ''),
+    programKode:item.programKode || '',
+    programNama:item.programNama || '',
+    kegiatanId:String(item.kegiatanId || ''),
+    kegiatanKode:item.kegiatanKode || '',
+    kegiatanNama:item.kegiatanNama || linkedKegiatan?.nama || '',
+    waktuAwalBulan:item.waktuAwalBulan || linkedKegiatan?.waktuAwalBulan || '',
+    waktuAwalTahun:String(item.waktuAwalTahun || linkedKegiatan?.waktuAwalTahun || startYear || ''),
+    waktuAkhirBulan:item.waktuAkhirBulan || linkedKegiatan?.waktuAkhirBulan || '',
+    waktuAkhirTahun:String(item.waktuAkhirTahun || linkedKegiatan?.waktuAkhirTahun || startYear || ''),
+    output:item.output || linkedKegiatan?.output || '',
+    penanggungJawab:item.penanggungJawab || linkedKegiatan?.penanggungJawab || '',
+    targetKegiatan:item.targetKegiatan || linkedKegiatan?.targetKegiatan || '',
+    resiko:item.resiko || linkedKegiatan?.resiko || '',
+    tingkatResiko:String(item.tingkatResiko || linkedKegiatan?.tingkatResiko || ''),
+    manfaat:item.manfaat || linkedKegiatan?.manfaat || '',
+    detailKategori,
+    tipeMataAnggaran:'Pendapatan',
+    mataAnggaranId:String(item.mataAnggaranId || ''),
+    mataAnggaranKode:item.mataAnggaranKode || item.kode || '',
+    mataAnggaranNama:item.mataAnggaranNama || '',
+    qty:Number(item.qty || 0),
+    satuan:item.satuan || '',
+    hargaSatuan:Number(item.hargaSatuan || 0),
+    nominal:Number(item.nominal || (Number(item.qty||0) * Number(item.hargaSatuan||0))),
+    status:item.status || 'Draft',
+    catatan:item.catatan || '',
+    catatanHead:item.catatanHead || '',
+    catatanDetail:item.catatanDetail || item.detailCatatan || ''
+  };
+}
+function normalizeRealization(item, idx){
+  return {id:Number(item.id ?? idx+1), budgetId:Number(item.budgetId || 0), tanggal:item.tanggal || '', kategori:item.kategori || '', detail:item.detail || '', qty:Number(item.qty || 0), unitPrice:Number(item.unitPrice || 0), total:Number(item.total || 0), accurateStatus:item.accurateStatus || 'Pending', overTarget:Boolean(item.overTarget), catatan:item.catatan || ''};
+}
 
-    const seedBudgets = [
-      {
-        id:1,
-        kode:'AI-UNI-001',
-        entitas:'Universitas',
-        upkId:'UPK-002', upkKode:'UPK-002', upkNama:'Universitas',
-        uptId:'UPT-UNI-HUMAS', uptKode:'UPT.1.2', uptNama:'Bagian Humas dan Kerjasama',
-        nama:'Target Kerjasama & Promosi Institusi 2026',
-        risikoId:'R-IN-003', risikoNama:'Risiko keterlambatan pembayaran UKT', risikoSkala:'Tinggi',
-        tahun:2026, nominal:650000000, status:'Aktif',
-        catatan:'Target uang masuk dari kerja sama institusi, sponsorship, dan promosi penerimaan mahasiswa.'
-      },
-      {
-        id:2,
-        kode:'AI-KLN-001',
-        entitas:'Klinik',
-        upkId:'UPK-003', upkKode:'UPK-003', upkNama:'Klinik',
-        uptId:'UPT-KLN-MEDIS', uptKode:'UPT.4', uptNama:'Unit Pelayanan Medis',
-        nama:'Target Pendapatan Layanan Medis 2026',
-        risikoId:'R-IN-001', risikoNama:'Risiko penurunan kunjungan pasien', risikoSkala:'Sedang',
-        tahun:2026, nominal:950000000, status:'Aktif',
-        catatan:'Target uang masuk dari layanan pasien, pemeriksaan, dan tindakan medis.'
-      },
-      {
-        id:3,
-        kode:'AI-YYS-001',
-        entitas:'Yayasan',
-        upkId:'UPK-001', upkKode:'UPK-001', upkNama:'Yayasan',
-        uptId:'UPT-YYS-KEU', uptKode:'UPT.3.1', uptNama:'Bagian Keuangan dan Akuntansi',
-        nama:'Target Donasi & Kontribusi Yayasan 2026',
-        risikoId:'R-IN-002', risikoNama:'Risiko fluktuasi donasi', risikoSkala:'Tinggi',
-        tahun:2026, nominal:420000000, status:'Aktif',
-        catatan:'Target uang masuk dari donasi, kontribusi, dan penerimaan sosial yayasan.'
-      },
-      {
-        id:4,
-        kode:'AI-UNI-002',
-        entitas:'Universitas',
-        upkId:'UPK-002', upkKode:'UPK-002', upkNama:'Universitas',
-        uptId:'UPT-UNI-KARIR', uptKode:'UPT.1.3', uptNama:'Bagian Pusat Karir',
-        nama:'Target Event Career Center 2026',
-        risikoId:'R-IN-004', risikoNama:'Risiko mismatch data penerimaan', risikoSkala:'Sedang',
-        tahun:2026, nominal:180000000, status:'Draft',
-        catatan:'Target uang masuk dari job fair, tracer study premium, dan event pusat karir.'
+function getUPKs(){ const modern=readJson(STORAGE_UPK); const legacy=readJson(LEGACY_UPK); const src=modern.length?modern:(legacy.length?legacy:fallbackUPK); return src.map(normalizeUPK); }
+function getUPTs(){ const modern=readJson(STORAGE_UPT); const legacy=readJson(LEGACY_UPT); const src=modern.length?modern:(legacy.length?legacy:fallbackUPT); return src.map(normalizeUPT); }
+function getPrograms(){ const src=readJson(STORAGE_PROGRAM); return (src.length?src:fallbackPrograms).map(normalizeProgram); }
+function getKegiatans(){ const src=readJson(STORAGE_KEGIATAN); return (src.length?src:fallbackKegiatan).map(normalizeKegiatan); }
+function getMataAnggaran(){ const src=readJson(STORAGE_MATA); return (src.length?src:fallbackMata).map(normalizeMata); }
+function getBudgets(){ return readJson(STORAGE_BUDGETS).map(normalizeBudget); }
+function getRealizations(){ return readJson(STORAGE_REALIZATIONS).map(normalizeRealization); }
+
+let UPKS=[], UPTS=[], PROGRAMS=[], KEGIATANS=[], MATA=[], BUDGETS=[], REALIZATIONS=[];
+let formSourceLines = [];
+let formIncomeLines = [];
+
+function reloadRefs(){
+  UPKS=getUPKs();
+  UPTS=getUPTs();
+  PROGRAMS=getPrograms();
+  KEGIATANS=getKegiatans();
+  MATA=getMataAnggaran();
+  BUDGETS=getBudgets();
+  REALIZATIONS=getRealizations();
+}
+function getUpk(id){ return UPKS.find(x=>String(x.id)===String(id)); }
+function getUpt(id){ return UPTS.find(x=>String(x.id)===String(id)); }
+function getProgram(id){ return PROGRAMS.find(x=>String(x.id)===String(id)); }
+function getKegiatan(id){ return KEGIATANS.find(x=>String(x.id)===String(id)); }
+function getMata(id){ return MATA.find(x=>String(x.id)===String(id)); }
+
+function buildUptDisplayName(upt){
+  if(!upt) return '';
+  const parts=[upt.nama || ''];
+  const seen=new Set();
+  let current=upt;
+  while(current && current.parentId && !seen.has(String(current.parentId))){
+    seen.add(String(current.parentId));
+    current=getUpt(current.parentId);
+    if(current) parts.unshift(current.nama || '');
+  }
+  return parts.join(' / ');
+}
+function fillMonthYearOptions(){
+  const monthOptions = '<option value="">— Bulan —</option>' + MONTHS.map(m => `<option value="${m}">${m}</option>`).join('');
+  const years = [];
+  for(let y=CURRENT_YEAR-2; y<=CURRENT_YEAR+5; y++) years.push(y);
+  const yearOptions = '<option value="">— Tahun —</option>' + years.map(y => `<option value="${y}">${y}</option>`).join('');
+  ['fStartMonth','fEndMonth'].forEach(id => { const el=document.getElementById(id); if(el) el.innerHTML = monthOptions; });
+  ['fStartYear','fEndYear'].forEach(id => { const el=document.getElementById(id); if(el) el.innerHTML = yearOptions; });
+}
+function generateNomorAnggaranIncome(year){
+  const targetYear = String(year || CURRENT_YEAR);
+  const seqs = BUDGETS.map(item => String(item.nomorAnggaranIncome || ''))
+    .filter(no => no.startsWith(`AI-${targetYear}-`))
+    .map(no => Number(no.split('-').pop() || 0))
+    .filter(num => !Number.isNaN(num));
+  const next = (seqs.length ? Math.max(...seqs) : 0) + 1;
+  return `AI-${targetYear}-${String(next).padStart(4,'0')}`;
+}
+function syncNomorAnggaranIncome(){
+  if(state.editingGroupNo) return;
+  const startYear = document.getElementById('fStartYear').value || CURRENT_YEAR;
+  document.getElementById('fNomorAnggaran').value = generateNomorAnggaranIncome(startYear);
+  updateHeadSummary();
+}
+function updateHeadSummary(){
+  const nomor = document.getElementById('fNomorAnggaran').value || '-';
+  const upk = getUpk(document.getElementById('fUpk').value);
+  const upt = getUpt(document.getElementById('fUpt').value);
+  const program = getProgram(document.getElementById('fProgram').value);
+  const kegiatan = getKegiatan(document.getElementById('fKegiatan').value);
+  const start = [document.getElementById('fStartMonth').value, document.getElementById('fStartYear').value].filter(Boolean).join(' ');
+  const end = [document.getElementById('fEndMonth').value, document.getElementById('fEndYear').value].filter(Boolean).join(' ');
+  document.getElementById('headSummaryBox').innerHTML = `
+    <div><b>No:</b> ${escapeHtml(nomor)}</div>
+    <div><b>UPK:</b> ${escapeHtml(upk?.nama || '-')}</div>
+    <div><b>UPT:</b> ${escapeHtml(upt ? buildUptDisplayName(upt) : 'Level UPK')}</div>
+    <div><b>Program:</b> ${escapeHtml(program?.nama || '-')}</div>
+    <div><b>Kegiatan:</b> ${escapeHtml(kegiatan?.nama || '-')}</div>
+    <div><b>Periode:</b> ${escapeHtml(start || '-')} s.d. ${escapeHtml(end || '-')}</div>
+  `;
+}
+
+
+function nextLineUid(){ return 'L' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+function createEmptyLine(kind='income'){ return { uid: nextLineUid(), kind, mataId:'', query:'', qty:1, satuan:'', hargaSatuan:0, subtotal:0, catatan:'', resultsOpen:false }; }
+function detailLabel(kind){ return kind === 'sumber' ? 'Sumber Dana' : 'Pendapatan'; }
+function mataTypeForKind(kind){ return 'Pendapatan'; }
+function getLinesByKind(kind){ return kind === 'sumber' ? formSourceLines : formIncomeLines; }
+function setLinesByKind(kind, lines){ if(kind === 'sumber') formSourceLines = lines; else formIncomeLines = lines; }
+
+const state = {
+  page:1,
+  perPage:8,
+  search:'',
+  filterUpk:'',
+  filterStatus:'',
+  sortCol:'nomorAnggaranIncome',
+  sortDir:'asc',
+  editingGroupNo:'',
+  editingGroupIds:[]
+};
+
+function getFilteredMataOptions(query='', kind='income'){
+  const upkId = document.getElementById('fUpk')?.value || '';
+  const uptId = document.getElementById('fUpt')?.value || '';
+  let items = MATA.filter(m => m.status !== 'Nonaktif' && String(m.tipe || '').toLowerCase() === 'pendapatan' && (!upkId || String(m.idUpk) === String(upkId)));
+  if(uptId) items = items.filter(m => !m.idUpt || String(m.idUpt) === String(uptId));
+  const q = normalizeText(query);
+  if(q){
+    items = items.filter(m => normalizeText([m.kodeAnggaran, m.namaMataAnggaran, m.namaUpt, m.satuan, m.catatan, m.tipe].join(' ')).includes(q));
+  }
+  return items.sort((a,b) => (a.namaMataAnggaran || '').localeCompare(b.namaMataAnggaran || ''));
+}
+
+function populateFilterUpk(){
+  const el=document.getElementById('filterUpk');
+  const current=el.value;
+  el.innerHTML='<option value="">Semua UPK</option>' + UPKS.filter(u=>u.status!=='Nonaktif').map(u=>`<option value="${u.id}">${escapeHtml(u.nama)}</option>`).join('');
+  if([...el.options].some(o=>o.value===current)) el.value=current;
+}
+function populateFormUpk(selected=''){
+  const el=document.getElementById('fUpk');
+  el.innerHTML='<option value="">— Pilih Nama UPK —</option>' + UPKS.filter(u=>u.status!=='Nonaktif').map(u=>`<option value="${u.id}">${escapeHtml(u.kode)} · ${escapeHtml(u.nama)}</option>`).join('');
+  el.value=selected || '';
+  populateFormUpt();
+  populateFormProgram();
+  populateFormKegiatan();
+  updateHeadSummary();
+}
+function populateFormUpt(selected=''){
+  const upkId=document.getElementById('fUpk').value;
+  const items=UPTS.filter(u=>u.status!=='Nonaktif' && (!upkId || String(u.upkId)===String(upkId))).sort((a,b)=>buildUptDisplayName(a).localeCompare(buildUptDisplayName(b)));
+  const el=document.getElementById('fUpt');
+  el.innerHTML='<option value="">— Tidak dipilih / level UPK —</option>' + items.map(u=>`<option value="${u.id}">${escapeHtml(u.kode)} · ${escapeHtml(buildUptDisplayName(u))}</option>`).join('');
+  el.value=selected || '';
+}
+function populateFormProgram(selected=''){
+  const upkId=document.getElementById('fUpk').value;
+  const items=PROGRAMS.filter(p=>p.status!=='Nonaktif' && (!upkId || String(p.upkId)===String(upkId))).sort((a,b)=>(a.nama||'').localeCompare(b.nama||''));
+  const el=document.getElementById('fProgram');
+  el.innerHTML='<option value="">— Tidak dipilih —</option>' + items.map(p=>{
+    const upt = p.uptId ? getUpt(p.uptId) : null;
+    const uptLabel = upt ? buildUptDisplayName(upt) : 'Level UPK';
+    return `<option value="${p.id}">${escapeHtml(p.kode)} · ${escapeHtml(p.nama)} · ${escapeHtml(uptLabel)}</option>`;
+  }).join('');
+  el.value=selected || '';
+}
+function populateFormKegiatan(selected=''){
+  const upkId=document.getElementById('fUpk').value;
+  const uptId=document.getElementById('fUpt').value;
+  const programId=document.getElementById('fProgram').value;
+  let items=KEGIATANS.filter(k=>k.status!=='Nonaktif' && (!upkId || String(k.upkId)===String(upkId)));
+  if(programId) items=items.filter(k=>String(k.programId||'')===String(programId));
+  else if(uptId) items=items.filter(k=>!k.uptId || String(k.uptId)===String(uptId));
+  items=items.sort((a,b)=>(a.nama||'').localeCompare(b.nama||''));
+  const el=document.getElementById('fKegiatan');
+  el.innerHTML='<option value="">— Tidak dipilih —</option>' + items.map(k=>{
+    const program = k.programNama ? k.programNama : 'Tanpa Program';
+    const upt = k.uptId ? buildUptDisplayName(getUpt(k.uptId)) : 'Level UPK';
+    return `<option value="${k.id}">${escapeHtml(k.kode)} · ${escapeHtml(k.nama)} · ${escapeHtml(program)} · ${escapeHtml(upt)}</option>`;
+  }).join('');
+  el.value=selected || '';
+}
+
+function resetLinesForContext(kind, selectedUptId){
+  const lines = getLinesByKind(kind).map(line => {
+    const mata = getMata(line.mataId);
+    if(mata){
+      const uptMatch = !selectedUptId || !mata.idUpt || String(mata.idUpt) === String(selectedUptId);
+      if(!uptMatch) return createEmptyLine(kind);
+    }
+    return {...line, kind, resultsOpen:false};
+  });
+  setLinesByKind(kind, lines.length ? lines : [createEmptyLine(kind)]);
+}
+function handleUpkChange(){
+  populateFormUpt();
+  populateFormProgram();
+  populateFormKegiatan();
+  formSourceLines = [createEmptyLine('sumber')];
+  formIncomeLines = [createEmptyLine('income')];
+  renderAllLineItems();
+  updateHeadSummary();
+}
+function handleUptChange(){
+  const keepProgram = document.getElementById('fProgram').value;
+  populateFormProgram(keepProgram);
+  populateFormKegiatan();
+  const selectedUptId = document.getElementById('fUpt').value;
+  resetLinesForContext('sumber', selectedUptId);
+  resetLinesForContext('income', selectedUptId);
+  renderAllLineItems();
+  updateHeadSummary();
+}
+function handleProgramChange(){
+  populateFormKegiatan();
+  updateHeadSummary();
+}
+function handleKegiatanChange(){
+  const kegiatan = getKegiatan(document.getElementById('fKegiatan').value);
+  if(kegiatan){
+    if(kegiatan.waktuAwalBulan) document.getElementById('fStartMonth').value = kegiatan.waktuAwalBulan;
+    if(kegiatan.waktuAwalTahun) document.getElementById('fStartYear').value = String(kegiatan.waktuAwalTahun);
+    if(kegiatan.waktuAkhirBulan) document.getElementById('fEndMonth').value = kegiatan.waktuAkhirBulan;
+    if(kegiatan.waktuAkhirTahun) document.getElementById('fEndYear').value = String(kegiatan.waktuAkhirTahun);
+    if(kegiatan.output) document.getElementById('fOutput').value = kegiatan.output;
+    if(kegiatan.penanggungJawab) document.getElementById('fPenanggungJawab').value = kegiatan.penanggungJawab;
+    if(kegiatan.targetKegiatan) document.getElementById('fTargetKegiatan').value = kegiatan.targetKegiatan;
+    if(kegiatan.resiko) document.getElementById('fResiko').value = kegiatan.resiko;
+    if(kegiatan.tingkatResiko) document.getElementById('fTingkatResiko').value = kegiatan.tingkatResiko;
+    if(kegiatan.manfaat) document.getElementById('fManfaat').value = kegiatan.manfaat;
+  }
+  syncNomorAnggaranIncome();
+  updateHeadSummary();
+}
+
+function addBudgetLine(kind='income', prefill=null){
+  const line = Object.assign(createEmptyLine(kind), prefill || {}, {kind});
+  line.qty = Math.max(1, Number(line.qty || 1));
+  line.hargaSatuan = Number(line.hargaSatuan || 0);
+  line.subtotal = line.qty * line.hargaSatuan;
+  setLinesByKind(kind, [...getLinesByKind(kind), line]);
+  renderLineItems(kind);
+}
+function removeBudgetLine(kind, uid){
+  let lines = getLinesByKind(kind).filter(line => line.uid !== uid);
+  if(!lines.length) lines = [createEmptyLine(kind)];
+  setLinesByKind(kind, lines);
+  renderLineItems(kind);
+}
+function updateLineQty(kind, uid, value){
+  const lines = getLinesByKind(kind).map(line => {
+    if(line.uid !== uid) return line;
+    const qty = Math.max(1, Number(value || 1));
+    return {...line, qty, subtotal: qty * Number(line.hargaSatuan || 0)};
+  });
+  setLinesByKind(kind, lines);
+  renderLineItems(kind);
+}
+function updateLineCatatan(kind, uid, value){
+  setLinesByKind(kind, getLinesByKind(kind).map(line => line.uid === uid ? {...line, catatan:value} : line));
+}
+function updateLineQuery(kind, uid, value){
+  setLinesByKind(kind, getLinesByKind(kind).map(line => line.uid === uid ? {...line, query:value, resultsOpen:true} : line));
+  renderLineItems(kind);
+}
+function openLineResults(kind, uid){
+  setLinesByKind(kind, getLinesByKind(kind).map(line => line.uid === uid ? {...line, resultsOpen:true} : line));
+  renderLineItems(kind);
+}
+function getLineMatches(line, kind){
+  return getFilteredMataOptions(line.query || '', kind).slice(0, 20);
+}
+function selectLineMata(kind, uid, mataId){
+  const mata = getMata(mataId);
+  if(!mata) return;
+  const lines = getLinesByKind(kind).map(line => {
+    if(line.uid !== uid) return line;
+    return {
+      ...line,
+      mataId:String(mata.id),
+      query:`${mata.kodeAnggaran} · ${mata.namaMataAnggaran}`,
+      satuan:mata.satuan || '',
+      hargaSatuan:Number(mata.hargaSatuan || 0),
+      subtotal:Number(line.qty || 1) * Number(mata.hargaSatuan || 0),
+      resultsOpen:false
+    };
+  });
+  setLinesByKind(kind, lines);
+  renderLineItems(kind);
+}
+function renderLineItems(kind){
+  const tbody = document.getElementById(kind === 'sumber' ? 'sourceLineItemsBody' : 'incomeLineItemsBody');
+  if(!tbody) return;
+  const lines = getLinesByKind(kind);
+  if(!lines.length){
+    setLinesByKind(kind, [createEmptyLine(kind)]);
+    return renderLineItems(kind);
+  }
+  tbody.innerHTML = lines.map(line => {
+    const mata = getMata(line.mataId);
+    const matches = getLineMatches(line, kind);
+    const uptLabel = mata?.idUpt ? buildUptDisplayName(getUpt(mata.idUpt)) : 'Level UPK';
+    const label = detailLabel(kind);
+    return `
+      <tr>
+        <td>
+          <div class="line-cell-stack">
+            <div class="lookup-shell">
+              <input class="lookup-input" type="text" value="${escapeHtml(line.query || '')}" placeholder="Cari kode / nama mata anggaran ${label.toLowerCase()}" oninput="updateLineQuery('${kind}', '${line.uid}', this.value)" onfocus="openLineResults('${kind}', '${line.uid}')">
+              <div class="lookup-results-inline ${line.resultsOpen ? 'open' : ''}">
+                ${matches.length ? matches.map(item => {
+                  const itemUpt = item.idUpt ? buildUptDisplayName(getUpt(item.idUpt)) : 'Level UPK';
+                  return `<button type="button" class="lookup-result-btn" onclick="selectLineMata('${kind}', '${line.uid}', '${escapeHtml(String(item.id))}')"><span class="lookup-result-code">${escapeHtml(item.kodeAnggaran)}</span><span class="lookup-result-name">${escapeHtml(item.namaMataAnggaran)}</span><span class="lookup-result-sub">${escapeHtml(item.tipe || 'Pendapatan')} · ${escapeHtml(itemUpt)} · ${escapeHtml(item.satuan || '-')} · ${fmtCurrency(item.hargaSatuan || 0)}</span></button>`;
+                }).join('') : `<div class="lookup-result-empty">Tidak ada mata anggaran ${label.toLowerCase()} yang cocok.</div>`}
+              </div>
+            </div>
+            ${mata ? `<div class="lookup-picked"><strong>${escapeHtml(mata.namaMataAnggaran)}</strong><span>${escapeHtml(mata.kodeAnggaran)} · ${escapeHtml(mata.tipe || 'Pendapatan')} · ${escapeHtml(uptLabel)} · ${escapeHtml(mata.catatan || 'Tanpa catatan')}</span></div>` : `<div class="line-meta">Pilih ${label.toLowerCase()} berdasarkan kode atau nama mata anggaran.</div>`}
+          </div>
+        </td>
+        <td><input class="form-input" type="number" min="1" value="${Number(line.qty || 1)}" oninput="updateLineQty('${kind}', '${line.uid}', this.value)"></td>
+        <td><input class="form-input" type="text" readonly style="background:var(--bg)" value="${escapeHtml(line.satuan || '')}"></td>
+        <td><input class="form-input" type="text" readonly style="background:var(--bg)" value="${escapeHtml(fmtCurrency(line.hargaSatuan || 0))}"></td>
+        <td><input class="form-input" type="text" readonly style="background:var(--bg)" value="${escapeHtml(fmtCurrency(line.subtotal || 0))}"></td>
+        <td><input class="form-input" type="text" value="${escapeHtml(line.catatan || '')}" placeholder="Catatan detail" oninput="updateLineCatatan('${kind}', '${line.uid}', this.value)"></td>
+        <td><button type="button" class="line-remove" onclick="removeBudgetLine('${kind}', '${line.uid}')" title="Hapus baris"><i class="fa-solid fa-trash"></i></button></td>
+      </tr>
+    `;
+  }).join('');
+  updateFormGrandTotal();
+}
+function renderAllLineItems(){ renderLineItems('sumber'); renderLineItems('income'); }
+function updateFormGrandTotal(){
+  const sourceTotal = formSourceLines.reduce((sum, line) => sum + Number(line.subtotal || 0), 0);
+  const incomeTotal = formIncomeLines.reduce((sum, line) => sum + Number(line.subtotal || 0), 0);
+  document.getElementById('formSourceTotal').textContent = fmtCurrency(sourceTotal);
+  document.getElementById('formIncomeTotal').textContent = fmtCurrency(incomeTotal);
+  document.getElementById('formGrandTotal').textContent = fmtCurrency(sourceTotal + incomeTotal);
+  document.getElementById('formBalanceTotal').textContent = fmtCurrency(sourceTotal - incomeTotal);
+}
+
+function incomeActual(budgetId){
+  return REALIZATIONS.filter(r => Number(r.budgetId) === Number(budgetId)).reduce((sum,r)=>sum+Number(r.total||0),0);
+}
+function incomeGapInfo(budgetId){
+  const budget = BUDGETS.find(b => Number(b.id) === Number(budgetId));
+  const actual = incomeActual(budgetId);
+  const target = Number(budget?.nominal || 0);
+  const gap = actual - target;
+  const pct = target > 0 ? Math.round((actual/target)*100) : 0;
+  return { actual, target, gap, pct };
+}
+function getUniqueHeadCount(){
+  return new Set(BUDGETS.map(item => String(item.nomorAnggaranIncome || ''))).size;
+}
+function updateStats(){
+  const targetRows = BUDGETS.filter(item => item.detailKategori !== 'Sumber Dana');
+  const totalHead = getUniqueHeadCount();
+  const totalTarget = targetRows.reduce((s,b)=>s+Number(b.nominal||0),0);
+  const totalActual = REALIZATIONS.reduce((s,r)=>s+Number(r.total||0),0);
+  document.getElementById('statHead').textContent = totalHead;
+  document.getElementById('statTarget').textContent = fmtShortCurrency(totalTarget);
+  document.getElementById('statActual').textContent = fmtShortCurrency(totalActual);
+  document.getElementById('statAchievement').textContent = `${totalTarget > 0 ? Math.round((totalActual/totalTarget)*100) : 0}%`;
+  document.getElementById('heroHead').textContent = totalHead;
+  document.getElementById('heroTarget').textContent = fmtShortCurrency(totalTarget);
+  document.getElementById('heroActual').textContent = fmtShortCurrency(totalActual);
+  document.getElementById('heroGap').textContent = fmtShortCurrency(totalActual-totalTarget);
+}
+function applyFilters(){
+  state.search = document.getElementById('searchInput').value.trim().toLowerCase();
+  state.filterUpk = document.getElementById('filterUpk').value;
+  state.filterStatus = document.getElementById('filterStatus').value;
+  state.page = 1;
+  render();
+}
+function sortBy(col){
+  if(state.sortCol === col) state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
+  else { state.sortCol = col; state.sortDir = 'asc'; }
+  render();
+}
+function getFiltered(){
+  return BUDGETS.filter(item => {
+    if(state.filterUpk && String(item.upkId) !== String(state.filterUpk)) return false;
+    if(state.filterStatus && item.status !== state.filterStatus) return false;
+    if(state.search){
+      const hay = [
+        item.nomorAnggaranIncome,item.upkNama,item.uptNama,item.programNama,item.kegiatanNama,
+        item.waktuAwalBulan,item.waktuAwalTahun,item.waktuAkhirBulan,item.waktuAkhirTahun,
+        item.detailKategori,item.tipeMataAnggaran,item.mataAnggaranKode,item.mataAnggaranNama,item.output,item.penanggungJawab,item.targetKegiatan,
+        item.resiko,item.manfaat,item.catatan,item.satuan
+      ].join(' ').toLowerCase();
+      if(!hay.includes(state.search)) return false;
+    }
+    return true;
+  }).sort((a,b) => {
+    const av=a[state.sortCol], bv=b[state.sortCol];
+    if(typeof av === 'string' || typeof bv === 'string'){
+      return state.sortDir === 'asc' ? String(av||'').localeCompare(String(bv||'')) : String(bv||'').localeCompare(String(av||''));
+    }
+    return state.sortDir === 'asc' ? Number(av||0) - Number(bv||0) : Number(bv||0) - Number(av||0);
+  });
+}
+function renderPagination(total){
+  const pages=Math.ceil(total/state.perPage);
+  if(!pages){ document.getElementById('pagination').innerHTML=''; return; }
+  const start=(state.page-1)*state.perPage+1;
+  const end=Math.min(state.page*state.perPage,total);
+  let buttons='';
+  for(let i=1;i<=pages;i++) buttons += `<button class="pg-btn ${i===state.page?'active':''}" onclick="goPage(${i})">${i}</button>`;
+  document.getElementById('pagination').innerHTML = `<div class="pagination-info">Menampilkan ${start}-${end} dari ${total} baris detail</div><div class="pagination-btns"><button class="pg-btn" onclick="goPage(${state.page-1})" ${state.page<=1?'disabled':''}><i class="fa-solid fa-chevron-left"></i></button>${buttons}<button class="pg-btn" onclick="goPage(${state.page+1})" ${state.page>=pages?'disabled':''}><i class="fa-solid fa-chevron-right"></i></button></div>`;
+}
+function goPage(page){
+  const maxPage=Math.max(1,Math.ceil(getFiltered().length/state.perPage));
+  state.page=Math.max(1,Math.min(page,maxPage));
+  render();
+}
+function statusBadge(status){
+  if(status==='Aktif') return '<span class="badge badge-success">Aktif</span>';
+  if(status==='Draft') return '<span class="badge badge-warning">Draft</span>';
+  return '<span class="badge badge-danger">Tutup</span>';
+}
+function riskBadge(level){
+  const lv = Number(level || 0);
+  if(!lv) return '<span class="badge badge-warning">Belum diisi</span>';
+  if(lv >= 4) return `<span class="badge badge-danger">Risiko ${lv}</span>`;
+  if(lv === 3) return `<span class="badge badge-warning">Risiko ${lv}</span>`;
+  return `<span class="badge badge-success">Risiko ${lv}</span>`;
+}
+function detailKategoriBadge(item){
+  return item.detailKategori === 'Sumber Dana'
+    ? `<span class="badge badge-primary">Sumber Dana</span><div class="title-sub">${escapeHtml(item.tipeMataAnggaran || 'Pendapatan')}</div>`
+    : `<span class="badge badge-accent">Pendapatan</span><div class="title-sub">${escapeHtml(item.tipeMataAnggaran || 'Pendapatan')}</div>`;
+}
+function formatPeriode(item){
+  const start = [item.waktuAwalBulan, item.waktuAwalTahun].filter(Boolean).join(' ');
+  const end = [item.waktuAkhirBulan, item.waktuAkhirTahun].filter(Boolean).join(' ');
+  return `${start || '-'} s.d. ${end || '-'}`;
+}
+function render(){
+  reloadRefs();
+  populateFilterUpk();
+  updateStats();
+  const data = getFiltered();
+  const start = (state.page-1)*state.perPage;
+  const page = data.slice(start,start+state.perPage);
+  document.getElementById('tableSubtitle').textContent = `Menampilkan ${data.length} dari ${BUDGETS.length} detail mata anggaran income (${getUniqueHeadCount()} nomor anggaran income)`;
+  const tbody=document.getElementById('budgetTbody');
+  const empty=document.getElementById('emptyState');
+  if(!page.length){
+    tbody.innerHTML='';
+    empty.style.display='block';
+    renderPagination(0);
+    return;
+  }
+  empty.style.display='none';
+  tbody.innerHTML = page.map(item => {
+    const info = incomeGapInfo(item.id);
+    const pct = Number(item.nominal || 0) > 0 ? Math.min(100, Math.round((info.actual / Number(item.nominal || 0)) * 100)) : 0;
+    return `<tr>
+      <td><div class="title-cell">${escapeHtml(item.nomorAnggaranIncome || '-')}</div><div class="title-sub">${escapeHtml(formatPeriode(item))}</div></td>
+      <td><div class="title-cell">${escapeHtml(item.upkNama || '-')}</div><div class="title-sub">${escapeHtml(item.upkKode || '-')}</div></td>
+      <td><div class="title-cell">${escapeHtml(item.uptNama || 'Level UPK')}</div><div class="title-sub">${escapeHtml(item.uptKode || '-')}</div></td>
+      <td><div class="title-cell">${escapeHtml(item.programNama || '-')}</div><div class="title-sub">${escapeHtml(item.programKode || 'Tanpa Program')}</div></td>
+      <td><div class="title-cell">${escapeHtml(item.kegiatanNama || '-')}</div><div class="title-sub">${escapeHtml(item.kegiatanKode || 'Tanpa Kegiatan')}</div><div class="title-sub">${escapeHtml(item.targetKegiatan || '-')}</div></td>
+      <td><div class="title-cell">${escapeHtml(formatPeriode(item))}</div><div class="title-sub">${escapeHtml(item.manfaat || '-')}</div></td>
+      <td>${detailKategoriBadge(item)}</td>
+      <td><div class="title-cell">${escapeHtml(item.mataAnggaranNama || '-')}</div><div class="title-sub">${escapeHtml(item.mataAnggaranKode || '-')}</div><div class="title-sub">${escapeHtml(item.catatan || '-')}</div></td>
+      <td><div class="title-cell">${escapeHtml(item.output || '-')}</div><div class="title-sub">PJ: ${escapeHtml(item.penanggungJawab || '-')}</div><div class="title-sub">${riskBadge(item.tingkatResiko)} ${item.resiko ? '· ' + escapeHtml(item.resiko) : ''}</div></td>
+      <td class="mono">${Number(item.qty||0).toLocaleString('id-ID')}</td>
+      <td>${escapeHtml(item.satuan || '-')}</td>
+      <td class="mono">${fmtCurrency(item.hargaSatuan)}</td>
+      <td><div class="mono">${fmtCurrency(item.nominal)}</div><div class="title-sub">${item.detailKategori === 'Sumber Dana' ? 'Sumber penerimaan' : 'Target pendapatan'}</div></td>
+      <td>
+        <div class="progress-wrap">
+          <div class="progress-track"><div class="progress-fill" style="width:${pct}%;background:${info.pct >= 100 ? 'var(--success)' : (info.pct >= 70 ? 'var(--accent)' : 'var(--primary)')};"></div></div>
+          <div class="progress-label">${pct}%</div>
+        </div>
+        <div class="title-sub">${fmtCurrency(info.actual)}</div>
+      </td>
+      <td><div class="mono" style="color:${info.gap >= 0 ? 'var(--success)' : 'var(--danger)'}">${fmtCurrency(info.gap)}</div><div class="title-sub">${info.gap >= 0 ? 'Di atas / tercapai' : 'Di bawah target'}</div></td>
+      <td>${statusBadge(item.status)}</td>
+      <td style="text-align:right;"><div class="actions-inline"><button class="act-btn primary" onclick="openEditModal(${item.id})" title="Edit grup"><i class="fa-solid fa-pen"></i></button><button class="act-btn danger" onclick="deleteBudget(${item.id})" title="Hapus detail"><i class="fa-solid fa-trash"></i></button></div></td>
+    </tr>`;
+  }).join('');
+  renderPagination(data.length);
+}
+
+function resetHeadFields(){
+  document.getElementById('fNomorAnggaran').value = '';
+  document.getElementById('fOutput').value = '';
+  document.getElementById('fPenanggungJawab').value = '';
+  document.getElementById('fTargetKegiatan').value = '';
+  document.getElementById('fResiko').value = '';
+  document.getElementById('fTingkatResiko').value = '';
+  document.getElementById('fManfaat').value = '';
+  document.getElementById('fStatus').value = 'Draft';
+  document.getElementById('fCatatan').value = '';
+  document.getElementById('headSummaryBox').innerHTML = '';
+}
+function openAddModal(){
+  state.editingGroupNo = '';
+  state.editingGroupIds = [];
+  document.getElementById('modalTitle').textContent='Tambah Anggaran Income';
+  document.getElementById('modalSub').textContent='Isi head anggaran income lalu tambahkan detail sumber dana dan pendapatan sekaligus.';
+  fillMonthYearOptions();
+  resetHeadFields();
+  populateFormUpk();
+  document.getElementById('fStartYear').value = String(CURRENT_YEAR);
+  document.getElementById('fEndYear').value = String(CURRENT_YEAR);
+  formSourceLines = [createEmptyLine('sumber')];
+  formIncomeLines = [createEmptyLine('income')];
+  syncNomorAnggaranIncome();
+  renderAllLineItems();
+  updateHeadSummary();
+  openModal('modalForm');
+}
+function groupRowsFor(item){
+  const no = String(item.nomorAnggaranIncome || '');
+  if(!no) return [item];
+  return BUDGETS.filter(row => String(row.nomorAnggaranIncome || '') === no).sort((a,b) => Number(a.id) - Number(b.id));
+}
+function openEditModal(id){
+  const item=BUDGETS.find(b=>Number(b.id)===Number(id));
+  if(!item) return;
+  const group = groupRowsFor(item);
+  state.editingGroupNo = item.nomorAnggaranIncome || '';
+  state.editingGroupIds = group.map(row => Number(row.id));
+  document.getElementById('modalTitle').textContent='Edit Anggaran Income';
+  document.getElementById('modalSub').textContent=`${escapeHtml(item.nomorAnggaranIncome || '-')} · ${group.length} detail sumber dana/pendapatan`;
+  fillMonthYearOptions();
+  populateFormUpk(item.upkId || '');
+  populateFormUpt(item.uptId || '');
+  populateFormProgram(item.programId || '');
+  populateFormKegiatan(item.kegiatanId || '');
+  document.getElementById('fNomorAnggaran').value = item.nomorAnggaranIncome || '';
+  document.getElementById('fStartMonth').value = item.waktuAwalBulan || '';
+  document.getElementById('fStartYear').value = item.waktuAwalTahun || '';
+  document.getElementById('fEndMonth').value = item.waktuAkhirBulan || '';
+  document.getElementById('fEndYear').value = item.waktuAkhirTahun || '';
+  document.getElementById('fOutput').value = item.output || '';
+  document.getElementById('fPenanggungJawab').value = item.penanggungJawab || '';
+  document.getElementById('fTargetKegiatan').value = item.targetKegiatan || '';
+  document.getElementById('fResiko').value = item.resiko || '';
+  document.getElementById('fTingkatResiko').value = item.tingkatResiko || '';
+  document.getElementById('fManfaat').value = item.manfaat || '';
+  document.getElementById('fStatus').value = item.status || 'Draft';
+  document.getElementById('fCatatan').value = item.catatanHead || item.catatan || '';
+  formSourceLines = group.filter(row => row.detailKategori === 'Sumber Dana').map(row => ({
+    uid: nextLineUid(),
+    existingId: row.id,
+    kind:'sumber',
+    mataId: String(row.mataAnggaranId || ''),
+    query: `${row.mataAnggaranKode || ''} · ${row.mataAnggaranNama || ''}`.trim(),
+    qty: Number(row.qty || 1),
+    satuan: row.satuan || '',
+    hargaSatuan: Number(row.hargaSatuan || 0),
+    subtotal: Number(row.nominal || 0),
+    catatan: row.catatanDetail || '',
+    resultsOpen:false
+  }));
+  formIncomeLines = group.filter(row => row.detailKategori !== 'Sumber Dana').map(row => ({
+    uid: nextLineUid(),
+    existingId: row.id,
+    kind:'income',
+    mataId: String(row.mataAnggaranId || ''),
+    query: `${row.mataAnggaranKode || ''} · ${row.mataAnggaranNama || ''}`.trim(),
+    qty: Number(row.qty || 1),
+    satuan: row.satuan || '',
+    hargaSatuan: Number(row.hargaSatuan || 0),
+    subtotal: Number(row.nominal || 0),
+    catatan: row.catatanDetail || '',
+    resultsOpen:false
+  }));
+  if(!formSourceLines.length) formSourceLines = [createEmptyLine('sumber')];
+  if(!formIncomeLines.length) formIncomeLines = [createEmptyLine('income')];
+  renderAllLineItems();
+  updateHeadSummary();
+  openModal('modalForm');
+}
+
+function buildHeadPayload(){
+  const upk = getUpk(document.getElementById('fUpk').value);
+  const upt = getUpt(document.getElementById('fUpt').value);
+  const program = getProgram(document.getElementById('fProgram').value);
+  const kegiatan = getKegiatan(document.getElementById('fKegiatan').value);
+  return {
+    nomorAnggaranIncome: document.getElementById('fNomorAnggaran').value.trim(),
+    upkId: upk?.id || '',
+    upkKode: upk?.kode || '',
+    upkNama: upk?.nama || '',
+    uptId: upt?.id || '',
+    uptKode: upt?.kode || '',
+    uptNama: upt ? buildUptDisplayName(upt) : '',
+    programId: program?.id || '',
+    programKode: program?.kode || '',
+    programNama: program?.nama || '',
+    kegiatanId: kegiatan?.id || '',
+    kegiatanKode: kegiatan?.kode || '',
+    kegiatanNama: kegiatan?.nama || '',
+    waktuAwalBulan: document.getElementById('fStartMonth').value,
+    waktuAwalTahun: document.getElementById('fStartYear').value,
+    waktuAkhirBulan: document.getElementById('fEndMonth').value,
+    waktuAkhirTahun: document.getElementById('fEndYear').value,
+    output: document.getElementById('fOutput').value,
+    penanggungJawab: document.getElementById('fPenanggungJawab').value.trim(),
+    targetKegiatan: document.getElementById('fTargetKegiatan').value.trim(),
+    resiko: document.getElementById('fResiko').value.trim(),
+    tingkatResiko: document.getElementById('fTingkatResiko').value,
+    manfaat: document.getElementById('fManfaat').value.trim(),
+    status: document.getElementById('fStatus').value,
+    catatan: document.getElementById('fCatatan').value.trim()
+  };
+}
+function buildDetailPayload(head, line, kind){
+  const mata = getMata(line.mataId);
+  return {
+    nomorAnggaranIncome: head.nomorAnggaranIncome,
+    upkId: head.upkId,
+    upkKode: head.upkKode,
+    upkNama: head.upkNama,
+    uptId: head.uptId,
+    uptKode: head.uptKode,
+    uptNama: head.uptNama,
+    programId: head.programId,
+    programKode: head.programKode,
+    programNama: head.programNama,
+    kegiatanId: head.kegiatanId,
+    kegiatanKode: head.kegiatanKode,
+    kegiatanNama: head.kegiatanNama,
+    waktuAwalBulan: head.waktuAwalBulan,
+    waktuAwalTahun: head.waktuAwalTahun,
+    waktuAkhirBulan: head.waktuAkhirBulan,
+    waktuAkhirTahun: head.waktuAkhirTahun,
+    output: head.output,
+    penanggungJawab: head.penanggungJawab,
+    targetKegiatan: head.targetKegiatan,
+    resiko: head.resiko,
+    tingkatResiko: head.tingkatResiko,
+    manfaat: head.manfaat,
+    detailKategori: detailLabel(kind),
+    tipeMataAnggaran: 'Pendapatan',
+    mataAnggaranId: mata?.id || '',
+    mataAnggaranKode: mata?.kodeAnggaran || '',
+    mataAnggaranNama: mata?.namaMataAnggaran || '',
+    qty: Number(line.qty || 0),
+    satuan: mata?.satuan || '',
+    hargaSatuan: Number(mata?.hargaSatuan || 0),
+    nominal: Number(line.qty || 0) * Number(mata?.hargaSatuan || 0),
+    status: head.status,
+    catatanHead: head.catatan,
+    catatanDetail: line.catatan || '',
+    catatan: line.catatan ? `${head.catatan ? head.catatan + ' | ' : ''}${line.catatan}` : head.catatan
+  };
+}
+function sameBudgetContext(a, b){
+  return String(a.upkId||'')===String(b.upkId||'')
+    && String(a.uptId||'')===String(b.uptId||'')
+    && String(a.programId||'')===String(b.programId||'')
+    && String(a.kegiatanId||'')===String(b.kegiatanId||'')
+    && String(a.waktuAwalBulan||'')===String(b.waktuAwalBulan||'')
+    && String(a.waktuAwalTahun||'')===String(b.waktuAwalTahun||'')
+    && String(a.waktuAkhirBulan||'')===String(b.waktuAkhirBulan||'')
+    && String(a.waktuAkhirTahun||'')===String(b.waktuAkhirTahun||'')
+    && String(a.detailKategori||'')===String(b.detailKategori||'')
+    && String(a.mataAnggaranId||'')===String(b.mataAnggaranId||'');
+}
+function hasRealizationForBudget(id){
+  return REALIZATIONS.some(item => Number(item.budgetId) === Number(id));
+}
+function collectValidLines(kind){
+  return getLinesByKind(kind).map(line => {
+    const mata = getMata(line.mataId);
+    if(!mata) return null;
+    const qty = Number(line.qty || 0);
+    if(qty <= 0) return null;
+    if(String(mata.tipe || '').toLowerCase() !== 'pendapatan') return null;
+    return {...line, qty, mataId:String(mata.id), kind};
+  }).filter(Boolean);
+}
+function validateUniqueLines(lines, kind){
+  const seen = new Set();
+  for(const line of lines){
+    if(seen.has(String(line.mataId))){
+      showToast('warning','fa-copy',`Ada mata anggaran ${detailLabel(kind).toLowerCase()} yang dipilih lebih dari satu kali.`);
+      return false;
+    }
+    seen.add(String(line.mataId));
+  }
+  return true;
+}
+function saveBudget(){
+  reloadRefs();
+  const head = buildHeadPayload();
+  if(!head.upkId || !head.nomorAnggaranIncome || !head.waktuAwalBulan || !head.waktuAwalTahun || !head.waktuAkhirBulan || !head.waktuAkhirTahun || !head.output || !head.penanggungJawab || !head.tingkatResiko || !head.status){
+    showToast('warning','fa-triangle-exclamation','Nomor Anggaran Income, UPK, periode, output, penanggung jawab, tingkat resiko, dan status wajib diisi.');
+    return;
+  }
+  const startIndex = MONTHS.indexOf(head.waktuAwalBulan);
+  const endIndex = MONTHS.indexOf(head.waktuAkhirBulan);
+  const startSerial = Number(head.waktuAwalTahun) * 12 + startIndex;
+  const endSerial = Number(head.waktuAkhirTahun) * 12 + endIndex;
+  if(startIndex < 0 || endIndex < 0 || endSerial < startSerial){
+    showToast('warning','fa-calendar-xmark','Waktu akhir tidak boleh lebih awal dari waktu awal.');
+    return;
+  }
+
+  const sourceLines = collectValidLines('sumber');
+  const incomeLines = collectValidLines('income');
+  if(!incomeLines.length){
+    showToast('warning','fa-triangle-exclamation','Tambahkan minimal satu detail mata anggaran pendapatan yang valid.');
+    return;
+  }
+  if(!validateUniqueLines(sourceLines, 'sumber') || !validateUniqueLines(incomeLines, 'income')) return;
+
+  const payloads = [
+    ...sourceLines.map(line => buildDetailPayload(head, line, 'sumber')),
+    ...incomeLines.map(line => buildDetailPayload(head, line, 'income'))
+  ];
+  const excludedIds = new Set(state.editingGroupIds || []);
+  const duplicateOutside = payloads.find(payload => BUDGETS.some(item => !excludedIds.has(Number(item.id)) && sameBudgetContext(item, payload)));
+  if(duplicateOutside){
+    showToast('warning','fa-copy',`Detail mata anggaran "${duplicateOutside.mataAnggaranNama}" pada kategori ${duplicateOutside.detailKategori} sudah ada pada head yang sama.`);
+    return;
+  }
+
+  if(state.editingGroupNo){
+    const existingGroup = BUDGETS.filter(item => excludedIds.has(Number(item.id))).sort((a,b) => Number(a.id) - Number(b.id));
+    const removedWithRealization = existingGroup.filter(row => hasRealizationForBudget(row.id) && !payloads.some(payload => String(payload.detailKategori) === String(row.detailKategori) && String(payload.mataAnggaranId) === String(row.mataAnggaranId)));
+    if(removedWithRealization.length){
+      showToast('warning','fa-link',`Detail "${removedWithRealization[0].mataAnggaranNama}" sudah punya realisasi dan tidak bisa dihapus dari grup ini.`);
+      return;
+    }
+
+    let nextId = Math.max(0, ...BUDGETS.map(item => Number(item.id || 0))) + 1;
+    const usedExistingIds = new Set();
+    const merged = payloads.map(payload => {
+      let reuse = existingGroup.find(row => !usedExistingIds.has(Number(row.id)) && String(row.detailKategori) === String(payload.detailKategori) && String(row.mataAnggaranId) === String(payload.mataAnggaranId));
+      if(!reuse){
+        reuse = existingGroup.find(row => !usedExistingIds.has(Number(row.id)) && !hasRealizationForBudget(row.id));
       }
-    ];
-
-    const seedRealizations = [
-      { id:1, budgetId:1, tanggal:'2026-01-18', kategori:'Kerjasama', detail:'Penerimaan sponsorship seminar kampus', qty:1, unitPrice:125000000, total:125000000, accurateStatus:'Pending', overTarget:false, catatan:'' },
-      { id:2, budgetId:2, tanggal:'2026-01-10', kategori:'Layanan Pasien', detail:'Penerimaan pasien rawat jalan', qty:1, unitPrice:165000000, total:165000000, accurateStatus:'Pending', overTarget:false, catatan:'' },
-      { id:3, budgetId:3, tanggal:'2026-01-12', kategori:'Donasi', detail:'Donasi rutin bulanan yayasan', qty:1, unitPrice:55000000, total:55000000, accurateStatus:'Sudah Push', overTarget:false, catatan:'' },
-      { id:4, budgetId:4, tanggal:'2026-02-03', kategori:'Event Karir', detail:'Penerimaan booth job fair', qty:1, unitPrice:42000000, total:42000000, accurateStatus:'Pending', overTarget:false, catatan:'' }
-    ];
-
-    function readJSON(key, fallback = []){
-      try {
-        const parsed = JSON.parse(localStorage.getItem(key));
-        return Array.isArray(parsed) ? parsed : fallback.slice();
-      } catch {
-        return fallback.slice();
+      if(reuse){
+        usedExistingIds.add(Number(reuse.id));
+        return {id:Number(reuse.id), ...payload};
       }
-    }
-
-    function strId(value){
-      return String(value ?? '').trim();
-    }
-
-    function ensureSeed(){
-      if(!localStorage.getItem(STORAGE_BUDGETS)) localStorage.setItem(STORAGE_BUDGETS, JSON.stringify(seedBudgets));
-      if(!localStorage.getItem(STORAGE_REALIZATIONS)) localStorage.setItem(STORAGE_REALIZATIONS, JSON.stringify(seedRealizations));
-      if(!localStorage.getItem(STORAGE_RISKS)) localStorage.setItem(STORAGE_RISKS, JSON.stringify(fallbackRisks));
-    }
-
-    function writeBudgets(data){ localStorage.setItem(STORAGE_BUDGETS, JSON.stringify(data)); }
-    function writeRealizations(data){ localStorage.setItem(STORAGE_REALIZATIONS, JSON.stringify(data)); }
-
-    function normalizeUpk(item, idx){
-      const kode = strId(item.kode || item.code || item.kodeUpk || item.upkKode || '') || `UPK-${String(idx + 1).padStart(3,'0')}`;
-      return {
-        id: strId(item.id || item.id_upk || item.upkId || kode),
-        kode,
-        nama: String(item.nama || item.name || item.entitas || item.upkNama || kode).trim(),
-        status: String(item.status || 'Aktif')
-      };
-    }
-
-    function normalizeUpt(item, idx){
-      const kode = strId(item.kode || item.code || item.kodeUpt || item.uptKode || '') || `UPT-${String(idx + 1).padStart(3,'0')}`;
-      return {
-        id: strId(item.id || item.id_upt || item.uptId || kode),
-        kode,
-        nama: String(item.nama || item.name || item.uptNama || kode).trim(),
-        upkId: strId(item.upkId || item.id_upk || item.upk_id || item.idUpk || ''),
-        parentId: strId(item.parentId || item.id_parent_upt || item.parent || item.parentUptId || item.subOf || ''),
-        status: String(item.status || 'Aktif')
-      };
-    }
-
-    function normalizeRisk(item, idx){
-      if(typeof item === 'string') return { id:`RISK-${idx+1}`, nama:item, skala:'' };
-      return {
-        id: strId(item.id || item.id_risk || item.riskId || `RISK-${idx+1}`),
-        nama: String(item.nama || item.name || item.risikoNama || '').trim(),
-        skala: String(item.skala || item.level || item.risikoSkala || '').trim()
-      };
-    }
-
-    function readBudgets(){ return readJSON(STORAGE_BUDGETS, seedBudgets); }
-    function readRealizations(){ return readJSON(STORAGE_REALIZATIONS, seedRealizations); }
-    function readUpks(){ return readJSON(STORAGE_UPK, fallbackUPK).map(normalizeUpk).filter(item => item.nama); }
-    function readUpts(){ return readJSON(STORAGE_UPT, fallbackUPT).map(normalizeUpt).filter(item => item.nama); }
-    function readRisks(){ return readJSON(STORAGE_RISKS, fallbackRisks).map(normalizeRisk).filter(item => item.nama); }
-
-    ensureSeed();
-    let BUDGETS = readBudgets();
-    let REALIZATIONS = readRealizations();
-    let UPKS = readUpks();
-    let UPTS = readUpts();
-    let RISKS = readRisks();
-
-    function escapeHtml(str){
-      return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-    }
-    function normalizeText(value){
-      return String(value || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
-    }
-    function fmtCurrency(n){ return 'Rp ' + (Number(n || 0)).toLocaleString('id-ID'); }
-    function fmtShortCurrency(n){
-      const num = Number(n || 0);
-      if(num >= 1000000000) return 'Rp ' + (num / 1000000000).toFixed(num % 1000000000 === 0 ? 0 : 1) + ' M';
-      if(num >= 1000000) return 'Rp ' + (num / 1000000).toFixed(num % 1000000 === 0 ? 0 : 1) + ' jt';
-      return fmtCurrency(num);
-    }
-
-    function getUpkById(id){ return UPKS.find(item => strId(item.id) === strId(id)); }
-    function getUptById(id){ return UPTS.find(item => strId(item.id) === strId(id)); }
-    function getRiskById(id){ return RISKS.find(item => strId(item.id) === strId(id)); }
-
-    function inferLegacyUpk(entitas){
-      const needle = normalizeText(entitas);
-      if(!needle) return null;
-      return UPKS.find(item => normalizeText(item.nama).includes(needle) || needle.includes(normalizeText(item.nama))) || null;
-    }
-
-    function buildUptDisplayName(upt, seen = new Set()){
-      if(!upt) return '';
-      if(seen.has(strId(upt.id))) return upt.nama;
-      seen.add(strId(upt.id));
-      const parent = getUptById(upt.parentId);
-      return parent ? `${buildUptDisplayName(parent, seen)} / ${upt.nama}` : upt.nama;
-    }
-
-    function hydrateBudget(item){
-      const upk = getUpkById(item.upkId) ||
-        UPKS.find(x => normalizeText(x.nama) === normalizeText(item.upkNama || item.entitas)) ||
-        inferLegacyUpk(item.entitas);
-
-      const upt = getUptById(item.uptId) ||
-        UPTS.find(x =>
-          normalizeText(x.nama) === normalizeText(item.uptNama) &&
-          (!upk || strId(x.upkId) === strId(upk.id))
-        );
-
-      return {
-        ...item,
-        upkId: strId(upk?.id || item.upkId || ''),
-        upkKode: upk?.kode || item.upkKode || '',
-        upkNama: upk?.nama || item.upkNama || item.entitas || '',
-        uptId: strId(upt?.id || item.uptId || ''),
-        uptKode: upt?.kode || item.uptKode || '',
-        uptNama: upt?.nama || item.uptNama || '',
-        uptDisplay: upt ? buildUptDisplayName(upt) : (item.uptNama || '-'),
-        entitas: upk?.nama || item.entitas || item.upkNama || ''
-      };
-    }
-
-    function getActualByBudget(budgetId, excludeId = null){
-      return REALIZATIONS
-        .filter(r => strId(r.budgetId) === strId(budgetId) && strId(r.id) !== strId(excludeId))
-        .reduce((sum, r) => sum + Number(r.total || 0), 0);
-    }
-
-    function getBudgetGapInfo(budgetId, excludeId = null){
-      const budget = hydrateBudget(
-        readBudgets().find(item => strId(item.id) === strId(budgetId)) ||
-        BUDGETS.find(item => strId(item.id) === strId(budgetId)) ||
-        {}
-      );
-      const actual = getActualByBudget(budgetId, excludeId);
-      const target = Number(budget.nominal || 0);
-      const gap = actual - target;
-      const pct = target > 0 ? Math.round((actual / target) * 100) : 0;
-      return { budget, actual, target, gap, pct };
-    }
-
-    function refreshRefs(){
-      BUDGETS = readBudgets();
-      REALIZATIONS = readRealizations();
-      UPKS = readUpks();
-      UPTS = readUpts();
-      RISKS = readRisks();
-    }
-
-    function populateUpkSelect(selectId, selected = '', includeAllLabel = 'Semua UPK'){
-      const select = document.getElementById(selectId);
-      if(!select) return;
-      const options = UPKS
-        .slice()
-        .sort((a,b) => (a.nama || '').localeCompare(b.nama || ''))
-        .map(item => `<option value="${escapeHtml(strId(item.id))}">${escapeHtml(item.kode)} · ${escapeHtml(item.nama)}</option>`)
-        .join('');
-      const first = includeAllLabel !== '' ? `<option value="">${includeAllLabel}</option>` : '<option value="">— Pilih UPK —</option>';
-      select.innerHTML = first + options;
-      select.value = strId(selected || '');
-    }
-
-    function populateUptSelect(selectId, upkId, selected = '', includeAll = false){
-      const select = document.getElementById(selectId);
-      if(!select) return;
-      const rows = UPTS
-        .filter(item => !upkId || strId(item.upkId) === strId(upkId))
-        .sort((a,b) => buildUptDisplayName(a).localeCompare(buildUptDisplayName(b)));
-      const first = includeAll ? '<option value="">Semua UPT</option>' : '<option value="">— Pilih UPT —</option>';
-      select.innerHTML = first + rows.map(item => `<option value="${escapeHtml(strId(item.id))}">${escapeHtml(item.kode)} · ${escapeHtml(buildUptDisplayName(item))}</option>`).join('');
-      select.value = strId(selected || '');
-    }
-
-    function populateRiskSelect(selectId, selected = ''){
-      const select = document.getElementById(selectId);
-      if(!select) return;
-      select.innerHTML = '<option value="">— Pilih Risiko —</option>' +
-        RISKS.map(item => `<option value="${escapeHtml(strId(item.id))}">${escapeHtml(item.nama)}${item.skala ? ` (${escapeHtml(item.skala)})` : ''}</option>`).join('');
-      select.value = strId(selected || '');
-    }
-
-    function getSelectedRisk(){
-      const riskId = document.getElementById('fRisk') ? document.getElementById('fRisk').value : '';
-      const risk = getRiskById(riskId);
-      return { risikoId:risk?.id || '', risikoNama:risk?.nama || '', risikoSkala:risk?.skala || '' };
-    }
-
-    function showToast(type, icon, message){
-      const stack = document.getElementById('toastStack');
-      if(!stack) return;
-      const el = document.createElement('div');
-      el.className = `toast ${type}`;
-      el.innerHTML = `<i class="fa-solid ${icon}"></i><span>${escapeHtml(message)}</span>`;
-      stack.appendChild(el);
-      setTimeout(() => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateX(18px)';
-        el.style.transition = 'all .24s ease';
-        setTimeout(() => el.remove(), 240);
-      }, 3200);
-    }
-
-    function openModal(id){ document.getElementById(id).classList.add('open'); }
-    function closeModal(id){ document.getElementById(id).classList.remove('open'); }
-    function closeModalIfBg(event,id){ if(event.target === document.getElementById(id)) closeModal(id); }
-
-    window.addEventListener('storage', (event) => {
-      if([STORAGE_BUDGETS, STORAGE_REALIZATIONS, STORAGE_RISKS, STORAGE_UPK, STORAGE_UPT].includes(event.key)){
-        refreshRefs();
-        if(typeof syncFilters === 'function') syncFilters();
-        if(typeof render === 'function') render();
-        if(typeof renderAll === 'function') renderAll();
-      }
+      return {id:nextId++, ...payload};
     });
 
+    BUDGETS = BUDGETS.filter(item => !excludedIds.has(Number(item.id)));
+    BUDGETS = [...merged, ...BUDGETS];
+    showToast('success','fa-circle-check', 'Nomor anggaran income berhasil diperbarui.');
+  } else {
+    let nextId = Math.max(0, ...BUDGETS.map(item => Number(item.id || 0))) + 1;
+    const inserted = payloads.map(payload => ({id:nextId++, ...payload}));
+    BUDGETS = [...inserted, ...BUDGETS];
+    showToast('success','fa-circle-check', `${inserted.length} detail sumber dana / pendapatan berhasil disimpan pada nomor ${head.nomorAnggaranIncome}.`);
+  }
 
-    const state = { search:'', filterUpk:'', filterUpt:'', filterStatus:'', sortCol:'kode', sortDir:'asc', page:1, perPage:8, editingId:null };
+  writeJson(STORAGE_BUDGETS, BUDGETS);
+  closeModal('modalForm');
+  render();
+}
+function deleteBudget(id){
+  const item=BUDGETS.find(b=>Number(b.id)===Number(id));
+  if(!item) return;
+  if(hasRealizationForBudget(id)){
+    showToast('warning','fa-link',`Detail "${item.mataAnggaranNama || item.nomorAnggaranIncome}" sudah memiliki realisasi.`);
+    return;
+  }
+  if(!confirm(`Hapus detail ${item.detailKategori || 'Pendapatan'} "${item.mataAnggaranNama}" dari nomor ${item.nomorAnggaranIncome}?`)) return;
+  BUDGETS = BUDGETS.filter(b=>Number(b.id)!==Number(id));
+  writeJson(STORAGE_BUDGETS, BUDGETS);
+  render();
+  showToast('success','fa-trash','Detail anggaran income berhasil dihapus.');
+}
+function exportCSV(){
+  const rows=BUDGETS.map(item=>[
+    item.nomorAnggaranIncome,item.upkNama,item.uptNama||'',item.programNama||'',item.kegiatanNama||'',
+    `${item.waktuAwalBulan || ''} ${item.waktuAwalTahun || ''}`.trim(),
+    `${item.waktuAkhirBulan || ''} ${item.waktuAkhirTahun || ''}`.trim(),
+    item.output || '', item.penanggungJawab || '', item.targetKegiatan || '', item.resiko || '', item.tingkatResiko || '', item.manfaat || '',
+    item.detailKategori || '', item.tipeMataAnggaran || '', item.mataAnggaranKode||'',item.mataAnggaranNama||'',item.qty,item.satuan,item.hargaSatuan,item.nominal,incomeActual(item.id),incomeGapInfo(item.id).gap,item.status,item.catatan||''
+  ]);
+  const header=['Nomor Anggaran Income','Nama UPK','Nama UPT','Nama Program','Nama Kegiatan','Waktu Awal','Waktu Akhir','Output','Penanggung Jawab','Target Kegiatan','Resiko','Tingkat Resiko','Manfaat','Jenis Detail','Tipe Mata Anggaran','Kode Mata Anggaran','Nama Mata Anggaran','Qty','Satuan','Harga Satuan','Target Income','Realisasi','Gap','Status','Catatan'];
+  const csv=[header,...rows].map(r=>r.map(c=>`"${String(c??'').replace(/"/g,'""')}"`).join(',')).join('\\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const link=document.createElement('a');
+  link.href=URL.createObjectURL(blob);
+  link.download='anggaran_income.csv';
+  link.click();
+  showToast('success','fa-file-csv','Export CSV berhasil.');
+}
+function seedDefaultData(){
+  if(!confirm('Reset sample data Anggaran Income dan Realisasi Income?')) return;
+  writeJson(STORAGE_BUDGETS, seedBudgets);
+  writeJson(STORAGE_REALIZATIONS, seedRealizations);
+  render();
+  showToast('success','fa-database','Sample income berhasil direset.');
+}
 
-    function syncFilters(){
-      populateUpkSelect('filterUpk', state.filterUpk, 'Semua UPK');
-      populateUptSelect('filterUpt', state.filterUpk, state.filterUpt, true);
-    }
-
-    function onFilterUpkChange(){
-      state.filterUpk = document.getElementById('filterUpk').value;
-      state.filterUpt = '';
-      populateUptSelect('filterUpt', state.filterUpk, '', true);
-      applyFilters();
-    }
-
-    function onFormUpkChange(selectedUpt = ''){
-      const upkId = document.getElementById('fUpk').value;
-      populateUptSelect('fUpt', upkId, selectedUpt, false);
-    }
-
-    function getFiltered(){
-      return BUDGETS.map(hydrateBudget).filter(item => {
-        if(state.filterUpk && strId(item.upkId) !== strId(state.filterUpk)) return false;
-        if(state.filterUpt && strId(item.uptId) !== strId(state.filterUpt)) return false;
-        if(state.filterStatus && item.status !== state.filterStatus) return false;
-        if(state.search){
-          const hay = [
-            item.kode, item.upkKode, item.upkNama, item.uptKode, item.uptDisplay,
-            item.nama, item.risikoNama || '', item.risikoSkala || '', item.catatan || ''
-          ].join(' ').toLowerCase();
-          if(!hay.includes(state.search)) return false;
-        }
-        return true;
-      }).sort((a,b) => {
-        const av = a[state.sortCol];
-        const bv = b[state.sortCol];
-        if(typeof av === 'string' || typeof bv === 'string'){
-          return state.sortDir === 'asc'
-            ? String(av || '').localeCompare(String(bv || ''))
-            : String(bv || '').localeCompare(String(av || ''));
-        }
-        return state.sortDir === 'asc' ? Number(av || 0) - Number(bv || 0) : Number(bv || 0) - Number(av || 0);
+document.addEventListener('click', (event) => {
+  if(!event.target.closest('.lookup-shell')){
+    let changed = false;
+    [formSourceLines, formIncomeLines].forEach(lines => {
+      lines.forEach(line => {
+        if(line.resultsOpen){ line.resultsOpen = false; changed = true; }
       });
-    }
+    });
+    if(changed) renderAllLineItems();
+  }
+});
+window.addEventListener('storage', e => {
+  if([STORAGE_BUDGETS,STORAGE_REALIZATIONS,STORAGE_UPK,STORAGE_UPT,STORAGE_PROGRAM,STORAGE_KEGIATAN,STORAGE_MATA,LEGACY_UPK,LEGACY_UPT].includes(e.key)) render();
+});
 
-    function sortBy(col){
-      if(state.sortCol === col) state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
-      else { state.sortCol = col; state.sortDir = 'asc'; }
-      render();
-    }
-
-    function applyFilters(){
-      state.search = document.getElementById('searchInput').value.trim().toLowerCase();
-      state.filterUpk = document.getElementById('filterUpk').value;
-      state.filterUpt = document.getElementById('filterUpt').value;
-      state.filterStatus = document.getElementById('filterStatus').value;
-      state.page = 1;
-      render();
-    }
-
-    function updateStats(){
-      const hydrated = BUDGETS.map(hydrateBudget);
-      const totalHead = hydrated.length;
-      const totalTarget = hydrated.reduce((sum, item) => sum + Number(item.nominal || 0), 0);
-      const totalActual = hydrated.reduce((sum, item) => sum + getActualByBudget(item.id), 0);
-      const totalAchievement = totalTarget > 0 ? Math.round((totalActual / totalTarget) * 100) : 0;
-
-      document.getElementById('statHead').textContent = totalHead;
-      document.getElementById('statTarget').textContent = fmtShortCurrency(totalTarget);
-      document.getElementById('statActual').textContent = fmtShortCurrency(totalActual);
-      document.getElementById('statAchievement').textContent = `${totalAchievement}%`;
-
-      document.getElementById('heroHead').textContent = totalHead;
-      document.getElementById('heroTarget').textContent = fmtShortCurrency(totalTarget);
-      document.getElementById('heroActual').textContent = fmtShortCurrency(totalActual);
-      document.getElementById('heroGap').textContent = fmtShortCurrency(totalActual - totalTarget);
-    }
-
-    function budgetBadge(status){
-      if(status === 'Aktif') return '<span class="badge badge-success"><i class="fa-solid fa-circle-check"></i>Aktif</span>';
-      if(status === 'Draft') return '<span class="badge badge-warning"><i class="fa-solid fa-pen"></i>Draft</span>';
-      return '<span class="badge badge-danger"><i class="fa-solid fa-lock"></i>Tutup</span>';
-    }
-
-    function progressColor(pct){
-      if(pct >= 100) return 'var(--success)';
-      if(pct >= 70) return 'var(--accent)';
-      return 'var(--primary)';
-    }
-
-    function renderPagination(total){
-      const pages = Math.ceil(total / state.perPage);
-      if(!pages){ document.getElementById('pagination').innerHTML = ''; return; }
-      const start = (state.page - 1) * state.perPage + 1;
-      const end = Math.min(state.page * state.perPage, total);
-      let buttons = '';
-      for(let i=1;i<=pages;i++) buttons += `<button class="pg-btn ${i===state.page?'active':''}" onclick="goPage(${i})">${i}</button>`;
-      document.getElementById('pagination').innerHTML = `
-        <div class="pagination-info">Menampilkan ${start}-${end} dari ${total} data</div>
-        <div class="pagination-btns">
-          <button class="pg-btn" onclick="goPage(${state.page-1})" ${state.page<=1?'disabled':''}><i class="fa-solid fa-chevron-left"></i></button>
-          ${buttons}
-          <button class="pg-btn" onclick="goPage(${state.page+1})" ${state.page>=pages?'disabled':''}><i class="fa-solid fa-chevron-right"></i></button>
-        </div>`;
-    }
-
-    function goPage(page){
-      const total = getFiltered().length;
-      const maxPage = Math.max(1, Math.ceil(total / state.perPage));
-      state.page = Math.max(1, Math.min(page, maxPage));
-      render();
-    }
-
-    function render(){
-      refreshRefs();
-      syncFilters();
-      updateStats();
-
-      const data = getFiltered();
-      const start = (state.page - 1) * state.perPage;
-      const page = data.slice(start, start + state.perPage);
-
-      document.getElementById('tableSubtitle').textContent = `Menampilkan ${data.length} dari ${BUDGETS.length} head income`;
-
-      const tbody = document.getElementById('budgetTbody');
-      const empty = document.getElementById('emptyState');
-
-      if(!page.length){
-        tbody.innerHTML = '';
-        empty.style.display = 'block';
-        renderPagination(0);
-        return;
-      }
-
-      empty.style.display = 'none';
-      tbody.innerHTML = page.map(item => {
-        const info = getBudgetGapInfo(item.id);
-        const pct = Number(item.nominal || 0) > 0 ? Math.min(100, Math.round((info.actual / Number(item.nominal || 0)) * 100)) : 0;
-        return `
-          <tr>
-            <td class="mono">${escapeHtml(item.kode)}</td>
-            <td><div class="title-cell">${escapeHtml(item.upkNama || '-')}</div><div class="title-sub">${escapeHtml(item.upkKode || '-')}</div></td>
-            <td><div class="title-cell">${escapeHtml(item.uptDisplay || '-')}</div><div class="title-sub">${escapeHtml(item.uptKode || '-')}</div></td>
-            <td><div class="title-cell">${escapeHtml(item.nama)}</div><div class="title-sub">${escapeHtml(item.catatan || '-')}</div></td>
-            <td>${item.risikoNama ? `<div class="title-cell">${escapeHtml(item.risikoNama)}</div><div class="title-sub">${escapeHtml(item.risikoSkala || '-')}</div>` : '<span class="badge badge-accent">-</span>'}</td>
-            <td class="mono">${escapeHtml(item.tahun || '-')}</td>
-            <td class="mono">${fmtCurrency(item.nominal)}</td>
-            <td>
-              <div class="progress-wrap">
-                <div class="progress-track"><div class="progress-fill" style="width:${pct}%;background:${progressColor(info.pct)};"></div></div>
-                <div class="progress-label">${pct}%</div>
-              </div>
-              <div class="title-sub">${fmtCurrency(info.actual)}</div>
-            </td>
-            <td><div class="mono" style="color:${info.gap >= 0 ? 'var(--success)' : 'var(--danger)'}">${fmtCurrency(info.gap)}</div><div class="title-sub">${info.gap >= 0 ? 'Di atas / tercapai' : 'Di bawah target'}</div></td>
-            <td>${budgetBadge(item.status)}</td>
-            <td style="text-align:right;"><div class="actions-inline"><button class="act-btn primary" onclick="openEditModal(\'${escapeHtml(strId(item.id))}\')" title="Edit"><i class="fa-solid fa-pen"></i></button><button class="act-btn danger" onclick="deleteBudget(\'${escapeHtml(strId(item.id))}\')" title="Hapus"><i class="fa-solid fa-trash"></i></button></div></td>
-          </tr>`;
-      }).join('');
-      renderPagination(data.length);
-    }
-
-    function updateNominalPreview(){
-      document.getElementById('nominalPreview').textContent = fmtCurrency(document.getElementById('fNominal').value || 0);
-    }
-
-    function openAddModal(){
-      state.editingId = null;
-      document.getElementById('modalTitle').textContent = 'Tambah Anggaran Income';
-      document.getElementById('modalSub').textContent = 'Buat head target income berdasarkan UPK dan UPT.';
-      document.getElementById('fKode').value = '';
-      document.getElementById('fNama').value = '';
-      document.getElementById('fTahun').value = '2026';
-      document.getElementById('fNominal').value = '';
-      document.getElementById('fStatus').value = 'Aktif';
-      document.getElementById('fCatatan').value = '';
-      populateUpkSelect('fUpk', '', '');
-      onFormUpkChange('');
-      populateRiskSelect('fRisk', '');
-      updateNominalPreview();
-      openModal('modalForm');
-    }
-
-    function openEditModal(id){
-      refreshRefs();
-      const item = hydrateBudget(BUDGETS.find(row => strId(row.id) === strId(id)) || {});
-      if(!item.id) return;
-      state.editingId = strId(id);
-      document.getElementById('modalTitle').textContent = 'Edit Anggaran Income';
-      document.getElementById('modalSub').textContent = `${item.kode} · ${item.nama}`;
-      document.getElementById('fKode').value = item.kode || '';
-      document.getElementById('fNama').value = item.nama || '';
-      document.getElementById('fTahun').value = String(item.tahun || '2026');
-      document.getElementById('fNominal').value = Number(item.nominal || 0);
-      document.getElementById('fStatus').value = item.status || 'Aktif';
-      document.getElementById('fCatatan').value = item.catatan || '';
-      populateUpkSelect('fUpk', item.upkId || '', '');
-      onFormUpkChange(item.uptId || '');
-      populateRiskSelect('fRisk', item.risikoId || '');
-      updateNominalPreview();
-      openModal('modalForm');
-    }
-
-    function saveBudget(){
-      refreshRefs();
-      const upk = getUpkById(document.getElementById('fUpk').value);
-      const upt = getUptById(document.getElementById('fUpt').value);
-      const payload = {
-        kode: document.getElementById('fKode').value.trim(),
-        nama: document.getElementById('fNama').value.trim(),
-        tahun: Number(document.getElementById('fTahun').value || 2026),
-        nominal: Number(document.getElementById('fNominal').value || 0),
-        status: document.getElementById('fStatus').value,
-        catatan: document.getElementById('fCatatan').value.trim(),
-        entitas: upk?.nama || '',
-        upkId: upk?.id || '',
-        upkKode: upk?.kode || '',
-        upkNama: upk?.nama || '',
-        uptId: upt?.id || '',
-        uptKode: upt?.kode || '',
-        uptNama: upt?.nama || '',
-        ...getSelectedRisk()
-      };
-
-      if(!payload.kode || !payload.nama || !payload.upkId || !payload.uptId || payload.nominal <= 0){
-        showToast('warning', 'fa-triangle-exclamation', 'Kode, UPK, UPT, nama income, dan nominal wajib diisi.');
-        return;
-      }
-
-      const duplicate = BUDGETS.find(item => String(item.kode || '').toLowerCase() === payload.kode.toLowerCase() && strId(item.id) !== strId(state.editingId));
-      if(duplicate){
-        showToast('warning', 'fa-copy', 'Kode income sudah digunakan.');
-        return;
-      }
-
-      if(state.editingId){
-        const idx = BUDGETS.findIndex(item => strId(item.id) === strId(state.editingId));
-        if(idx >= 0) BUDGETS[idx] = { ...BUDGETS[idx], ...payload };
-        showToast('success', 'fa-circle-check', 'Anggaran income berhasil diperbarui.');
-      } else {
-        const numericIds = BUDGETS.map(item => Number(item.id)).filter(Number.isFinite);
-        const nextNumeric = numericIds.length ? Math.max(...numericIds) + 1 : BUDGETS.length + 1;
-        BUDGETS.unshift({ id: String(nextNumeric), ...payload });
-        showToast('success', 'fa-circle-check', 'Anggaran income berhasil ditambahkan.');
-      }
-
-      writeBudgets(BUDGETS);
-      closeModal('modalForm');
-      render();
-    }
-
-    function deleteBudget(id){
-      const item = hydrateBudget(BUDGETS.find(row => strId(row.id) === strId(id)) || {});
-      if(!item.id) return;
-      const usage = REALIZATIONS.filter(row => strId(row.budgetId) === strId(id)).length;
-      if(usage > 0){
-        showToast('warning', 'fa-link', `Head income "${item.nama}" sudah memiliki realisasi. Tidak bisa dihapus.`);
-        return;
-      }
-      if(!confirm(`Hapus head income "${item.nama}"?`)) return;
-      BUDGETS = BUDGETS.filter(row => strId(row.id) !== strId(id));
-      writeBudgets(BUDGETS);
-      render();
-      showToast('success', 'fa-trash', 'Anggaran income berhasil dihapus.');
-    }
-
-    function exportCSV(){
-      refreshRefs();
-      const rows = BUDGETS.map(hydrateBudget).map(item => {
-        const info = getBudgetGapInfo(item.id);
-        return [item.kode, item.upkKode, item.upkNama, item.uptKode, item.uptDisplay, item.nama, item.risikoId || '', item.risikoNama || '', item.risikoSkala || '', item.tahun, item.nominal, info.actual, info.gap, item.status, item.catatan || ''];
-      });
-      const header = ['Kode','Kode UPK','Nama UPK','Kode UPT','Nama UPT','Nama Income','ID Risiko','Nama Risiko','Skala Risiko','Tahun','Target','Realisasi','Gap','Status','Catatan'];
-      const csv = [header, ...rows].map(row => row.map(col => `"${String(col ?? '').replace(/"/g,'""')}"`).join(',')).join('\\n');
-      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'anggaran_income.csv';
-      link.click();
-      showToast('success', 'fa-file-csv', 'Export CSV berhasil.');
-    }
-
-    function seedDefaultData(){
-      if(!confirm('Reset sample data Anggaran Income dan Realisasi Income?')) return;
-      localStorage.setItem(STORAGE_BUDGETS, JSON.stringify(seedBudgets));
-      localStorage.setItem(STORAGE_REALIZATIONS, JSON.stringify(seedRealizations));
-      if(!localStorage.getItem(STORAGE_RISKS)) localStorage.setItem(STORAGE_RISKS, JSON.stringify(fallbackRisks));
-      refreshRefs();
-      render();
-      showToast('success', 'fa-database', 'Sample income berhasil direset.');
-    }
-
-    document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('id-ID', { weekday:'short', day:'numeric', month:'long', year:'numeric' });
-    syncFilters();
-    populateRiskSelect('fRisk');
-    render();
-
+document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('id-ID',{weekday:'short', day:'numeric', month:'long', year:'numeric'});
+ensureSeed();
+render();
   </script>
   <script src="../sidebar.js" defer></script>
 </body>
