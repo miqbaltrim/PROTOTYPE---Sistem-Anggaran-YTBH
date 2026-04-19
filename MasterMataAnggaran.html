@@ -336,7 +336,7 @@
       <div class="toolbar">
         <div class="search-wrap">
           <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-          <input class="search-input" id="searchInput" type="text" placeholder="Cari kode, nama mata anggaran, COA, risk, UPK, atau UPT..." oninput="applyFilters()">
+          <input class="search-input" id="searchInput" type="text" placeholder="Cari kode, nama mata anggaran, COA, UPK, atau UPT..." oninput="applyFilters()">
         </div>
 
         <select class="filter-select" id="filterUPK" onchange="applyFilters()">
@@ -380,8 +380,7 @@
                 <th>Satuan</th>
                 <th>Harga Satuan</th>
                 <th>COA</th>
-                <th>Risk</th>
-                <th style="text-align:right;">Aksi</th>
+                                <th style="text-align:right;">Aksi</th>
               </tr>
             </thead>
             <tbody id="mataTbody"></tbody>
@@ -465,10 +464,6 @@
             <label class="form-label">id_coa <span class="req">*</span></label>
             <select class="form-select" id="fCoa"></select>
           </div>
-          <div class="form-group">
-            <label class="form-label">id_risk <span class="req">*</span></label>
-            <select class="form-select" id="fRisk"></select>
-          </div>
         </div>
 
         <div class="preview-box">
@@ -491,7 +486,6 @@
     const STORAGE_UPK = 'APP_MASTER_UPK_V1';
     const STORAGE_UPT = 'APP_MASTER_UPT_V1';
     const STORAGE_COA = 'APP_MASTER_COA_V1';
-    const STORAGE_RISK = 'APP_MASTER_RISIKO_V1';
 
     const seedUPK = [
       { id:'UPK-001', kode:'KLINIK', nama:'Klinik' },
@@ -513,12 +507,6 @@
       { id:'COA-004', kode:'06.1.01.06.01', nama:'Biaya Listrik - TP' }
     ];
 
-    const seedRisk = [
-      { id:1, nama:'Risiko over budget operasional', skala:'Tinggi' },
-      { id:2, nama:'Risiko keterlambatan vendor', skala:'Sedang' },
-      { id:3, nama:'Risiko ketidaksesuaian dokumentasi', skala:'Rendah' }
-    ];
-
     const seedItems = [
       {
         id:1,
@@ -532,10 +520,7 @@
         satuan:'box',
         hargaSatuan:275000,
         idCoa:'COA-002',
-        coaLabel:'06.1.01.02.18 · Biaya pembelian obat dan alat kesehatan - TP',
-        idRisk:1,
-        riskLabel:'Risiko over budget operasional',
-        riskSkala:'Tinggi'
+        coaLabel:'06.1.01.02.18 · Biaya pembelian obat dan alat kesehatan - TP'
       },
       {
         id:2,
@@ -549,10 +534,7 @@
         satuan:'paket',
         hargaSatuan:950000,
         idCoa:'COA-003',
-        coaLabel:'06.1.01.03.02 · Biaya Alat Tulis Kantor - TP',
-        idRisk:3,
-        riskLabel:'Risiko ketidaksesuaian dokumentasi',
-        riskSkala:'Rendah'
+        coaLabel:'06.1.01.03.02 · Biaya Alat Tulis Kantor - TP'
       },
       {
         id:3,
@@ -566,10 +548,7 @@
         satuan:'bulan',
         hargaSatuan:14500000,
         idCoa:'COA-004',
-        coaLabel:'06.1.01.06.01 · Biaya Listrik - TP',
-        idRisk:2,
-        riskLabel:'Risiko keterlambatan vendor',
-        riskSkala:'Sedang'
+        coaLabel:'06.1.01.06.01 · Biaya Listrik - TP'
       },
       {
         id:4,
@@ -583,10 +562,7 @@
         satuan:'bulan',
         hargaSatuan:18000000,
         idCoa:'COA-001',
-        coaLabel:'06.1.01.01.01 · Gaji pokok karyawan - TP',
-        idRisk:1,
-        riskLabel:'Risiko over budget operasional',
-        riskSkala:'Tinggi'
+        coaLabel:'06.1.01.01.01 · Gaji pokok karyawan - TP'
       }
     ];
 
@@ -603,7 +579,6 @@
       if(!localStorage.getItem(STORAGE_UPK)) writeJson(STORAGE_UPK, seedUPK);
       if(!localStorage.getItem(STORAGE_UPT)) writeJson(STORAGE_UPT, seedUPT);
       if(!localStorage.getItem(STORAGE_COA)) writeJson(STORAGE_COA, seedCOA);
-      if(!localStorage.getItem(STORAGE_RISK)) writeJson(STORAGE_RISK, seedRisk);
       if(!localStorage.getItem(STORAGE_ITEMS)) writeJson(STORAGE_ITEMS, seedItems);
     }
 
@@ -645,21 +620,12 @@
       }));
     }
 
-    function normalizeRisks(items){
-      return (items || []).map((item, index) => ({
-        id: String(item.id ?? item.id_risk ?? `RISK-AUTO-${index+1}`),
-        nama: String(item.nama ?? item.name ?? `Risk ${index+1}`),
-        skala: String(item.skala ?? item.level ?? item.risikoSkala ?? '-')
-      }));
-    }
-
     ensureSeed();
 
     let ITEMS = readJson(STORAGE_ITEMS);
     let UPKS = normalizeUPKs(readJson(STORAGE_UPK));
     let UPTS = normalizeUPTs(readJson(STORAGE_UPT));
     let COAS = normalizeCOAs(readJson(STORAGE_COA));
-    let RISKS = normalizeRisks(readJson(STORAGE_RISK));
 
     const state = {
       search: '',
@@ -677,7 +643,6 @@
       UPKS = normalizeUPKs(readJson(STORAGE_UPK));
       UPTS = normalizeUPTs(readJson(STORAGE_UPT));
       COAS = normalizeCOAs(readJson(STORAGE_COA));
-      RISKS = normalizeRisks(readJson(STORAGE_RISK));
     }
 
     function getUPKLabel(id){
@@ -693,10 +658,6 @@
     function getCOALabel(id){
       const found = COAS.find(x => String(x.id) === String(id));
       return found ? `${found.kode} · ${found.nama}` : '-';
-    }
-
-    function getRiskRecord(id){
-      return RISKS.find(x => String(x.id) === String(id));
     }
 
     function populateStaticFilters(){
@@ -726,13 +687,6 @@
       const select = document.getElementById('fCoa');
       select.innerHTML = '<option value="">— Pilih COA —</option>' +
         COAS.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.id)} · ${escapeHtml(item.kode)} · ${escapeHtml(item.nama)}</option>`).join('');
-      if(selected) select.value = String(selected);
-    }
-
-    function populateRiskOptions(selected=''){
-      const select = document.getElementById('fRisk');
-      select.innerHTML = '<option value="">— Pilih Risk —</option>' +
-        RISKS.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.id)} · ${escapeHtml(item.nama)}${item.skala && item.skala !== '-' ? ` (${escapeHtml(item.skala)})` : ''}</option>`).join('');
       if(selected) select.value = String(selected);
     }
 
@@ -785,9 +739,6 @@
             item.satuan,
             item.idCoa,
             item.coaLabel,
-            item.idRisk,
-            item.riskLabel,
-            item.riskSkala,
             item.status || ''
           ].join(' ').toLowerCase();
           if(!hay.includes(state.search)) return false;
@@ -847,10 +798,6 @@
             <div class="title-cell">${escapeHtml(item.idCoa || '-')}</div>
             <div class="title-sub">${escapeHtml(item.coaLabel || getCOALabel(item.idCoa))}</div>
           </td>
-          <td>
-            <div class="title-cell">${escapeHtml(item.idRisk || '-')}</div>
-            <div class="title-sub">${escapeHtml(item.riskLabel || (getRiskRecord(item.idRisk)?.nama || '-'))}${item.riskSkala ? ` · ${escapeHtml(item.riskSkala)}` : ''}</div>
-          </td>
           <td style="text-align:right;">
             <div class="actions-inline">
               <button class="act-btn primary" onclick="openEditModal(${item.id})" title="Edit"><i class="fa-solid fa-pen"></i></button>
@@ -909,7 +856,6 @@
       populateUPKOptions();
       populateUPTOptions();
       populateCOAOptions();
-      populateRiskOptions();
       document.getElementById('fSatuan').value = '';
       document.getElementById('fHarga').value = '';
       updatePreview();
@@ -929,7 +875,6 @@
       populateUPKOptions(item.idUpk || '');
       populateUPTOptions(item.idUpk || '', item.idUpt || '');
       populateCOAOptions(item.idCoa || '');
-      populateRiskOptions(item.idRisk || '');
       document.getElementById('fSatuan').value = item.satuan || '';
       document.getElementById('fHarga').value = item.hargaSatuan || 0;
       updatePreview();
@@ -940,11 +885,9 @@
       const idUpk = document.getElementById('fUpk').value;
       const idUpt = document.getElementById('fUpt').value;
       const idCoa = document.getElementById('fCoa').value;
-      const idRisk = document.getElementById('fRisk').value;
       const upk = UPKS.find(x => String(x.id) === String(idUpk));
       const upt = UPTS.find(x => String(x.id) === String(idUpt));
       const coa = COAS.find(x => String(x.id) === String(idCoa));
-      const risk = getRiskRecord(idRisk);
 
       const payload = {
         kodeAnggaran: document.getElementById('fKode').value.trim(),
@@ -957,14 +900,11 @@
         satuan: document.getElementById('fSatuan').value.trim(),
         hargaSatuan: Number(document.getElementById('fHarga').value || 0),
         idCoa,
-        coaLabel: coa ? `${coa.kode} · ${coa.nama}` : '',
-        idRisk,
-        riskLabel: risk?.nama || '',
-        riskSkala: risk?.skala || ''
+        coaLabel: coa ? `${coa.kode} · ${coa.nama}` : ''
       };
 
-      if(!payload.kodeAnggaran || !payload.namaMataAnggaran || !payload.tipe || !payload.idUpk || !payload.satuan || payload.hargaSatuan <= 0 || !payload.idCoa || !payload.idRisk){
-        showToast('warning', 'fa-triangle-exclamation', 'Kode, nama, tipe, id_upk, satuan, harga satuan, id_coa, dan id_risk wajib diisi.');
+      if(!payload.kodeAnggaran || !payload.namaMataAnggaran || !payload.tipe || !payload.idUpk || !payload.satuan || payload.hargaSatuan <= 0 || !payload.idCoa){
+        showToast('warning', 'fa-triangle-exclamation', 'Kode, nama, tipe, id_upk, satuan, harga satuan, dan id_coa wajib diisi.');
         return;
       }
 
@@ -1026,13 +966,10 @@
         item.satuan,
         item.hargaSatuan,
         item.idCoa,
-        item.coaLabel,
-        item.idRisk,
-        item.riskLabel,
-        item.riskSkala || ''
+        item.coaLabel
       ]);
 
-      const header = ['ID','Kode Anggaran','Nama Mata Anggaran','Tipe','id_upk','Nama UPK','id_upt','Nama UPT','Satuan','Harga Satuan','id_coa','COA','id_risk','Risk','Skala Risk'];
+      const header = ['ID','Kode Anggaran','Nama Mata Anggaran','Tipe','id_upk','Nama UPK','id_upt','Nama UPT','Satuan','Harga Satuan','id_coa','COA'];
       const csv = [header, ...rows]
         .map(row => row.map(col => `"${String(col ?? '').replace(/"/g,'""')}"`).join(','))
         .join('\n');
@@ -1050,7 +987,6 @@
       writeJson(STORAGE_UPK, seedUPK);
       writeJson(STORAGE_UPT, seedUPT);
       writeJson(STORAGE_COA, seedCOA);
-      writeJson(STORAGE_RISK, seedRisk);
       writeJson(STORAGE_ITEMS, seedItems);
       refreshSources();
       render();
@@ -1076,7 +1012,7 @@
     }
 
     window.addEventListener('storage', (event) => {
-      if([STORAGE_ITEMS, STORAGE_UPK, STORAGE_UPT, STORAGE_COA, STORAGE_RISK].includes(event.key)){
+      if([STORAGE_ITEMS, STORAGE_UPK, STORAGE_UPT, STORAGE_COA].includes(event.key)){
         refreshSources();
         render();
       }
@@ -1089,6 +1025,6 @@
     render();
   </script>
 
-  <script src="/sidebar.js" defer></script>
+  <script src="../sidebar.js" defer></script>
 </body>
 </html>

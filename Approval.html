@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Approval Anggaran Cost — Sistem Anggaran</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Times+New+Roman:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root{
       --bg:#f4f7fc;
@@ -174,13 +174,27 @@
     .print-modal-info b{font-weight:700}
     .print-modal-actions{display:flex;gap:9px;flex-wrap:wrap}
 
+    /* Aptos font (font Microsoft Office 2024, gunakan local() agar dipakai jika tersedia di mesin cetak) */
+    @font-face {
+      font-family: 'Aptos';
+      src: local('Aptos'), local('Aptos-Regular');
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Aptos';
+      src: local('Aptos Bold'), local('Aptos-Bold');
+      font-weight: 700;
+      font-style: normal;
+    }
+
     /* The actual paper */
     #printSheet{
       background:#fff;
       border-radius:4px;
       box-shadow:0 20px 60px rgba(0,0,0,.38);
       padding:48px 56px;
-      font-family:'Times New Roman','Times',Georgia,serif;
+      font-family:'Aptos','Calibri','Segoe UI',Arial,sans-serif;
       color:#000;
       font-size:11pt;
       line-height:1.5;
@@ -248,6 +262,7 @@
         padding:20mm 22mm;
         border-radius:0;
         box-shadow:none;
+        font-family:'Aptos','Calibri','Segoe UI',Arial,sans-serif;
         font-size:11pt;
         margin:0;
       }
@@ -965,6 +980,6 @@
     renderAll();
     window.addEventListener('storage', event => { if([MASTER_KEY, REQUEST_KEY, COST_KEY, MATA_KEY].includes(event.key)) renderAll(); });
   </script>
-  <script src="./sidebar.js" defer></script>
+  <script src="../sidebar.js" defer></script>
 </body>
 </html>
